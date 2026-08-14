@@ -1,0 +1,16 @@
+(kicad_sch
+	(version 20231120)
+	(generator "eeschema")
+	(generator_version "8.0")
+	(uuid "b3417696-fb19-4c3e-bd30-28bb2d157bef")
+	(paper "A4")
+	(title_block
+		(title "Wristband")
+		(comment 1 "UWB rescue locator -- wristband tag: NINA-B1 + UWB radio + compact BMS")
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+)

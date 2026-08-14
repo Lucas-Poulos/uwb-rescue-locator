@@ -1,0 +1,4 @@
+(sym_lib_table
+  (lib (name "wristband")(type "KiCad")(uri "${KIPRJMOD}/libs/wristband.kicad_sym")(options "")(descr "Wristband board-specific symbols"))
+  (lib (name "uwb_rescue_locator_shared")(type "KiCad")(uri "${KIPRJMOD}/../shared/symbols/uwb_rescue_locator_shared.kicad_sym")(options "")(descr "Symbols shared across both boards (e.g. UWB IC/module used on wristband + bay station)"))
+)

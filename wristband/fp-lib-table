@@ -1,0 +1,4 @@
+(fp_lib_table
+  (lib (name "wristband")(type "KiCad")(uri "${KIPRJMOD}/libs/wristband.pretty")(options "")(descr "Wristband board-specific footprints"))
+  (lib (name "uwb_rescue_locator_shared")(type "KiCad")(uri "${KIPRJMOD}/../shared/footprints/uwb_rescue_locator_shared.pretty")(options "")(descr "Footprints shared across both boards (e.g. UWB IC/module used on wristband + bay station)"))
+)

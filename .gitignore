@@ -1,0 +1,24 @@
+# KiCad backups / autosave / lock files
+*-backups/
+_autosave-*
+*.bak
+*.kicad_sch-bak
+*.kicad_pcb-bak
+*.kicad_prl
+*.lck
+~*.lck
+fp-info-cache
+
+# KiCad plot/fab output
+*.pos
+*.drl
+*.gbr
+*.gbrjob
+*.rpt
+gerbers/
+fab-outputs/
+
+# macOS / Windows cruft
+.DS_Store
+Thumbs.db
+desktop.ini
