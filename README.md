@@ -1,5 +1,7 @@
 # UWB Rescue Locator
 
+Repo: https://github.com/Lucas-Poulos/uwb-rescue-locator
+
 A two-board UWB positioning system for a rescue/safety use case: a **wristband**
 worn by a person, and a fixed **bay station** that ranges to it from four
 anchor points to triangulate its 3D position and upload it to the internet.
