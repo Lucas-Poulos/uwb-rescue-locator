@@ -276,6 +276,14 @@
     [
       "e17e6f9a-2b41-4d3a-9f0a-1c1f5c9a7b21",
       "Power BMS"
+    ],
+    [
+      "86c28fe6-4393-4319-af10-ef3feae83fa8",
+      "Radio MCU"
+    ],
+    [
+      "6584e225-7dea-477e-b9b3-e07582ebd863",
+      "Mechanical"
     ]
   ],
   "text_variables": {}

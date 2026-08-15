@@ -8,6 +8,7 @@ _autosave-*
 *.lck
 ~*.lck
 fp-info-cache
+.history/
 
 # KiCad plot/fab output
 *.pos
