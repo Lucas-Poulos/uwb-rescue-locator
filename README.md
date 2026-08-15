@@ -65,9 +65,9 @@ setup needed.
 
 Files are currently in **KiCad 8.0** format, originally authored/verified
 against KiCad 8.0.6. As of 2026-08-14 this machine has been upgraded to
-**KiCad 10.0.5** (the actual current stable -- newer than the KiCad 9.x the
-team had originally planned to standardize on; confirm 10.x is fine for
-everyone before rolling it out). All existing files were re-checked with
+**KiCad 10.0.5** (the actual current stable -- confirmed as the team's
+standard, superseding an earlier, since-corrected plan to target KiCad 9.x).
+All existing files were re-checked with
 `kicad-cli` under 10.0.5 (`sch erc`/`pcb drc`) and open/parse cleanly with no
 new issues -- opening a file in the newer GUI and re-saving is still a
 one-way, zero-cost upgrade whenever the team wants to bump the file format

@@ -58,6 +58,8 @@ relitigate them. Keep this updated as the team decides things.
   `bay-station/`) + a `shared/` library folder. Reason: KiCad has no native
   multi-board project, and a monorepo keeps shared parts/docs/history in one
   place for a small team.
-- **KiCad version**: files are currently in KiCad 8.0 format (matches the
-  installed toolchain as of 2026-08-14). Team wants to standardize on
-  KiCad 9.x once everyone can upgrade -- see root `README.md`.
+- **KiCad version**: team standardizes on **KiCad 10.0.5** (current stable;
+  supersedes an earlier, since-corrected plan to target 9.x). Files on disk
+  are still KiCad 8.0 format for now (nobody's re-saved them under 10 yet) --
+  re-checked and confirmed clean under 10.0.5 via `kicad-cli` on 2026-08-14.
+  See root `README.md`'s Toolchain section.
