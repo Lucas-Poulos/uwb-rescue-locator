@@ -1,0 +1,191 @@
+(footprint "MAX17048_TDFN8-EP_PLACEHOLDER"
+	(version 20240108)
+	(generator "uwb_rescue_locator_lib_builder")
+	(layer "F.Cu")
+	(descr "PLACEHOLDER footprint for Maxim/Analog Devices MAX17048G+T10 fuel gauge IC, 8-pin TDFN-EP, package code T822+3, outline drawing 21-0168, recommended land pattern 90-0065. Body size (2.0x2.0mm), pin count (8+EP), and pin arrangement (4 pins along the bottom edge = pins 1-4 CTG/CELL/VDD/GND left-to-right, 4 pins along the top edge = pins 8-5 SDA/SCL/QSTRT/ALRT left-to-right, EP centered) are REAL/confirmed from the Maxim datasheet 19-6171 Rev 2 (8/12) page 1 ('2mm x 2mm, 8-pin TDFN package') and page 6 Pin/Bump Configurations diagram. Individual terminal pad size (0.25x0.45mm) and exposed-pad size (1.4x1.2mm) are industry-typical ESTIMATES for a TDFN-8 2x2mm 0.5mm-pitch part, NOT taken from Maxim's own proprietary package-outline PDF (21-0168) or land-pattern PDF (90-0065) -- both were located at analog.com/media/en/package-pcb-resources/ but repeatedly timed out on fetch (5+ attempts) and could not be read. Verify against those two documents (or Maxim's own KiCad/Ultra Librarian footprint if available) before fabrication.")
+	(tags "Maxim Analog Devices MAX17048 fuel gauge TDFN PLACEHOLDER")
+	(property "Reference" "REF**"
+		(at 0 -1.75 0)
+		(layer "F.SilkS")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "MAX17048_TDFN8-EP_PLACEHOLDER"
+		(at 0 1.75 0)
+		(layer "F.Fab")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr smd)
+	(fp_line
+		(start -1.0 -1.0)
+		(end 1.0 -1.0)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+	)
+	(fp_line
+		(start 1.0 -1.0)
+		(end 1.0 1.0)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+	)
+	(fp_line
+		(start 1.0 1.0)
+		(end -1.0 1.0)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+	)
+	(fp_line
+		(start -1.0 1.0)
+		(end -1.0 -1.0)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+	)
+	(fp_line
+		(start -1.25 -1.25)
+		(end 1.25 -1.25)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+	)
+	(fp_line
+		(start 1.25 -1.25)
+		(end 1.25 1.25)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+	)
+	(fp_line
+		(start 1.25 1.25)
+		(end -1.25 1.25)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+	)
+	(fp_line
+		(start -1.25 1.25)
+		(end -1.25 -1.25)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+	)
+	(fp_line
+		(start -1.0 -1.0)
+		(end 1.0 -1.0)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+	)
+	(fp_line
+		(start 1.0 -1.0)
+		(end 1.0 1.0)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+	)
+	(fp_line
+		(start 1.0 1.0)
+		(end -1.0 1.0)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+	)
+	(fp_line
+		(start -1.0 1.0)
+		(end -1.0 -1.0)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+	)
+	(fp_text user "${REFERENCE}"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(effects
+			(font
+				(size 0.5 0.5)
+				(thickness 0.08)
+			)
+		)
+	)
+	(pad "1" smd rect
+		(at -0.75 -1.0)
+		(size 0.25 0.45)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "2" smd rect
+		(at -0.25 -1.0)
+		(size 0.25 0.45)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "3" smd rect
+		(at 0.25 -1.0)
+		(size 0.25 0.45)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "4" smd rect
+		(at 0.75 -1.0)
+		(size 0.25 0.45)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "5" smd rect
+		(at 0.75 1.0)
+		(size 0.25 0.45)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "6" smd rect
+		(at 0.25 1.0)
+		(size 0.25 0.45)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "7" smd rect
+		(at -0.25 1.0)
+		(size 0.25 0.45)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "8" smd rect
+		(at -0.75 1.0)
+		(size 0.25 0.45)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "9" smd rect
+		(at 0 0)
+		(size 1.4 1.2)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+)
