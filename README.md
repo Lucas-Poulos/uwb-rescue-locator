@@ -63,10 +63,26 @@ setup needed.
 
 ## Toolchain
 
-Built and verified against **KiCad 8.0.6** (`kicad-cli`), since that's what's
-currently installed on the machine this was scaffolded on. Opening these
-files in KiCad 9 and re-saving is a one-way, zero-cost upgrade -- do that
-once the whole team is on KiCad 9, and update this note.
+Files are currently in **KiCad 8.0** format, originally authored/verified
+against KiCad 8.0.6. As of 2026-08-14 this machine has been upgraded to
+**KiCad 10.0.5** (the actual current stable -- newer than the KiCad 9.x the
+team had originally planned to standardize on; confirm 10.x is fine for
+everyone before rolling it out). All existing files were re-checked with
+`kicad-cli` under 10.0.5 (`sch erc`/`pcb drc`) and open/parse cleanly with no
+new issues -- opening a file in the newer GUI and re-saving is still a
+one-way, zero-cost upgrade whenever the team wants to bump the file format
+itself; nothing has been re-saved yet, so the files on disk are still 8.0
+format.
+
+Note for anyone else upgrading KiCad's major version: `kicad-cli` alone
+won't auto-populate the new version's global symbol/footprint library table
+(`~/Library/Preferences/kicad/<version>/sym-lib-table` /`fp-lib-table`) --
+that normally happens the first time you launch the actual KiCad GUI and it
+offers to migrate/create settings. If you only ever use `kicad-cli`
+headlessly without opening the GUI first, you may see a wall of spurious
+"library not included in configuration" ERC errors -- just launch KiCad.app
+once (or copy the two `*-lib-table` files from
+`.../KiCad.app/Contents/SharedSupport/template/`) to fix it.
 
 ## Contributing
 
