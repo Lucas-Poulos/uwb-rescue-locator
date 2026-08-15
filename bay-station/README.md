@@ -70,6 +70,43 @@ All other sheets from `CONTRIBUTING.md`'s suggested breakdown are now
 started; future work is wiring these three sheets up (power rails from
 `power_bms`, SPI/GPIO between U3 and U4-U7) rather than adding new sheets.
 
+Two more sheets are now in, wired into the root sheet and registered in
+`bay-station.kicad_pro`'s `sheets` list, fixing three confirmed hardware gaps
+(no regulated 3.3V rail for the ESP32-S3/DWM3000 loads, floating DWM3000
+GPIO5/GPIO6 SPI-mode-strapping pins, and missing ESP32-S3 boot-strapping/
+programming provisions). **Both are placement-only**, same convention as
+`connectivity`/`uwb_anchors`/`mechanical` -- see `regulation_notes.md` for the
+full current-draw math and datasheet citations:
+
+- `regulation.kicad_sch` -- a TI `TPS62A02PDDCR` synchronous buck converter
+  (U8, 2.5-5.5V in / 2A, real datasheet SLUSEG9E) stepping the unregulated
+  `+VSYS` rail down to a new `+3V3_SYS` rail, sized with ~3.5x headroom over
+  the real worst-case combined draw (ESP32-S3-WROOM-1 355mA peak TX + 4x
+  DWM3000 55mA RX each, both from their real datasheets). Chosen over the
+  higher-current TPS563201/TPS563200 family specifically because its
+  2.5-5.5V input range covers this board's single-cell-Li-Ion-only `+VSYS`
+  condition (which the 4.5V-minimum TPS563201 family cannot). Includes the
+  datasheet-recommended 1uH inductor (L1), input/output caps (C20/C21),
+  optional feedforward cap (C22), and feedback divider (R8=453k/R9=100k,
+  targeting 3.318V).
+- `uwb_anchors.kicad_sch` -- 8 new 10k pull-down resistors (R10-R17) added to
+  the existing 4-anchor sheet, defining SPI mode 0 on each DWM3000's
+  GPIO5/GPIO6 pins per the real Qorvo datasheet's "Sample GPIOs 5&6 to set SPI
+  mode" power-up step. Placed explicitly for all 4 anchors (not compacted into
+  a shared note), matching the sheet's existing per-anchor-explicit-component
+  convention.
+- `programming_debug.kicad_sch` -- ESP32-S3-WROOM-1 boot-strapping pull
+  resistors (GPIO0 pull-up, GPIO3/GPIO45/GPIO46 pull-downs, all 10k, per the
+  real Espressif datasheet's Table 4-1/4-3/4-4/4-5), an EN reset RC delay
+  (10k + 1uF, per the real Espressif ESP32-S3 Hardware Design Guidelines'
+  Schematic Checklist), BOOT and RESET tactile buttons (SW1/SW2), and a
+  dedicated data-capable USB-C receptacle (J3 + CC1/CC2 pulldowns R23/R24) for
+  native-USB flashing via the ESP32-S3's built-in USB-OTG peripheral --
+  chosen over a UART-bridge IC since the datasheet confirms native
+  USB-Serial-JTAG/USB-OTG download-boot support. Flags one open concern: the
+  board's existing USB-C connector (J2, power_bms.kicad_sch) is power-only and
+  can't carry the native-USB data lines, hence the second connector.
+
 ## Libraries
 
 - `libs/` -- bay-station-only symbols/footprints

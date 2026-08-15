@@ -691,6 +691,146 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "Device:R"
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 0)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "R"
+				(at 2.032 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "R"
+				(at 0 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at -1.778 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "R res resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "R_*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "R_0_1"
+				(rectangle
+					(start -1.016 -2.54)
+					(end 1.016 2.54)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "R_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 	)
 	(text "UWB Anchor Array -- 4x DWM3000 (U4-U7)"
 		(at 60 30 0)
@@ -2269,6 +2409,647 @@
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
 					(reference "C19")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(text "GPIO5/GPIO6 SPI-mode strap pull-downs (R10-R17, added in a later pass): the real\nQorvo DWM3000 Data Sheet Rev B, May 2021 (already cited above) explicitly shows, in\nboth Figure 1 'Timing diagram for cold start POR' and Figure 2 'Timing diagram for\nwarm start', a 'Sample GPIOs 5&6 to set SPI mode' step during the AON power-up\nsequence, before the digital core reaches its active states. Table 2 'Pin Descriptions'\nconfirms GPIO5/EXTTXE/SPIPOL (pin 10) and GPIO6/EXTRXE/SPIPHA (pin 9) 'act as the\nSPIPOL/SPIPHA pin for configuring the SPI mode of operation' on power-up, defaulting\nto General Purpose I/O afterward. Section 6.3 'GPIO and SPI I/O Internal Pull Up /\nDown' confirms all GPIOs default to an internally SW-controllable pull-down (10k-30k,\nvarying with VDD1), which already yields SPI mode 0 (SPIPOL=0, SPIPHA=0) by default --\nbut per this task's explicit ask, each anchor gets its own EXTERNAL 10k pull-down on\nboth pins (R10/R11 for U4, R12/R13 for U5, R14/R15 for U6, R16/R17 for U7) to make\nSPI mode 0 a defined hardware default rather than relying solely on the internal\npull across 4 separate remote anchor boards. All 8 placed explicitly (not compacted\ninto a single shared note) for consistency with this sheet's existing per-anchor-\nexplicit-component convention (each anchor already gets its own full decoupling set,\nC8-C19, rather than a single shared/implied passive)."
+		(at 60 240 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "2ef21d2a-b7d5-4fb1-98c3-3ff28956d768")
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 100 105 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "05055643-bcc8-4757-8378-9e404959f909")
+		(property "Reference" "R10"
+			(at 108 105 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10k"
+			(at 108 112 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 100 105 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 100 105 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "GPIO5 (GPIO5/EXTTXE/SPIPOL, U4 pin 10) SPI-mode-strap pull-down, 10k to GND -- explicitly defines SPI mode 0 (SPIPOL=0/SPIPHA=0) at power-up, per the real Qorvo DWM3000 Data Sheet Rev B 'Sample GPIOs 5&6 to set SPI mode' power-up step (Figures 1/2) and Section 6.3 (see this sheet's note text). Reinforces the DWM3000's own internal 10k-30k pull-down default (Section 6.3) with an explicit external resistor."
+			(at 100 105 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "30470a58-ad89-4e89-8d05-ede4afa259dd")
+		)
+		(pin "2"
+			(uuid "7dc921d9-f70e-4983-a82d-f4fec00bade1")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
+					(reference "R10")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 100 120 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "272f20ba-ff24-4060-9987-dc2aeaa460e7")
+		(property "Reference" "R11"
+			(at 108 120 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10k"
+			(at 108 127 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 100 120 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 100 120 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "GPIO6 (GPIO6/EXTRXE/SPIPHA, U4 pin 9) SPI-mode-strap pull-down, 10k to GND -- explicitly defines SPI mode 0 (SPIPOL=0/SPIPHA=0) at power-up, per the real Qorvo DWM3000 Data Sheet Rev B 'Sample GPIOs 5&6 to set SPI mode' power-up step (Figures 1/2) and Section 6.3 (see this sheet's note text). Reinforces the DWM3000's own internal 10k-30k pull-down default (Section 6.3) with an explicit external resistor."
+			(at 100 120 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "7dbe82eb-b4d9-4672-bb0a-bfb665f16176")
+		)
+		(pin "2"
+			(uuid "edf8de7a-3bf3-4d60-8757-7820aa694a69")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
+					(reference "R11")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 250 105 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "b2f5c3d7-48db-4260-bf68-7f0590563148")
+		(property "Reference" "R12"
+			(at 258 105 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10k"
+			(at 258 112 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 250 105 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 250 105 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "GPIO5 (GPIO5/EXTTXE/SPIPOL, U5 pin 10) SPI-mode-strap pull-down, 10k to GND -- explicitly defines SPI mode 0 (SPIPOL=0/SPIPHA=0) at power-up, per the real Qorvo DWM3000 Data Sheet Rev B 'Sample GPIOs 5&6 to set SPI mode' power-up step (Figures 1/2) and Section 6.3 (see this sheet's note text). Reinforces the DWM3000's own internal 10k-30k pull-down default (Section 6.3) with an explicit external resistor."
+			(at 250 105 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "a579db55-3deb-49b2-b8fb-8eadc6b5358e")
+		)
+		(pin "2"
+			(uuid "7904f89d-84d4-4851-a2ca-632c37cb5fa4")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
+					(reference "R12")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 250 120 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "8e1a31db-e1ed-4619-9c74-60007755b564")
+		(property "Reference" "R13"
+			(at 258 120 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10k"
+			(at 258 127 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 250 120 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 250 120 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "GPIO6 (GPIO6/EXTRXE/SPIPHA, U5 pin 9) SPI-mode-strap pull-down, 10k to GND -- explicitly defines SPI mode 0 (SPIPOL=0/SPIPHA=0) at power-up, per the real Qorvo DWM3000 Data Sheet Rev B 'Sample GPIOs 5&6 to set SPI mode' power-up step (Figures 1/2) and Section 6.3 (see this sheet's note text). Reinforces the DWM3000's own internal 10k-30k pull-down default (Section 6.3) with an explicit external resistor."
+			(at 250 120 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "44766a30-7bb5-470a-a5f3-8bb2b887a684")
+		)
+		(pin "2"
+			(uuid "f605ee67-846a-4829-92b6-7437e6ed1ef6")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
+					(reference "R13")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 100 205 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "e41d5b35-0c3f-4c7e-9912-202108f74969")
+		(property "Reference" "R14"
+			(at 108 205 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10k"
+			(at 108 212 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 100 205 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 100 205 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "GPIO5 (GPIO5/EXTTXE/SPIPOL, U6 pin 10) SPI-mode-strap pull-down, 10k to GND -- explicitly defines SPI mode 0 (SPIPOL=0/SPIPHA=0) at power-up, per the real Qorvo DWM3000 Data Sheet Rev B 'Sample GPIOs 5&6 to set SPI mode' power-up step (Figures 1/2) and Section 6.3 (see this sheet's note text). Reinforces the DWM3000's own internal 10k-30k pull-down default (Section 6.3) with an explicit external resistor."
+			(at 100 205 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "91a92442-295f-4918-9654-e141038dc6a1")
+		)
+		(pin "2"
+			(uuid "82ab0c22-c094-4d76-a21c-a6f31171e3b9")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
+					(reference "R14")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 100 220 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "05226323-00f0-4fb2-8d43-a65dfeaf4c52")
+		(property "Reference" "R15"
+			(at 108 220 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10k"
+			(at 108 227 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 100 220 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 100 220 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "GPIO6 (GPIO6/EXTRXE/SPIPHA, U6 pin 9) SPI-mode-strap pull-down, 10k to GND -- explicitly defines SPI mode 0 (SPIPOL=0/SPIPHA=0) at power-up, per the real Qorvo DWM3000 Data Sheet Rev B 'Sample GPIOs 5&6 to set SPI mode' power-up step (Figures 1/2) and Section 6.3 (see this sheet's note text). Reinforces the DWM3000's own internal 10k-30k pull-down default (Section 6.3) with an explicit external resistor."
+			(at 100 220 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "58064ba0-0525-41e6-99e2-6f96af8d1a43")
+		)
+		(pin "2"
+			(uuid "08985451-8564-415b-a006-0704b1acab4f")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
+					(reference "R15")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 250 205 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "f24c93f5-246b-436a-ae1b-a2c84bf98787")
+		(property "Reference" "R16"
+			(at 258 205 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10k"
+			(at 258 212 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 250 205 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 250 205 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "GPIO5 (GPIO5/EXTTXE/SPIPOL, U7 pin 10) SPI-mode-strap pull-down, 10k to GND -- explicitly defines SPI mode 0 (SPIPOL=0/SPIPHA=0) at power-up, per the real Qorvo DWM3000 Data Sheet Rev B 'Sample GPIOs 5&6 to set SPI mode' power-up step (Figures 1/2) and Section 6.3 (see this sheet's note text). Reinforces the DWM3000's own internal 10k-30k pull-down default (Section 6.3) with an explicit external resistor."
+			(at 250 205 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "939a46db-46f8-4d11-ad5f-d0b5f12e8e40")
+		)
+		(pin "2"
+			(uuid "effd82f9-032c-48ad-95e2-c534a8d516c3")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
+					(reference "R16")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 250 220 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "b7c9b318-c6e0-44ae-90d9-43130fa5a1bc")
+		(property "Reference" "R17"
+			(at 258 220 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10k"
+			(at 258 227 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 250 220 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 250 220 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "GPIO6 (GPIO6/EXTRXE/SPIPHA, U7 pin 9) SPI-mode-strap pull-down, 10k to GND -- explicitly defines SPI mode 0 (SPIPOL=0/SPIPHA=0) at power-up, per the real Qorvo DWM3000 Data Sheet Rev B 'Sample GPIOs 5&6 to set SPI mode' power-up step (Figures 1/2) and Section 6.3 (see this sheet's note text). Reinforces the DWM3000's own internal 10k-30k pull-down default (Section 6.3) with an explicit external resistor."
+			(at 250 220 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "06c9d514-b676-4dbb-84b4-380dc18645a4")
+		)
+		(pin "2"
+			(uuid "105324a6-5958-4f18-ac68-6e340b8b9bde")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
+					(reference "R17")
 					(unit 1)
 				)
 			)

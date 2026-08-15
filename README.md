@@ -6,7 +6,7 @@ A two-board UWB positioning system for a rescue/safety use case: a **wristband**
 worn by a person, and a fixed **bay station** that ranges to it from four
 anchor points to triangulate its 3D position and upload it to the internet.
 
-## Status (last updated 2026-08-15)
+## Status (last updated 2026-08-15, revised same day)
 
 **Schematic capture is in progress on both boards. Nothing is wired yet
 except each board's own Power/BMS sheet.** If you're an agent or a new
@@ -15,24 +15,29 @@ anything -- it's written to be a complete handoff.
 
 ### What exists, per board
 
-Both boards now have 4 hierarchical sheets each (Root -> Power BMS -> ...).
-Reference designators are project-wide unique per board (checked, no
-collisions) -- see each `libs/components.csv` for the full part-by-part BOM.
+Both boards now have 7 hierarchical sheets each. Reference designators are
+project-wide unique per board (checked, no collisions) -- see each
+`libs/components.csv` for the full part-by-part BOM.
 
 **Wristband** (`wristband/`):
 | Sheet | Status | Contents |
 |---|---|---|
 | Power BMS | **Wired** (global labels, no drawn wires), ERC clean (0 errors, 1 cosmetic warning) | JST-PH battery -> AO3401A reverse-polarity FET -> TVS -> DW01A+FS8205A protection -> MCP73831 charger (USB-C in) |
-| Radio MCU | Placement only, not wired | NINA-B111 (U3) + DWM3000 (U4) + decoupling caps (values are generic defaults, not datasheet-confirmed yet) |
+| Radio MCU | Placement only, not wired | NINA-B111 (U3) + DWM3000 (U4) + decoupling caps + GPIO5/6 strapping pull-downs for DWM3000's SPI mode |
 | Mechanical | Placement only | 4x M2 mounting holes |
+| Regulation | Placement only, not wired | MCP1700T-3302E/TT LDO (3.3V) -- steps the protected battery rail down to a safe voltage for NINA-B111/DWM3000 (see "Confirmed chips" below for why this exists) |
+| Antenna | Placement only, not wired | ProAnt InSide-2400 BLE antenna (U.FL) + DNP 0603 L/C matching network (values pending RF tuning) |
+| Programming/Debug | Placement only, not wired | ARM Cortex Debug SWD header for NINA-B111 |
 
 **Bay Station** (`bay-station/`):
 | Sheet | Status | Contents |
 |---|---|---|
 | Power BMS | **Wired** (global labels), ERC has 8 known/expected items (see `power_bms_notes.md`) | Barrel jack + USB-C power-only input -> MCP73871 power-path charger -> MAX17048 fuel gauge; separate backup-battery input with its own AO3401A reverse-polarity FET + TVS |
 | Connectivity | Placement only, not wired | ESP32-S3-WROOM-1 (U3) + decoupling |
-| UWB Anchors | Placement only, not wired | 4x DWM3000 (U4-U7), one per anchor, individually labeled + decoupled |
+| UWB Anchors | Placement only, not wired | 4x DWM3000 (U4-U7), one per anchor, individually labeled + decoupled, each with its own GPIO5/6 SPI-mode strapping pull-downs |
 | Mechanical | Placement only | 4x M3 mounting holes |
+| Regulation | Placement only, not wired | TPS62A02PDDCR buck converter -- steps the unregulated `+VSYS` rail down to a safe ~3.3V for ESP32-S3/DWM3000 anchors |
+| Programming/Debug | Placement only, not wired | ESP32-S3 boot-strap resistors + EN RC delay + BOOT/RESET buttons + a second, data-capable USB-C for native-USB flashing (see "Not done yet" -- this duplicate-USB-C situation is a flagged open item) |
 
 "Placement only" sheets deliberately show a lot of ERC "not connected"/"not
 driven" warnings -- that's expected, not a bug, until they get wired.
@@ -51,6 +56,9 @@ driven" warnings -- that's expected, not a bug, until they get wired.
 | Espressif **ESP32-S3-WROOM-1** | WiFi/BLE connectivity MCU | Bay Station | 1 |
 | Microchip **MCP73871** | Charge management + power-path IC | Bay Station | 1 |
 | Maxim/Analog Devices **MAX17048** | Battery fuel gauge (SOC monitor) | Bay Station | 1 |
+| Microchip **MCP1700T-3302E/TT** | LDO regulator (3.3V) -- battery rail can hit 4.2V, which exceeds NINA-B111/DWM3000's absolute max voltage without this | Wristband | 1 |
+| TI **TPS62A02PDDCR** | Buck (switching) regulator -- same voltage-safety role as the wristband's LDO, sized for the bay station's higher combined load current | Bay Station | 1 |
+| ProAnt **InSide-2400** | BLE patch antenna (NINA-B111 needs an external one; DWM3000 has its own onboard antenna already) | Wristband | 1 |
 
 Footprint caveats: DWM3000 and MAX17048 are both flagged `_PLACEHOLDER` in
 their footprint files -- pin/electrical data is fully verified, but one
@@ -97,17 +105,24 @@ decisions (anchor placement, uplink backend, etc.), is in
 
 ### Not done yet (in rough next-up order)
 
-1. Wire the 3 placement-only sheets (net labels between MCU/radio pins and
-   their decoupling, power-rail connections in from Power BMS).
-2. Design the bay station's missing 3.3V regulation -- `power_bms`
-   currently only produces an unregulated `+VSYS` rail; the ESP32-S3 and
-   DWM3000 anchors need a real regulated 3.3V supply that doesn't exist yet.
-3. Confirm/re-verify decoupling cap values placed on `radio_mcu.kicad_sch`
+1. Wire all placement-only sheets (net labels between MCU/radio pins, their
+   decoupling, the new regulator outputs, and power-rail connections in
+   from Power BMS).
+2. **Bay station: resolve the two-USB-C-connector situation** -- the
+   original power-input USB-C has no data pins, so a second, data-capable
+   USB-C got added for ESP32-S3 flashing rather than consolidating into
+   one. Decide whether to swap the power-only connector for a data-capable
+   one instead of running two (`docs/decisions.md`).
+3. **Bay station: source a real footprint for L1** (the buck converter's
+   inductor, Coilcraft XGL3520-102MEC) -- no KiCad-default match exists yet.
+4. Confirm/re-verify decoupling cap values placed on `radio_mcu.kicad_sch`
    and `uwb_anchors.kicad_sch` against each part's exact datasheet
    application circuit (current values are reasonable generic defaults).
-4. Anchor placement/enclosure geometry (open decision, `docs/decisions.md`).
-5. Bay station uplink backend/protocol (open decision).
-6. PCB footprint placement + layout (nothing placed on either `.kicad_pcb`
+5. Antenna matching-network values on `wristband/antenna.kicad_sch` (parts
+   are DNP placeholders pending prototype RF tuning).
+6. Anchor placement/enclosure geometry (open decision, `docs/decisions.md`).
+7. Bay station uplink backend/protocol (open decision).
+8. PCB footprint placement + layout (nothing placed on either `.kicad_pcb`
    yet -- this has all been schematic-only so far).
 
 ## System overview

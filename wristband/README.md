@@ -68,6 +68,50 @@ sheets from root `CONTRIBUTING.md`'s suggested breakdown. Add them from the
 KiCad GUI rather than hand-editing files where practical, and keep this
 section in sync as sheets get added.
 
+Fourth, fifth, and sixth hierarchical sheets added to close three confirmed
+hardware gaps (NINA-B111/DWM3000 abs-max-voltage headroom, NINA-B111's
+missing external antenna, and its missing SWD debug header):
+**`regulation.kicad_sch`** ("Regulation"), **`antenna.kicad_sch`**
+("Antenna"), and **`programming_debug.kicad_sch`** ("Programming Debug"), all
+wired into `wristband.kicad_sch` as sheet symbols (pages 5, 6, 7) and
+registered in `wristband.kicad_pro`'s `sheets` list. Same **placement-only**
+convention as `radio_mcu.kicad_sch`/`mechanical.kicad_sch` -- no wires or
+global labels drawn yet. Two pull resistors (`R7`, `R8`) were also added
+directly onto the already-existing `radio_mcu.kicad_sch` (an addition, not a
+change to anything already there). Full design rationale, current-draw math,
+and datasheet citations are in `regulation_notes.md`.
+
+- `regulation.kicad_sch`: Microchip **MCP1700T-3302E/TT** LDO (`U5`, SOT-23,
+  3.3V fixed output, 250mA max, 1.6uA typ Iq) steps the protected `VBAT` rail
+  (up to 4.2V full-charge) down to a new `+3V3` rail (not yet labeled/wired)
+  with real margin under both NINA-B111's abs-max VCC (3.9V) and DWM3000's
+  abs-max VDD3V3 (4.0V) -- chosen after budgeting real peak current draw from
+  both parts' own datasheets (~67mA combined vs 250mA rated, ~3.7x headroom).
+  Datasheet-recommended 1uF input/output ceramic caps (`C11`, `C12`).
+- `antenna.kicad_sch`: **ProAnt InSide-2400** patch antenna (`AE1`, KiCad's
+  generic `Device:Antenna` placeholder symbol), chosen directly from u-blox's
+  own NINA-B1 datasheet Section 7.2 "Approved antennas" list as the one entry
+  meant for mounting inside a plastic enclosure (the rest are rigid external
+  monopoles). Real U.FL PCB connector (`J2`, `Connector:Conn_Coaxial` +
+  `Connector_Coaxial:U.FL_Hirose_U.FL-R-SMT-1_Vertical` footprint) plus a
+  generic 0603 L/C antenna-matching-network placeholder (`L1`, `C13`, values
+  DNP pending prototype tuning).
+- `programming_debug.kicad_sch`: real ARM Cortex Debug SWD connector (`J3`,
+  KiCad default `Connector:Conn_ARM_JTAG_SWD_10`, 2x5 1.27mm pitch) for
+  programming NINA-B111 (U3, already placed on `radio_mcu.kicad_sch` --
+  referenced by pin name here, not re-placed).
+- `radio_mcu.kicad_sch` (addition): `R7`/`R8`, 10k&Omega; 0603 pull-down
+  resistors for DWM3000's (U4) GPIO5/GPIO6 pins -- Qorvo's own DWM3000
+  datasheet power-up timing diagrams explicitly require these to be sampled
+  at boot to set the chip's SPI mode (SPIPOL/SPIPHA), and this makes that
+  strap deterministic rather than floating.
+
+Still TBD: wiring all six placement-only sheets (`radio_mcu.kicad_sch`,
+`mechanical.kicad_sch`, `regulation.kicad_sch`, `antenna.kicad_sch`,
+`programming_debug.kicad_sch`, plus `R7`/`R8`'s own nets) -- nets, decoupling
+values, SPI/GPIO hookups, and the `VBAT`/`+3V3` rail handoff all still need
+real wires/global labels added.
+
 ## Libraries
 
 - `libs/` -- wristband-only symbols/footprints

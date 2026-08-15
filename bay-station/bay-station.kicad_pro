@@ -655,6 +655,14 @@
     [
       "adf6c49a-dc88-4f76-9bc6-0f3625bf3bc5",
       "Mechanical"
+    ],
+    [
+      "5c2a31d1-5b69-4a48-a195-eba324445020",
+      "Regulation"
+    ],
+    [
+      "883ff08c-ad9f-4863-b9db-49772b53748e",
+      "Programming / Debug"
     ]
   ],
   "text_variables": {},

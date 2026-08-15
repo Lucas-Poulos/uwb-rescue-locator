@@ -284,6 +284,18 @@
     [
       "6584e225-7dea-477e-b9b3-e07582ebd863",
       "Mechanical"
+    ],
+    [
+      "c8a62365-e5e1-4a35-95a0-d1447cde3053",
+      "Regulation"
+    ],
+    [
+      "70531719-0575-447f-9fe2-78b3cc25b488",
+      "Antenna"
+    ],
+    [
+      "ddd7aa1e-0d16-49f7-8332-00365f7ee71d",
+      "Programming Debug"
     ]
   ],
   "text_variables": {}

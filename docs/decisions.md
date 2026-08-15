@@ -5,22 +5,28 @@ relitigate them. Keep this updated as the team decides things.
 
 ## Open
 
-- **Bay station connectivity IC**: ESP32-S3-WROOM-1 module chosen (see
-  Resolved), but exact BOM/footprint sourcing is pending -- being added now.
 - **Bay station uplink backend**: what protocol/service position data gets
   sent to.
-- **Bay station BMS**: MCP73871 (charge + power-path) + MAX17048 fuel gauge
-  chosen (see Resolved), but exact battery chemistry/capacity and BOM
-  sourcing is pending -- being added now.
 - **Anchor placement / enclosure** for the bay station's 4 UWB anchors
   (fixed relative geometry matters for triangulation accuracy).
 - **PCB layer count / stackup** for each board -- not set yet; likely needs
   4-layer on at least the wristband for RF (UWB + BLE) given board size
   constraints, but that's a layout-phase call.
-- **UWB antenna matching network values** on both boards -- generic 0603
-  inductor/cap footprints are reserved in the wristband BOM
-  (`wristband/libs/components.csv`), but values depend on the final antenna
-  choice and PCB layout, set at schematic/layout time.
+- **UWB antenna matching network values** on both boards -- the wristband's
+  BLE antenna is now chosen (see Resolved), with a DNP-placeholder 0603 L/C
+  network reserved on `wristband/antenna.kicad_sch`, but actual values
+  depend on prototype RF tuning, set at layout/bring-up time.
+- **Bay station: two USB-C connectors instead of one.** Building the
+  programming/flashing sheet surfaced that the existing power-input USB-C
+  (`power_bms.kicad_sch`, power-only, no D+/D-) can't also be used to flash
+  the ESP32-S3 over native USB, so a second, data-capable USB-C was added on
+  `programming_debug.kicad_sch` instead of consolidating into one connector.
+  Revisit whether one connector should be swapped for a data-capable variant
+  instead of running two.
+- **Bay station L1 (buck converter inductor) footprint**: the specific part
+  chosen (Coilcraft XGL3520-102MEC) has no matching footprint in KiCad's
+  default libraries -- pick/verify a real footprint at BOM time (see
+  `bay-station/regulation_notes.md`).
 
 ## Resolved
 
@@ -54,10 +60,37 @@ relitigate them. Keep this updated as the team decides things.
   `bay-station/`) + a `shared/` library folder. Reason: KiCad has no native
   multi-board project, and a monorepo keeps shared parts/docs/history in one
   place for a small team.
-- **Repo structure**: monorepo, two KiCad projects (`wristband/`,
-  `bay-station/`) + a `shared/` library folder. Reason: KiCad has no native
-  multi-board project, and a monorepo keeps shared parts/docs/history in one
-  place for a small team.
+- **Voltage regulation** (a gap found by checking real datasheets: NINA-B111
+  abs-max VCC is 3.9V, DWM3000 abs-max VDD3V3 is 4.0V, but a charged LiPo
+  hits 4.2V -- both ICs were about to be fed straight off the unregulated
+  battery/system rail with no margin against permanent damage):
+  - Wristband: **Microchip MCP1700T-3302E/TT** LDO (fixed 3.3V, low-Iq),
+    `wristband/regulation.kicad_sch`. Current budget: NINA-B111 (~12mA) +
+    DWM3000 (~55mA) vs. the part's 250mA rating, ~3.7x headroom.
+  - Bay station: **TI TPS62A02PDDCR** buck converter (2A, single-cell-Li-Ion
+    input range), `bay-station/regulation.kicad_sch`. Current budget:
+    ESP32-S3-WROOM-1 (~355mA peak TX) + 4x DWM3000 (~55mA each) = ~575mA
+    vs. 2A rating, ~3.5x headroom.
+  - Both sheets are placement-only (not wired) like everything else at this
+    stage -- see each board's `regulation_notes.md`.
+- **Wristband antenna**: ProAnt InSide-2400 patch antenna, pulled from
+  u-blox's own NINA-B1 series approved-antenna list (Section 7.2) --
+  chosen since it's the one entry meant for mounting inside a plastic
+  enclosure (the rest are rigid external monopoles). U.FL connector,
+  `wristband/antenna.kicad_sch`. (DWM3000 needs no external antenna -- it
+  has its own onboard ceramic antenna, confirmed in its datasheet.)
+- **DWM3000 GPIO5/GPIO6 SPI-mode strapping**: both ICs' power-up sequence
+  requires these sampled at boot (per Qorvo's own timing diagrams) --
+  10k pull-downs added per instance (`wristband/radio_mcu.kicad_sch`;
+  `bay-station/uwb_anchors.kicad_sch` x4, one set per anchor).
+- **ESP32-S3-WROOM-1 boot-strapping + programming**: pull resistors on
+  GPIO0/3/45/46 per Espressif's real hardware design guidelines, an EN
+  RC-delay network, BOOT/RESET buttons, and a native-USB flashing interface
+  -- `bay-station/programming_debug.kicad_sch`. Surfaced a real
+  inconsistency in doing so -- see the "two USB-C connectors" open item
+  above.
+- **NINA-B111 programming**: standard 2x5 1.27mm ARM Cortex Debug SWD
+  header, `wristband/programming_debug.kicad_sch`.
 - **KiCad version**: team standardizes on **KiCad 10.0.5** (current stable;
   supersedes an earlier, since-corrected plan to target 9.x). Files on disk
   are still KiCad 8.0 format for now (nobody's re-saved them under 10 yet) --
