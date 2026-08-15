@@ -37,18 +37,34 @@ collisions) -- see each `libs/components.csv` for the full part-by-part BOM.
 "Placement only" sheets deliberately show a lot of ERC "not connected"/"not
 driven" warnings -- that's expected, not a bug, until they get wired.
 
-### Confirmed component choices (all sourced against real datasheets, not guessed)
+### Confirmed chips/ICs (all sourced against real datasheets, not guessed)
 
-- Wristband MCU/radio: **u-blox NINA-B111**
-- Shared UWB module (wristband + x4 on bay station): **Qorvo DWM3000** (footprint flagged `_PLACEHOLDER`, one land-pattern dimension needs re-checking before fab -- see `shared/README.md`)
-- Wristband charge/protection: **MCP73831** + **DW01A**/**FS8205** ("FS8205A" as commonly sold is actually named "FS8205" at the manufacturer -- see `wristband/libs/README.md`)
-- Bay station connectivity: **ESP32-S3-WROOM-1** (KiCad default symbol/footprint, pin-verified)
-- Bay station charge/power-path + fuel gauge: **MCP73871** (KiCad default) + **MAX17048** (hand-authored, footprint flagged `_PLACEHOLDER`)
-- Reverse-battery-polarity protection (both boards): P-MOSFET "ideal diode" (**AO3401A**), not a series diode -- no continuous voltage-drop loss
-- TVS protection: **onsemi ESD5B5.0ST1G** on battery/power-input lines on both boards
-- Standard passive size for this whole project: **0603** for R/C/L (0-ohm 0603 link/jumper resistors are documented as a standard available option in each `components.csv`, not yet placed on any sheet -- no specific strap/bridge need identified yet)
+| Part number | Role | Board(s) | Qty |
+|---|---|---|---|
+| u-blox **NINA-B111** | BLE MCU/radio | Wristband | 1 |
+| Qorvo **DWM3000** | UWB transceiver module (shared part, lives in `shared/`) | Wristband (1) + Bay Station (4, one per anchor) | 5 |
+| Microchip **MCP73831** | LiPo linear battery charger | Wristband | 1 |
+| Fortune Semiconductor **DW01A** | Battery protection IC | Wristband | 1 |
+| Fortune Semiconductor **FS8205** (commonly sold as "FS8205A" -- see `wristband/libs/README.md`) | Protection dual MOSFET, DW01A's partner IC | Wristband | 1 |
+| AOS **AO3401A** | Reverse-battery-polarity protection P-MOSFET ("ideal diode") | Wristband + Bay Station | 2 |
+| onsemi **ESD5B5.0ST1G** | TVS diode, battery/power-input protection | Wristband (1) + Bay Station (2) | 3 |
+| Espressif **ESP32-S3-WROOM-1** | WiFi/BLE connectivity MCU | Bay Station | 1 |
+| Microchip **MCP73871** | Charge management + power-path IC | Bay Station | 1 |
+| Maxim/Analog Devices **MAX17048** | Battery fuel gauge (SOC monitor) | Bay Station | 1 |
 
-Full reasoning/history for every choice above is in `docs/decisions.md`.
+Footprint caveats: DWM3000 and MAX17048 are both flagged `_PLACEHOLDER` in
+their footprint files -- pin/electrical data is fully verified, but one
+land-pattern dimension on each needs re-checking against the real datasheet
+figure before fab (see `shared/README.md` and `bay-station/libs/README.md`).
+
+Standard passive size for this whole project: **0603** for R/C/L (0-ohm
+0603 link/jumper resistors are documented as a standard available option in
+each `components.csv`, not yet placed on any sheet -- no specific
+strap/bridge need identified yet).
+
+Full reasoning/history for every choice above, plus the still-open
+decisions (anchor placement, uplink backend, etc.), is in
+`docs/decisions.md`.
 
 ### Known gotchas for whoever (human or agent) works on this next
 
