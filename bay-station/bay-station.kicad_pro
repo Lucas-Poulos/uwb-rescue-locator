@@ -268,6 +268,15 @@
     "legacy_lib_dir": "",
     "legacy_lib_list": []
   },
-  "sheets": [],
+  "sheets": [
+    [
+      "543ba435-6cf4-448c-821e-3c5778b02e9c",
+      "Root"
+    ],
+    [
+      "b2362bec-be69-491d-a07e-a9d16de4ad17",
+      "Power BMS"
+    ]
+  ],
   "text_variables": {}
 }

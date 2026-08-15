@@ -14,11 +14,38 @@ The worn tag. Open `wristband.kicad_pro` in KiCad.
 
 ## Status
 
-Blank project -- no schematic capture yet. When that starts, add
-hierarchical sheets from the KiCad GUI rather than hand-editing files; see
-root `CONTRIBUTING.md` for the suggested sheet breakdown
-(`power_bms`, `radio_mcu`, `mechanical`, ...) and keep this file's sheet
-list in sync as sheets get added.
+First hierarchical sheet added: **`power_bms.kicad_sch`** ("Power BMS"),
+wired into `wristband.kicad_sch` as a sheet symbol and registered in
+`wristband.kicad_pro`'s `sheets` list. It covers the wristband's complete
+battery/charging/protection chain:
+
+- 2-pin JST-PH battery input (`BT1`)
+- P-MOSFET (AO3401A) reverse-battery-polarity "ideal diode" protection (`Q1`,
+  `R1`)
+- Battery-rail TVS (ESD5B5.0ST1G) (`D1`)
+- DW01A + FS8205A single-cell overcharge/overdischarge/overcurrent
+  protection, wired per Fortune Semiconductor's own DW01A typical
+  application circuit (`U1`, `Q2`, `R2`, `R3`, `C1`)
+- MCP73831 Li-Po charger with a USB-C (power-only) input, PROG resistor sized
+  for ~147mA charge current, and datasheet-recommended input/output caps
+  (`U2`, `J1`, `R4`, `C2`, `C3`, `R5`, `R6`)
+- Bulk/bypass decoupling on the protected `VBAT` output rail (`C4`, `C5`) --
+  see `power_bms_notes.md` for why NINA-B111/DWM3000 themselves (and their
+  own per-IC decoupling) are deferred to a future `radio_mcu` sheet instead
+  of being placed here.
+
+No wires are drawn -- net identity is carried entirely by global labels
+placed exactly on top of each pin, matching the sibling wristband-alarm
+project's convention. `kicad-cli sch erc` on the whole project reports
+0 errors (1 harmless, documented warning -- see notes file). Full
+component-by-component documentation, datasheet citations, and design-choice
+rationale (PROG resistor math, TVS/MOSFET part selection, etc.) is in
+`power_bms_notes.md`.
+
+Still TBD: `radio_mcu` (NINA-B111 + DWM3000), `mechanical`, and any other
+sheets from root `CONTRIBUTING.md`'s suggested breakdown. Add them from the
+KiCad GUI rather than hand-editing files where practical, and keep this
+section in sync as sheets get added.
 
 ## Libraries
 

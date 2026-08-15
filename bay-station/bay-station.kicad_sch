@@ -8,6 +8,45 @@
 		(title "Bay Station")
 		(comment 1 "UWB rescue locator -- bay station: 4x UWB anchor array + connectivity MCU + longevity-focused BMS")
 	)
+	(lib_symbols)
+	(sheet
+		(at 30 30)
+		(size 60 40)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "b2362bec-be69-491d-a07e-a9d16de4ad17")
+		(property "Sheetname" "Power BMS"
+			(at 30 28.5 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "power_bms.kicad_sch"
+			(at 30 71.5 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c"
+					(page "2")
+				)
+			)
+		)
+	)
 	(sheet_instances
 		(path "/"
 			(page "1")
