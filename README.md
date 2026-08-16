@@ -6,6 +6,70 @@ A two-board UWB positioning system for a rescue/safety use case: a **wristband**
 worn by a person, and a fixed **bay station** that ranges to it from four
 anchor points to triangulate its 3D position and upload it to the internet.
 
+## Getting started (new contributor setup)
+
+### 1. Install KiCad
+
+The team standard is **KiCad 10.0.5** (see Toolchain below for why).
+
+- **macOS**: `brew install --cask kicad` (Homebrew). If KiCad is already
+  installed some other way, add `--force` to overwrite it.
+- **Windows/Linux**: download the installer for your platform from
+  https://www.kicad.org/download/.
+
+You do **not** need to set any environment variables or configure library
+paths yourself -- both boards' `fp-lib-table`/`sym-lib-table` use
+`${KIPRJMOD}`-relative paths into this repo's own `shared/` and `libs/`
+folders, so cloning the repo anywhere and opening a project just works.
+
+The very first time you launch the KiCad GUI on a given machine, it may
+offer to set up its own default global libraries (Device, Connector, etc.)
+-- accept the defaults. This is a one-time, per-machine, KiCad-level setup
+step, unrelated to this repo.
+
+### 2. Get repo access and clone it
+
+Ask whoever's administering the repo to add you as a collaborator (repo
+link at the top of this file), then:
+
+```
+git clone git@github.com:Lucas-Poulos/uwb-rescue-locator.git
+cd uwb-rescue-locator
+```
+
+(Use the HTTPS clone URL instead if you haven't set up an SSH key with
+GitHub.)
+
+### 3. Open a board
+
+KiCad doesn't support one project spanning multiple PCBs, so open whichever
+board you're working on directly -- there's no single top-level project
+file for the whole repo:
+
+```
+open wristband/wristband.kicad_pro       # macOS; or just double-click the file
+open bay-station/bay-station.kicad_pro
+```
+
+### 4. Sanity-check your setup
+
+From a terminal, **outside** this repo (see the `kicad-cli` gotcha further
+down for why):
+
+```
+cd /tmp
+kicad-cli sch erc /path/to/uwb-rescue-locator/wristband/wristband.kicad_sch
+```
+
+If this reports a handful of known/expected items (see each board's sheet
+table below) rather than a wall of "library not included in configuration"
+errors, your KiCad install is set up correctly. If you do see that wall of
+errors, see the per-major-version global library table note in Toolchain.
+
+Before pushing anything, also read `CONTRIBUTING.md` -- branch off `main`,
+don't edit a sheet someone else is actively working on, and PRs need review
+(branch protection is on).
+
 ## Status (last updated 2026-08-15, revised same day)
 
 **Schematic capture is in progress on both boards. Nothing is wired yet
@@ -196,6 +260,62 @@ headlessly without opening the GUI first, you may see a wall of spurious
 "library not included in configuration" ERC errors -- just launch KiCad.app
 once (or copy the two `*-lib-table` files from
 `.../KiCad.app/Contents/SharedSupport/template/`) to fix it.
+
+## Using Claude Code (or another coding agent) on this project
+
+KiCad's file formats (`.kicad_sch`, `.kicad_pcb`, `.kicad_pro`, `.kicad_sym`,
+`.kicad_mod`) are plain text (S-expression or JSON) -- an agent can read and
+edit them directly like any other source file, no special MCP server or
+plugin required. Everything in this repo so far was built that way. A few
+things make it work reliably, several of them learned the hard way in this
+repo's own history:
+
+- **`kicad-cli` is the fast headless sanity check.** After any edit, run
+  `kicad-cli sch erc <board>.kicad_sch` and `kicad-cli pcb drc
+  <board>.kicad_pcb` before trusting a change. On macOS this ships inside
+  the app bundle; a Homebrew install symlinks it onto `PATH` automatically
+  (`/opt/homebrew/bin/kicad-cli`), otherwise it's at
+  `/Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli`.
+- **Always run `kicad-cli` from a scratch/temp directory, never from
+  inside this repo.** It writes `.rpt` report files to the current working
+  directory as a side effect -- running it from inside a git repo (this
+  one or any other) pollutes the working tree with stray files. This has
+  actually happened once already, to an unrelated sibling project, from a
+  leftover `cd`.
+- **`kicad-cli` silently fails on `extends`-based symbols.** A cached
+  schematic symbol using KiCad's `extends` mechanism (e.g. the default
+  library's `AO3401A extends TP0610T`) makes `kicad-cli` fail to load the
+  *entire file* and report it as empty (0 components, 0 ERC violations)
+  instead of erroring loudly -- a suspiciously clean ERC run is a red flag,
+  not necessarily good news. This repo works around it everywhere by
+  embedding flattened, non-`extends` copies of any such symbols (see
+  `docs/decisions.md` and the various `*_notes.md` files for examples).
+- **Use an existing sheet/symbol/footprint as the format template before
+  writing a new one.** Every file in this repo was built by reading a
+  known-good file first -- either one already in this repo, or one of
+  KiCad's own bundled default libraries -- and matching its exact
+  structure, rather than freehand-authoring the s-expression format from
+  memory. This repo uses literal tab characters for indentation, not
+  spaces; match that.
+- **Don't run scripted file edits at the same time as a live KiCad GUI
+  session has the same project open.** A background GUI window doesn't
+  know about changes made outside it, and saving from a stale window can
+  silently overwrite newer edits -- this already caused one near-miss on
+  the bay station board (see "Known gotchas" above). Close/reload any open
+  KiCad windows before scripted edits, and vice versa. A lock file at
+  `<board>/~<board>.kicad_pro.lck` means a GUI session currently has that
+  project open.
+- **Verify real datasheet facts (pinouts, voltage ratings, current draw)
+  by actually fetching and reading the datasheet PDF**, not from memory or
+  a search-result summary -- several real bugs/gaps in this repo were only
+  caught this way (e.g. the wristband's missing voltage regulator, a
+  part-number that doesn't actually exist, a mislabeled SOT-23-6 part).
+- **pcbnew's Python bindings** are available for programmatic
+  footprint/board work (generating a blank `.kicad_pcb`, loading a
+  footprint to sanity-check its pad count, etc.) via KiCad's own bundled
+  Python interpreter, not your system Python:
+  `/Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/Current/bin/python3`
+  on macOS.
 
 ## Contributing
 
