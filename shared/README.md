@@ -61,3 +61,20 @@ uncertain footprints, e.g. `PUIAudio_SMT-1341-TW-HT-R_PLACEHOLDER`) --
 body outline and pad count/layout are trustworthy, individual pad
 width/height are reasonable estimates only. Verify against the real
 Figure 14 drawing (page 22 of the datasheet above) before fab.
+
+### PCB layout requirement: antenna keep-out area (not yet actioned -- PCB layout hasn't started)
+
+DWM3000 has its own onboard ceramic UWB antenna (confirmed -- no external
+antenna/matching network needed for the UWB radio itself, unlike NINA-B111's
+BLE antenna). The datasheet's Section 6.1 "Application Board Layout
+Guidelines" (Figure 10, "Application Board Keep-Out Areas") is explicit:
+ground copper should be flooded everywhere on the application board *except*
+in a keep-out zone directly around the antenna, where there must be no metal
+on either side, above, or below (e.g. don't place the battery under the
+antenna) -- flooding metal there degrades RF performance. The keep-out
+distance `d` should ideally be **10mm** from the antenna edge for the most
+vertically-polarized radiation pattern; increasing `d` beyond 10mm reduces
+that polarization. This applies on **both boards**, at all 5 DWM3000
+placements (wristband + 4 bay-station anchors). Nothing to do about this
+yet since PCB layout hasn't started on either board -- flagging it here now
+so it isn't rediscovered/relearned when that phase begins.

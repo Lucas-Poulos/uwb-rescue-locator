@@ -12,6 +12,11 @@ relitigate them. Keep this updated as the team decides things.
 - **PCB layer count / stackup** for each board -- not set yet; likely needs
   4-layer on at least the wristband for RF (UWB + BLE) given board size
   constraints, but that's a layout-phase call.
+- **DWM3000 antenna keep-out area** (all 5 placements, both boards) --
+  confirmed real requirement from the datasheet (Section 6.1/Figure 10): no
+  metal above/below/beside the antenna within ~10mm for best RF performance.
+  Nothing actionable until PCB layout starts on either board -- see
+  `shared/README.md` for the full detail.
 - **UWB antenna matching network values** on both boards -- the wristband's
   BLE antenna is now chosen (see Resolved), with a DNP-placeholder 0603 L/C
   network reserved on `wristband/antenna.kicad_sch`, but actual values
