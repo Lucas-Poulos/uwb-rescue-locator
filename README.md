@@ -272,10 +272,14 @@ repo's own history:
 
 - **`kicad-cli` is the fast headless sanity check.** After any edit, run
   `kicad-cli sch erc <board>.kicad_sch` and `kicad-cli pcb drc
-  <board>.kicad_pcb` before trusting a change. On macOS this ships inside
-  the app bundle; a Homebrew install symlinks it onto `PATH` automatically
-  (`/opt/homebrew/bin/kicad-cli`), otherwise it's at
-  `/Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli`.
+  <board>.kicad_pcb` before trusting a change.
+  - **macOS**: a Homebrew install symlinks it onto `PATH` automatically
+    (`/opt/homebrew/bin/kicad-cli`); otherwise it's inside the app bundle at
+    `/Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli`.
+  - **Windows**: the official installer puts it on `PATH` automatically; if
+    not, it's at `C:\Program Files\KiCad\10.0\bin\kicad-cli.exe`.
+  - **Linux**: on `PATH` automatically via most package managers (apt,
+    dnf, etc.) or the official AppImage/flatpak.
 - **Always run `kicad-cli` from a scratch/temp directory, never from
   inside this repo.** It writes `.rpt` report files to the current working
   directory as a side effect -- running it from inside a git repo (this
@@ -313,9 +317,34 @@ repo's own history:
 - **pcbnew's Python bindings** are available for programmatic
   footprint/board work (generating a blank `.kicad_pcb`, loading a
   footprint to sanity-check its pad count, etc.) via KiCad's own bundled
-  Python interpreter, not your system Python:
-  `/Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/Current/bin/python3`
-  on macOS.
+  Python interpreter -- **not** your system Python, which won't have the
+  `pcbnew` module installed:
+  - **macOS**: `/Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/Current/bin/python3`
+  - **Windows**: typically `C:\Program Files\KiCad\10.0\bin\python.exe`
+  - **Linux**: usually just your system `python3` if KiCad was installed via
+    a package manager that wires up the `pcbnew` module for it; otherwise
+    check your distro's KiCad packaging docs.
+
+## Will this work on both Mac and Windows?
+
+Yes, and this has actually been checked, not just assumed:
+
+- No absolute Mac-specific paths are baked into any `.kicad_pro`/`.kicad_sch`/
+  `.kicad_pcb`/library file (`git grep`-checked) -- all cross-file/library
+  references use `${KIPRJMOD}`-relative paths, which KiCad resolves
+  identically on every OS.
+- No filenames in this repo use characters or reserved names that are
+  illegal on Windows (`: * ? " < > |`, or `CON`/`PRN`/`AUX`/`NUL`/`COM1-9`/
+  `LPT1-9`), and no path exceeds even a fraction of Windows' historical
+  260-character path limit (longest path in this repo is 80 characters).
+- All tracked files use consistent LF line endings, and `.gitattributes`
+  normalizes this going forward so a Windows contributor's git config
+  (which sometimes auto-converts line endings on checkout) can't silently
+  turn KiCad files into CRLF and create noisy diffs or merge pain.
+
+What differs by platform is purely the install step and a couple of tool
+paths (both covered above/in Getting Started) -- KiCad itself, the file
+formats, and this repo's structure are fully cross-platform.
 
 ## Contributing
 

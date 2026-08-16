@@ -1,0 +1,23 @@
+# Normalize line endings to LF for all KiCad and text files, regardless of
+# what a contributor's local git config (core.autocrlf etc.) would otherwise
+# do on checkout/commit on Windows. Prevents noisy whole-file diffs and
+# merge conflicts purely from line-ending churn.
+* text=auto eol=lf
+
+*.kicad_sch text eol=lf
+*.kicad_pcb text eol=lf
+*.kicad_pro text eol=lf
+*.kicad_sym text eol=lf
+*.kicad_mod text eol=lf
+*.kicad_prl text eol=lf
+fp-lib-table text eol=lf
+sym-lib-table text eol=lf
+*.md text eol=lf
+*.csv text eol=lf
+
+# Binary/opaque formats -- don't let git touch these at all
+*.step binary
+*.stp binary
+*.wrl binary
+*.png binary
+*.jpg binary
