@@ -96,3 +96,12 @@ relitigate them. Keep this updated as the team decides things.
   are still KiCad 8.0 format for now (nobody's re-saved them under 10 yet) --
   re-checked and confirmed clean under 10.0.5 via `kicad-cli` on 2026-08-14.
   See root `README.md`'s Toolchain section.
+- **Passives audit against every chip's real reference design**: compiled
+  in `docs/passives-reference.md`. Found and fixed one real gap (100k
+  IRQ/GPIO8 pulldowns were missing on all 5 DWM3000 instances, per Qorvo's
+  own Figure 11 -- added as R9 on the wristband, R25-R28 on the bay
+  station). Also documented, not changed: DWM3000's placed decoupling caps
+  exceed what Qorvo's own minimal application circuit shows (kept as
+  reasonable conservative practice), and its GPIO5/6 external strap
+  resistors are redundant with the chip's own internal default pulls (kept
+  deliberately for tighter timing margin).

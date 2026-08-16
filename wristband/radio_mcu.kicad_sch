@@ -2136,6 +2136,64 @@
 			)
 		)
 	)
+	(symbol
+		(lib_id "Device:R")
+		(at 245.0 101.6 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "66173628-5285-48fb-b1a6-a04494afb67c")
+		(property "Reference" "R9"
+			(at 245.0 93.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "100k"
+			(at 245.0 109.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 245.0 101.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 245.0 101.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "a815b5b4-955b-4dc7-8eb8-6d8be48ba1fd")
+		)
+		(pin "2"
+			(uuid "0edda56c-5bab-491e-bebb-ceec99e91675")
+		)
+		(instances
+			(project "wristband"
+				(path "/b3417696-fb19-4c3e-bd30-28bb2d157bef/86c28fe6-4393-4319-af10-ef3feae83fa8"
+					(reference "R9")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(sheet_instances
 		(path "/"
 			(page "1")

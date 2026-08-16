@@ -179,9 +179,12 @@ decisions (anchor placement, uplink backend, etc.), is in
    one instead of running two (`docs/decisions.md`).
 3. **Bay station: source a real footprint for L1** (the buck converter's
    inductor, Coilcraft XGL3520-102MEC) -- no KiCad-default match exists yet.
-4. Confirm/re-verify decoupling cap values placed on `radio_mcu.kicad_sch`
-   and `uwb_anchors.kicad_sch` against each part's exact datasheet
-   application circuit (current values are reasonable generic defaults).
+4. ~~Confirm/re-verify decoupling cap values against each part's exact
+   datasheet application circuit~~ -- done, see `docs/passives-reference.md`.
+   One passive was found missing (100k IRQ/GPIO8 pulldowns, now added to all
+   5 DWM3000 instances); DWM3000's own decoupling was confirmed to exceed
+   what Qorvo's minimal example circuit actually calls for (kept anyway, not
+   wrong, just more conservative than strictly required).
 5. Antenna matching-network values on `wristband/antenna.kicad_sch` (parts
    are DNP placeholders pending prototype RF tuning).
 6. Anchor placement/enclosure geometry (open decision, `docs/decisions.md`).
@@ -229,6 +232,7 @@ bay-station/                 # KiCad project: the fixed 4-anchor station
 docs/
   system-overview.md         # block diagram + RF/data interface between the boards
   decisions.md                # open component/architecture decisions log
+  passives-reference.md       # every chip's reference-design passives, compiled per-chip
 ```
 
 Each board is its own KiCad project (KiCad doesn't support one project

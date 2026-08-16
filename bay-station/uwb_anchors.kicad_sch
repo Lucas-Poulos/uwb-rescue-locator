@@ -3055,9 +3055,242 @@
 			)
 		)
 	)
+	(symbol
+		(lib_id "Device:R")
+		(at 290.0 170.0 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "04fc605b-56ef-412a-98c9-d2f21e84e2f1")
+		(property "Reference" "R25"
+			(at 290.0 162.0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "100k"
+			(at 290.0 178.0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 290.0 170.0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 290.0 170.0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "f07db000-d0ea-492e-a9a1-055b5e73e3a7")
+		)
+		(pin "2"
+			(uuid "c23526a7-da34-4550-8dfb-397f6cf92ce6")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
+					(reference "R25")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 290.0 190.0 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "7710d885-5ef6-4e1b-8393-7d8497424355")
+		(property "Reference" "R26"
+			(at 290.0 182.0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "100k"
+			(at 290.0 198.0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 290.0 190.0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 290.0 190.0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "7f2372bb-be3b-4668-8299-9666dc6e818c")
+		)
+		(pin "2"
+			(uuid "64c39989-f109-43d6-850e-f11110818556")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
+					(reference "R26")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 290.0 210.0 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "839ad62f-2e49-4270-84ef-dcea223913cf")
+		(property "Reference" "R27"
+			(at 290.0 202.0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "100k"
+			(at 290.0 218.0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 290.0 210.0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 290.0 210.0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "eae32714-c6c8-4f5c-ba22-7b40c88071ac")
+		)
+		(pin "2"
+			(uuid "04fc605b-1111-412a-98c9-d2f21e84e2f1")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
+					(reference "R27")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 290.0 230.0 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "04fc605b-2222-412a-98c9-d2f21e84e2f1")
+		(property "Reference" "R28"
+			(at 290.0 222.0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "100k"
+			(at 290.0 238.0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 290.0 230.0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 290.0 230.0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "04fc605b-3333-412a-98c9-d2f21e84e2f1")
+		)
+		(pin "2"
+			(uuid "04fc605b-4444-412a-98c9-d2f21e84e2f1")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
+					(reference "R28")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(sheet_instances
 		(path "/"
 			(page "1")
 		)
 	)
 )
+
