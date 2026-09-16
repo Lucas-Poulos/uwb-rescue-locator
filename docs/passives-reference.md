@@ -7,21 +7,29 @@ board's `*_notes.md` are the more detailed originals this was compiled from.
 All passives are standard **0603** (`R_0603_1608Metric` / `C_0603_1608Metric`
 / `L_0603_1608Metric`) unless noted otherwise.
 
-## u-blox NINA-B111 (wristband, U3)
+## u-blox NINA-B400 (wristband, U3)
 
-No reference/application circuit exists for this part -- it's a certified
-module with fully integrated LDO + DC/DC step-down regulation on-board
-(datasheet Section 2.1.1: "compatible for use in battery powered designs --
-without the use of an additional voltage converter"), so there's nothing
-external to add for its own internal supply rails.
+*Migrated from NINA-B111 on 2026-09-15 — see `decisions.md`.*
+
+The module carries its own integrated DC/DC converter (NINA-B4 system
+integration manual UBX-19052230 R13 §2.2.1), so there is nothing external to
+add for its internal supply rails. u-blox's guidance on external capacitance is
+deliberately loose: *"It is best practice to include bypass capacitors on the
+supply rails close to the NINA-B4 series module. Depending on the design of the
+power routing on the host system, capacitance might not be needed."* (§2.2.3.1)
 
 | Passive | Value | Role | Status |
 |---|---|---|---|
-| C6, C7 | 100nF | VCC / VCC_IO bypass | Placed (`radio_mcu.kicad_sch`). Reasonable standard practice; the datasheet gives no specific external decoupling value to confirm against since none is required. |
-| L1, C13 | DNP (placeholder) | ANT-pin matching network to the external antenna | Placed on `antenna.kicad_sch`, deliberately unpopulated -- values depend on prototype RF tuning/layout, not something a datasheet gives numerically. u-blox's separate "NINA-B1 System Integration Manual" (referenced but not fetched in this pass) may have more specific guidance -- worth a follow-up if precise starting values are wanted before tuning. |
+| C6, C7 | 100nF | VCC (pin 10) / VCC_IO (pin 9) bypass | Placed (`radio_mcu.kicad_sch`). Standard practice; u-blox mandates no specific value. **Note pin 9 VCC_IO must be tied to VCC** — data sheet UBX-19049405 R09 Table 6 says "Must be connected to VCC", and §2.2.2 confirms VCC_IO is internally bonded to VCC. Both are wired to `+3V3`. |
+| Y1 | 32.768 kHz (Epson FC-135, `Q13FC13500004`) | LFXO low-power clock on XL1/XL2 (pins 2/3) | **Added 2026-09-15.** Required for low sleep current — SIM §1.9: *"To reach the lowest sleep current consumption of the NINA-B4 module, an external crystal or external clock source shall be used."* Meets every line of data sheet Table 14: ±20 ppm vs ±500 ppm max, CL 12.5 pF vs 12.5 pF max, ESR 70 kΩ vs 100 kΩ max. Without it the module falls back to its internal RC oscillator at higher sleep current — and Table 6 would then require XL1/XL2 be grounded rather than left floating. |
+| C14, C15 | 18pF C0G (`CL10C180JB8NNNC`) | Y1 load capacitors | **Added 2026-09-15.** Derived, not guessed: each leg needs Ca = 2 × CL = 25 pF; subtracting the module's own 5 pF XL1/XL2 pin capacitance (Table 14, `Cpin`) and ~2 pF PCB stray gives 18 pF. Re-check once the real stackup exists. C0G dielectric is required for oscillator stability over temperature. |
+| SW1 | — (Panasonic `EVQPUA02K`) | SOS / user button on GPIO_21 | **Added 2026-09-15.** Pulls the GPIO low when pressed; uses the nRF52833's internal pull-up, so no external pull resistor part is needed. Debounce in firmware. Actuation force (2.2 N) should be re-checked for gloved/cold-weather use — this is a rescue device. |
+| R11, R12 | 1M / 1M (`RC0603FR-071ML`) | Battery-voltage sense divider to GPIO_23 (analog-capable) | **Added 2026-09-15.** Halves VBAT's 4.2 V full-charge to 2.1 V, inside SAADC range at a 3.3 V reference. **Tradeoff:** 4.2 V / 2 MΩ ≈ 2.1 µA continuous, comparable to the module's own ~2.6 µA System-ON sleep current (Table 12) — this roughly doubles standby drain. Gate the low side with a FET and sample on demand if runtime matters more than always-on reporting. |
+| C16 | 100nF | SAADC sampling reservoir across R12 | **Added 2026-09-15.** The divider's ~500 kΩ source impedance is high for the SAADC; this cap plus a long acquisition-time setting in firmware is what makes the reading accurate. |
 
-External **antenna required** (B111 has no on-module antenna, unlike B112) --
-already resolved: ProAnt InSide-2400, see `docs/decisions.md`.
+External **antenna required** (B400 has no on-module antenna — it has an
+on-module U.FL connector instead, so no PCB-side connector or matching network
+is needed). Resolved: Abracon PRO-IS-237, see `decisions.md`.
 
 ## Qorvo DWM3000 (wristband U4; bay-station U4-U7, x5 total)
 

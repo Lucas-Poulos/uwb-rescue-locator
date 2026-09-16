@@ -1,5 +1,19 @@
 # Regulation / Antenna / Programming-Debug -- design notes
 
+> **SUPERSEDED IN PART — 2026-09-15.** This document records the analysis pass that
+> was done when the wristband's BLE MCU was the **u-blox NINA-B111** (nRF52832) and the
+> antenna fed through a PCB-side U.FL connector (`J2`) and an L/C matching network
+> (`L1`/`C13`). The board has since migrated to the **u-blox NINA-B400** (nRF52833,
+> Bluetooth 5.1), whose on-module U.FL connector made `J2`, `L1` and `C13` unnecessary —
+> all three were removed. The reasoning and datasheet citations below are kept verbatim
+> as the historical record of *how* those decisions were reached; where they name
+> NINA-B111, read the conclusion as applying to NINA-B400 unless noted otherwise.
+> Two things deliberately carry over unchanged, both re-verified against the NINA-B40
+> data sheet UBX-19049405 R09: the **3.9 V abs-max VCC** (identical on both modules, so
+> the MCP1700 LDO rationale still stands) and the **SWD pin numbers** (SWDCLK=11,
+> SWDIO=15, RESET_N=19, SWO=8 on both). See `../docs/decisions.md` for the current state.
+
+
 This covers the three new **placement-only** hierarchical sheets added in this
 pass -- `regulation.kicad_sch`, `antenna.kicad_sch`, `programming_debug.kicad_sch`
 -- plus the two GPIO strapping resistors (`R7`, `R8`) added directly onto the

@@ -11,7 +11,7 @@ footprint -> datasheet URL -> verification notes).
 ## What's in here
 
 ```
-wristband.kicad_sym    # 4 hand-authored symbols: NINA-B111, MCP73831-2-OT, DW01A, FS8205A
+wristband.kicad_sym    # 5 hand-authored symbols: NINA-B400, NINA-B111 (legacy), MCP73831-2-OT, DW01A, FS8205A
 wristband.pretty/      # 1 custom footprint: NINA111-42 (real u-blox Eagle-lib pad data)
 sym-lib-table          # project-local library registration (symbols) -- not touched here
 fp-lib-table           # project-local library registration (footprints) -- not touched here

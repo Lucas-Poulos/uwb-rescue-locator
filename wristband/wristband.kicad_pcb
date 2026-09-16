@@ -12,6 +12,8 @@
 	)
 	(layers
 		(0 "F.Cu" signal)
+		(1 "In1.Cu" signal)
+		(2 "In2.Cu" signal)
 		(31 "B.Cu" signal)
 		(32 "B.Adhes" user "B.Adhesive")
 		(33 "F.Adhes" user "F.Adhesive")
@@ -83,4 +85,56 @@
 		)
 	)
 	(net 0 "")
+	(gr_line
+		(start 100 60)
+		(end 145 60)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "Edge.Cuts")
+		(uuid "c62e2a34-634b-4a3b-b4e1-0686bed3275e")
+	)
+	(gr_line
+		(start 145 60)
+		(end 145 95)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "Edge.Cuts")
+		(uuid "ffe7903b-be6d-4ff1-8597-52bbd93d87d0")
+	)
+	(gr_line
+		(start 145 95)
+		(end 100 95)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "Edge.Cuts")
+		(uuid "1662e46e-8573-41cc-83ea-4b5c24a42883")
+	)
+	(gr_line
+		(start 100 95)
+		(end 100 60)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "Edge.Cuts")
+		(uuid "7e0b0f4d-eadf-48a7-8412-c5f6ead83c14")
+	)
+	(gr_text "Wristband v0 -- 45 x 35 mm, 4-layer.\nStackup intent: F.Cu signal / In1.Cu GND plane / In2.Cu power / B.Cu signal.\nSolid In1.Cu ground reference is required under the DWM3000 UWB and NINA-B400 BLE sections.\nOutline and size are a STARTING POINT -- confirm against enclosure and strap before layout."
+		(at 100 101 0)
+		(layer "Cmts.User")
+		(uuid "aec15f86-a0e2-477d-b2da-bcd124c84d43")
+		(effects
+			(font
+				(size 1.2 1.2)
+				(thickness 0.2)
+			)
+			(justify left)
+		)
+	)
 )

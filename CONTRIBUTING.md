@@ -25,7 +25,7 @@ feature change.
 
 When you start schematic capture on a board, add sheets from the KiCad GUI
 (Place > Sheet) rather than hand-editing files -- e.g. for the wristband:
-`power_bms`, `radio_mcu` (NINA-B1 + UWB module), `mechanical`; for the bay
+`power_bms`, `radio_mcu` (NINA-B400 + UWB module), `mechanical`; for the bay
 station: `power_bms`, `uwb_anchors` (or one sheet per anchor), `connectivity`
 (ESP32/WiFi/BT), `mechanical`. Keep sheet names and this list in the
 board-level `README.md` in sync.

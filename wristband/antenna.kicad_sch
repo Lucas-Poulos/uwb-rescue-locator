@@ -6,7 +6,7 @@
 	(paper "A4")
 	(title_block
 		(title "Antenna")
-		(comment 1 "Wristband NINA-B111 external antenna (U.FL feed + L/C matching network placeholder) -- placement only, not yet wired")
+		(comment 1 "Wristband NINA-B400 external antenna -- plugs into the module's ON-BOARD U.FL connector; no PCB-side U.FL or L/C match network needed")
 	)
 	(lib_symbols
 		(symbol "Device:L"
@@ -489,7 +489,7 @@
 					(justify right)
 				)
 			)
-			(property "Value" "InSide-2400 (ProAnt)"
+			(property "Value" "PRO-IS-237 (Abracon, ex-ProAnt InSide-2400)"
 				(at -1.905 0 0)
 				(effects
 					(font
@@ -507,7 +507,7 @@
 					(hide yes)
 				)
 			)
-			(property "Datasheet" "https://download.mikroe.com/documents/datasheets/NINA-B1112_datasheet.pdf"
+			(property "Datasheet" "https://content.u-blox.com/sites/default/files/NINA-B4_Certification_AppNote_UBX-20037320.pdf"
 				(at 0 0 0)
 				(effects
 					(font
@@ -516,7 +516,7 @@
 					(hide yes)
 				)
 			)
-			(property "Description" "ProAnt InSide-2400: 2.4GHz patch antenna, +3.0dBi gain, 50 ohm, 27x12mm triangular, U.FL connector + 100mm cable, FCC/IC/RED/MIC/NCC/KCC/ANATEL/ACMA/ICASA approved. Chosen from u-blox's own NINA-B1 series datasheet UBX-15019243-R15 Section 7.2 'Approved antennas' (real verified table, not guessed) as the best fit for a compact on-body wristband enclosure: datasheet's own comment for this specific antenna reads 'Part of this antenna should be attached to a plastic enclosure for best performance' -- a direct match for a wearable's plastic case, unlike the list's other approved options (GW.26.0111, Ex-It 2400 28 RP-SMA/U.FL-100, Ex-It 2400 Foldable RP-SMA, FlatWhip-2400 RP-SMA) which are all rigid external monopole 'stick' antennas (7.9-50mm diameter, some requiring a metal ground plane) meant for boxier/metal-enclosure products, not a slim wristband. This is a real, board-mountable-via-cable part from the real approved list -- not the NINA-B112's own integrated-antenna 'u-blox LILY' entry (also in the same table), which does not apply here since this design uses NINA-B111 (external-antenna-pin variant), not NINA-B112. Represented on this sheet by KiCad's own generic Device:Antenna placeholder symbol (no footprint -- the real antenna body mounts off-board via its own 100mm U.FL pigtail, hence the separate Conn_Coaxial/U.FL connector J2 placed alongside it as the actual PCB-side attachment point)."
+			(property "Description" "Abracon PRO-IS-237 (formerly ProAnt InSide-2400 -- ProAnt was acquired by Abracon and u-blox now lists this antenna under the Abracon PN): 2.4GHz patch antenna, +3.0dBi gain, 50 ohm, 27x12mm triangular, U.FL connector + 100mm cable. RE-VERIFIED for NINA-B400 against the real u-blox NINA-B4 series certification application note UBX-20037320 R05, Section 3.2 'Single band antennas' -- entry 'Wi-Fi / Bluetooth / Bluetooth LE board antenna, PN PRO-IS-237' matches this part exactly on every listed spec (gain, impedance, 27x12mm triangular, patch, 100mm cable, U.FL) and is PRE-APPROVED for NINA-B4 with FCC, IC, RED, UKCA, MIC, NCC, KCC, ANATEL, ACMA and ICASA. u-blox's own comment on the entry -- 'Should be attached to a plastic enclosure or part for best performance' -- still makes it the right pick for a wearable wristband, the same reason it was chosen off the NINA-B1 list. Connects directly to the NINA-B400's ON-MODULE U.FL connector; the previous PCB-side U.FL receptacle (J2) and L/C matching network (L1/C13) are removed as they are no longer needed. NOTE: u-blox's certification note requires the U.FL reference design be followed to keep FCC/IC modular approval."
 				(at 0 0 0)
 				(effects
 					(font
@@ -583,182 +583,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:L")
-		(at 60.96 76.2 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "06aeff93-af41-4495-b9d1-0015d0d45af7")
-		(property "Reference" "L1"
-			(at 59.69 76.2 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "DNP -- match network placeholder"
-			(at 63.5 76.2 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Inductor_SMD:L_0603_1608Metric"
-			(at 60.96 76.2 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 60.96 76.2 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "4fbe0d7d-1dfb-461d-b90f-25aa15df1dcd")
-		)
-		(pin "2"
-			(uuid "d5e7c76c-89e3-40f2-9533-67721537f0db")
-		)
-		(instances
-			(project "wristband"
-				(path "/b3417696-fb19-4c3e-bd30-28bb2d157bef/70531719-0575-447f-9fe2-78b3cc25b488"
-					(reference "L1")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:C")
-		(at 60.96 101.6 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "e1c769d7-da9a-4991-bca2-8ec95532552f")
-		(property "Reference" "C13"
-			(at 61.595 104.14 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "DNP -- match network placeholder"
-			(at 61.595 99.06 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 60.96 101.6 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 60.96 101.6 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "07bd07ce-ccf4-4be9-801b-dc021fc8290e")
-		)
-		(pin "2"
-			(uuid "94b84301-67ca-4049-af5c-e6abbc641699")
-		)
-		(instances
-			(project "wristband"
-				(path "/b3417696-fb19-4c3e-bd30-28bb2d157bef/70531719-0575-447f-9fe2-78b3cc25b488"
-					(reference "C13")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Connector:Conn_Coaxial")
-		(at 101.6 76.2 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "b195d287-c42a-4663-8dab-91fa69298d73")
-		(property "Reference" "J2"
-			(at 101.6 68.58 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "U.FL Hirose U.FL-R-SMT-1"
-			(at 101.6 84.582 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Connector_Coaxial:U.FL_Hirose_U.FL-R-SMT-1_Vertical"
-			(at 101.6 76.2 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 101.6 76.2 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "a0f0bda1-3160-4e10-8ce6-2addbebdcb64")
-		)
-		(pin "2"
-			(uuid "e748814e-7843-47b8-b1b2-e9fbc89edb5d")
-		)
-		(instances
-			(project "wristband"
-				(path "/b3417696-fb19-4c3e-bd30-28bb2d157bef/70531719-0575-447f-9fe2-78b3cc25b488"
-					(reference "J2")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:Antenna")
 		(at 142.24 76.2 0)
 		(unit 1)
@@ -776,7 +600,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "InSide-2400 (ProAnt)"
+		(property "Value" "PRO-IS-237 (Abracon, ex-ProAnt InSide-2400)"
 			(at 140.335 76.2 0)
 			(effects
 				(font
@@ -803,6 +627,24 @@
 				(hide yes)
 			)
 		)
+		(property "MPN" "PRO-IS-237"
+			(at 140.335 78.105 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Abracon"
+			(at 140.335 78.105 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "bba8352a-8566-4c87-96bc-004b69de63de")
 		)
@@ -819,5 +661,9 @@
 		(path "/"
 			(page "1")
 		)
+	)
+	(no_connect
+		(at 142.24 81.28)
+		(uuid "ca559488-1a72-4404-bdf8-1ba1fb851c9a")
 	)
 )

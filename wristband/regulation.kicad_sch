@@ -6,7 +6,7 @@
 	(paper "A4")
 	(title_block
 		(title "Regulation")
-		(comment 1 "Wristband VBAT (up to 4.2V) -> +3V3 LDO rail for NINA-B111 (abs max VCC 3.9V) and DWM3000 (abs max VDD3V3 4.0V) -- placement only, not yet wired")
+		(comment 1 "Wristband VBAT (up to 4.2V) -> +3V3 LDO rail for NINA-B400 (abs max VCC 3.9V) and DWM3000 (abs max VDD3V3 4.0V) -- placement only, not yet wired")
 	)
 	(lib_symbols
 		(symbol "Regulator_Linear:MCP1700x-330xxTT"
@@ -337,6 +337,24 @@
 				(hide yes)
 			)
 		)
+		(property "MPN" "MCP1700T-3302E/TT"
+			(at 101.6 60.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Microchip"
+			(at 101.6 60.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "5f0ae882-2d2e-43d7-b96d-9ff56231b2e2")
 		)
@@ -393,6 +411,24 @@
 		)
 		(property "Datasheet" ""
 			(at 60.96 76.2 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "CL10B105KA8NNNC"
+			(at 61.595 78.74 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 61.595 78.74 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -460,6 +496,24 @@
 				(hide yes)
 			)
 		)
+		(property "MPN" "CL10B105KA8NNNC"
+			(at 142.875 78.74 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 142.875 78.74 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "b04cee24-6963-414a-9038-fda2e9dab453")
 		)
@@ -479,5 +533,82 @@
 		(path "/"
 			(page "1")
 		)
+	)
+	(global_label "GND"
+		(shape input)
+		(at 101.6 83.82 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "27ed435d-7b93-4b6d-a63f-d393b99f0115")
+	)
+	(global_label "+3V3"
+		(shape input)
+		(at 109.22 76.2 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "d3dc9d06-9396-48a6-ba0a-cdec092e85bf")
+	)
+	(global_label "VBAT"
+		(shape input)
+		(at 93.98 76.2 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "6eadd1b9-98d7-4cbb-bcdb-99978e994d1f")
+	)
+	(global_label "VBAT"
+		(shape input)
+		(at 60.96 72.39 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "b9569f68-0113-495a-b3b0-5b3fdd3a051a")
+	)
+	(global_label "GND"
+		(shape input)
+		(at 60.96 80.01 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "3050c309-a56e-4a1d-816a-6f97d6ab68c0")
+	)
+	(global_label "+3V3"
+		(shape input)
+		(at 142.24 72.39 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "14d630e6-affb-423a-b6b9-e3eceb8ad059")
+	)
+	(global_label "GND"
+		(shape input)
+		(at 142.24 80.01 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "abf44ce6-c148-428e-8600-69ecf3b8b3be")
 	)
 )

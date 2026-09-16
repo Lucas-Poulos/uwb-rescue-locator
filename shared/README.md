@@ -33,11 +33,11 @@ could have been meant:
 - **DWM3000** (confirmed choice) -- a bare UWB transceiver module (no
   onboard host MCU), 24-pin 1.4mm-pitch side-castellated package,
   23x13x2.9mm, based on the DW3110 IC. Architecturally consistent with
-  this project, since the wristband already has a separate NINA-B111 BLE
+  this project, since the wristband already has a separate NINA-B400 BLE
   MCU to act as the SPI host.
 - **DWM3001C** (not used) -- a larger, different module that additionally
   integrates its own nRF52833 BLE SoC, a planar antenna, and an
-  accelerometer. Using this alongside a separate NINA-B111 would be
+  accelerometer. Using this alongside a separate NINA-B400 would be
   redundant (two BLE radios on one board) and it's a different footprint
   entirely.
 
@@ -65,7 +65,7 @@ Figure 14 drawing (page 22 of the datasheet above) before fab.
 ### PCB layout requirement: antenna keep-out area (not yet actioned -- PCB layout hasn't started)
 
 DWM3000 has its own onboard ceramic UWB antenna (confirmed -- no external
-antenna/matching network needed for the UWB radio itself, unlike NINA-B111's
+antenna/matching network needed for the UWB radio itself, unlike the BLE side's
 BLE antenna). The datasheet's Section 6.1 "Application Board Layout
 Guidelines" (Figure 10, "Application Board Keep-Out Areas") is explicit:
 ground copper should be flooded everywhere on the application board *except*

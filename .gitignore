@@ -23,3 +23,7 @@ fab-outputs/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# kicad-happy analyzer cache (regenerable; manifest excepted)
+wristband/analysis/
+bay-station/analysis/

@@ -87,11 +87,11 @@ project-wide unique per board (checked, no collisions) -- see each
 | Sheet | Status | Contents |
 |---|---|---|
 | Power BMS | **Wired** (global labels, no drawn wires), ERC clean (0 errors, 1 cosmetic warning) | JST-PH battery -> AO3401A reverse-polarity FET -> TVS -> DW01A+FS8205A protection -> MCP73831 charger (USB-C in) |
-| Radio MCU | Placement only, not wired | NINA-B111 (U3) + DWM3000 (U4) + decoupling caps + GPIO5/6 strapping pull-downs for DWM3000's SPI mode |
+| Radio MCU | **Wired** (global labels) | NINA-B400 (U3, nRF52833) + DWM3000 (U4) + decoupling + GPIO5/6 SPI-mode straps + IRQ pull-down + 32.768kHz LFXO crystal (Y1/C14/C15) + SOS button (SW1) + battery-sense divider (R11/R12/C16) |
 | Mechanical | Placement only | 4x M2 mounting holes |
-| Regulation | Placement only, not wired | MCP1700T-3302E/TT LDO (3.3V) -- steps the protected battery rail down to a safe voltage for NINA-B111/DWM3000 (see "Confirmed chips" below for why this exists) |
-| Antenna | Placement only, not wired | ProAnt InSide-2400 BLE antenna (U.FL) + DNP 0603 L/C matching network (values pending RF tuning) |
-| Programming/Debug | Placement only, not wired | ARM Cortex Debug SWD header for NINA-B111 |
+| Regulation | **Wired** (global labels) | MCP1700T-3302E/TT LDO (3.3V) -- steps the protected battery rail down to a safe voltage for NINA-B400/DWM3000 (see "Confirmed chips" below for why this exists) |
+| Antenna | Documentation only (off-board part) | Abracon PRO-IS-237 BLE patch antenna (ex-ProAnt InSide-2400). Plugs into the NINA-B400's **on-module** U.FL -- the old PCB-side U.FL (`J2`) and L/C match network (`L1`/`C13`) were removed as unnecessary |
+| Programming/Debug | **Wired** (global labels) | ARM Cortex Debug SWD header for NINA-B400 |
 
 **Bay Station** (`bay-station/`):
 | Sheet | Status | Contents |
@@ -110,7 +110,7 @@ driven" warnings -- that's expected, not a bug, until they get wired.
 
 | Part number | Role | Board(s) | Qty |
 |---|---|---|---|
-| u-blox **NINA-B111** | BLE MCU/radio | Wristband | 1 |
+| u-blox **NINA-B400-00B** | BLE MCU/radio (Nordic nRF52833, Bluetooth 5.1, on-module U.FL) | Wristband | 1 |
 | Qorvo **DWM3000** | UWB transceiver module (shared part, lives in `shared/`) | Wristband (1) + Bay Station (4, one per anchor) | 5 |
 | Microchip **MCP73831** | LiPo linear battery charger | Wristband | 1 |
 | Fortune Semiconductor **DW01A** | Battery protection IC | Wristband | 1 |
@@ -120,9 +120,9 @@ driven" warnings -- that's expected, not a bug, until they get wired.
 | Espressif **ESP32-S3-WROOM-1** | WiFi/BLE connectivity MCU | Bay Station | 1 |
 | Microchip **MCP73871** | Charge management + power-path IC | Bay Station | 1 |
 | Maxim/Analog Devices **MAX17048** | Battery fuel gauge (SOC monitor) | Bay Station | 1 |
-| Microchip **MCP1700T-3302E/TT** | LDO regulator (3.3V) -- battery rail can hit 4.2V, which exceeds NINA-B111/DWM3000's absolute max voltage without this | Wristband | 1 |
+| Microchip **MCP1700T-3302E/TT** | LDO regulator (3.3V) -- battery rail can hit 4.2V, which exceeds NINA-B400/DWM3000's absolute max voltage without this | Wristband | 1 |
 | TI **TPS62A02PDDCR** | Buck (switching) regulator -- same voltage-safety role as the wristband's LDO, sized for the bay station's higher combined load current | Bay Station | 1 |
-| ProAnt **InSide-2400** | BLE patch antenna (NINA-B111 needs an external one; DWM3000 has its own onboard antenna already) | Wristband | 1 |
+| Abracon **PRO-IS-237** (formerly ProAnt InSide-2400) | BLE patch antenna -- plugs into the NINA-B400's on-module U.FL; DWM3000 has its own onboard antenna already | Wristband | 1 |
 
 Footprint caveats: DWM3000 and MAX17048 are both flagged `_PLACEHOLDER` in
 their footprint files -- pin/electrical data is fully verified, but one
@@ -163,7 +163,7 @@ decisions (anchor placement, uplink backend, etc.), is in
   stale window had been saved again afterward. Close/reload any open KiCad
   windows before doing further programmatic edits, and vice versa.
 - The sibling project at `~/kicad-projects/wristband-alarm` (a *different*,
-  unrelated wristband-alarm concept, also using NINA-B111) has its own
+  unrelated wristband-alarm concept, still using NINA-B111) has its own
   long-standing uncommitted working-tree state -- don't touch it, don't
   assume its README reflects its actual working tree.
 
@@ -204,7 +204,7 @@ decisions (anchor placement, uplink backend, etc.), is in
                                                     Internet / backend (TBD)
 ```
 
-- **Wristband**: NINA-B111 (BLE MCU/radio) + Qorvo DWM3000 (UWB module) +
+- **Wristband**: NINA-B400 (BLE MCU/radio, nRF52833) + Qorvo DWM3000 (UWB module) +
   a compact BMS (MCP73831 charger + DW01A/FS8205 protection + AO3401A
   reverse-polarity protection). Design compromises favor small size and
   just enough battery life to get core functionality working.

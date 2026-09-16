@@ -2011,6 +2011,207 @@
 				)
 			)
 		)
+		(symbol "Device:LED"
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 1.016)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "D"
+				(at 0 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "LED"
+				(at 0 -2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Light emitting diode"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Sim.Pins" "1=K 2=A"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "LED diode"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "LED* LED_SMD:* LED_THT:*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "LED_0_1"
+				(polyline
+					(pts
+						(xy -3.048 -0.762) (xy -4.572 -2.286) (xy -3.81 -2.286) (xy -4.572 -2.286) (xy -4.572 -1.524)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.778 -0.762) (xy -3.302 -2.286) (xy -2.54 -2.286) (xy -3.302 -2.286) (xy -3.302 -1.524)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.27 0) (xy 1.27 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.27 -1.27) (xy -1.27 1.27)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 1.27 -1.27) (xy 1.27 1.27) (xy -1.27 0) (xy 1.27 -1.27)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "LED_1_1"
+				(pin passive line
+					(at -3.81 0 0)
+					(length 2.54)
+					(name "K"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 3.81 0 180)
+					(length 2.54)
+					(name "A"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 	)
 	(symbol
 		(lib_id "Device:Battery_Cell")
@@ -2113,6 +2314,24 @@
 				(hide yes)
 			)
 		)
+		(property "MPN" "AO3401A"
+			(at 44.45 36.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Alpha & Omega Semiconductor"
+			(at 44.45 36.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "839e27f1-dcf6-49f2-b8f1-9dc580ddfcc5")
 		)
@@ -2167,6 +2386,24 @@
 		)
 		(property "Datasheet" ""
 			(at 44.45 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "RC0603FR-07100KL"
+			(at 44.45 61.849999999999994 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Yageo"
+			(at 44.45 61.849999999999994 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2232,6 +2469,24 @@
 				(hide yes)
 			)
 		)
+		(property "MPN" "ESD5B5.0ST1G"
+			(at 69.85 36.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "onsemi"
+			(at 69.85 36.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "9726cec5-af40-444f-9eac-c93b4c589aae")
 		)
@@ -2290,6 +2545,24 @@
 				(hide yes)
 			)
 		)
+		(property "MPN" "RC0603FR-13100RL"
+			(at 95.25 22.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Yageo"
+			(at 95.25 22.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "cfce9969-1dac-4282-b7e9-de20cd91d3d1")
 		)
@@ -2341,6 +2614,24 @@
 		)
 		(property "Datasheet" ""
 			(at 115.57 44.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "DW01A"
+			(at 115.57 36.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Fortune Semiconductor"
+			(at 115.57 36.45 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2418,6 +2709,24 @@
 				(hide yes)
 			)
 		)
+		(property "MPN" "CL10B104KB8NNNC"
+			(at 95.25 51.69 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 95.25 51.69 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "e6675570-e221-43e0-9b70-8c35d02f4560")
 		)
@@ -2476,6 +2785,24 @@
 				(hide yes)
 			)
 		)
+		(property "MPN" "RC0603FR-071KL"
+			(at 134.62 61.849999999999994 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Yageo"
+			(at 134.62 61.849999999999994 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "10bfda3b-7a87-4158-b807-0a44eee53e29")
 		)
@@ -2527,6 +2854,24 @@
 		)
 		(property "Datasheet" ""
 			(at 115.57 95.25 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "FS8205"
+			(at 115.57 87.25 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Fortune Semiconductor"
+			(at 115.57 87.25 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2604,6 +2949,24 @@
 				(hide yes)
 			)
 		)
+		(property "MPN" "MCP73831T-2ACI/OT"
+			(at 165.1 36.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Microchip"
+			(at 165.1 36.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "5"
 			(uuid "457b7c1f-e693-4f03-99b9-786378bc9401")
 		)
@@ -2671,6 +3034,24 @@
 				(hide yes)
 			)
 		)
+		(property "MPN" "RC0603FR-076K8L"
+			(at 149.86 56.769999999999996 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Yageo"
+			(at 149.86 56.769999999999996 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "8e22aaff-1817-4a37-9441-e3283e6e1a59")
 		)
@@ -2722,6 +3103,24 @@
 		)
 		(property "Datasheet" ""
 			(at 165.1 20.32 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "CL10A475KO8NNNC"
+			(at 165.1 12.32 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 165.1 12.32 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2787,6 +3186,24 @@
 				(hide yes)
 			)
 		)
+		(property "MPN" "CL10A475KO8NNNC"
+			(at 185.42 51.69 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 185.42 51.69 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "14fc4490-41a1-45b6-975d-980fcc772896")
 		)
@@ -2838,6 +3255,24 @@
 		)
 		(property "Datasheet" ""
 			(at 224.79 54.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "USB4125-GF-A"
+			(at 224.79 46.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "GCT"
+			(at 224.79 46.61 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2918,6 +3353,24 @@
 				(hide yes)
 			)
 		)
+		(property "MPN" "RC0603FR-075K1L"
+			(at 250.19 27.560000000000002 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Yageo"
+			(at 250.19 27.560000000000002 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "3902ac48-c1b6-4920-a471-c117fdda4c28")
 		)
@@ -2969,6 +3422,24 @@
 		)
 		(property "Datasheet" ""
 			(at 250.19 59.69 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "RC0603FR-075K1L"
+			(at 250.19 51.69 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Yageo"
+			(at 250.19 51.69 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3034,6 +3505,24 @@
 				(hide yes)
 			)
 		)
+		(property "MPN" "CL10A106KP8NNNC"
+			(at 69.85 92.33 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 69.85 92.33 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "9cade0eb-4816-449b-9307-1ef8f2f44959")
 		)
@@ -3085,6 +3574,24 @@
 		)
 		(property "Datasheet" ""
 			(at 85.09 100.33 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "CL10B104KB8NNNC"
+			(at 85.09 92.33 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 85.09 92.33 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3871,10 +4378,6 @@
 			)
 		)
 	)
-	(no_connect
-		(at 170.18 41.91)
-		(uuid "202e98df-c511-4232-8f56-76148f163604")
-	)
 	(global_label "GND"
 		(shape passive)
 		(at 162.56 49.53 0)
@@ -4459,5 +4962,337 @@
 		(path "/"
 			(page "1")
 		)
+	)
+	(symbol
+		(lib_id "Device:LED")
+		(at 101.6 127 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "fd3472ba-5f47-4bd5-b282-3062fbf7bb6e")
+		(property "Reference" "D2"
+			(at 101.6 123.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "Green"
+			(at 101.6 130.81 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "LED_SMD:LED_0603_1608Metric"
+			(at 101.6 127 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 101.6 127 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Charge-status LED driven by MCP73831 (U2) STAT pin through R10. The MCP73831 typical application circuit shows this LED; this board previously documented it but never placed it, leaving STAT floating with no way to tell charging from charged. Anode to +VBUS-side rail through R10, cathode to STAT (the MCP73831 sinks when charging)."
+			(at 101.6 127 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "LTST-C191KGKT"
+			(at 101.6 127 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Lite-On"
+			(at 101.6 127 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "827bfc62-9b05-48f5-9a5d-92f47665a3f1")
+		)
+		(pin "2"
+			(uuid "711b9a00-3131-4a11-8c74-1f5826fdd722")
+		)
+		(instances
+			(project "wristband"
+				(path "/b3417696-fb19-4c3e-bd30-28bb2d157bef/e17e6f9a-2b41-4d3a-9f0a-1c1f5c9a7b21"
+					(reference "D2")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 101.6 140.97 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "aab317c8-739d-4155-a843-d8408f0ed214")
+		(property "Reference" "R10"
+			(at 101.6 137.16 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "1k"
+			(at 101.6 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 101.6 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 101.6 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Series resistor for the D2 charge-status LED. ~1.3mA at 3.3V with the LTST-C191KGKT's ~2.0V Vf ((3.3-2.0)/1k) -- deliberately dim. This is a wearable on a small cell, and the MCP73831 STAT pin can sink up to 25mA, so the constraint here is battery life, not the driver."
+			(at 101.6 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "RC0603FR-071KL"
+			(at 101.6 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Yageo"
+			(at 101.6 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "86bd8f6a-a405-47eb-a280-3cf7c1014f14")
+		)
+		(pin "2"
+			(uuid "f7c10d6e-0db6-4236-a2c9-2eaf654ab4b7")
+		)
+		(instances
+			(project "wristband"
+				(path "/b3417696-fb19-4c3e-bd30-28bb2d157bef/e17e6f9a-2b41-4d3a-9f0a-1c1f5c9a7b21"
+					(reference "R10")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:D_TVS")
+		(at 161.29 127 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "2c0414ab-e081-4693-bc14-9990ff46a750")
+		(property "Reference" "D3"
+			(at 161.29 123.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "ESD5B5.0ST1G"
+			(at 161.29 130.81 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Diode_SMD:D_SOD-523"
+			(at 161.29 127 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 161.29 127 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "USB VBUS ESD/TVS protection at the J1 charging port -- the gap flagged by the analyzer (UC-002) and already listed as 'not yet placed' in libs/components.csv. Same part as the battery-line TVS D1: 5V reverse standoff, 5.8V clamp, SOD-523, which suits a 5V USB VBUS rail. Cathode to VBUS, anode to GND, placed as close to J1 as layout allows."
+			(at 161.29 127 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "ESD5B5.0ST1G"
+			(at 161.29 127 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "onsemi"
+			(at 161.29 127 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "cf0ba751-ff78-4737-a0e2-d56dd73b312f")
+		)
+		(pin "2"
+			(uuid "ff3b98a2-2eaf-4267-b79c-950f3d387de9")
+		)
+		(instances
+			(project "wristband"
+				(path "/b3417696-fb19-4c3e-bd30-28bb2d157bef/e17e6f9a-2b41-4d3a-9f0a-1c1f5c9a7b21"
+					(reference "D3")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(global_label "CHG_STAT"
+		(shape input)
+		(at 170.18 41.91 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "378b3363-adb2-4173-a4d3-c0c5bd21ac2e")
+	)
+	(global_label "CHG_STAT"
+		(shape input)
+		(at 97.79 127 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "9bfd7b24-c644-4449-b648-c201acaafb39")
+	)
+	(global_label "LED_A"
+		(shape input)
+		(at 105.41 127 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "fe51e597-9ca3-4784-9553-c4c72e3af016")
+	)
+	(global_label "VBUS"
+		(shape input)
+		(at 101.6 137.16 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "1af0aa7d-d0f8-469e-a5dd-5f582ad20d20")
+	)
+	(global_label "LED_A"
+		(shape input)
+		(at 101.6 144.78 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "f110b178-802e-4d0c-b3a8-2ece2fa4f598")
+	)
+	(global_label "VBUS"
+		(shape input)
+		(at 157.48 127 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "160488bd-ea6a-4943-bbf6-2f8b3be6bba6")
+	)
+	(global_label "GND"
+		(shape input)
+		(at 165.1 127 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "299699b9-d7e9-418e-9201-daa5ce9cef3c")
 	)
 )

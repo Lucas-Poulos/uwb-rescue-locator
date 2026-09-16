@@ -13,7 +13,7 @@ internet. Intended use: a safety/rescue tracking system.
 |---|---|---|
 | Role | Worn tag | Fixed reference station |
 | UWB | 1x UWB IC/module (TBD) | 4x UWB IC (one per anchor) |
-| MCU/radio | u-blox NINA-B1 (confirmed) | ESP32 or discrete BLE + dual-band WiFi IC (TBD) |
+| MCU/radio | u-blox NINA-B400 / NINA-B4 series, nRF52833 (confirmed) | ESP32 or discrete BLE + dual-band WiFi IC (TBD) |
 | Power | Single-cell battery + BMS, sized for just enough runtime -- core function takes priority over battery life | Battery + BMS optimized for longevity, not size |
 | Connectivity to internet | None (talks only to the bay station over UWB) | WiFi and/or BLE/cellular uplink (TBD) |
 
