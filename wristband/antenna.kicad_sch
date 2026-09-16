@@ -666,4 +666,81 @@
 		(at 142.24 81.28)
 		(uuid "ca559488-1a72-4404-bdf8-1ba1fb851c9a")
 	)
+	(text "Off-board antenna  --  Abracon PRO-IS-237 (formerly ProAnt InSide-2400)"
+		(at 76.2 50.8 0)
+		(effects
+			(font
+				(size 1.7 1.7)
+				(bold yes)
+			)
+			(justify left)
+		)
+		(uuid "140106dd-6666-413e-8e62-84484bd197a8")
+	)
+	(text "+3.0dBi, 50 ohm, 27x12mm triangular patch, 100mm U.FL pigtail."
+		(at 76.2 55.88 0)
+		(effects
+			(font
+				(size 1.7 1.7)
+				(bold yes)
+			)
+			(justify left)
+		)
+		(uuid "27967593-78be-42a2-bbc6-f4e80fff0148")
+	)
+	(text "Plugs straight into the NINA-B400's ON-MODULE U.FL connector, so there is"
+		(at 76.2 60.96 0)
+		(effects
+			(font
+				(size 1.7 1.7)
+				(bold yes)
+			)
+			(justify left)
+		)
+		(uuid "9b0f4ce9-71b5-470b-824e-0a409d9c8a97")
+	)
+	(text "no PCB-side U.FL receptacle and no L/C matching network on this board --"
+		(at 76.2 66.04 0)
+		(effects
+			(font
+				(size 1.7 1.7)
+				(bold yes)
+			)
+			(justify left)
+		)
+		(uuid "1f458e14-c63e-4d79-bd5e-14e422b51d4e")
+	)
+	(text "the former J2 / L1 / C13 were removed with the NINA-B400 migration."
+		(at 76.2 71.12 0)
+		(effects
+			(font
+				(size 1.7 1.7)
+				(bold yes)
+			)
+			(justify left)
+		)
+		(uuid "73a49a4b-c716-46c9-8a19-f72f477e7c06")
+	)
+	(text "Still pre-approved for NINA-B4: certification app note UBX-20037320 R05 s3.2."
+		(at 76.2 76.2 0)
+		(effects
+			(font
+				(size 1.7 1.7)
+				(bold yes)
+			)
+			(justify left)
+		)
+		(uuid "082cd40c-58ed-4332-90e2-90cd8c0eb0ca")
+	)
+	(text "AE1 carries a no-connect flag by design: it has no PCB-side net."
+		(at 76.2 111.76 0)
+		(effects
+			(font
+				(size 1.7 1.7)
+				(bold yes)
+			)
+			(justify left)
+		)
+		(uuid "050ec7bf-3b6d-46aa-b5f1-5bda317f6e36")
+	)
 )

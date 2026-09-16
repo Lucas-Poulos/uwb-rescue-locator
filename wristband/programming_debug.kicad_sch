@@ -368,7 +368,7 @@
 	)
 	(symbol
 		(lib_id "Connector:Conn_ARM_JTAG_SWD_10")
-		(at 101.6 76.2 0)
+		(at 152.4 101.6 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -376,7 +376,7 @@
 		(dnp no)
 		(uuid "10d02685-451d-44cb-b91d-20db902c9bba")
 		(property "Reference" "J3"
-			(at 99.06 92.71 0)
+			(at 149.86 118.11 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -385,7 +385,7 @@
 			)
 		)
 		(property "Value" "Conn_ARM_JTAG_SWD_10"
-			(at 99.06 90.17 0)
+			(at 149.86 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -394,7 +394,7 @@
 			)
 		)
 		(property "Footprint" "Connector_PinHeader_1.27mm:PinHeader_2x05_P1.27mm_Vertical"
-			(at 101.6 76.2 0)
+			(at 152.4 101.6 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -403,7 +403,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 101.6 76.2 0)
+			(at 152.4 101.6 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -455,85 +455,214 @@
 			(page "1")
 		)
 	)
+	(wire
+		(pts
+			(xy 152.4 86.36) (xy 152.4 76.2)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "afda2b5b-251e-473a-80bf-5a0dd4db37cf")
+	)
 	(global_label "+3V3"
 		(shape input)
-		(at 101.6 60.96 90)
+		(at 152.4 76.2 90)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
 			(justify left)
 		)
-		(uuid "cf2c382b-1e4d-419a-a18a-cee96dcf49af")
+		(uuid "1fb4faad-8aa0-4419-846d-1584edbba492")
+	)
+	(wire
+		(pts
+			(xy 165.1 101.6) (xy 175.26 101.6)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a39048f1-8e3c-4d09-8939-8a4df7ffa188")
 	)
 	(global_label "SWDIO"
 		(shape input)
-		(at 114.3 76.2 0)
+		(at 175.26 101.6 0)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
 			(justify left)
 		)
-		(uuid "2e2e219c-fec3-4823-b4a7-7df9af3d4181")
+		(uuid "0f175f3a-c694-42a9-a692-f8483c143afd")
+	)
+	(wire
+		(pts
+			(xy 152.4 116.84) (xy 152.4 127)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "de96d617-778e-42e0-8d9e-f8a4e7e2ebda")
 	)
 	(global_label "GND"
 		(shape input)
-		(at 101.6 91.44 270)
+		(at 152.4 127 270)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
 			(justify left)
 		)
-		(uuid "98599ada-ccfd-4d0a-9916-8447543cb383")
+		(uuid "2cae68d9-4c14-4038-baaa-3ea3f5615c11")
+	)
+	(wire
+		(pts
+			(xy 165.1 99.06) (xy 175.26 99.06)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "47940f50-2608-461e-b4c7-6c6c191e83cb")
 	)
 	(global_label "SWDCLK"
 		(shape input)
-		(at 114.3 73.66 0)
+		(at 175.26 99.06 0)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
 			(justify left)
 		)
-		(uuid "ee953db4-1ecb-45fa-a6a0-2694de000605")
+		(uuid "8b17c49b-c307-4ac0-be74-4501d4913408")
+	)
+	(wire
+		(pts
+			(xy 165.1 104.14) (xy 175.26 104.14)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a16dfd24-b696-4076-a7d5-8db6888d3ebc")
 	)
 	(global_label "SWO"
 		(shape input)
-		(at 114.3 78.74 0)
+		(at 175.26 104.14 0)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
 			(justify left)
 		)
-		(uuid "a0b0f2cd-a3df-4937-877e-37955a020cdb")
+		(uuid "4c748a7a-b4f8-4d79-aa56-185e8cb8da18")
+	)
+	(wire
+		(pts
+			(xy 149.86 116.84) (xy 149.86 127)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "865cca94-49b4-4a45-9875-fd710ae29480")
 	)
 	(global_label "GND"
 		(shape input)
-		(at 99.06 91.44 270)
+		(at 149.86 127 270)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
 			(justify left)
 		)
-		(uuid "789c5a60-e2ba-4149-86d7-ca85a51c460e")
+		(uuid "6a592ccc-90bd-41c7-80b9-1604fcff065a")
+	)
+	(wire
+		(pts
+			(xy 165.1 93.98) (xy 175.26 93.98)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "690cfb2a-ebb2-43fc-88e2-5782f82e4589")
 	)
 	(global_label "RESET_N"
 		(shape input)
-		(at 114.3 68.58 0)
+		(at 175.26 93.98 0)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
 			(justify left)
 		)
-		(uuid "2212a535-52c5-4a49-b3c5-5d5b6743aafd")
+		(uuid "5d16504b-c8d7-4587-b968-eabb5e14cbf0")
+	)
+	(text "SWD / ARM Cortex Debug header for NINA-B400 (U3)"
+		(at 101.6 40.64 0)
+		(effects
+			(font
+				(size 1.7 1.7)
+				(bold yes)
+			)
+			(justify left)
+		)
+		(uuid "cf154fbc-a2b9-4424-9c5f-2078f2c77920")
+	)
+	(text "Standard 2x5 1.27mm pitch. Pin numbers are unchanged from the"
+		(at 101.6 45.72 0)
+		(effects
+			(font
+				(size 1.7 1.7)
+				(bold yes)
+			)
+			(justify left)
+		)
+		(uuid "4bbdd709-a3de-407e-9874-937f14e3779a")
+	)
+	(text "NINA-B111 this board previously used: SWDCLK=11, SWDIO=15,"
+		(at 101.6 50.8 0)
+		(effects
+			(font
+				(size 1.7 1.7)
+				(bold yes)
+			)
+			(justify left)
+		)
+		(uuid "b90bc5e0-086a-447f-be3d-db75b5e578d0")
+	)
+	(text "RESET_N=19, SWO=8 -- verified against UBX-19049405 R09 Table 6."
+		(at 101.6 55.88 0)
+		(effects
+			(font
+				(size 1.7 1.7)
+				(bold yes)
+			)
+			(justify left)
+		)
+		(uuid "cfccce6e-7999-40b6-8e08-363d545492b2")
+	)
+	(text "VTref takes the regulated +3V3 rail."
+		(at 101.6 60.96 0)
+		(effects
+			(font
+				(size 1.7 1.7)
+				(bold yes)
+			)
+			(justify left)
+		)
+		(uuid "e9c1ad79-dc4a-4496-a941-193f8628f2aa")
 	)
 	(no_connect
-		(at 114.3 81.28)
-		(uuid "4db2c2a0-e0a7-492a-a96a-bd4745a2b9fd")
+		(at 142.24 101.6)
+		(uuid "42d47761-e980-42c8-83c3-37fa876ef885")
+	)
+	(no_connect
+		(at 165.1 106.68)
+		(uuid "21078cb0-f7fa-4c6d-8013-fc5e2bc3e5f5")
 	)
 )
