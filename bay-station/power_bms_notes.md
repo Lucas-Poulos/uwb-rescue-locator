@@ -10,10 +10,12 @@ footprints placed on the PCB, no wires drawn -- every net is carried by
 
 ## Scope decisions
 
-- **No ESP32-S3-WROOM-1 or DWM3000 instances on this sheet.** This sheet's
+- **No host MCU or UWB transceiver instances on this sheet.** (Written when
+  those were an ESP32-S3 and four DWM3000 modules; they are now a BT840 and
+  four DW3210s, but the scope reasoning is unchanged.) This sheet's
   job is the input protection / charge / fuel-gauge circuitry; the MCU and
   UWB anchor modules belong on their own future `connectivity` /
-  `uwb_anchors` sheets where their own datasheet-specific decoupling will be
+  `uwb_array` sheets where their own datasheet-specific decoupling will be
   added (per each part's own supply-pin requirements -- ESP32-S3-WROOM-1
   needs several caps across multiple 3V3 pins per Espressif's hardware
   design guidelines; DWM3000 needs its own decoupling per the Qorvo

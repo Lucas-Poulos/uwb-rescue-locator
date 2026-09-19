@@ -6,7 +6,7 @@
 	(paper "A3")
 	(title_block
 		(title "Regulation")
-		(comment 1 "Bay station -- +VSYS to +3V3_SYS buck regulation (TPS62A02PDDCR) for ESP32-S3 + 4x DWM3000 loads. Placement only -- no wires/labels yet.")
+		(comment 1 "Bay station -- +VSYS to +3V3_SYS buck regulation (TPS62A02PDDCR) for BT840 host + 4x DW3210 anchor loads. Placement only -- no wires/labels yet. Budget re-run 2026-09-19: ~347mA vs 2A rating.")
 	)
 	(lib_symbols
 		(symbol "Regulator_Switching:TPS62A02PDDCR"
@@ -702,7 +702,7 @@
 		)
 		(uuid "5926d5cf-017c-4cf8-a16a-c71477f01801")
 	)
-	(text "Placement only: no wires or global labels on this sheet yet.\nU8 = TPS62A02PDDCR (TI, real datasheet SLUSEG9E), a 2.5-5.5V-in / 2A synchronous\nbuck converter, adjustable output via R8/R9 feedback divider (R8=453k, R9=100k,\nVOUT = 0.6V x (1+R1/R2) = 0.6V x 5.53 = ~3.318V per Eq.2 of the datasheet).\nL1=1uH + C20=4.7uF (VIN) + C21=22uF (VOUT) per the datasheet's own Table 8-3\nrecommended LC combination for VOUT>=1.8V; C22=120pF optional feedforward cap\nacross R8, per the datasheet's own PSM-ripple-reduction note.\nIntended rail names (not yet wired): input = +VSYS (from power_bms.kicad_sch's\nMCP73871 OUT/VBATT_PROT node), output = +3V3_SYS (new regulated rail feeding\nU3 on connectivity.kicad_sch and U4-U7 on uwb_anchors.kicad_sch). EN (pin 1) and\nPG (pin 5, unused/optional) are also left unconnected here -- EN needs to be tied\nto +VSYS (always-on) in a future wiring pass. See regulation_notes.md for the full\ncurrent-budget math and datasheet citations."
+	(text "Placement only: no wires or global labels on this sheet yet.\nU8 = TPS62A02PDDCR (TI, real datasheet SLUSEG9E), a 2.5-5.5V-in / 2A synchronous\nbuck converter, adjustable output via R8/R9 feedback divider (R8=453k, R9=100k,\nVOUT = 0.6V x (1+R1/R2) = 0.6V x 5.53 = ~3.318V per Eq.2 of the datasheet).\nL1=1uH + C20=4.7uF (VIN) + C21=22uF (VOUT) per the datasheet's own Table 8-3\nrecommended LC combination for VOUT>=1.8V; C22=120pF optional feedforward cap\nacross R8, per the datasheet's own PSM-ripple-reduction note.\nIntended rail names (not yet wired): input = +VSYS (from power_bms.kicad_sch's\nMCP73871 OUT/VBATT_PROT node), output = +3V3_SYS (new regulated rail feeding\nU3 on connectivity.kicad_sch and U4-U7 on uwb_array.kicad_sch). EN (pin 1) and\nPG (pin 5, unused/optional) are also left unconnected here -- EN needs to be tied\nto +VSYS (always-on) in a future wiring pass. See regulation_notes.md for the full\ncurrent-budget math and datasheet citations."
 		(at 60 38 0)
 		(effects
 			(font

@@ -1,0 +1,2123 @@
+(kicad_sch
+	(version 20231120)
+	(generator "eeschema")
+	(generator_version "8.0")
+	(uuid "4dd823fa-d4dd-4956-97ec-7b272a4ae2d4")
+	(paper "A4")
+	(title_block
+		(title "UWB Array")
+		(comment 1 "4x DW3210 -- A0 center + A1-A3 outer -- placement only")
+	)
+	(lib_symbols
+		(symbol "bay_station:DW3210"
+			(pin_names
+				(offset 1.016)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "U"
+				(at 0 31.75 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "DW3210"
+				(at 0 -28.0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" "Package_DFN_QFN:QFN-40-1EP_5x5mm_P0.4mm_EP3.6x3.6mm"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "https://www.qorvo.com/products/p/DW3210"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "Qorvo DW3210 -- IEEE802.15.4z UWB transceiver IC, QFN40 5x5mm, non-PDoA variant. Pin names/numbers transcribed from the real Qorvo DW3000 Datasheet v1.3, Table 2 'DW3000 QFN & WLCSP Pin functions'. IMPORTANT: that table must be extracted with 'pdftotext -raw' -- the -layout mode mangles it (it renders VDD1 as pin 24 'Ground return for VDD2', which is wrong). Supplies: VDD1 pin 29 is the main supply (1.62-3.6V) and also feeds WAKEUP/EXTON/RSTn/SPI I/O; VDD2a pin 28 and VDD2b pin 23 are 2.4-3.6V (the datasheet notes ball F-15 needs ferrite isolation from B-15); VDD3 pin 26 is 1.5-3.6V. VTX_D pin 27 and VIO_D pin 38 are decoupling pins, each needing an external capacitor to ground -- they are NOT supply inputs and are typed passive here. Grounds: 10/11/12/14/15/16/17/19/20 are RF ground, 24 VSS2, 25 VSS3, 30 VSS1, 39/40 VSS digital. RF1 pin 18 needs a series 2pF cap; RF2 pin 13 is unused on this non-PDoA variant and must be terminated into 50 ohm through a 50 ohm trace. XTI pin 21 is the external-reference overdrive input used by this design's shared clock; XTO pin 22 then needs 1pF to ground. Symbol layout: pins 1-20 down the left, 21-40 down the right, numeric order."
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "DW3210_0_1"
+				(rectangle
+					(start -17.78 27.94)
+					(end 17.78 -25.4)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+			)
+			)
+			(symbol "DW3210_1_1"
+				(pin bidirectional line
+					(at -22.86 25.40 0)
+					(length 5.08)
+					(name "IRQ/GPIO8"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+				)
+				(pin bidirectional line
+					(at -22.86 22.86 0)
+					(length 5.08)
+					(name "GPIO6/EXTRXE/SPIPHA"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+				)
+				(pin bidirectional line
+					(at -22.86 20.32 0)
+					(length 5.08)
+					(name "GPIO0/RXOKLED"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+				)
+				(pin bidirectional line
+					(at -22.86 17.78 0)
+					(length 5.08)
+					(name "GPIO1/SFDLED"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+					(number "4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+				)
+				(pin bidirectional line
+					(at -22.86 15.24 0)
+					(length 5.08)
+					(name "GPIO5/EXTTXE/SPIPOL"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+					(number "5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+				)
+				(pin bidirectional line
+					(at -22.86 12.70 0)
+					(length 5.08)
+					(name "GPIO2/RXLED"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+					(number "6"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+				)
+				(pin bidirectional line
+					(at -22.86 10.16 0)
+					(length 5.08)
+					(name "GPIO3/TXLED"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+					(number "7"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+				)
+				(pin bidirectional line
+					(at -22.86 7.62 0)
+					(length 5.08)
+					(name "GPIO4/EXTPA"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+					(number "8"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+				)
+				(pin bidirectional line
+					(at -22.86 5.08 0)
+					(length 5.08)
+					(name "GPIO7/SYNC"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+					(number "9"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+				)
+				(pin power_in line
+					(at -22.86 2.54 0)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+					(number "10"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+				)
+				(pin power_in line
+					(at -22.86 0.00 0)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+					(number "11"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+				)
+				(pin power_in line
+					(at -22.86 -2.54 0)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+					(number "12"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+				)
+				(pin bidirectional line
+					(at -22.86 -5.08 0)
+					(length 5.08)
+					(name "RF2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+					(number "13"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+				)
+				(pin power_in line
+					(at -22.86 -7.62 0)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+					(number "14"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+				)
+				(pin power_in line
+					(at -22.86 -10.16 0)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+					(number "15"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+				)
+				(pin power_in line
+					(at -22.86 -12.70 0)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+					(number "16"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+				)
+				(pin power_in line
+					(at -22.86 -15.24 0)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+					(number "17"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+				)
+				(pin bidirectional line
+					(at -22.86 -17.78 0)
+					(length 5.08)
+					(name "RF1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+					(number "18"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+				)
+				(pin power_in line
+					(at -22.86 -20.32 0)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+					(number "19"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+				)
+				(pin power_in line
+					(at -22.86 -22.86 0)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+					(number "20"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+				)
+				(pin input line
+					(at 22.86 25.40 180)
+					(length 5.08)
+					(name "XTI"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+					(number "21"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+				)
+				(pin output line
+					(at 22.86 22.86 180)
+					(length 5.08)
+					(name "XTO"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+					(number "22"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+				)
+				(pin power_in line
+					(at 22.86 20.32 180)
+					(length 5.08)
+					(name "VDD2b"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+					(number "23"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+				)
+				(pin power_in line
+					(at 22.86 17.78 180)
+					(length 5.08)
+					(name "VSS2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+					(number "24"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+				)
+				(pin power_in line
+					(at 22.86 15.24 180)
+					(length 5.08)
+					(name "VSS3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+					(number "25"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+				)
+				(pin power_in line
+					(at 22.86 12.70 180)
+					(length 5.08)
+					(name "VDD3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+					(number "26"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+				)
+				(pin passive line
+					(at 22.86 10.16 180)
+					(length 5.08)
+					(name "VTX_D"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+					(number "27"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+				)
+				(pin power_in line
+					(at 22.86 7.62 180)
+					(length 5.08)
+					(name "VDD2a"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+					(number "28"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+				)
+				(pin power_in line
+					(at 22.86 5.08 180)
+					(length 5.08)
+					(name "VDD1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+					(number "29"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+				)
+				(pin power_in line
+					(at 22.86 2.54 180)
+					(length 5.08)
+					(name "VSS1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+					(number "30"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+				)
+				(pin output line
+					(at 22.86 0.00 180)
+					(length 5.08)
+					(name "EXTON"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+					(number "31"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+				)
+				(pin input line
+					(at 22.86 -2.54 180)
+					(length 5.08)
+					(name "WAKEUP"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+					(number "32"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+				)
+				(pin bidirectional line
+					(at 22.86 -5.08 180)
+					(length 5.08)
+					(name "RSTn"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+					(number "33"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+				)
+				(pin input line
+					(at 22.86 -7.62 180)
+					(length 5.08)
+					(name "SPICLK"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+					(number "34"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+				)
+				(pin input line
+					(at 22.86 -10.16 180)
+					(length 5.08)
+					(name "SPIMOSI"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+					(number "35"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+				)
+				(pin output line
+					(at 22.86 -12.70 180)
+					(length 5.08)
+					(name "SPIMISO"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+					(number "36"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+				)
+				(pin input line
+					(at 22.86 -15.24 180)
+					(length 5.08)
+					(name "SPICSn"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+					(number "37"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+				)
+				(pin passive line
+					(at 22.86 -17.78 180)
+					(length 5.08)
+					(name "VIO_D"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+					(number "38"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+				)
+				(pin power_in line
+					(at 22.86 -20.32 180)
+					(length 5.08)
+					(name "VSS"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+					(number "39"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+				)
+				(pin power_in line
+					(at 22.86 -22.86 180)
+					(length 5.08)
+					(name "VSS"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+					(number "40"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+				)
+				)
+			)
+		)
+		(symbol "Device:R"
+			(pin_numbers hide)
+			(pin_names
+				(offset 0)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "R"
+				(at 2.032 0 90)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "R"
+				(at 0 0 90)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at -1.778 0 90)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "~"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "Resistor"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "R res resistor"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "R_*"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "R_0_1"
+				(rectangle
+					(start -1.016 -2.54)
+					(end 1.016 2.54)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "R_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 1.27)
+					(name "~"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 1.27)
+					(name "~"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
+		(symbol "Device:C"
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 0.254)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "C"
+				(at 0.635 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Value" "C"
+				(at 0.635 -2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Footprint" ""
+				(at 0.9652 -3.81 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Unpolarized capacitor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "cap capacitor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "C_*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "C_0_1"
+				(polyline
+					(pts
+						(xy -2.032 0.762) (xy 2.032 0.762)
+					)
+					(stroke
+						(width 0.508)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -2.032 -0.762) (xy 2.032 -0.762)
+					)
+					(stroke
+						(width 0.508)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "C_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 2.794)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 2.794)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+	)
+	(text "UWB Array -- 4x DW3210 (A0 center + A1-A3 outer)"
+		(at 25 18 0)
+		(effects
+			(font
+				(size 2.5 2.5)
+			)
+		)
+		(uuid "66666666-0000-4000-8000-000000000001")
+	)
+	(text "Placement only: no wires or global labels yet, same convention as this\nboard's other unwired sheets.\n\nTHE FOUR ANCHORS ARE NOT INTERCHANGEABLE PEERS.\n  U4 = A0, the CENTER anchor. Does two-way ranging with the wristband and\n       produces the RANGE to the tag.\n  U5-U7 = A1-A3, the OUTER anchors. They timestamp the SAME wristband\n       transmission and produce TDoA against A0, which gives DIRECTION.\nOne tag transmission, four measurements. See docs/positioning.md.\n\nWhy discrete DW3210 and not the DWM3000 module this sheet used to hold:\nTDoA compares timestamps across receivers, so they must share a time base\n-- 1ns of clock error is 30cm of position error. The module exposes no\nclock pin and its crystal is unreachable, so four of them cannot be\nsynchronised at any price. The bare IC can: XTI (pin 21) is documented as\nan external-reference overdrive input. All four XTI pins are driven from\nthe one TCXO on clock_dist.kicad_sch.\n\nDW3210 is the QFN40 5x5mm NON-PDoA variant. Deliberately NOT DW3110, which\nis the 52-ball WLCSP the module is built on and is not hand-assemblable."
+		(at 25 26 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "66666666-0000-4000-8000-000000000002")
+	)
+	(text "PER-ANCHOR CONNECTIONS, still to be wired:\n  RF1 (pin 18)  -> 2pF series cap -> SMA connector -> ~1-2m coax -> antenna.\n                   CH5 is 6489.6MHz, ABOVE U.FL's 6GHz rating: SMA only.\n  RF2 (pin 13)  -> unused on the non-PDoA variant. No cap, but terminate\n                   into 50 ohm through a 50 ohm trace.\n  XTI (pin 21)  -> 2200pF AC coupling from the clock buffer (clock_dist).\n  XTO (pin 22)  -> 1pF to ground. Required ONLY because an external clock\n                   is used (clock_dist holds C28-C31 for this).\n  SPI           -> SPICLK 34, SPIMOSI 35, SPIMISO 36 shared across all four;\n                   SPICSn 37 individually to the host.\n  IRQ (pin 1)   -> individually to the host.\n  RSTn (pin 33) -> shared reset from the host.\n\nSUPPLIES (all from +3V3_SYS, regulation.kicad_sch):\n  VDD1 pin 29 (1.62-3.6V) is the main supply and also feeds WAKEUP, EXTON,\n  RSTn and the SPI I/O. VDD2a pin 28 and VDD2b pin 23 are 2.4-3.6V; the\n  datasheet notes the WLCSP equivalents need ferrite isolation from each\n  other, so check that applies on QFN before merging them. VDD3 pin 26 is\n  1.5-3.6V.\n  VTX_D pin 27 and VIO_D pin 38 are NOT supply inputs -- they are decoupling\n  pins, each needing its own capacitor to ground. Do not tie them to a rail.\n\nDECOUPLING IS NOT YET PLACED. The old C8-C19 were sized for a module with\none VDD3V3 rail and do not map onto this IC's separate VDD1/VDD2/VDD3 rails\nplus two decoupling pins. Re-derive from the DW3000 datasheet before wiring."
+		(at 25 62 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "66666666-0000-4000-8000-000000000003")
+	)
+	(text "LAYOUT (Section 7.3, not actionable until layout starts): RF1/RF2 must be\n50 ohm impedance-controlled; ground removed from under the chip on the top\nlayer and inner layer 1; first solid ground copper at least 0.25mm below the\ntop layer. This forces a controlled-impedance stackup of at least 4 layers."
+		(at 25 116 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "66666666-0000-4000-8000-000000000004")
+	)
+	(symbol
+		(lib_id "bay_station:DW3210")
+		(at 55 165 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "66666666-0000-4000-8000-000000000010")
+		(property "Reference" "U4"
+			(at 55 161.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "DW3210"
+			(at 55 168.81 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Package_DFN_QFN:QFN-40-1EP_5x5mm_P0.4mm_EP3.6x3.6mm"
+			(at 55 165 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 55 165 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Anchor A0 CENTER -- two-way ranging with the tag, yields RANGE. Pin data verified against Qorvo DW3000 Datasheet v1.3 Table 2 (extracted with pdftotext -raw; -layout mangles that table)."
+			(at 55 165 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
+					(reference "U4")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(text "Anchor A0  (U4)"
+		(at 37 130 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "66666666-0000-4000-8000-000000000020")
+	)
+	(symbol
+		(lib_id "bay_station:DW3210")
+		(at 115 165 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "66666666-0000-4000-8000-000000000011")
+		(property "Reference" "U5"
+			(at 115 161.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "DW3210"
+			(at 115 168.81 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Package_DFN_QFN:QFN-40-1EP_5x5mm_P0.4mm_EP3.6x3.6mm"
+			(at 115 165 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 115 165 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Anchor A1 OUTER -- timestamps the tag transmission for TDoA against A0, yields DIRECTION. Pin data verified against Qorvo DW3000 Datasheet v1.3 Table 2 (extracted with pdftotext -raw; -layout mangles that table)."
+			(at 115 165 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
+					(reference "U5")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(text "Anchor A1  (U5)"
+		(at 97 130 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "66666666-0000-4000-8000-000000000021")
+	)
+	(symbol
+		(lib_id "bay_station:DW3210")
+		(at 175 165 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "66666666-0000-4000-8000-000000000012")
+		(property "Reference" "U6"
+			(at 175 161.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "DW3210"
+			(at 175 168.81 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Package_DFN_QFN:QFN-40-1EP_5x5mm_P0.4mm_EP3.6x3.6mm"
+			(at 175 165 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 175 165 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Anchor A2 OUTER -- timestamps the tag transmission for TDoA against A0, yields DIRECTION. Pin data verified against Qorvo DW3000 Datasheet v1.3 Table 2 (extracted with pdftotext -raw; -layout mangles that table)."
+			(at 175 165 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
+					(reference "U6")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(text "Anchor A2  (U6)"
+		(at 157 130 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "66666666-0000-4000-8000-000000000022")
+	)
+	(symbol
+		(lib_id "bay_station:DW3210")
+		(at 235 165 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "66666666-0000-4000-8000-000000000013")
+		(property "Reference" "U7"
+			(at 235 161.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "DW3210"
+			(at 235 168.81 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Package_DFN_QFN:QFN-40-1EP_5x5mm_P0.4mm_EP3.6x3.6mm"
+			(at 235 165 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 235 165 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Anchor A3 OUTER -- timestamps the tag transmission for TDoA against A0, yields DIRECTION. Pin data verified against Qorvo DW3000 Datasheet v1.3 Table 2 (extracted with pdftotext -raw; -layout mangles that table)."
+			(at 235 165 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
+					(reference "U7")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(text "Anchor A3  (U7)"
+		(at 217 130 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "66666666-0000-4000-8000-000000000023")
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 30 235 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "66666666-0000-4000-8000-000000000030")
+		(property "Reference" "R10"
+			(at 30 231.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10k"
+			(at 30 238.81 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 30 235 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 30 235 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "GPIO5 SPI-mode strap pull-down for anchor A0 (DW3210 pin 5). Defines SPI mode 0 at power-up, per the DW3000 'Sample GPIOs 5&6 to set SPI mode' step in Figures 1 and 2."
+			(at 30 235 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
+					(reference "R10")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 46 235 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "66666666-0000-4000-8000-000000000031")
+		(property "Reference" "R11"
+			(at 46 231.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10k"
+			(at 46 238.81 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 46 235 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 46 235 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "GPIO6 SPI-mode strap pull-down for anchor A0 (DW3210 pin 2). Defines SPI mode 0 at power-up, per the DW3000 'Sample GPIOs 5&6 to set SPI mode' step in Figures 1 and 2."
+			(at 46 235 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
+					(reference "R11")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 62 235 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "66666666-0000-4000-8000-000000000032")
+		(property "Reference" "R12"
+			(at 62 231.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10k"
+			(at 62 238.81 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 62 235 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 62 235 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "GPIO5 SPI-mode strap pull-down for anchor A1 (DW3210 pin 5). Defines SPI mode 0 at power-up, per the DW3000 'Sample GPIOs 5&6 to set SPI mode' step in Figures 1 and 2."
+			(at 62 235 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
+					(reference "R12")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 78 235 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "66666666-0000-4000-8000-000000000033")
+		(property "Reference" "R13"
+			(at 78 231.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10k"
+			(at 78 238.81 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 78 235 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 78 235 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "GPIO6 SPI-mode strap pull-down for anchor A1 (DW3210 pin 2). Defines SPI mode 0 at power-up, per the DW3000 'Sample GPIOs 5&6 to set SPI mode' step in Figures 1 and 2."
+			(at 78 235 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
+					(reference "R13")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 94 235 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "66666666-0000-4000-8000-000000000034")
+		(property "Reference" "R14"
+			(at 94 231.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10k"
+			(at 94 238.81 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 94 235 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 94 235 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "GPIO5 SPI-mode strap pull-down for anchor A2 (DW3210 pin 5). Defines SPI mode 0 at power-up, per the DW3000 'Sample GPIOs 5&6 to set SPI mode' step in Figures 1 and 2."
+			(at 94 235 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
+					(reference "R14")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 110 235 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "66666666-0000-4000-8000-000000000035")
+		(property "Reference" "R15"
+			(at 110 231.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10k"
+			(at 110 238.81 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 110 235 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 110 235 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "GPIO6 SPI-mode strap pull-down for anchor A2 (DW3210 pin 2). Defines SPI mode 0 at power-up, per the DW3000 'Sample GPIOs 5&6 to set SPI mode' step in Figures 1 and 2."
+			(at 110 235 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
+					(reference "R15")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 126 235 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "66666666-0000-4000-8000-000000000036")
+		(property "Reference" "R16"
+			(at 126 231.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10k"
+			(at 126 238.81 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 126 235 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 126 235 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "GPIO5 SPI-mode strap pull-down for anchor A3 (DW3210 pin 5). Defines SPI mode 0 at power-up, per the DW3000 'Sample GPIOs 5&6 to set SPI mode' step in Figures 1 and 2."
+			(at 126 235 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
+					(reference "R16")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 142 235 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "66666666-0000-4000-8000-000000000037")
+		(property "Reference" "R17"
+			(at 142 231.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10k"
+			(at 142 238.81 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 142 235 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 142 235 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "GPIO6 SPI-mode strap pull-down for anchor A3 (DW3210 pin 2). Defines SPI mode 0 at power-up, per the DW3000 'Sample GPIOs 5&6 to set SPI mode' step in Figures 1 and 2."
+			(at 142 235 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
+					(reference "R17")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 30 255 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "66666666-0000-4000-8000-000000000040")
+		(property "Reference" "R25"
+			(at 30 251.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "100k"
+			(at 30 258.81 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 30 255 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 30 255 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "IRQ/GPIO8 (DW3210 pin 1) pull-down for anchor A0, per Qorvo Figure 11, 'to prevent spurious interrupts'. The datasheet also notes IRQ floats in SLEEP/DEEPSLEEP and recommends 100k externally."
+			(at 30 255 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
+					(reference "R25")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 46 255 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "66666666-0000-4000-8000-000000000041")
+		(property "Reference" "R26"
+			(at 46 251.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "100k"
+			(at 46 258.81 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 46 255 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 46 255 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "IRQ/GPIO8 (DW3210 pin 1) pull-down for anchor A1, per Qorvo Figure 11, 'to prevent spurious interrupts'. The datasheet also notes IRQ floats in SLEEP/DEEPSLEEP and recommends 100k externally."
+			(at 46 255 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
+					(reference "R26")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 62 255 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "66666666-0000-4000-8000-000000000042")
+		(property "Reference" "R27"
+			(at 62 251.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "100k"
+			(at 62 258.81 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 62 255 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 62 255 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "IRQ/GPIO8 (DW3210 pin 1) pull-down for anchor A2, per Qorvo Figure 11, 'to prevent spurious interrupts'. The datasheet also notes IRQ floats in SLEEP/DEEPSLEEP and recommends 100k externally."
+			(at 62 255 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
+					(reference "R27")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 78 255 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "66666666-0000-4000-8000-000000000043")
+		(property "Reference" "R28"
+			(at 78 251.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "100k"
+			(at 78 258.81 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 78 255 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 78 255 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "IRQ/GPIO8 (DW3210 pin 1) pull-down for anchor A3, per Qorvo Figure 11, 'to prevent spurious interrupts'. The datasheet also notes IRQ floats in SLEEP/DEEPSLEEP and recommends 100k externally."
+			(at 78 255 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
+					(reference "R28")
+					(unit 1)
+				)
+			)
+		)
+	)
+)

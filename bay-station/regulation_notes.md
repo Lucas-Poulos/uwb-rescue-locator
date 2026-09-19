@@ -1,5 +1,13 @@
 # regulation.kicad_sch + programming_debug.kicad_sch -- design notes
 
+> **2026-09-19:** this file predates two architecture changes. The bay station
+> now uses a Fanstel BT840 (nRF52840) host and four discrete DW3210s, not an
+> ESP32-S3 and four DWM3000 modules, and Section 3 below documents ESP32-S3
+> programming circuitry that has since been DELETED from the schematic
+> (`programming_debug` is now just an SWD header and a reset button). The
+> current-budget section has been re-run and is live; everything else naming
+> those parts is historical. See `../docs/decisions.md`.
+
 Two new hierarchical sub-sheets fixing three confirmed hardware gaps on the bay
 station: (1) no regulated 3.3V rail for the ESP32-S3-WROOM-1 / 4x DWM3000 loads
 (they were tracking the unregulated `+VSYS` rail directly, up to ~4.2V+), (2)
@@ -9,7 +17,7 @@ boot-strapping pulls, reset/boot buttons, and a flashing interface. Wired into
 `5c2a31d1-5b69-4a48-a195-eba324445020`) and "Programming / Debug" (sheet-symbol
 uuid `883ff08c-ad9f-4863-b9db-49772b53748e`), registered in
 `bay-station.kicad_pro`'s `sheets` list. **Placement only, same as
-`connectivity`/`uwb_anchors`/`mechanical`: no wires, no global labels.**
+`connectivity`/`uwb_array`/`mechanical`: no wires, no global labels.**
 
 ## 1. Buck converter selection: TI TPS62A02 (TPS62A02PDDCR)
 
@@ -26,7 +34,7 @@ exceed their absolute-maximum ratings:
 - **DWM3000 abs-max VDD3V3/VDD1: -0.3V to 4.0V.** Verified directly from the
   real Qorvo DWM3000 Data Sheet Rev B, May 2021, Table 9 "DWM3000 Absolute
   Maximum Ratings" (`https://download.mikroe.com/documents/datasheets/DWM3000_datasheet.pdf`,
-  already the datasheet URL cited in `libs/components.csv`/`uwb_anchors.kicad_sch`).
+  already the datasheet URL cited in `libs/components.csv`/`uwb_array.kicad_sch`).
 - **ESP32-S3-WROOM-1 abs-max VDD33: -0.3V to 3.6V.** Verified directly from the
   real Espressif ESP32-S3-WROOM-1 & WROOM-1U Datasheet v1.8, Table 6-1
   "Absolute Maximum Ratings" (`https://www.espressif.com/sites/default/files/documentation/esp32-s3-wroom-1_wroom-1u_datasheet_en.pdf`,
@@ -40,22 +48,69 @@ station's longevity/efficiency-focused design philosophy (see `README.md`).
 
 ### Current-draw budget (real datasheet numbers, not estimates)
 
-- **ESP32-S3-WROOM-1 peak current: 355 mA.** Real Espressif ESP32-S3-WROOM-1
+- **Host MCU: ~20 mA [ESTIMATE].** The BT840 (nRF52840) replaced the
+  ESP32-S3-WROOM-1 on 2026-09-19. **The Fanstel BT840 datasheet
+  (BT840/F/E/X/XE Ver 1.15) contains no current-consumption table**, so this
+  is an order-of-magnitude allowance based on the nRF52840 running BLE at
+  +8dBm with its on-module DC-DC, not a datasheet figure. Confirm against the
+  Nordic nRF52840 Product Specification before relying on it.
+
+  This is the single biggest change to this budget: the ESP32-S3 figure it
+  replaced was **355 mA**, and it dominated everything else. Retained below
+  for the record.
+
+  *Superseded:* **ESP32-S3-WROOM-1 peak current: 355 mA.** Real Espressif ESP32-S3-WROOM-1
   Datasheet v1.8, Section 6.4.1 "Current Consumption in Active Mode", Table
   6-4 "Current Consumption for Wi-Fi (2.4 GHz) in Active Mode": the highest
   listed peak is 802.11b, 1 Mbps, @20.5 dBm TX = **355 mA** (the Bluetooth LE
   TX table peaks lower, at 344 mA @20.0 dBm, so Wi-Fi TX is the worst case).
-- **DWM3000 worst-case current: 55 mA each.** Real Qorvo DWM3000 Data Sheet
-  Rev B, Table 5 "DWM3000 DC Characteristics" (`Tamb=25C`, "Total current drawn
-  from all supplies"): CH9 RX = 55 mA typ (the highest single figure in the
-  table; CH9 TX = 45 mA, CH5 RX = 50 mA, CH5 TX = 40 mA, IDLE modes 12-20 mA).
-  Worst-case simultaneous 4-anchor RX: **4 x 55 mA = 220 mA.**
-- **Combined worst-case peak (conservative, assumes simultaneous ESP32-S3 TX
-  burst + all 4 anchors in RX):** 355 mA + 220 mA = **575 mA.**
+- **DW3210 peak current: 72 mA each (CH5 RX).** Real Qorvo **DW3000 Datasheet
+  v1.3**, Table 5 "DC Characteristics" (`Tamb=25C`, supplies at 3.0V), row
+  "Peak current continuous Tx/Rx": **RX CH5 = 72 mA**, RX CH9 = 88 mA, TX CH5
+  at nominal -41.3 dBm/MHz = 23 mA (VDD2) + 25 mA (VDD3). RX is the worst
+  case, and CH5 is this design's chosen channel. Worst-case simultaneous
+  4-anchor RX: **4 x 72 mA = 288 mA.**
 
-This is a genuinely conservative stack-up (in practice the anchor array is
-unlikely to have all 4 units in RX at the exact same instant as an ESP32-S3
-Wi-Fi TX burst), but it's the right number to size against.
+  *Why this number went up from the 220 mA in the previous revision:* that
+  figure was 4 x 55 mA taken from the **module** datasheet's "total current
+  drawn from all supplies", which is a typical figure. This design now uses
+  the **bare DW3210 IC**, and the IC datasheet quotes *peak current
+  continuous* -- a stricter metric, and the correct one for sizing a
+  regulator. The part did not get worse; the measurement basis got more
+  conservative.
+
+  *Caveat:* Table 5 extracts with scrambled column alignment from the PDF.
+  The RX CH5 = 72 mA and RX CH9 = 88 mA rows are unambiguous, but confirm the
+  sleep/idle rows against the rendered table before relying on them.
+- **Clock network: ~27 mA, estimated.** One 38.4 MHz TCXO (~2 mA) plus a 1:4
+  low-skew fan-out buffer driving four loads (~25 mA). **Neither part is
+  selected yet** (open item, `../docs/decisions.md`), so both are
+  order-of-magnitude allowances, not datasheet figures. Re-check once chosen.
+- **Status LEDs: 3-12 mA, depending on a decision not yet made.** `D7`
+  (system status, ESP32-S3 GPIO) sits on `+3V3_SYS` at ~3 mA. `D4`/`D5`/`D6`
+  are driven from MCP73871's open-drain `STAT1`/`STAT2`/`~PG`, and whether
+  they pull from `+3V3_SYS` or `+VSYS` is still open -- if `+3V3_SYS`, add
+  ~9 mA. Budgeted here at the worst case.
+- **Combined worst-case peak** (conservative: BLE TX + all 4 anchors in RX +
+  clock network + all LEDs lit): 20 + 288 + 27 + 12 = **~347 mA.**
+
+Against the TPS62A02's 2A rating that is **~5.8x headroom** -- up from 2.9x,
+because dropping WiFi removed the largest single load on the board. **The
+part choice survives**, and is now substantially oversized.
+
+That is worth a deliberate note rather than silent acceptance: a smaller,
+cheaper buck would now do. **Not changing it** -- the TPS62A02 is drawn,
+datasheet-verified, and its headroom has already absorbed two architecture
+changes without a respin. Revisit only if board area or BOM cost becomes
+tight. The 4x DW3210 anchors are now the dominant load by a wide margin,
+which is the right thing for the dominant load to be.
+
+This remains a genuinely conservative stack-up (in practice the anchor array
+is unlikely to have all four units in RX at the exact instant of a BLE TX
+burst, with every LED lit), but it is the right number to size against.
+
+**Re-run this again** when the TCXO and clock buffer are selected and when the
+LED drive rails are fixed -- those are the two estimated lines above.
 
 ### Part chosen and why
 
@@ -94,11 +149,15 @@ single-cell-Li-Ion-powered scenario (TI markets the whole TPS62A0x family for
 "Battery-powered applications"), while its 6.5V absolute-max VIN still gives
 headroom over the documented ~5V-class wall/USB-present condition (and over
 MCP73871's own 7.0V IN absolute-max, so the buck won't be the first thing to
-fail if the input creeps toward that ceiling). **2A rated output gives ~3.5x
-headroom** over the 575 mA worst-case combined peak budget above -- chosen
+fail if the input creeps toward that ceiling). **2A rated output gives ~5.8x
+headroom** over the ~347 mA worst-case combined peak budget above -- chosen
 deliberately generous since this board isn't size-constrained, prioritizing a
 modern, well-documented TI part with a straightforward datasheet-verified
-design over the smallest/cheapest option.
+design over the smallest/cheapest option. That generosity is exactly what
+absorbed two architecture changes without a respin: the load first grew from
+575 mA to 682 mA when the DWM3000 modules became discrete DW3210s with a
+shared clock network, then fell to ~347 mA when the WiFi host was replaced by
+a BLE one. Sizing generously up front is what let both happen for free.
 
 ### Circuit built on `regulation.kicad_sch`
 
@@ -123,7 +182,7 @@ the 3.3V target, and with comfortable margin under both abs-max ratings above
 `+VSYS` (from `power_bms.kicad_sch`'s MCP73871 `OUT`/`VBATT_PROT` node, once a
 future wiring pass connects the two sheets), output = **`+3V3_SYS`** (a new
 regulated rail intended to feed U3 on `connectivity.kicad_sch` and U4-U7 on
-`uwb_anchors.kicad_sch`). EN (pin 1) is left unconnected here -- it needs to be
+`uwb_array.kicad_sch`). EN (pin 1) is left unconnected here -- it needs to be
 tied to `+VSYS` (always-on) in a future wiring pass, since "EN must be
 terminated and not left floating" per the datasheet. PG (pin 5, power-good) is
 intentionally left unconnected/unused -- the datasheet explicitly allows this
@@ -145,7 +204,7 @@ produces one expected, benign `lib_symbol_issues` ERC warning ("Symbol
 'TPS62A02PDDCR' not found in symbol library 'Regulator_Switching'"), the same
 category and cause as the existing AO3401A warning.
 
-## 2. DWM3000 GPIO5/GPIO6 SPI-mode-strap pull resistors (uwb_anchors.kicad_sch)
+## 2. DWM3000 GPIO5/GPIO6 SPI-mode-strap pull resistors (uwb_array.kicad_sch)
 
 **The gap:** the real Qorvo DWM3000 Data Sheet Rev B explicitly shows, in both
 Figure 1 ("Timing diagram for cold start POR") and Figure 2 ("Timing diagram
@@ -159,11 +218,11 @@ GPIOs default to an internally SW-controllable pull-down (10k-30k, varying
 with VDD1 per Figure 12), which already yields SPI mode 0 (SPIPOL=0, SPIPHA=0)
 by default -- but the task explicitly calls for defined external pull
 resistors rather than leaving these boot-sampled pins to rely solely on an
-internal, VDD1-dependent, software-configurable default across 4 separate
-remote anchor boards.
+internal, VDD1-dependent, software-configurable default across all 4 anchor
+instances.
 
 **The fix:** 8 external 10k pull-down resistors added directly to
-`uwb_anchors.kicad_sch` (not compacted into a shared note -- placed in full,
+`uwb_array.kicad_sch` (not compacted into a shared note -- placed in full,
 matching this sheet's existing per-anchor-explicit-component convention, where
 each anchor already gets its own full decoupling set rather than an implied
 shared passive):
@@ -184,7 +243,14 @@ is also what the DWM3000's own internal pull-down default already selects --
 this reinforces/guarantees that default in hardware rather than leaving it to
 chance.
 
-## 3. ESP32-S3-WROOM-1 boot-strapping, buttons, and flashing interface (programming_debug.kicad_sch)
+## 3. ESP32-S3-WROOM-1 boot-strapping, buttons, and flashing interface -- HISTORICAL
+
+> **All of the circuitry in this section has been deleted from the schematic.**
+> The BT840 programs over SWD, so the boot straps, the EN RC delay, the BOOT
+> button and the data-capable USB-C are all gone -- which also resolved the
+> two-USB-C open item. `programming_debug.kicad_sch` is now a 2x5 1.27mm ARM
+> Cortex Debug header (J3) plus the RESET button (SW2). Kept below as a record
+> of why each part was there.
 
 ### Boot-strapping pull resistors
 
@@ -259,7 +325,7 @@ cannot be touched in this pass.
 ## Reference designators used
 
 `U8, L1, C20, C21, C22, R8, R9` (regulation.kicad_sch); `R10-R17`
-(uwb_anchors.kicad_sch additions); `SW1, SW2, J3, R18-R24, C23`
+(uwb_array.kicad_sch additions); `SW1, SW2, J3, R18-R24, C23`
 (programming_debug.kicad_sch). All within the pre-cleared next-available
 ranges for this board.
 
