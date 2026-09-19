@@ -290,12 +290,16 @@
       "Regulation"
     ],
     [
-      "70531719-0575-447f-9fe2-78b3cc25b488",
-      "Antenna"
-    ],
-    [
       "ddd7aa1e-0d16-49f7-8332-00365f7ee71d",
       "Programming Debug"
+    ],
+    [
+      "7e1c4a92-3b5d-4f68-a2c1-9d0e5f7b3a41",
+      "Indicators"
+    ],
+    [
+      "8a1b2c3d-4e5f-4061-8273-849506a7b8c9",
+      "Test Points"
     ]
   ],
   "text_variables": {}

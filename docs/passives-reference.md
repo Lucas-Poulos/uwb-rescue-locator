@@ -7,21 +7,26 @@ board's `*_notes.md` are the more detailed originals this was compiled from.
 All passives are standard **0603** (`R_0603_1608Metric` / `C_0603_1608Metric`
 / `L_0603_1608Metric`) unless noted otherwise.
 
-## u-blox NINA-B111 (wristband, U3)
+## Qorvo DWM3001C (wristband, U3)
 
-No reference/application circuit exists for this part -- it's a certified
-module with fully integrated LDO + DC/DC step-down regulation on-board
-(datasheet Section 2.1.1: "compatible for use in battery powered designs --
-without the use of an additional voltage converter"), so there's nothing
-external to add for its own internal supply rails.
+No reference/application circuit exists for this part. It is a certified
+module with on-board power management, its own 38.4MHz crystal, and both
+antennas integrated -- the datasheet is explicit that it "requires no RF
+design as the antenna and associated analog and RF components are on the
+module" (Section 8). There is nothing external to add beyond supply
+decoupling.
 
 | Passive | Value | Role | Status |
 |---|---|---|---|
-| C6, C7 | 100nF | VCC / VCC_IO bypass | Placed (`radio_mcu.kicad_sch`). Reasonable standard practice; the datasheet gives no specific external decoupling value to confirm against since none is required. |
-| L1, C13 | DNP (placeholder) | ANT-pin matching network to the external antenna | Placed on `antenna.kicad_sch`, deliberately unpopulated -- values depend on prototype RF tuning/layout, not something a datasheet gives numerically. u-blox's separate "NINA-B1 System Integration Manual" (referenced but not fetched in this pass) may have more specific guidance -- worth a follow-up if precise starting values are wanted before tuning. |
+| C6 | 100nF | VDD (pin 12) bypass | Placed (`radio_mcu.kicad_sch`). Conservative standard practice; Qorvo publishes no external application circuit, so there is no datasheet value to confirm against. |
+| C7 | 10uF | VDD bulk | Placed (`radio_mcu.kicad_sch`). Same basis as C6. |
 
-External **antenna required** (B111 has no on-module antenna, unlike B112) --
-already resolved: ProAnt InSide-2400, see `docs/decisions.md`.
+**Superseded:** this section previously covered u-blox NINA-B111 (C6/C7 as
+VCC/VCC_IO bypass) and an L1/C13 DNP antenna matching network on
+`antenna.kicad_sch`. Both parts and that whole sheet were deleted on
+2026-09-19 when the wristband consolidated onto the DWM3001C -- see
+`decisions.md`. The matching network no longer exists, so neither does the
+open RF-tuning task attached to it.
 
 ## Qorvo DWM3000 (wristband U4; bay-station U4-U7, x5 total)
 
@@ -80,7 +85,29 @@ choice, not derived from a table.
 Standalone protection part -- no supporting passives required by its own
 datasheet; used directly across the rail it protects.
 
-## Espressif ESP32-S3-WROOM-1 (bay-station connectivity, U3)
+## Fanstel BT840 / Nordic nRF52840 (bay-station connectivity, U3)
+
+Replaced the ESP32-S3-WROOM-1 on 2026-09-19. The BT840 is a certified module
+with on-board DC-DC and its own antenna, so there is no external application
+circuit to work from -- C5/C6/C7 on `connectivity.kicad_sch` are conservative
+3V3 supply decoupling, not datasheet-specified values.
+
+## Qorvo DW3210 (bay-station uwb_array, U4-U7, x4)
+
+**Decoupling is deliberately NOT yet placed.** The previous C8-C19 were sized
+for a DWM3000 module with a single VDD3V3 rail and do not map onto a bare IC.
+The DW3210 has three separate supply rails -- VDD1 (pin 29, main + I/O),
+VDD2a/VDD2b (28/23) and VDD3 (26) -- **plus two decoupling-only pins**,
+VTX_D (27) and VIO_D (38), which each need their own capacitor to ground and
+must NOT be tied to a rail. Re-derive the whole set from the DW3000 datasheet
+before wiring.
+
+Also required per anchor and already placed: 10k GPIO5/GPIO6 SPI-mode straps
+(R10-R17) and a 100k IRQ pull-down (R25-R28, Qorvo Figure 11). RF1 (pin 18)
+needs a series 2pF cap; RF2 (pin 13) is unused on this non-PDoA variant and
+must be terminated into 50 ohm through a 50 ohm trace.
+
+## Espressif ESP32-S3-WROOM-1 -- HISTORICAL (superseded by the BT840)
 
 Decoupling per Espressif's hardware design guidelines; boot-strap resistors
 per the real datasheet Section 4/Table 4-1/4-3/4-4/4-5; EN RC delay per the

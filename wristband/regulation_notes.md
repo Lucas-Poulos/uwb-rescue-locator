@@ -1,9 +1,19 @@
-# Regulation / Antenna / Programming-Debug -- design notes
+# Regulation / Programming-Debug -- design notes
 
-This covers the three new **placement-only** hierarchical sheets added in this
-pass -- `regulation.kicad_sch`, `antenna.kicad_sch`, `programming_debug.kicad_sch`
--- plus the two GPIO strapping resistors (`R7`, `R8`) added directly onto the
-already-existing `radio_mcu.kicad_sch`. As with `radio_mcu.kicad_sch` and
+> **2026-09-19:** this file was written when it also covered
+> `antenna.kicad_sch`. **That sheet has been deleted** -- the wristband moved
+> to the DWM3001C, which has both antennas on-module, so the ProAnt
+> InSide-2400, the U.FL connector and the L/C matching network are all gone,
+> along with the open "matching network values pending RF tuning" item. The
+> antenna sections below are kept as a record of why those parts were chosen;
+> they no longer describe the board. The NINA-B111 sections are historical for
+> the same reason. See `../docs/decisions.md`.
+
+This originally covered three placement-only sheets added in one pass --
+`regulation.kicad_sch`, `antenna.kicad_sch` (now deleted) and
+`programming_debug.kicad_sch` -- plus GPIO strapping resistors `R7`/`R8` on
+`radio_mcu.kicad_sch` (also now gone, since the DWM3001C's host-to-transceiver
+SPI is internal). As with `radio_mcu.kicad_sch` and
 `mechanical.kicad_sch` before them, **no wires or global labels are drawn on
 any of these sheets** -- components are instantiated and laid out only.
 `kicad-cli sch erc` therefore reports the expected pile of
@@ -18,8 +28,11 @@ Confirmed against real datasheets before touching any files:
 
 - **NINA-B111 absolute max VCC = 3.9V** (u-blox NINA-B1 series datasheet
   UBX-15019243-R15, Table 8 "Absolute maximum ratings").
-- **DWM3000 absolute max VDD3V3/VDD1 = 4.0V** (Qorvo DWM3000 Data Sheet Rev B,
-  Table 9 "DWM3000 Absolute Maximum Ratings").
+- **DWM3001C operating maximum VDD = 3.6V** (Qorvo DWM3001C Data Sheet Rev B,
+  Table 4 "DWM3001C Operating Conditions"; digital pins also 3.6V max). This
+  supersedes the NINA-B111 and DWM3000 limits above, but the conclusion is
+  unchanged and in fact tighter -- 3.6V is well below a full 4.2V cell, so the
+  LDO is still required.
 - A single-cell LiPo sits at **4.20V fully charged** (matches this board's
   MCP73831-**2** charger regulation voltage, already placed on
   `power_bms.kicad_sch`).
@@ -46,40 +59,61 @@ Low Quiescent Current LDO".
 
 ### Why 3.3V output (not 3.0V)
 
-| Rail comparison | NINA-B111 | DWM3000 |
+| Rail comparison | DWM3001C (current) | NINA-B111 + DWM3000 (historical) |
 |---|---|---|
-| Absolute max | 3.9V (Table 8) | 4.0V (Table 9) |
-| Operating max | 3.6V (Table 11, "Supply/Power pins") | 3.6V (Table 4, "Nominal Operating Conditions") |
-| Chosen +3V3 rail | **3.3V** | **3.3V** |
+| Operating max | 3.6V (Table 4) | 3.6V both |
+| Absolute max | -- | 3.9V / 4.0V |
+| Chosen +3V3 rail | **3.3V** | 3.3V |
 | Margin under operating max | 0.3V | 0.3V |
-| Margin under absolute max | 0.6V | 0.7V |
 
-3.3V sits comfortably inside **both** parts' own operating-condition maximums
-(not just under the absolute-max ratings, which would be the bare minimum
-bar) -- real margin on both counts, using a single standard LDO output option
-that both parts commonly run at in existing reference designs.
+3.3V sits comfortably inside the DWM3001C's own operating-condition maximum
+rather than merely under an absolute-max rating, which would be the bare
+minimum bar. The conclusion is unchanged from when this board carried two
+separate parts -- the module's 3.6V limit is the same figure both of them had.
 
 ### Current budget (why 250mA-class, not a smaller/simpler part)
 
 Real per-IC current draw pulled from each part's own datasheet, not guessed:
 
-- **NINA-B111**: Table 12 "Module VCC current consumption" (software-agnostic)
-  gives Radio TX-only +0dBm typical **5.3mA**, Radio RX-only **5.4mA**. But
-  Table 13 "Current consumption during typical use cases" (real
-  u-connectXpress software, +4dBm output -- this module's actual max rated
-  output power per Table 14) gives the realistic worst case: **peak 12mA**
-  @3.3V VCC, either "Active, advertising" or "Connected as peripheral,
-  connection events" scenarios. **12mA** is the number used for budgeting.
-- **DWM3000**: Table 5 "DWM3000 DC Characteristics" -- total current drawn
-  from all supplies (VDD1+VDD3V3 combined): CH5 TX 40mA typ, CH9 TX 45mA typ,
-  CH5 RX 50mA typ, **CH9 RX 55mA typ** (worst case of the four rows). **55mA**
-  is the number used for budgeting (Channel 9/7987.2MHz, receiver active).
+- **DWM3001C**: real Qorvo DWM3001C Data Sheet Rev B (May 2022), Table 5
+  "DWM3001C DC Characteristics", supply current at VDD (pin 12) -- this is a
+  whole-module figure covering the DW3110 *and* the nRF52833 together:
 
-**Combined peak draw: 12mA + 55mA = 67mA.** Against the MCP1700's 250mA max
-output rating, that's **~3.7x headroom** -- comfortable margin for two ICs
-that will rarely peak simultaneously in practice (BLE advertising and UWB
-ranging are not typically driven at the exact same instant in a duty-cycled
-tag), without over-provisioning into a needlessly large/expensive part.
+  | Mode | CH5 | CH9 |
+  |---|---|---|
+  | TX (continuous frame) | **40 mA** | 45 mA |
+  | RX (receiver active) | **40 mA** | 45 mA |
+  | IDLE | 18 mA | 32 mA |
+  | INIT | 6 mA | 6 mA |
+  | SLEEP | 850 nA | -- |
+
+  This design runs **Channel 5** (`../docs/decisions.md`), so **40 mA** is the
+  worst case and the number used for budgeting.
+- **D3 status LED**: ~3mA on the `+3V3` rail (`indicators.kicad_sch`,
+  `D3`/`R11`). Note `D2`, the charge-status LED, is **not** an LDO load -- it
+  is driven from MCP73831's `STAT` pin off the USB `VBUS` rail, upstream of
+  this regulator entirely.
+
+**Combined peak draw: 40mA + 3mA = 43mA.** Against the MCP1700's 250mA max
+output rating, that's **~5.8x headroom**.
+
+### Why this budget got easier, not harder
+
+The previous revision budgeted **70 mA**: NINA-B111 (12 mA) + DWM3000 (55 mA)
++ LED (3 mA). Consolidating onto the DWM3001C cut that to 43 mA, because one
+module doing both jobs draws less than two modules doing one each -- the
+40 mA figure already includes the nRF52833.
+
+Headroom therefore went from ~3.6x to ~5.8x. **The MCP1700 remains correct
+and comfortably oversized**; no regulator change is needed, and there is now
+plenty of room if the accelerometer or BLE are ever switched on.
+
+One caveat on the figure: the datasheet gives a single module-level supply
+current per mode and does not break out what the nRF52833 was doing during
+the measurement. Since BLE is unused here, the quoted numbers should be
+representative or slightly pessimistic. Sustained heavy MCU activity would
+add on top -- re-check during bring-up if the tag ever does real work between
+ranging exchanges.
 
 ### Why this part over MCP1802 or a bigger buck/LDO
 
@@ -94,7 +128,7 @@ tag), without over-provisioning into a needlessly large/expensive part.
   (power-good) this design doesn't use; MCP1700's simpler 3-pin SOT-23 with
   no unused pins is the better fit.
 - **Dropout**: DC Characteristics table, "Dropout Voltage, VR>2.5V": typical
-  178mV / max 350mV **at IL=250mA** -- our actual worst-case load (~67mA) is
+  178mV / max 350mV **at IL=250mA** -- our actual worst-case load (~43mA) is
   well under that test current, so real dropout at our load is lower still.
   Even at the datasheet's own worst-case 350mV number, VBAT only needs to
   stay above ~3.65V for full-accuracy regulation; below that the output
@@ -227,11 +261,25 @@ found as a real default part rather than hand-authored. Footprint:
 KiCad default, registered under the global `Connector_PinHeader_1.27mm`
 footprint library nickname).
 
-### NINA-B111 pin mapping (U3, already placed on `radio_mcu.kicad_sch` --
-### not re-placed here, per this task's constraints)
+### SWD target pin mapping (U3, placed on `radio_mcu.kicad_sch`)
 
-Verified against the same u-blox NINA-B1 datasheet Table 6 pinout already
-cited for U3:
+> **Updated 2026-09-19.** U3 is now a **DWM3001C**, and the SWD header targets
+> the **nRF52833 inside it**. Per the real Qorvo DWM3001C Data Sheet Rev B
+> (May 2022) Table 2, the two signals land on:
+>
+> | J3 signal | DWM3001C pin | Datasheet name |
+> |---|---|---|
+> | SWDIO | **3** | `SWD_DIO` -- "Serial wire debug I/O for debug and programming of nRF52833 processor" |
+> | SWCLK | **2** | `SWD_CLK` -- "Serial wire debug clock input for debug and programming of nRF52833 processor" |
+> | nRESET | **47** | `RESET (P0.18)`, active-low |
+>
+> `VTref` still goes to the `+3V3` rail and `GND` to ground, unchanged. The
+> table below is the **superseded NINA-B111 mapping**, kept for the
+> signal-by-signal rationale (which pins a Cortex debug header needs and why),
+> not as a wiring reference.
+
+Original NINA-B111 mapping, verified against the u-blox NINA-B1 datasheet
+Table 6 pinout:
 
 | J3 (Conn_ARM_JTAG_SWD_10) pin | Signal | Intended NINA-B111 (U3) connection |
 |---|---|---|

@@ -1,8 +1,28 @@
 # Shared libraries
 
 Symbols, footprints, and 3D models used on **both** the wristband and the bay
-station -- the clearest example is whatever UWB IC/module gets chosen, since
-it appears on both boards.
+station.
+
+> ### Nothing in here is currently used by either board
+>
+> As of 2026-09-19 both boards have moved off the DWM3000, in opposite
+> directions and for unrelated reasons:
+>
+> - **Bay station** -> discrete **DW3210**, because four modules cannot share
+>   a reference clock and TDoA needs one (`../docs/positioning.md`).
+> - **Wristband** -> **DWM3001C**, which folds the MCU, both antennas and an
+>   accelerometer into one module (`../docs/decisions.md`).
+>
+> Both replacements are board-specific, so they live in the respective
+> `libs/` folders. The DWM3000 symbol and footprint are **kept here
+> deliberately**, not because anything uses them but because the bay
+> station's discrete rework has not been built yet and this is the fallback
+> if it stalls. Delete them once the DW3210 design is proven.
+>
+> That also means the `shared/` folder is, for now, a monorepo structure with
+> nothing in it. Keep the lib-table registrations -- they cost nothing and a
+> genuinely shared part may reappear -- but don't add anything here without
+> checking it really is used on both boards.
 
 - `symbols/uwb_rescue_locator_shared.kicad_sym`
 - `footprints/uwb_rescue_locator_shared.pretty/`
@@ -30,20 +50,49 @@ listings) -- an earlier version of this doc used that name by mistake.
 Qorvo's real lineup has two different, non-interchangeable parts that
 could have been meant:
 
-- **DWM3000** (confirmed choice) -- a bare UWB transceiver module (no
-  onboard host MCU), 24-pin 1.4mm-pitch side-castellated package,
-  23x13x2.9mm, based on the DW3110 IC. Architecturally consistent with
-  this project, since the wristband already has a separate NINA-B111 BLE
-  MCU to act as the SPI host.
-- **DWM3001C** (not used) -- a larger, different module that additionally
-  integrates its own nRF52833 BLE SoC, a planar antenna, and an
-  accelerometer. Using this alongside a separate NINA-B111 would be
-  redundant (two BLE radios on one board) and it's a different footprint
-  entirely.
+- **DWM3000** -- a bare UWB transceiver module (no onboard host MCU), 24-pin
+  1.4mm-pitch side-castellated package, 23x13x2.9mm, based on the DW3110 IC.
+  Was the choice for both boards; now used by neither.
+- **DWM3001C** -- a larger module that additionally integrates an nRF52833
+  BLE SoC, the antennas, and an accelerometer. **This is now the wristband's
+  part**, in `../wristband/libs/`.
+
+  **The original rejection of DWM3001C recorded here was wrong, and it is
+  worth understanding why.** It read: *"Using this alongside a separate
+  NINA-B111 would be redundant (two BLE radios on one board)."* That is
+  true, but it evaluated DWM3001C as a replacement for the DWM3000 **while
+  holding NINA-B111 fixed** -- it never considered DWM3001C replacing
+  *both*. Doing so deletes a module, an antenna, a U.FL connector, a
+  matching network, an entire schematic sheet and an open RF-tuning task,
+  and adds an accelerometer. The comparison that was never run was the one
+  that mattered.
+
+  Worth remembering when rejecting a part in future: check you are comparing
+  whole designs, not swapping one line item while everything else stays put.
 
 All data in the `DWM3000` symbol (pin names/numbers, package dimensions)
 was pulled from the real **Qorvo DWM3000 Data Sheet Rev B, May 2021**.
 See `../docs/decisions.md`, where this is now marked resolved.
+
+### The module exposes no clock pin -- and why that matters
+
+Worth stating explicitly next to the symbol, because it drives a whole
+architecture decision. The DWM3000's 24 pins are: EXTON, WAKEUP, RSTn,
+GPIO7/SYNC, VDD1, 2x VDD3V3, 5x GND, GPIO8/IRQ, SPICLK, SPIMISO, SPIMOSI,
+SPICSn, and GPIO0-6. **There is no XTI/XTO or other clock pin** -- the
+38.4 MHz crystal is internal to the module and unreachable.
+
+Four of these modules therefore cannot share a time base, which the bay
+station's TDoA scheme requires (1 ns of clock error = 30 cm of position
+error). The bare DW3000-family IC *can*: its datasheet states a 38.4 MHz
+signal may be supplied from an external reference in place of a crystal, via
+the XTI overdrive pin. That's why the bay station is moving discrete. Full
+detail and datasheet citations in `../docs/positioning.md`.
+
+**If you go looking for the bare IC: the DWM3000 is built on the DW3110,
+which is a 52-ball WLCSP measuring 3.1 x 3.5 mm** -- chip-scale, not
+hand-assemblable. The QFN40 equivalent is the **DW3210**. Don't order DW3110
+by reflex just because it's the part the module datasheet names.
 
 ### Footprint verification detail
 

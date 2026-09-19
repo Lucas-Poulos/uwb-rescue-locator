@@ -162,44 +162,6 @@
 		)
 	)
 	(sheet
-		(at 210 30)
-		(size 60 40)
-		(fields_autoplaced yes)
-		(stroke
-			(width 0.1524)
-			(type solid)
-		)
-		(fill
-			(color 0 0 0 0.0000)
-		)
-		(uuid "70531719-0575-447f-9fe2-78b3cc25b488")
-		(property "Sheetname" "Antenna"
-			(at 210 28.5 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left bottom)
-			)
-		)
-		(property "Sheetfile" "antenna.kicad_sch"
-			(at 210 71.5 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-			)
-		)
-		(instances
-			(project "wristband"
-				(path "/b3417696-fb19-4c3e-bd30-28bb2d157bef"
-					(page "6")
-				)
-			)
-		)
-	)
-	(sheet
 		(at 210 100)
 		(size 60 40)
 		(fields_autoplaced yes)
@@ -222,6 +184,82 @@
 		)
 		(property "Sheetfile" "programming_debug.kicad_sch"
 			(at 210 141.5 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "wristband"
+				(path "/b3417696-fb19-4c3e-bd30-28bb2d157bef"
+					(page "7")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 30 170)
+		(size 60 40)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "7e1c4a92-3b5d-4f68-a2c1-9d0e5f7b3a41")
+		(property "Sheetname" "Indicators"
+			(at 30 168.5 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "indicators.kicad_sch"
+			(at 30 211.5 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "wristband"
+				(path "/b3417696-fb19-4c3e-bd30-28bb2d157bef"
+					(page "8")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 210 30)
+		(size 60 40)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "8a1b2c3d-4e5f-4061-8273-849506a7b8c9")
+		(property "Sheetname" "Test Points"
+			(at 210 28.5 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "testpoints.kicad_sch"
+			(at 210 71.5 0)
 			(effects
 				(font
 					(size 1.27 1.27)
