@@ -113,7 +113,7 @@
 		)
 	)
 	(text "Test Points -- bring-up probing"
-		(at 25 20 0)
+		(at 25.40 20.32 0)
 		(effects
 			(font
 				(size 2.5 2.5)
@@ -122,7 +122,7 @@
 		(uuid "88888888-0000-4000-8000-000000000001")
 	)
 	(text "Placement only: no wires or global labels yet.\n\nThis board's whole difficulty is sub-nanosecond timing and per-anchor delay\ncalibration, and bring-up will involve real measurement against real\nhardware. Without probe points that measurement is guesswork. These cost\nnothing now and cannot be added after layout.\n\nChosen for the specific risks this design actually has:\n\n  CLOCK -- the defining signal. If the shared reference is absent, wrong\n  frequency, or missing at one anchor, TDoA silently produces nonsense\n  rather than failing loudly. TP5 checks the TCXO itself; TP6-TP9 confirm\n  the buffer actually reaches each of the four DW3210 XTI pins.\n\n  SPI -- the driver work (restoring multi-instance support) is on the\n  critical path and will need a logic analyser. TP10-TP12 give it somewhere\n  to clip on. TP13 (A0 IRQ) and TP14 (shared anchor reset) make the\n  exchange timing visible.\n\n  POWER -- TP1/TP2 confirm the rails before anything else is debugged.\n\n  GROUND -- TWO of them, deliberately. TP3 sits next to the clock points so\n  a scope probe can use a short ground spring rather than a long flying\n  lead; at 38.4MHz a clip lead's inductance distorts what you are trying to\n  measure. TP4 is a general-purpose ground elsewhere on the board."
-		(at 25 28 0)
+		(at 25.40 27.94 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -131,7 +131,7 @@
 		(uuid "88888888-0000-4000-8000-000000000002")
 	)
 	(text "LAYOUT NOTE, important: a test point on the clock network is a STUB, and\nstubs degrade exactly the signal integrity this design depends on. Keep\nTP5-TP9 as small pads with the shortest possible stub -- ideally a bare\nprobe pad rather than a through-hole post -- and place them ON the existing\nrouting rather than spurring off it where possible. If a clean layout\ncannot accommodate all four anchor clock points, drop TP8/TP9 and keep\nTP6/TP7: two is enough to compare skew between channels."
-		(at 25 78 0)
+		(at 25.40 77.47 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -141,7 +141,7 @@
 	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 35 115 0)
+		(at 35.56 115.57 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -149,7 +149,7 @@
 		(dnp no)
 		(uuid "88888888-0000-4000-8000-000000000001")
 		(property "Reference" "TP1"
-			(at 35 111.19 0)
+			(at 35.56 111.76 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -157,7 +157,7 @@
 			)
 		)
 		(property "Value" "+3V3_SYS"
-			(at 35 118.81 0)
+			(at 35.56 119.38 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -165,7 +165,7 @@
 			)
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 35 115 0)
+			(at 35.56 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -174,7 +174,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 35 115 0)
+			(at 35.56 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -183,7 +183,7 @@
 			)
 		)
 		(property "Description" "Regulated 3.3V rail from the TPS62A02 (regulation.kicad_sch). Check first when anything misbehaves."
-			(at 35 115 0)
+			(at 35.56 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -202,7 +202,7 @@
 	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 55 115 0)
+		(at 54.61 115.57 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -210,7 +210,7 @@
 		(dnp no)
 		(uuid "88888888-0000-4000-8000-000000000002")
 		(property "Reference" "TP2"
-			(at 55 111.19 0)
+			(at 54.61 111.76 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -218,7 +218,7 @@
 			)
 		)
 		(property "Value" "+VSYS"
-			(at 55 118.81 0)
+			(at 54.61 119.38 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -226,7 +226,7 @@
 			)
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 55 115 0)
+			(at 54.61 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -235,7 +235,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 55 115 0)
+			(at 54.61 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -244,7 +244,7 @@
 			)
 		)
 		(property "Description" "Unregulated system rail out of the MCP73871 power path (power_bms.kicad_sch)."
-			(at 55 115 0)
+			(at 54.61 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -263,7 +263,7 @@
 	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 75 115 0)
+		(at 74.93 115.57 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -271,7 +271,7 @@
 		(dnp no)
 		(uuid "88888888-0000-4000-8000-000000000003")
 		(property "Reference" "TP3"
-			(at 75 111.19 0)
+			(at 74.93 111.76 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -279,7 +279,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 75 118.81 0)
+			(at 74.93 119.38 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -287,7 +287,7 @@
 			)
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 75 115 0)
+			(at 74.93 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -296,7 +296,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 75 115 0)
+			(at 74.93 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -305,7 +305,7 @@
 			)
 		)
 		(property "Description" "Scope ground, to be placed adjacent to TP5-TP9. Use a short ground spring here, not a flying clip lead -- at 38.4MHz the lead inductance distorts the measurement."
-			(at 75 115 0)
+			(at 74.93 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -324,7 +324,7 @@
 	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 95 115 0)
+		(at 95.25 115.57 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -332,7 +332,7 @@
 		(dnp no)
 		(uuid "88888888-0000-4000-8000-000000000004")
 		(property "Reference" "TP4"
-			(at 95 111.19 0)
+			(at 95.25 111.76 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -340,7 +340,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 95 118.81 0)
+			(at 95.25 119.38 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -348,7 +348,7 @@
 			)
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 95 115 0)
+			(at 95.25 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -357,7 +357,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 95 115 0)
+			(at 95.25 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -366,7 +366,7 @@
 			)
 		)
 		(property "Description" "General-purpose ground, placed away from the clock area."
-			(at 95 115 0)
+			(at 95.25 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -385,7 +385,7 @@
 	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 35 115 0)
+		(at 35.56 115.57 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -393,7 +393,7 @@
 		(dnp no)
 		(uuid "88888888-0000-4000-8000-000000000005")
 		(property "Reference" "TP5"
-			(at 35 111.19 0)
+			(at 35.56 111.76 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -401,7 +401,7 @@
 			)
 		)
 		(property "Value" "REF_38M4"
-			(at 35 118.81 0)
+			(at 35.56 119.38 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -409,7 +409,7 @@
 			)
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 35 115 0)
+			(at 35.56 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -418,7 +418,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 35 115 0)
+			(at 35.56 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -427,7 +427,7 @@
 			)
 		)
 		(property "Description" "TCXO output, before the fan-out buffer. Confirms the shared reference exists and is on frequency at all."
-			(at 35 115 0)
+			(at 35.56 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -446,7 +446,7 @@
 	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 55 115 0)
+		(at 54.61 115.57 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -454,7 +454,7 @@
 		(dnp no)
 		(uuid "88888888-0000-4000-8000-000000000006")
 		(property "Reference" "TP6"
-			(at 55 111.19 0)
+			(at 54.61 111.76 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -462,7 +462,7 @@
 			)
 		)
 		(property "Value" "CLK_A0"
-			(at 55 118.81 0)
+			(at 54.61 119.38 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -470,7 +470,7 @@
 			)
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 55 115 0)
+			(at 54.61 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -479,7 +479,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 55 115 0)
+			(at 54.61 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -488,7 +488,7 @@
 			)
 		)
 		(property "Description" "Buffer output to the A0 (center) DW3210 XTI pin."
-			(at 55 115 0)
+			(at 54.61 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -507,7 +507,7 @@
 	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 75 115 0)
+		(at 74.93 115.57 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -515,7 +515,7 @@
 		(dnp no)
 		(uuid "88888888-0000-4000-8000-000000000007")
 		(property "Reference" "TP7"
-			(at 75 111.19 0)
+			(at 74.93 111.76 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -523,7 +523,7 @@
 			)
 		)
 		(property "Value" "CLK_A1"
-			(at 75 118.81 0)
+			(at 74.93 119.38 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -531,7 +531,7 @@
 			)
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 75 115 0)
+			(at 74.93 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -540,7 +540,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 75 115 0)
+			(at 74.93 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -549,7 +549,7 @@
 			)
 		)
 		(property "Description" "Buffer output to the A1 DW3210 XTI pin."
-			(at 75 115 0)
+			(at 74.93 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -568,7 +568,7 @@
 	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 95 115 0)
+		(at 95.25 115.57 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -576,7 +576,7 @@
 		(dnp no)
 		(uuid "88888888-0000-4000-8000-000000000008")
 		(property "Reference" "TP8"
-			(at 95 111.19 0)
+			(at 95.25 111.76 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -584,7 +584,7 @@
 			)
 		)
 		(property "Value" "CLK_A2"
-			(at 95 118.81 0)
+			(at 95.25 119.38 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -592,7 +592,7 @@
 			)
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 95 115 0)
+			(at 95.25 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -601,7 +601,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 95 115 0)
+			(at 95.25 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -610,7 +610,7 @@
 			)
 		)
 		(property "Description" "Buffer output to the A2 DW3210 XTI pin."
-			(at 95 115 0)
+			(at 95.25 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -629,7 +629,7 @@
 	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 115 115 0)
+		(at 115.57 115.57 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -637,7 +637,7 @@
 		(dnp no)
 		(uuid "88888888-0000-4000-8000-000000000009")
 		(property "Reference" "TP9"
-			(at 115 111.19 0)
+			(at 115.57 111.76 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -645,7 +645,7 @@
 			)
 		)
 		(property "Value" "CLK_A3"
-			(at 115 118.81 0)
+			(at 115.57 119.38 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -653,7 +653,7 @@
 			)
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 115 115 0)
+			(at 115.57 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -662,7 +662,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 115 115 0)
+			(at 115.57 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -671,7 +671,7 @@
 			)
 		)
 		(property "Description" "Buffer output to the A3 DW3210 XTI pin."
-			(at 115 115 0)
+			(at 115.57 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -690,7 +690,7 @@
 	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 35 115 0)
+		(at 35.56 115.57 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -698,7 +698,7 @@
 		(dnp no)
 		(uuid "88888888-0000-4000-8000-000000000010")
 		(property "Reference" "TP10"
-			(at 35 111.19 0)
+			(at 35.56 111.76 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -706,7 +706,7 @@
 			)
 		)
 		(property "Value" "SPI_SCLK"
-			(at 35 118.81 0)
+			(at 35.56 119.38 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -714,7 +714,7 @@
 			)
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 35 115 0)
+			(at 35.56 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -723,7 +723,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 35 115 0)
+			(at 35.56 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -732,7 +732,7 @@
 			)
 		)
 		(property "Description" "Shared SPI clock to all four anchors. Must be on SPIM3 -- the only high-speed SPI instance on the nRF52840."
-			(at 35 115 0)
+			(at 35.56 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -751,7 +751,7 @@
 	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 55 115 0)
+		(at 54.61 115.57 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -759,7 +759,7 @@
 		(dnp no)
 		(uuid "88888888-0000-4000-8000-000000000011")
 		(property "Reference" "TP11"
-			(at 55 111.19 0)
+			(at 54.61 111.76 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -767,7 +767,7 @@
 			)
 		)
 		(property "Value" "SPI_MOSI"
-			(at 55 118.81 0)
+			(at 54.61 119.38 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -775,7 +775,7 @@
 			)
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 55 115 0)
+			(at 54.61 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -784,7 +784,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 55 115 0)
+			(at 54.61 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -793,7 +793,7 @@
 			)
 		)
 		(property "Description" "Shared SPI MOSI to all four anchors."
-			(at 55 115 0)
+			(at 54.61 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -812,7 +812,7 @@
 	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 75 115 0)
+		(at 74.93 115.57 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -820,7 +820,7 @@
 		(dnp no)
 		(uuid "88888888-0000-4000-8000-000000000012")
 		(property "Reference" "TP12"
-			(at 75 111.19 0)
+			(at 74.93 111.76 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -828,7 +828,7 @@
 			)
 		)
 		(property "Value" "SPI_MISO"
-			(at 75 118.81 0)
+			(at 74.93 119.38 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -836,7 +836,7 @@
 			)
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 75 115 0)
+			(at 74.93 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -845,7 +845,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 75 115 0)
+			(at 74.93 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -854,7 +854,7 @@
 			)
 		)
 		(property "Description" "Shared SPI MISO from all four anchors."
-			(at 75 115 0)
+			(at 74.93 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -873,7 +873,7 @@
 	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 95 115 0)
+		(at 95.25 115.57 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -881,7 +881,7 @@
 		(dnp no)
 		(uuid "88888888-0000-4000-8000-000000000013")
 		(property "Reference" "TP13"
-			(at 95 111.19 0)
+			(at 95.25 111.76 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -889,7 +889,7 @@
 			)
 		)
 		(property "Value" "IRQ_A0"
-			(at 95 118.81 0)
+			(at 95.25 119.38 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -897,7 +897,7 @@
 			)
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 95 115 0)
+			(at 95.25 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -906,7 +906,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 95 115 0)
+			(at 95.25 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -915,7 +915,7 @@
 			)
 		)
 		(property "Description" "Interrupt from the A0 center anchor. Makes the ranging exchange timing visible on a scope."
-			(at 95 115 0)
+			(at 95.25 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -934,7 +934,7 @@
 	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 115 115 0)
+		(at 115.57 115.57 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -942,7 +942,7 @@
 		(dnp no)
 		(uuid "88888888-0000-4000-8000-000000000014")
 		(property "Reference" "TP14"
-			(at 115 111.19 0)
+			(at 115.57 111.76 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -950,7 +950,7 @@
 			)
 		)
 		(property "Value" "ANCHOR_RSTn"
-			(at 115 118.81 0)
+			(at 115.57 119.38 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -958,7 +958,7 @@
 			)
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 115 115 0)
+			(at 115.57 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -967,7 +967,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 115 115 0)
+			(at 115.57 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -976,7 +976,7 @@
 			)
 		)
 		(property "Description" "Shared reset to all four DW3210s."
-			(at 115 115 0)
+			(at 115.57 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)

@@ -5,6 +5,28 @@ relitigate them. Keep this updated as the team decides things.
 
 ## Open
 
+- **U8 `lib_symbol_issues` warning -- investigated, deliberately NOT "fixed".**
+  ERC reports `Symbol 'TPS62A02PDDCR' not found in symbol library
+  'Regulator_Switching'`. The library's actual symbol is `TPS62A02PDDC`,
+  without the trailing R (that is TI's tape-and-reel suffix on the orderable
+  part number, not part of the symbol name).
+
+  **Do not simply rename it.** KiCad's `TPS62A02PDDC` is defined as
+  `(extends "TPS62A01PDDC")`, and this repo has been bitten by `extends`
+  before: `kicad-cli` fails to load an entire file, silently, reporting zero
+  components and zero violations. Pointing U8 at a lib_id that does not
+  resolve means the flattened 6-pin copy embedded in `regulation.kicad_sch`
+  is always used -- which may well be why it was done this way, matching the
+  flattened-copy workaround already used for AO3401A and MCP1700.
+
+  So the warning is arguably the correct trade rather than a defect. Decide
+  deliberately: either keep it and annotate the sheet, or rename to
+  `TPS62A02PDDC` and re-verify that ERC still reports a non-zero component
+  count. Do not change it without that check.
+
+  Separately: **U8 has no row in `libs/components.csv`** -- only its inductor
+  L1 does. The buck converter itself is missing from the BOM.
+
 ### Critical path for the bay station
 
 - **Baseline length: 1 m as specified, but bigger is nearly free.** Corrected
@@ -33,12 +55,16 @@ relitigate them. Keep this updated as the team decides things.
   A vendor footprint numbered differently will silently connect nothing.
   Also confirm what the vendor does with DWM3001C pin 18, which its own
   datasheet leaves undocumented.
-- ~~Reconcile the BT840 pin count~~ -- **resolved**. The Pin Function table
-  appears to list 49 LGA designators against a stated 45, but F0-F3 are bare
-  "Ground pad" entries with no ball reference and no BT832 mapping, unlike
-  the genuine ground pads A0/B0/C0/D0. Dropping those four gives exactly 45,
-  and 16+45=61 matches Fanstel's own library component. F0-F3 are a ground
-  area belonging to the footprint, not symbol pins. Symbol corrected to 61.
+- ~~Reconcile the BT840 pin count~~ -- **resolved at 65, after a wrong turn.**
+  The datasheet summary says 45 LGA while its own Pin Function table lists
+  49 designators. An intermediate revision of this symbol dropped F0-F3 to
+  reach 61, reasoning that they are bare "Ground pad" entries with no ball
+  reference and that 16+45=61 matched Fanstel's library component. **That was
+  wrong.** A real BT840 footprint shows F0-F3 as 1.4986mm SQUARE pads, far
+  larger than the 0.6mm circular signal pads -- physical pads that must be
+  soldered and grounded. The stated 45 evidently counts only signal pads.
+  Symbol models all 65. Three agreeing numbers were agreeing with each other,
+  not with the part.
 - **TCXO + 1:4 low-skew fan-out buffer part selection**, against the DW3000
   Table 10 external-reference spec (0.8 V to VDD2 Vpp, AC coupled via 2200
   pF, -132 dBc/Hz @ 1 kHz, -145 dBc/Hz @ 10 kHz, 40-60% duty). See

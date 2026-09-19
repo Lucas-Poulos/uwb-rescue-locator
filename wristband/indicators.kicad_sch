@@ -301,7 +301,7 @@
 		)
 	)
 	(text "Indicators -- status LEDs (D2, D3)"
-		(at 30 25 0)
+		(at 30.48 25.40 0)
 		(effects
 			(font
 				(size 2.5 2.5)
@@ -310,7 +310,7 @@
 		(uuid "11111111-0000-4000-8000-000000000001")
 	)
 	(text "Placement only: no wires or global labels yet, same convention as this\nboard's other unwired sheets.\n\nD2 = charge status, driven from MCP73831 STAT (U2 pin 1,\npower_bms.kicad_sch), which is currently unconnected. STAT is a tri-state\noutput; Microchip's own typical application circuit (DS20001984H) drives an\nLED from VDD through a series resistor to STAT. R10 = 1k gives roughly 3mA\nat the ~5V VBUS rail -- confirm the exact rail and value at wiring time.\n\nD3 = system status, intended to be driven from a NINA-B111 GPIO so firmware\ncan indicate powered / ranging / fault. GPIO not yet allocated.\n\n0603 LEDs here rather than the bay station's 0805, since the wristband is\nthe size-constrained board. Series resistors are 0603 per the project\nstandard. Both LEDs are low-current by design -- the wristband runs off a\nsmall cell and indicator current is not free."
-		(at 30 33 0)
+		(at 30.48 33.02 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -320,7 +320,7 @@
 	)
 	(symbol
 		(lib_id "Device:LED")
-		(at 40 70 0)
+		(at 39.37 69.85 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -328,7 +328,7 @@
 		(dnp no)
 		(uuid "11111111-0000-4000-8000-000000000003")
 		(property "Reference" "D2"
-			(at 40 66.19 0)
+			(at 39.37 66.04 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -336,7 +336,7 @@
 			)
 		)
 		(property "Value" "LED"
-			(at 40 73.81 0)
+			(at 39.37 73.66 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -344,7 +344,7 @@
 			)
 		)
 		(property "Footprint" "LED_SMD:LED_0603_1608Metric"
-			(at 40 70 0)
+			(at 39.37 69.85 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -353,7 +353,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 40 70 0)
+			(at 39.37 69.85 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -362,7 +362,7 @@
 			)
 		)
 		(property "Description" "Charge status LED -- driven from MCP73831 STAT (U2 pin 1, power_bms.kicad_sch)"
-			(at 40 70 0)
+			(at 39.37 69.85 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -381,7 +381,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 55 70 0)
+		(at 54.61 69.85 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -389,7 +389,7 @@
 		(dnp no)
 		(uuid "11111111-0000-4000-8000-000000000004")
 		(property "Reference" "R10"
-			(at 55 66.19 0)
+			(at 54.61 66.04 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -397,7 +397,7 @@
 			)
 		)
 		(property "Value" "1k"
-			(at 55 73.81 0)
+			(at 54.61 73.66 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -405,7 +405,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 55 70 0)
+			(at 54.61 69.85 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -414,7 +414,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 55 70 0)
+			(at 54.61 69.85 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -423,7 +423,7 @@
 			)
 		)
 		(property "Description" "Series resistor for D2 charge-status LED. ~3mA from the ~5V VBUS rail; confirm rail and value at wiring time."
-			(at 55 70 0)
+			(at 54.61 69.85 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -442,7 +442,7 @@
 	)
 	(symbol
 		(lib_id "Device:LED")
-		(at 40 90 0)
+		(at 39.37 90.17 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -450,7 +450,7 @@
 		(dnp no)
 		(uuid "11111111-0000-4000-8000-000000000005")
 		(property "Reference" "D3"
-			(at 40 86.19 0)
+			(at 39.37 86.36 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -458,7 +458,7 @@
 			)
 		)
 		(property "Value" "LED"
-			(at 40 93.81 0)
+			(at 39.37 93.98 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -466,7 +466,7 @@
 			)
 		)
 		(property "Footprint" "LED_SMD:LED_0603_1608Metric"
-			(at 40 90 0)
+			(at 39.37 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -475,7 +475,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 40 90 0)
+			(at 39.37 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -484,7 +484,7 @@
 			)
 		)
 		(property "Description" "System status LED -- intended to be driven from a NINA-B111 GPIO (not yet allocated)"
-			(at 40 90 0)
+			(at 39.37 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -503,7 +503,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 55 90 0)
+		(at 54.61 90.17 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -511,7 +511,7 @@
 		(dnp no)
 		(uuid "11111111-0000-4000-8000-000000000006")
 		(property "Reference" "R11"
-			(at 55 86.19 0)
+			(at 54.61 86.36 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -519,7 +519,7 @@
 			)
 		)
 		(property "Value" "1k"
-			(at 55 93.81 0)
+			(at 54.61 93.98 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -527,7 +527,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 55 90 0)
+			(at 54.61 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -536,7 +536,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 55 90 0)
+			(at 54.61 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -545,7 +545,7 @@
 			)
 		)
 		(property "Description" "Series resistor for D3 system-status LED."
-			(at 55 90 0)
+			(at 54.61 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)

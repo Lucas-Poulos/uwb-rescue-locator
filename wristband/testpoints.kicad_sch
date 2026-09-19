@@ -113,7 +113,7 @@
 		)
 	)
 	(text "Test Points -- bring-up probing"
-		(at 25 20 0)
+		(at 25.40 20.32 0)
 		(effects
 			(font
 				(size 2.5 2.5)
@@ -122,7 +122,7 @@
 		(uuid "99999999-0000-4000-8000-000000000001")
 	)
 	(text "Placement only: no wires or global labels yet.\n\nDeliberately minimal. The tag is one module plus a battery chain, and the\nDWM3001C's internals are not reachable -- its UWB transceiver, MCU and both\nantennas are inside the package, so there is nothing useful to probe there.\nSWD already comes out on J3 (programming_debug.kicad_sch), so debug access\nis covered without a test point.\n\nWhat is worth probing:\n\n  POWER -- TP1 and TP2 are the two rails that matter. TP2 (VBAT) also lets\n  the battery chain be checked independently of the regulator, which is the\n  natural first question when a worn device will not start.\n\n  GROUND -- two, so a scope and a meter can be attached at once without\n  sharing a return.\n\n  TIMING MARKER -- TP5 on a spare nRF52833 GPIO. Firmware can toggle it\n  around a ranging exchange, which turns tag-side timing into something a\n  scope can see. On a system budgeted in nanoseconds that is worth one pad.\n\nThere is no power switch on this board (resolved 2026-09-19), so the tag is\nlive whenever a battery is connected -- TP1/TP2 are the only way to confirm\nrail state without disconnecting the cell."
-		(at 25 28 0)
+		(at 25.40 27.94 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -132,7 +132,7 @@
 	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 40 95 0)
+		(at 39.37 95.25 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -140,7 +140,7 @@
 		(dnp no)
 		(uuid "99999999-0000-4000-8000-000000000001")
 		(property "Reference" "TP1"
-			(at 40 91.19 0)
+			(at 39.37 91.44 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -148,7 +148,7 @@
 			)
 		)
 		(property "Value" "+3V3"
-			(at 40 98.81 0)
+			(at 39.37 99.06 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -156,7 +156,7 @@
 			)
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 40 95 0)
+			(at 39.37 95.25 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -165,7 +165,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 40 95 0)
+			(at 39.37 95.25 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -174,7 +174,7 @@
 			)
 		)
 		(property "Description" "Regulated 3.3V rail out of the MCP1700 LDO (regulation.kicad_sch)."
-			(at 40 95 0)
+			(at 39.37 95.25 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -193,7 +193,7 @@
 	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 65 95 0)
+		(at 64.77 95.25 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -201,7 +201,7 @@
 		(dnp no)
 		(uuid "99999999-0000-4000-8000-000000000002")
 		(property "Reference" "TP2"
-			(at 65 91.19 0)
+			(at 64.77 91.44 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -209,7 +209,7 @@
 			)
 		)
 		(property "Value" "VBAT"
-			(at 65 98.81 0)
+			(at 64.77 99.06 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -217,7 +217,7 @@
 			)
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 65 95 0)
+			(at 64.77 95.25 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -226,7 +226,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 65 95 0)
+			(at 64.77 95.25 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -235,7 +235,7 @@
 			)
 		)
 		(property "Description" "Protected battery rail out of the DW01A/FS8205 pair (power_bms.kicad_sch). Lets the cell and protection chain be checked independently of the regulator."
-			(at 65 95 0)
+			(at 64.77 95.25 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -254,7 +254,7 @@
 	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 90 95 0)
+		(at 90.17 95.25 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -262,7 +262,7 @@
 		(dnp no)
 		(uuid "99999999-0000-4000-8000-000000000003")
 		(property "Reference" "TP3"
-			(at 90 91.19 0)
+			(at 90.17 91.44 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -270,7 +270,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 90 98.81 0)
+			(at 90.17 99.06 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -278,7 +278,7 @@
 			)
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 90 95 0)
+			(at 90.17 95.25 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -287,7 +287,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 90 95 0)
+			(at 90.17 95.25 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -296,7 +296,7 @@
 			)
 		)
 		(property "Description" "Ground for scope probing."
-			(at 90 95 0)
+			(at 90.17 95.25 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -315,7 +315,7 @@
 	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 115 95 0)
+		(at 115.57 95.25 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -323,7 +323,7 @@
 		(dnp no)
 		(uuid "99999999-0000-4000-8000-000000000004")
 		(property "Reference" "TP4"
-			(at 115 91.19 0)
+			(at 115.57 91.44 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -331,7 +331,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 115 98.81 0)
+			(at 115.57 99.06 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -339,7 +339,7 @@
 			)
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 115 95 0)
+			(at 115.57 95.25 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -348,7 +348,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 115 95 0)
+			(at 115.57 95.25 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -357,7 +357,7 @@
 			)
 		)
 		(property "Description" "Second ground, so a meter and a scope can both attach."
-			(at 115 95 0)
+			(at 115.57 95.25 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -376,7 +376,7 @@
 	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 140 95 0)
+		(at 139.70 95.25 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -384,7 +384,7 @@
 		(dnp no)
 		(uuid "99999999-0000-4000-8000-000000000005")
 		(property "Reference" "TP5"
-			(at 140 91.19 0)
+			(at 139.70 91.44 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -392,7 +392,7 @@
 			)
 		)
 		(property "Value" "FW_MARKER"
-			(at 140 98.81 0)
+			(at 139.70 99.06 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -400,7 +400,7 @@
 			)
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 140 95 0)
+			(at 139.70 95.25 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -409,7 +409,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 140 95 0)
+			(at 139.70 95.25 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -418,7 +418,7 @@
 			)
 		)
 		(property "Description" "Spare nRF52833 GPIO for firmware to toggle around a ranging exchange, making tag-side timing visible on a scope. GPIO not yet allocated."
-			(at 140 95 0)
+			(at 139.70 95.25 0)
 			(effects
 				(font
 					(size 1.27 1.27)

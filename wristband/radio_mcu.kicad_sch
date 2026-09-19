@@ -1096,7 +1096,7 @@
 		)
 	)
 	(text "Radio / MCU -- DWM3001C (U3)"
-		(at 30 22 0)
+		(at 30.48 21.59 0)
 		(effects
 			(font
 				(size 2.5 2.5)
@@ -1105,7 +1105,7 @@
 		(uuid "44444444-0000-4000-8000-000000000001")
 	)
 	(text "Placement only: no wires or global labels yet, same convention as this\nboard's other unwired sheets.\n\nONE module replaces what used to be three things. U3 was NINA-B111 (BLE\nMCU) and U4 was DWM3000 (UWB); antenna.kicad_sch carried a ProAnt\nInSide-2400, a U.FL connector and an L/C matching network. All of that is\nnow inside the DWM3001C, which integrates: DW3110 UWB transceiver,\nNordic nRF52833 MCU, ST LIS2DH12 accelerometer, planar UWB antenna,\nBluetooth chip antenna, power management and a 38.4MHz crystal.\n\nThe datasheet is explicit that this 'requires no RF design as the antenna\nand associated analog and RF components are on the module' (Section 8).\n\nBLE and the accelerometer are UNUSED in this design -- the tag only needs\nto do UWB two-way ranging with the bay station's center anchor. They cost\nnothing to leave idle: no external parts, no wiring, no firmware. The\naccelerometer is worth revisiting later as a way to motion-gate the UWB\nand save battery, since the tag is the power-constrained side.\n\nGone with the old parts: R7/R8 (DW3110 GPIO5/6 SPI-mode straps) and R9\n(IRQ pulldown). The host-to-transceiver SPI link is internal to the module\nnow, so those are Qorvo's problem rather than ours."
-		(at 30 30 0)
+		(at 30.48 30.48 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1114,7 +1114,7 @@
 		(uuid "44444444-0000-4000-8000-000000000002")
 	)
 	(text "Decoupling (C6, C7): NOT datasheet-mandated. The DWM3001C has on-module\npower management and its datasheet gives no external application circuit\nwith decoupling values. C6/C7 are conservative standard practice on a 3V\nmodule supply rail, same judgement already applied to (and documented for)\nthe DWM3000 -- see docs/passives-reference.md. Verify before fab."
-		(at 30 96 0)
+		(at 30.48 96.52 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1123,7 +1123,7 @@
 		(uuid "44444444-0000-4000-8000-000000000003")
 	)
 	(text "PCB LAYOUT RULES -- both are real datasheet requirements, neither is\nactionable until layout starts:\n\n1. ANTENNA KEEP-OUT (Section 7.1). Minimum 10mm with NO metal either side\n   of the module antenna -- nothing above, below or beside it. Do not put\n   the battery under the antenna. Ground copper should be flooded\n   everywhere else on the board.\n\n2. KEEP THE MODULE >=1cm FROM THE PCB EDGE (Section 7.2). The DWM3001C\n   antenna is cross-polarized in some regions, which is good for link\n   budget as the tag's orientation changes -- relevant for something worn\n   on a wrist. But that polarization diversity can cause ranging accuracy\n   to vary in harsh multipath (reflective indoor spaces, corridors).\n   Qorvo's stated mitigation is to avoid placing the module closer than\n   1cm to the board edge, which reduces the horizontally polarized\n   component and improves multipath resilience."
-		(at 30 118 0)
+		(at 30.48 118.11 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1133,7 +1133,7 @@
 	)
 	(symbol
 		(lib_id "wristband:DWM3001C")
-		(at 95 65 0)
+		(at 95.25 64.77 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -1141,7 +1141,7 @@
 		(dnp no)
 		(uuid "44444444-0000-4000-8000-000000000010")
 		(property "Reference" "U3"
-			(at 95 61.19 0)
+			(at 95.25 60.96 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1149,7 +1149,7 @@
 			)
 		)
 		(property "Value" "DWM3001C"
-			(at 95 68.81 0)
+			(at 95.25 68.58 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1157,7 +1157,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 95 65 0)
+			(at 95.25 64.77 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1166,7 +1166,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 95 65 0)
+			(at 95.25 64.77 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1175,7 +1175,7 @@
 			)
 		)
 		(property "Description" "UWB transceiver module with integrated nRF52833 MCU, accelerometer and antennas. Pin data verified against Qorvo DWM3001C Data Sheet Rev B (May 2022) Table 2. FOOTPRINT NOT YET ASSIGNED -- needs the Figure 5 land pattern, see libs/README.md."
-			(at 95 65 0)
+			(at 95.25 64.77 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1194,7 +1194,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 150 60 0)
+		(at 149.86 59.69 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -1202,7 +1202,7 @@
 		(dnp no)
 		(uuid "44444444-0000-4000-8000-000000000011")
 		(property "Reference" "C6"
-			(at 150 56.19 0)
+			(at 149.86 55.88 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1210,7 +1210,7 @@
 			)
 		)
 		(property "Value" "100nF"
-			(at 150 63.81 0)
+			(at 149.86 63.50 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1218,7 +1218,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 150 60 0)
+			(at 149.86 59.69 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1227,7 +1227,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 150 60 0)
+			(at 149.86 59.69 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1236,7 +1236,7 @@
 			)
 		)
 		(property "Description" "VDD (pin 12) decoupling for U3. Standard practice, not a datasheet-specified value -- see this sheet's note."
-			(at 150 60 0)
+			(at 149.86 59.69 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1255,7 +1255,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 165 60 0)
+		(at 165.10 59.69 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -1263,7 +1263,7 @@
 		(dnp no)
 		(uuid "44444444-0000-4000-8000-000000000012")
 		(property "Reference" "C7"
-			(at 165 56.19 0)
+			(at 165.10 55.88 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1271,7 +1271,7 @@
 			)
 		)
 		(property "Value" "10uF"
-			(at 165 63.81 0)
+			(at 165.10 63.50 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1279,7 +1279,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 165 60 0)
+			(at 165.10 59.69 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1288,7 +1288,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 165 60 0)
+			(at 165.10 59.69 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1297,7 +1297,7 @@
 			)
 		)
 		(property "Description" "VDD (pin 12) bulk decoupling for U3. Standard practice, not a datasheet-specified value -- see this sheet's note."
-			(at 165 60 0)
+			(at 165.10 59.69 0)
 			(effects
 				(font
 					(size 1.27 1.27)

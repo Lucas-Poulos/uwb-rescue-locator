@@ -21,18 +21,15 @@ The fixed reference station. Open `bay-station.kicad_pro` in KiCad.
 
 Target performance: **10-30 cm at ~10 m, on Channel 5 (6489.6 MHz)**.
 
-> **The anchor design is mid-change.** The schematic currently shows four
-> DWM3000 **modules**, all treated as interchangeable peers with on-board
-> antennas. That's wrong on three counts: the modules can't share a reference
-> clock (no clock pin is exposed, so TDoA across them is impossible), the
-> anchors have distinct center/outer roles, and the antennas belong ~1-2 m
-> off-board or the baseline is far too short to give a useful bearing.
+> **Schematic capture is done for the anchor array; layout is not.** Four
+> discrete DW3210s share one TCXO through a 1:4 low-skew buffer, with the
+> antennas on ~1-2 m coax. What remains before layout: footprints for the
+> BT840 and the DW3210 exposed pad, TCXO and buffer part selection, and the
+> anchor decoupling, which must be re-derived for a bare IC rather than
+> reused from the module.
 >
-> The resolved design is four discrete **DW3210** ICs on this board sharing
-> one TCXO through a 1:4 low-skew buffer, with the antennas on coax. See
-> `../docs/decisions.md` -- the open items under "Critical path for the bay
-> station" gate this work, and **array calibration is a deliverable, not a
-> bring-up nicety**: the design does not close without it.
+> **Array calibration is a deliverable, not a bring-up nicety** -- the design
+> does not meet its accuracy target without it. See `../docs/decisions.md`.
 
 ## Status
 
@@ -52,9 +49,16 @@ Nine hierarchical sheets, all registered in `bay-station.kicad_pro`'s
 | `mechanical` | Placement only | 4x M3 mounting holes |
 
 **"Placement only" means components are instantiated but nothing is wired**
--- no wires, no global labels. KiCad's ERC doesn't flag isolated unwired
-symbols, so these sheets contribute no "not connected" findings yet. That
-wiring pass is still to come.
+-- no wires, no global labels.
+
+**ERC, run 2026-09-19 with kicad-cli 10.0.6: 452 violations, ZERO errors.**
+All warnings: 315 pin_not_connected, 88 power_pin_not_driven, 25
+pin_not_driven, 9 lib_symbol_mismatch, 8 ground_pin_not_ground (the DW3210
+VSS pins, which resolve once grounds are wired), 6 isolated_pin_label (the
+MCP73871 status outputs, which `indicators` will terminate), and 1
+lib_symbol_issues on U8 -- investigated and deliberately left alone, see
+`../docs/decisions.md`. DRC reports one `invalid_outline`, because no board
+outline is drawn yet.
 
 ### Sheet detail
 
@@ -89,14 +93,7 @@ wiring pass is still to come.
   count (summary says 45, its own table lists 49) -- reconcile both against
   the mechanical drawing.
 
-- **`uwb_array.kicad_sch`** -- four `uwb_rescue_locator_shared:DWM3000`
-  instances (`U4`-`U7`), each labeled "Anchor 1".."Anchor 4", each with its
-  own decoupling set (100nF at VDD1, 100nF at VDD3V3, 1uF bulk on VDD3V3,
-  `C8`-`C19`), 10k GPIO5/GPIO6 SPI-mode strap pull-downs (`R10`-`R17`), and a
-  100k IRQ/GPIO8 pulldown (`R25`-`R28`, per Qorvo's Figure 11, "to prevent
-  spurious interrupts").
-
-  **Now four real DW3210s**, `U4`-`U7`, labelled A0-A3 on the sheet. `U4` is
+- **`uwb_array.kicad_sch`** -- **four DW3210s**, `U4`-`U7`, labelled A0-A3 on the sheet. `U4` is
   the **center anchor** and does the two-way ranging; `U5`-`U7` are the outer
   anchors that timestamp the same transmission for TDoA. Symbol hand-authored
   from the real DW3000 Datasheet v1.3 Table 2.

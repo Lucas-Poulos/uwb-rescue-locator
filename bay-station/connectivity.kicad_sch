@@ -1402,7 +1402,7 @@
 		)
 	)
 	(text "Connectivity -- BT840 host (U3)"
-		(at 25 18 0)
+		(at 25.40 17.78 0)
 		(effects
 			(font
 				(size 2.5 2.5)
@@ -1411,7 +1411,7 @@
 		(uuid "55555555-0000-4000-8000-000000000001")
 	)
 	(text "Placement only: no wires or global labels yet.\n\nFanstel BT840 = Nordic nRF52840, Cortex-M4F 64MHz, 1MB flash, 256KB RAM,\nintegrated PCB trace antenna, on-module DC-DC. VDD 1.7-3.6V, fed from\n+3V3_SYS (regulation.kicad_sch).\n\nThis replaced an ESP32-S3-WROOM-1. The uplink moved from WiFi-to-internet\nto BLE-to-a-laptop, and WiFi was the only thing keeping this board off\nNordic. Going Nordic gives one toolchain across both boards (the wristband\nruns an nRF52833 inside its DWM3001C) and aligns with Qorvo's DW3000\nreference stack, which targets nRF52840 -- which directly eases the\nmulti-instance driver work on the critical path. See docs/decisions.md.\n\nPACKAGE: hybrid, 16 castellated pins (1-16) plus LGA pads (Z0-Z6, A0-A6,\nB0-B6, C0-C6, D0-D6, E0-E6, F0-F6). The castellated pins alone do not carry\nenough signals for this design, so the LGA pads are used and the part must\nbe reflowed. No change in practice -- the DW3210 is QFN40 at 0.4mm pitch.\n\nPIN COUNT CAVEAT: the datasheet summary says '16 castellated and 45 LGA',\nbut its own Pin Function table lists 49 LGA designators, which is what the\nsymbol models. Possibly the four F0-F3 ground pads count as one, or the\nvariants differ. Reconcile against the mechanical drawing before fab.\nFOOTPRINT NOT YET AUTHORED for the same reason."
-		(at 25 26 0)
+		(at 25.40 25.40 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1420,7 +1420,7 @@
 		(uuid "55555555-0000-4000-8000-000000000002")
 	)
 	(text "SIGNALS TO WIRE (all still to be done):\n  SPI to uwb_array -- SCLK/MOSI/MISO shared, plus 4x CS and 4x IRQ.\n    USE SPIM3: it is the ONLY high-speed SPI instance on the nRF52840\n    (32MHz; the others cap at 8MHz). DW3000 tops out at 36MHz so 32 is\n    fine. Check the silicon revision against Nordic's erratum on SPIM\n    rates above 8MHz.\n  Shared anchor reset to the four DW3210 RSTn pins.\n  I2C to the MAX17048 on power_bms (its SCL currently has no driver --\n    that is the one deliberately-deferred ERC item on that sheet).\n  SWD: SWDCLK pin 15 and SWDIO pin 16 to J3 on programming_debug;\n    P0.18/RESET pin 14 is the reset node SW2 pulls down.\n  One GPIO to D7 on indicators.\n\nAVOID B4 (P0.06), B5 (P0.08), C3 (P0.17) and D2 (P0.19) if this design\nmight ever move to a BT840X/XE: those are PA-control pins on the amplifier\nvariants, and are only plain GPIO on the plain BT840."
-		(at 25 72 0)
+		(at 25.40 72.39 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1429,7 +1429,7 @@
 		(uuid "55555555-0000-4000-8000-000000000003")
 	)
 	(text "C5/C6/C7 kept from the previous revision -- generic 3V3 supply decoupling,\nnot part-specific. Re-check count and placement against the BT840's VDD\n(pin 9) and its LGA ground pads once layout starts."
-		(at 25 112 0)
+		(at 25.40 111.76 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1439,7 +1439,7 @@
 	)
 	(symbol
 		(lib_id "bay_station:BT840")
-		(at 70 175 0)
+		(at 69.85 175.26 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -1447,7 +1447,7 @@
 		(dnp no)
 		(uuid "55555555-0000-4000-8000-000000000010")
 		(property "Reference" "U3"
-			(at 70 171.19 0)
+			(at 69.85 171.45 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1455,7 +1455,7 @@
 			)
 		)
 		(property "Value" "BT840"
-			(at 70 178.81 0)
+			(at 69.85 179.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1463,7 +1463,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 70 175 0)
+			(at 69.85 175.26 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1472,7 +1472,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 70 175 0)
+			(at 69.85 175.26 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1481,7 +1481,7 @@
 			)
 		)
 		(property "Description" "Nordic nRF52840 BLE module, host for the 4x DW3210 anchor array and the BLE link to a laptop. Pin data verified against Fanstel BT840/F/E/X/XE Ver 1.15 (Sep 2019) Pin Function table, extracted with pdftotext -raw."
-			(at 70 175 0)
+			(at 69.85 175.26 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1500,7 +1500,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 130 130 0)
+		(at 129.54 129.54 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -1508,7 +1508,7 @@
 		(dnp no)
 		(uuid "55555555-0000-4000-8000-000000000011")
 		(property "Reference" "C5"
-			(at 130 126.19 0)
+			(at 129.54 125.73 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1516,7 +1516,7 @@
 			)
 		)
 		(property "Value" "10uF"
-			(at 130 133.81 0)
+			(at 129.54 133.35 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1524,7 +1524,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 130 130 0)
+			(at 129.54 129.54 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1533,7 +1533,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 130 130 0)
+			(at 129.54 129.54 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1542,7 +1542,7 @@
 			)
 		)
 		(property "Description" "Bulk decoupling on the BT840's VDD (pin 9). Generic good practice, not a datasheet-specified value."
-			(at 130 130 0)
+			(at 129.54 129.54 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1561,7 +1561,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 145 130 0)
+		(at 144.78 129.54 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -1569,7 +1569,7 @@
 		(dnp no)
 		(uuid "55555555-0000-4000-8000-000000000012")
 		(property "Reference" "C6"
-			(at 145 126.19 0)
+			(at 144.78 125.73 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1577,7 +1577,7 @@
 			)
 		)
 		(property "Value" "100nF"
-			(at 145 133.81 0)
+			(at 144.78 133.35 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1585,7 +1585,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 145 130 0)
+			(at 144.78 129.54 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1594,7 +1594,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 145 130 0)
+			(at 144.78 129.54 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1603,7 +1603,7 @@
 			)
 		)
 		(property "Description" "HF decoupling on the BT840's VDD (pin 9). Generic good practice."
-			(at 145 130 0)
+			(at 144.78 129.54 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1622,7 +1622,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 160 130 0)
+		(at 160.02 129.54 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -1630,7 +1630,7 @@
 		(dnp no)
 		(uuid "55555555-0000-4000-8000-000000000013")
 		(property "Reference" "C7"
-			(at 160 126.19 0)
+			(at 160.02 125.73 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1638,7 +1638,7 @@
 			)
 		)
 		(property "Value" "100nF"
-			(at 160 133.81 0)
+			(at 160.02 133.35 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1646,7 +1646,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 160 130 0)
+			(at 160.02 129.54 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1655,7 +1655,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 160 130 0)
+			(at 160.02 129.54 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1664,7 +1664,7 @@
 			)
 		)
 		(property "Description" "HF decoupling on the BT840's VDD (pin 9). Generic good practice."
-			(at 160 130 0)
+			(at 160.02 129.54 0)
 			(effects
 				(font
 					(size 1.27 1.27)

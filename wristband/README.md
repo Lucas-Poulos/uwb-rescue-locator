@@ -42,8 +42,14 @@ list and wired into `wristband.kicad_sch` as sheet symbols.
 
 **"Placement only" means components are instantiated and laid out, but
 nothing is wired** -- no drawn wires, no global labels, no net identity.
-`kicad-cli sch erc` therefore reports the expected pile of "pin not
-connected" warnings on those sheets. That's correct at this stage, not a bug.
+
+**ERC, run 2026-09-19 with kicad-cli 10.0.6: 104 violations, ZERO errors.**
+All warnings, and all the expected unwired-sheet state: 80 pin_not_connected,
+10 power_pin_not_driven, 3 pin_not_driven, plus 11 lib_symbol_mismatch from
+the embedded 8.0-format symbol copies differing from the 10.x libraries
+(pre-existing and by design -- see the flattened-copy workaround in
+`../CLAUDE.md`). DRC reports one violation per board, `invalid_outline`,
+because no board outline is drawn yet.
 
 ### Sheet detail
 

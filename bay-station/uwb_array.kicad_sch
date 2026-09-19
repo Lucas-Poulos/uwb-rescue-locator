@@ -1073,7 +1073,7 @@
 		)
 	)
 	(text "UWB Array -- 4x DW3210 (A0 center + A1-A3 outer)"
-		(at 25 18 0)
+		(at 25.40 17.78 0)
 		(effects
 			(font
 				(size 2.5 2.5)
@@ -1082,7 +1082,7 @@
 		(uuid "66666666-0000-4000-8000-000000000001")
 	)
 	(text "Placement only: no wires or global labels yet, same convention as this\nboard's other unwired sheets.\n\nTHE FOUR ANCHORS ARE NOT INTERCHANGEABLE PEERS.\n  U4 = A0, the CENTER anchor. Does two-way ranging with the wristband and\n       produces the RANGE to the tag.\n  U5-U7 = A1-A3, the OUTER anchors. They timestamp the SAME wristband\n       transmission and produce TDoA against A0, which gives DIRECTION.\nOne tag transmission, four measurements. See docs/positioning.md.\n\nWhy discrete DW3210 and not the DWM3000 module this sheet used to hold:\nTDoA compares timestamps across receivers, so they must share a time base\n-- 1ns of clock error is 30cm of position error. The module exposes no\nclock pin and its crystal is unreachable, so four of them cannot be\nsynchronised at any price. The bare IC can: XTI (pin 21) is documented as\nan external-reference overdrive input. All four XTI pins are driven from\nthe one TCXO on clock_dist.kicad_sch.\n\nDW3210 is the QFN40 5x5mm NON-PDoA variant. Deliberately NOT DW3110, which\nis the 52-ball WLCSP the module is built on and is not hand-assemblable."
-		(at 25 26 0)
+		(at 25.40 25.40 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1091,7 +1091,7 @@
 		(uuid "66666666-0000-4000-8000-000000000002")
 	)
 	(text "PER-ANCHOR CONNECTIONS, still to be wired:\n  RF1 (pin 18)  -> 2pF series cap -> SMA connector -> ~1-2m coax -> antenna.\n                   CH5 is 6489.6MHz, ABOVE U.FL's 6GHz rating: SMA only.\n  RF2 (pin 13)  -> unused on the non-PDoA variant. No cap, but terminate\n                   into 50 ohm through a 50 ohm trace.\n  XTI (pin 21)  -> 2200pF AC coupling from the clock buffer (clock_dist).\n  XTO (pin 22)  -> 1pF to ground. Required ONLY because an external clock\n                   is used (clock_dist holds C28-C31 for this).\n  SPI           -> SPICLK 34, SPIMOSI 35, SPIMISO 36 shared across all four;\n                   SPICSn 37 individually to the host.\n  IRQ (pin 1)   -> individually to the host.\n  RSTn (pin 33) -> shared reset from the host.\n\nSUPPLIES (all from +3V3_SYS, regulation.kicad_sch):\n  VDD1 pin 29 (1.62-3.6V) is the main supply and also feeds WAKEUP, EXTON,\n  RSTn and the SPI I/O. VDD2a pin 28 and VDD2b pin 23 are 2.4-3.6V; the\n  datasheet notes the WLCSP equivalents need ferrite isolation from each\n  other, so check that applies on QFN before merging them. VDD3 pin 26 is\n  1.5-3.6V.\n  VTX_D pin 27 and VIO_D pin 38 are NOT supply inputs -- they are decoupling\n  pins, each needing its own capacitor to ground. Do not tie them to a rail.\n\nDECOUPLING IS NOT YET PLACED. The old C8-C19 were sized for a module with\none VDD3V3 rail and do not map onto this IC's separate VDD1/VDD2/VDD3 rails\nplus two decoupling pins. Re-derive from the DW3000 datasheet before wiring."
-		(at 25 62 0)
+		(at 25.40 62.23 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1100,7 +1100,7 @@
 		(uuid "66666666-0000-4000-8000-000000000003")
 	)
 	(text "LAYOUT (Section 7.3, not actionable until layout starts): RF1/RF2 must be\n50 ohm impedance-controlled; ground removed from under the chip on the top\nlayer and inner layer 1; first solid ground copper at least 0.25mm below the\ntop layer. This forces a controlled-impedance stackup of at least 4 layers."
-		(at 25 116 0)
+		(at 25.40 115.57 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1110,7 +1110,7 @@
 	)
 	(symbol
 		(lib_id "bay_station:DW3210")
-		(at 55 165 0)
+		(at 54.61 165.10 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -1118,7 +1118,7 @@
 		(dnp no)
 		(uuid "66666666-0000-4000-8000-000000000010")
 		(property "Reference" "U4"
-			(at 55 161.19 0)
+			(at 54.61 161.29 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1126,7 +1126,7 @@
 			)
 		)
 		(property "Value" "DW3210"
-			(at 55 168.81 0)
+			(at 54.61 168.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1134,7 +1134,7 @@
 			)
 		)
 		(property "Footprint" "Package_DFN_QFN:QFN-40-1EP_5x5mm_P0.4mm_EP3.6x3.6mm"
-			(at 55 165 0)
+			(at 54.61 165.10 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1143,7 +1143,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 55 165 0)
+			(at 54.61 165.10 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1152,7 +1152,7 @@
 			)
 		)
 		(property "Description" "Anchor A0 CENTER -- two-way ranging with the tag, yields RANGE. Pin data verified against Qorvo DW3000 Datasheet v1.3 Table 2 (extracted with pdftotext -raw; -layout mangles that table)."
-			(at 55 165 0)
+			(at 54.61 165.10 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1170,7 +1170,7 @@
 		)
 	)
 	(text "Anchor A0  (U4)"
-		(at 37 130 0)
+		(at 36.83 129.54 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1180,7 +1180,7 @@
 	)
 	(symbol
 		(lib_id "bay_station:DW3210")
-		(at 115 165 0)
+		(at 115.57 165.10 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -1188,7 +1188,7 @@
 		(dnp no)
 		(uuid "66666666-0000-4000-8000-000000000011")
 		(property "Reference" "U5"
-			(at 115 161.19 0)
+			(at 115.57 161.29 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1196,7 +1196,7 @@
 			)
 		)
 		(property "Value" "DW3210"
-			(at 115 168.81 0)
+			(at 115.57 168.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1204,7 +1204,7 @@
 			)
 		)
 		(property "Footprint" "Package_DFN_QFN:QFN-40-1EP_5x5mm_P0.4mm_EP3.6x3.6mm"
-			(at 115 165 0)
+			(at 115.57 165.10 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1213,7 +1213,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 115 165 0)
+			(at 115.57 165.10 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1222,7 +1222,7 @@
 			)
 		)
 		(property "Description" "Anchor A1 OUTER -- timestamps the tag transmission for TDoA against A0, yields DIRECTION. Pin data verified against Qorvo DW3000 Datasheet v1.3 Table 2 (extracted with pdftotext -raw; -layout mangles that table)."
-			(at 115 165 0)
+			(at 115.57 165.10 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1240,7 +1240,7 @@
 		)
 	)
 	(text "Anchor A1  (U5)"
-		(at 97 130 0)
+		(at 96.52 129.54 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1250,7 +1250,7 @@
 	)
 	(symbol
 		(lib_id "bay_station:DW3210")
-		(at 175 165 0)
+		(at 175.26 165.10 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -1258,7 +1258,7 @@
 		(dnp no)
 		(uuid "66666666-0000-4000-8000-000000000012")
 		(property "Reference" "U6"
-			(at 175 161.19 0)
+			(at 175.26 161.29 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1266,7 +1266,7 @@
 			)
 		)
 		(property "Value" "DW3210"
-			(at 175 168.81 0)
+			(at 175.26 168.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1274,7 +1274,7 @@
 			)
 		)
 		(property "Footprint" "Package_DFN_QFN:QFN-40-1EP_5x5mm_P0.4mm_EP3.6x3.6mm"
-			(at 175 165 0)
+			(at 175.26 165.10 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1283,7 +1283,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 175 165 0)
+			(at 175.26 165.10 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1292,7 +1292,7 @@
 			)
 		)
 		(property "Description" "Anchor A2 OUTER -- timestamps the tag transmission for TDoA against A0, yields DIRECTION. Pin data verified against Qorvo DW3000 Datasheet v1.3 Table 2 (extracted with pdftotext -raw; -layout mangles that table)."
-			(at 175 165 0)
+			(at 175.26 165.10 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1310,7 +1310,7 @@
 		)
 	)
 	(text "Anchor A2  (U6)"
-		(at 157 130 0)
+		(at 157.48 129.54 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1320,7 +1320,7 @@
 	)
 	(symbol
 		(lib_id "bay_station:DW3210")
-		(at 235 165 0)
+		(at 234.95 165.10 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -1328,7 +1328,7 @@
 		(dnp no)
 		(uuid "66666666-0000-4000-8000-000000000013")
 		(property "Reference" "U7"
-			(at 235 161.19 0)
+			(at 234.95 161.29 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1336,7 +1336,7 @@
 			)
 		)
 		(property "Value" "DW3210"
-			(at 235 168.81 0)
+			(at 234.95 168.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1344,7 +1344,7 @@
 			)
 		)
 		(property "Footprint" "Package_DFN_QFN:QFN-40-1EP_5x5mm_P0.4mm_EP3.6x3.6mm"
-			(at 235 165 0)
+			(at 234.95 165.10 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1353,7 +1353,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 235 165 0)
+			(at 234.95 165.10 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1362,7 +1362,7 @@
 			)
 		)
 		(property "Description" "Anchor A3 OUTER -- timestamps the tag transmission for TDoA against A0, yields DIRECTION. Pin data verified against Qorvo DW3000 Datasheet v1.3 Table 2 (extracted with pdftotext -raw; -layout mangles that table)."
-			(at 235 165 0)
+			(at 234.95 165.10 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1380,7 +1380,7 @@
 		)
 	)
 	(text "Anchor A3  (U7)"
-		(at 217 130 0)
+		(at 217.17 129.54 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1390,7 +1390,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 30 235 0)
+		(at 30.48 234.95 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -1398,7 +1398,7 @@
 		(dnp no)
 		(uuid "66666666-0000-4000-8000-000000000030")
 		(property "Reference" "R10"
-			(at 30 231.19 0)
+			(at 30.48 231.14 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1406,7 +1406,7 @@
 			)
 		)
 		(property "Value" "10k"
-			(at 30 238.81 0)
+			(at 30.48 238.76 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1414,7 +1414,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 30 235 0)
+			(at 30.48 234.95 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1423,7 +1423,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 30 235 0)
+			(at 30.48 234.95 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1432,7 +1432,7 @@
 			)
 		)
 		(property "Description" "GPIO5 SPI-mode strap pull-down for anchor A0 (DW3210 pin 5). Defines SPI mode 0 at power-up, per the DW3000 'Sample GPIOs 5&6 to set SPI mode' step in Figures 1 and 2."
-			(at 30 235 0)
+			(at 30.48 234.95 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1451,7 +1451,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 46 235 0)
+		(at 45.72 234.95 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -1459,7 +1459,7 @@
 		(dnp no)
 		(uuid "66666666-0000-4000-8000-000000000031")
 		(property "Reference" "R11"
-			(at 46 231.19 0)
+			(at 45.72 231.14 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1467,7 +1467,7 @@
 			)
 		)
 		(property "Value" "10k"
-			(at 46 238.81 0)
+			(at 45.72 238.76 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1475,7 +1475,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 46 235 0)
+			(at 45.72 234.95 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1484,7 +1484,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 46 235 0)
+			(at 45.72 234.95 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1493,7 +1493,7 @@
 			)
 		)
 		(property "Description" "GPIO6 SPI-mode strap pull-down for anchor A0 (DW3210 pin 2). Defines SPI mode 0 at power-up, per the DW3000 'Sample GPIOs 5&6 to set SPI mode' step in Figures 1 and 2."
-			(at 46 235 0)
+			(at 45.72 234.95 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1512,7 +1512,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 62 235 0)
+		(at 62.23 234.95 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -1520,7 +1520,7 @@
 		(dnp no)
 		(uuid "66666666-0000-4000-8000-000000000032")
 		(property "Reference" "R12"
-			(at 62 231.19 0)
+			(at 62.23 231.14 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1528,7 +1528,7 @@
 			)
 		)
 		(property "Value" "10k"
-			(at 62 238.81 0)
+			(at 62.23 238.76 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1536,7 +1536,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 62 235 0)
+			(at 62.23 234.95 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1545,7 +1545,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 62 235 0)
+			(at 62.23 234.95 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1554,7 +1554,7 @@
 			)
 		)
 		(property "Description" "GPIO5 SPI-mode strap pull-down for anchor A1 (DW3210 pin 5). Defines SPI mode 0 at power-up, per the DW3000 'Sample GPIOs 5&6 to set SPI mode' step in Figures 1 and 2."
-			(at 62 235 0)
+			(at 62.23 234.95 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1573,7 +1573,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 78 235 0)
+		(at 77.47 234.95 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -1581,7 +1581,7 @@
 		(dnp no)
 		(uuid "66666666-0000-4000-8000-000000000033")
 		(property "Reference" "R13"
-			(at 78 231.19 0)
+			(at 77.47 231.14 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1589,7 +1589,7 @@
 			)
 		)
 		(property "Value" "10k"
-			(at 78 238.81 0)
+			(at 77.47 238.76 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1597,7 +1597,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 78 235 0)
+			(at 77.47 234.95 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1606,7 +1606,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 78 235 0)
+			(at 77.47 234.95 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1615,7 +1615,7 @@
 			)
 		)
 		(property "Description" "GPIO6 SPI-mode strap pull-down for anchor A1 (DW3210 pin 2). Defines SPI mode 0 at power-up, per the DW3000 'Sample GPIOs 5&6 to set SPI mode' step in Figures 1 and 2."
-			(at 78 235 0)
+			(at 77.47 234.95 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1634,7 +1634,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 94 235 0)
+		(at 93.98 234.95 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -1642,7 +1642,7 @@
 		(dnp no)
 		(uuid "66666666-0000-4000-8000-000000000034")
 		(property "Reference" "R14"
-			(at 94 231.19 0)
+			(at 93.98 231.14 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1650,7 +1650,7 @@
 			)
 		)
 		(property "Value" "10k"
-			(at 94 238.81 0)
+			(at 93.98 238.76 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1658,7 +1658,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 94 235 0)
+			(at 93.98 234.95 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1667,7 +1667,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 94 235 0)
+			(at 93.98 234.95 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1676,7 +1676,7 @@
 			)
 		)
 		(property "Description" "GPIO5 SPI-mode strap pull-down for anchor A2 (DW3210 pin 5). Defines SPI mode 0 at power-up, per the DW3000 'Sample GPIOs 5&6 to set SPI mode' step in Figures 1 and 2."
-			(at 94 235 0)
+			(at 93.98 234.95 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1695,7 +1695,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 110 235 0)
+		(at 110.49 234.95 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -1703,7 +1703,7 @@
 		(dnp no)
 		(uuid "66666666-0000-4000-8000-000000000035")
 		(property "Reference" "R15"
-			(at 110 231.19 0)
+			(at 110.49 231.14 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1711,7 +1711,7 @@
 			)
 		)
 		(property "Value" "10k"
-			(at 110 238.81 0)
+			(at 110.49 238.76 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1719,7 +1719,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 110 235 0)
+			(at 110.49 234.95 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1728,7 +1728,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 110 235 0)
+			(at 110.49 234.95 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1737,7 +1737,7 @@
 			)
 		)
 		(property "Description" "GPIO6 SPI-mode strap pull-down for anchor A2 (DW3210 pin 2). Defines SPI mode 0 at power-up, per the DW3000 'Sample GPIOs 5&6 to set SPI mode' step in Figures 1 and 2."
-			(at 110 235 0)
+			(at 110.49 234.95 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1756,7 +1756,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 126 235 0)
+		(at 125.73 234.95 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -1764,7 +1764,7 @@
 		(dnp no)
 		(uuid "66666666-0000-4000-8000-000000000036")
 		(property "Reference" "R16"
-			(at 126 231.19 0)
+			(at 125.73 231.14 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1772,7 +1772,7 @@
 			)
 		)
 		(property "Value" "10k"
-			(at 126 238.81 0)
+			(at 125.73 238.76 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1780,7 +1780,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 126 235 0)
+			(at 125.73 234.95 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1789,7 +1789,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 126 235 0)
+			(at 125.73 234.95 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1798,7 +1798,7 @@
 			)
 		)
 		(property "Description" "GPIO5 SPI-mode strap pull-down for anchor A3 (DW3210 pin 5). Defines SPI mode 0 at power-up, per the DW3000 'Sample GPIOs 5&6 to set SPI mode' step in Figures 1 and 2."
-			(at 126 235 0)
+			(at 125.73 234.95 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1817,7 +1817,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 142 235 0)
+		(at 142.24 234.95 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -1825,7 +1825,7 @@
 		(dnp no)
 		(uuid "66666666-0000-4000-8000-000000000037")
 		(property "Reference" "R17"
-			(at 142 231.19 0)
+			(at 142.24 231.14 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1833,7 +1833,7 @@
 			)
 		)
 		(property "Value" "10k"
-			(at 142 238.81 0)
+			(at 142.24 238.76 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1841,7 +1841,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 142 235 0)
+			(at 142.24 234.95 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1850,7 +1850,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 142 235 0)
+			(at 142.24 234.95 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1859,7 +1859,7 @@
 			)
 		)
 		(property "Description" "GPIO6 SPI-mode strap pull-down for anchor A3 (DW3210 pin 2). Defines SPI mode 0 at power-up, per the DW3000 'Sample GPIOs 5&6 to set SPI mode' step in Figures 1 and 2."
-			(at 142 235 0)
+			(at 142.24 234.95 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1878,7 +1878,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 30 255 0)
+		(at 30.48 255.27 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -1886,7 +1886,7 @@
 		(dnp no)
 		(uuid "66666666-0000-4000-8000-000000000040")
 		(property "Reference" "R25"
-			(at 30 251.19 0)
+			(at 30.48 251.46 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1894,7 +1894,7 @@
 			)
 		)
 		(property "Value" "100k"
-			(at 30 258.81 0)
+			(at 30.48 259.08 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1902,7 +1902,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 30 255 0)
+			(at 30.48 255.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1911,7 +1911,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 30 255 0)
+			(at 30.48 255.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1920,7 +1920,7 @@
 			)
 		)
 		(property "Description" "IRQ/GPIO8 (DW3210 pin 1) pull-down for anchor A0, per Qorvo Figure 11, 'to prevent spurious interrupts'. The datasheet also notes IRQ floats in SLEEP/DEEPSLEEP and recommends 100k externally."
-			(at 30 255 0)
+			(at 30.48 255.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1939,7 +1939,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 46 255 0)
+		(at 45.72 255.27 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -1947,7 +1947,7 @@
 		(dnp no)
 		(uuid "66666666-0000-4000-8000-000000000041")
 		(property "Reference" "R26"
-			(at 46 251.19 0)
+			(at 45.72 251.46 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1955,7 +1955,7 @@
 			)
 		)
 		(property "Value" "100k"
-			(at 46 258.81 0)
+			(at 45.72 259.08 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1963,7 +1963,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 46 255 0)
+			(at 45.72 255.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1972,7 +1972,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 46 255 0)
+			(at 45.72 255.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1981,7 +1981,7 @@
 			)
 		)
 		(property "Description" "IRQ/GPIO8 (DW3210 pin 1) pull-down for anchor A1, per Qorvo Figure 11, 'to prevent spurious interrupts'. The datasheet also notes IRQ floats in SLEEP/DEEPSLEEP and recommends 100k externally."
-			(at 46 255 0)
+			(at 45.72 255.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2000,7 +2000,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 62 255 0)
+		(at 62.23 255.27 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -2008,7 +2008,7 @@
 		(dnp no)
 		(uuid "66666666-0000-4000-8000-000000000042")
 		(property "Reference" "R27"
-			(at 62 251.19 0)
+			(at 62.23 251.46 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2016,7 +2016,7 @@
 			)
 		)
 		(property "Value" "100k"
-			(at 62 258.81 0)
+			(at 62.23 259.08 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2024,7 +2024,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 62 255 0)
+			(at 62.23 255.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2033,7 +2033,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 62 255 0)
+			(at 62.23 255.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2042,7 +2042,7 @@
 			)
 		)
 		(property "Description" "IRQ/GPIO8 (DW3210 pin 1) pull-down for anchor A2, per Qorvo Figure 11, 'to prevent spurious interrupts'. The datasheet also notes IRQ floats in SLEEP/DEEPSLEEP and recommends 100k externally."
-			(at 62 255 0)
+			(at 62.23 255.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2061,7 +2061,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 78 255 0)
+		(at 77.47 255.27 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -2069,7 +2069,7 @@
 		(dnp no)
 		(uuid "66666666-0000-4000-8000-000000000043")
 		(property "Reference" "R28"
-			(at 78 251.19 0)
+			(at 77.47 251.46 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2077,7 +2077,7 @@
 			)
 		)
 		(property "Value" "100k"
-			(at 78 258.81 0)
+			(at 77.47 259.08 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2085,7 +2085,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 78 255 0)
+			(at 77.47 255.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2094,7 +2094,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 78 255 0)
+			(at 77.47 255.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2103,7 +2103,7 @@
 			)
 		)
 		(property "Description" "IRQ/GPIO8 (DW3210 pin 1) pull-down for anchor A3, per Qorvo Figure 11, 'to prevent spurious interrupts'. The datasheet also notes IRQ floats in SLEEP/DEEPSLEEP and recommends 100k externally."
-			(at 78 255 0)
+			(at 77.47 255.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)

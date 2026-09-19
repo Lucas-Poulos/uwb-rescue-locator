@@ -531,7 +531,7 @@
 		)
 	)
 	(text "Programming / Debug -- SWD"
-		(at 30 25 0)
+		(at 30.48 25.40 0)
 		(effects
 			(font
 				(size 2.5 2.5)
@@ -540,7 +540,7 @@
 		(uuid "77777777-0000-4000-8000-000000000001")
 	)
 	(text "This sheet collapsed when the host moved from ESP32-S3 to the Nordic\nBT840. Nordic parts program over SWD, so nearly all of the previous\ncontents were ESP32-specific and have been deleted:\n\n- R18-R21, the GPIO0/GPIO3/GPIO45/GPIO46 boot-strapping pulls. Nordic has\n  no equivalent boot-strap pins.\n- R22 + C23, the EN reset RC delay. The nRF52840 has an internal power-on\n  reset; no external RC is needed.\n- SW1, the BOOT button. There is no boot-mode pin to hold.\n- J3 + R23/R24, the data-capable USB-C and its CC pull-downs, which existed\n  ONLY so the ESP32-S3 could be flashed over native USB.\n\nThat last deletion RESOLVES the long-standing 'two USB-C connectors' open\nitem, by removal rather than by choosing between them. The board is back to\none USB-C, the power-only J2 on power_bms.kicad_sch.\n\nWhat remains is what a Nordic part actually needs: an SWD header and a\nreset button.\n\nJ3 (reference reused, the old one is gone) is the same 2x5 1.27mm ARM\nCortex Debug connector already used on the wristband -- deliberately the\nsame part on both boards so one debug probe and one cable serve the whole\nproject. SWDIO and SWCLK go to the BT840; VTref to +3V3_SYS so the probe's\nlevel shifters reference the right rail; nRESET to the BT840's reset pin,\nthe same node SW2 pulls down.\n\nSW2 keeps its reference from the previous revision. Its function is\nunchanged -- it was the RESET button then and it is the RESET button now."
-		(at 30 33 0)
+		(at 30.48 33.02 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -549,7 +549,7 @@
 		(uuid "77777777-0000-4000-8000-000000000002")
 	)
 	(text "Exact BT840 pin numbers for SWDIO/SWCLK/RESET are NOT yet filled in: the\nBT840 symbol is not authored, because its pin assignments are in datasheet\nfigures that do not extract as text. See connectivity.kicad_sch."
-		(at 30 118 0)
+		(at 30.48 118.11 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -559,7 +559,7 @@
 	)
 	(symbol
 		(lib_id "Connector:Conn_ARM_JTAG_SWD_10")
-		(at 60 145 0)
+		(at 59.69 144.78 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -567,7 +567,7 @@
 		(dnp no)
 		(uuid "77777777-0000-4000-8000-000000000010")
 		(property "Reference" "J3"
-			(at 60 141.19 0)
+			(at 59.69 140.97 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -575,7 +575,7 @@
 			)
 		)
 		(property "Value" "Conn_ARM_JTAG_SWD_10"
-			(at 60 148.81 0)
+			(at 59.69 148.59 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -583,7 +583,7 @@
 			)
 		)
 		(property "Footprint" "Connector_PinHeader_1.27mm:PinHeader_2x05_P1.27mm_Vertical"
-			(at 60 145 0)
+			(at 59.69 144.78 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -592,7 +592,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 60 145 0)
+			(at 59.69 144.78 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -601,7 +601,7 @@
 			)
 		)
 		(property "Description" "ARM Cortex Debug SWD header for the BT840 (nRF52840). Same part as the wristband's J3 so one probe and cable serve both boards."
-			(at 60 145 0)
+			(at 59.69 144.78 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -620,7 +620,7 @@
 	)
 	(symbol
 		(lib_id "Switch:SW_Push")
-		(at 120 145 0)
+		(at 119.38 144.78 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -628,7 +628,7 @@
 		(dnp no)
 		(uuid "77777777-0000-4000-8000-000000000011")
 		(property "Reference" "SW2"
-			(at 120 141.19 0)
+			(at 119.38 140.97 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -636,7 +636,7 @@
 			)
 		)
 		(property "Value" "RESET"
-			(at 120 148.81 0)
+			(at 119.38 148.59 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -644,7 +644,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 120 145 0)
+			(at 119.38 144.78 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -653,7 +653,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 120 145 0)
+			(at 119.38 144.78 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -662,7 +662,7 @@
 			)
 		)
 		(property "Description" "Reset button, pulling the BT840's active-low reset to ground. Footprint to be chosen at BOM time, same as the previous revision."
-			(at 120 145 0)
+			(at 119.38 144.78 0)
 			(effects
 				(font
 					(size 1.27 1.27)
