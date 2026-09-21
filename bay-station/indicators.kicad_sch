@@ -309,7 +309,7 @@
 		)
 		(uuid "22222222-0000-4000-8000-000000000001")
 	)
-	(text "Placement only: no wires or global labels yet, same convention as this\nboard's other unwired sheets.\n\nD4/D5/D6 are driven from MCP73871's open-drain status outputs on\npower_bms.kicad_sch, all three currently unconnected:\n  D4 <- STAT1 (pin 8)   charging\n  D5 <- STAT2 (pin 7)   charge complete\n  D6 <- ~PG   (pin 6)   external power good\nMicrochip's own typical application circuit (DS20002090E page 2) drives\nLEDs from these pins through series resistors.\n\nD7 = system status, intended to be driven from an ESP32-S3 GPIO so firmware\ncan indicate ranging / uplink / fault. GPIO not yet allocated.\n\nThis board had no user-visible indication of any kind before these were\nadded -- no way to tell whether it was powered, charging, or ranging, which\nmatters for a device whose whole purpose is locating someone in trouble.\n\n0805 LEDs (this board is not size-constrained; matches the existing\nlibs/components.csv status-LED row). Series resistors 0603 per the project\nstandard. R = 1k is indicative; set it once the drive rail is fixed."
+	(text "Placement only: no wires or global labels yet, same convention as this\nboard's other unwired sheets.\n\nD4/D5/D6 are driven from MCP73871's open-drain status outputs on\npower_bms.kicad_sch, all three currently unconnected:\n  D4 <- STAT1 (pin 8)   charging\n  D5 <- STAT2 (pin 7)   charge complete\n  D6 <- ~PG   (pin 6)   external power good\nMicrochip's own typical application circuit (DS20002090E page 2) drives\nLEDs from these pins through series resistors.\n\nD7 = system status, intended to be driven from a BT840 (nRF52840) GPIO so firmware\ncan indicate ranging / uplink / fault. GPIO not yet allocated.\n\nThis board had no user-visible indication of any kind before these were\nadded -- no way to tell whether it was powered, charging, or ranging, which\nmatters for a device whose whole purpose is locating someone in trouble.\n\n0805 LEDs (this board is not size-constrained; matches the existing\nlibs/components.csv status-LED row). Series resistors 0603 per the project\nstandard. R = 1k is indicative; set it once the drive rail is fixed."
 		(at 30.48 33.02 0)
 		(effects
 			(font
@@ -727,7 +727,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "System status LED -- intended to be driven from an ESP32-S3 GPIO (not yet allocated)"
+		(property "Description" "System status LED -- intended to be driven from a BT840 (nRF52840) GPIO (not yet allocated)"
 			(at 39.37 139.70 0)
 			(effects
 				(font

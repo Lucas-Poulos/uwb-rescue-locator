@@ -6,7 +6,7 @@
 	(paper "A4")
 	(title_block
 		(title "Programming / Debug")
-		(comment 1 "Wristband NINA-B111 SWD/debug header -- placement only, not yet wired")
+		(comment 1 "Wristband DWM3001C SWD/debug header -- placement only, not yet wired")
 	)
 	(lib_symbols
 		(symbol "Connector:Conn_ARM_JTAG_SWD_10"
@@ -52,7 +52,7 @@
 					(hide yes)
 				)
 			)
-			(property "Description" "Cortex Debug Connector, standard ARM Cortex-M SWD and JTAG interface -- real, common 2x5 1.27mm-pitch header (ARM CoreSight 10-pin 'Cortex Debug' connector, e.g. as used on Segger J-Link / ST-Link / Black Magic Probe adapters). Chosen for NINA-B111's SWD programming/debug: this module's SWDIO (pin 15) and SWDCLK (pin 11) are already placed as U3 on radio_mcu.kicad_sch (see programming_debug_notes in regulation_notes.md / README for the cross-sheet pin reference -- not re-placing U3 here per task constraints). RESET_N (U3 pin 19) maps to this connector's pin 10 (~RESET); module GND (U3 pins 6/12/14/26/30) maps to pins 3/5/9 here. VTref (pin 1) should be tied to the regulated +3V3 rail (see regulation.kicad_sch) once wiring is added, so debug-probe level-shifters reference the correct I/O voltage. SWO/TDO (pin 6) can optionally pick up NINA-B111's SWO/GPIO_8 pin (U3 pin 8) for trace output. JTAG-only pins (NC/TDI, KEY) are not used by NINA-B111 (SWD-only debug, per the nRF52-series MCU inside it) and stay unconnected by design, matching this connector's own standard 'SWD-only subset' usage pattern."
+			(property "Description" "Cortex Debug Connector, standard ARM Cortex-M SWD and JTAG interface -- real, common 2x5 1.27mm-pitch header (ARM CoreSight 10-pin 'Cortex Debug' connector, e.g. as used on Segger J-Link / ST-Link / Black Magic Probe adapters). Chosen for the DWM3001C's SWD programming/debug: this module's SWD_DIO (pin 3) and SWD_CLK (pin 2) are already placed as U3 on radio_mcu.kicad_sch (see programming_debug_notes in regulation_notes.md / README for the cross-sheet pin reference -- not re-placing U3 here per task constraints). ~RESET (U3 pin 47) maps to this connector's pin 10 (~RESET); module GND (U3 pins 1/11/21/38/48) maps to pins 3/5/9 here. VTref (pin 1) should be tied to the regulated +3V3 rail (see regulation.kicad_sch) once wiring is added, so debug-probe level-shifters reference the correct I/O voltage. SWO/TDO (pin 6) can optionally pick up an SWO/TRACE-capable GPIO for trace output; the pin is not yet allocated. JTAG-only pins (NC/TDI, KEY) are not used by the DWM3001C (SWD-only debug, per the nRF52833 inside it) and stay unconnected by design, matching this connector's own standard 'SWD-only subset' usage pattern."
 				(at 0 0 0)
 				(effects
 					(font

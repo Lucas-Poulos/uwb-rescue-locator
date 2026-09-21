@@ -161,7 +161,8 @@ driven" warnings -- that's expected, not a bug, until they get wired.
 | Part number | Role | Board(s) | Qty |
 |---|---|---|---|
 | Qorvo **DWM3001C** | UWB transceiver + nRF52833 MCU + LIS2DH12 accelerometer + both antennas, one module. Replaced NINA-B111 + DWM3000 + the antenna sheet | Wristband | 1 |
-| Qorvo **DWM3000** | UWB transceiver module (shared part, lives in `shared/`). Confirmed for the wristband; the bay station's 4 are **being replaced** by discrete DW3210 -- see the callout above | Wristband (1) + Bay Station (4, one per anchor) | 5 |
+| Qorvo **DW3210** | Discrete UWB transceiver IC, QFN-40 5x5mm. One per anchor (U4=A0 center, U5-U7=A1-A3 outer). Chosen over the DWM3000 module because the module exposes no clock pin, and a shared reference is what makes the TDoA array work -- see `docs/positioning.md` | Bay Station | 4 |
+| Qorvo **DWM3000** | UWB transceiver module. **No longer used on either board** -- the wristband moved to the DWM3001C and the bay station to discrete DW3210. Symbol and footprint are retained in `shared/` for reference only | -- | 0 |
 | Microchip **MCP73831** | LiPo linear battery charger | Wristband | 1 |
 | Fortune Semiconductor **DW01A** | Battery protection IC | Wristband | 1 |
 | Fortune Semiconductor **FS8205** (commonly sold as "FS8205A" -- see `wristband/libs/README.md`) | Protection dual MOSFET, DW01A's partner IC | Wristband | 1 |
@@ -173,10 +174,16 @@ driven" warnings -- that's expected, not a bug, until they get wired.
 | Microchip **MCP1700T-3302E/TT** | LDO regulator (3.3V) -- battery rail can hit 4.2V, which exceeds the DWM3001C's 3.6V operating max without this | Wristband | 1 |
 | TI **TPS62A02PDDCR** | Buck (switching) regulator -- same voltage-safety role as the wristband's LDO, sized for the bay station's higher combined load current | Bay Station | 1 |
 
-Footprint caveats: DWM3000 and MAX17048 are both flagged `_PLACEHOLDER` in
-their footprint files -- pin/electrical data is fully verified, but one
-land-pattern dimension on each needs re-checking against the real datasheet
-figure before fab (see `shared/README.md` and `bay-station/libs/README.md`).
+Footprint caveats: MAX17048 is flagged `_PLACEHOLDER` in its footprint file
+-- pin/electrical data is fully verified, but one land-pattern dimension
+needs re-checking against the real datasheet figure before fab (see
+`bay-station/libs/README.md`). The same caveat applies to the DWM3000
+footprint retained in `shared/`, though nothing uses it now.
+
+**No footprint assigned yet**: `U3` on both boards (BT840, 65 pins; and
+DWM3001C, 48 pins), plus bay-station `L1` (1uH inductor -- no exact KiCad
+default matches the XGL3520, pick at BOM time) and `SW2`. Not blocking
+while both `.kicad_pcb` files are still empty, but it blocks layout.
 
 Standard passive size for this whole project: **0603** for R/C/L (0-ohm
 0603 link/jumper resistors are documented as a standard available option in
