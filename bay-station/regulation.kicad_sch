@@ -6,7 +6,7 @@
 	(paper "A3")
 	(title_block
 		(title "Regulation")
-		(comment 1 "Bay station -- +VSYS to +3V3_SYS buck regulation (TPS62A02PDDCR) for ESP32-S3 + 4x DWM3000 loads. Placement only -- no wires/labels yet.")
+		(comment 1 "Bay station -- +VSYS to +3V3_SYS buck regulation (TPS62A02PDDCR) for BT840 host + 4x DW3210 anchor loads. Placement only -- no wires/labels yet. Budget re-run 2026-09-19: ~347mA vs 2A rating.")
 	)
 	(lib_symbols
 		(symbol "Regulator_Switching:TPS62A02PDDCR"
@@ -694,7 +694,7 @@
 		)
 	)
 	(text "Regulation -- +VSYS to +3V3_SYS buck converter (U8)"
-		(at 60 30 0)
+		(at 59.69 30.48 0)
 		(effects
 			(font
 				(size 2.5 2.5)
@@ -702,8 +702,8 @@
 		)
 		(uuid "5926d5cf-017c-4cf8-a16a-c71477f01801")
 	)
-	(text "Placement only: no wires or global labels on this sheet yet.\nU8 = TPS62A02PDDCR (TI, real datasheet SLUSEG9E), a 2.5-5.5V-in / 2A synchronous\nbuck converter, adjustable output via R8/R9 feedback divider (R8=453k, R9=100k,\nVOUT = 0.6V x (1+R1/R2) = 0.6V x 5.53 = ~3.318V per Eq.2 of the datasheet).\nL1=1uH + C20=4.7uF (VIN) + C21=22uF (VOUT) per the datasheet's own Table 8-3\nrecommended LC combination for VOUT>=1.8V; C22=120pF optional feedforward cap\nacross R8, per the datasheet's own PSM-ripple-reduction note.\nIntended rail names (not yet wired): input = +VSYS (from power_bms.kicad_sch's\nMCP73871 OUT/VBATT_PROT node), output = +3V3_SYS (new regulated rail feeding\nU3 on connectivity.kicad_sch and U4-U7 on uwb_anchors.kicad_sch). EN (pin 1) and\nPG (pin 5, unused/optional) are also left unconnected here -- EN needs to be tied\nto +VSYS (always-on) in a future wiring pass. See regulation_notes.md for the full\ncurrent-budget math and datasheet citations."
-		(at 60 38 0)
+	(text "Placement only: no wires or global labels on this sheet yet.\nU8 = TPS62A02PDDCR (TI, real datasheet SLUSEG9E), a 2.5-5.5V-in / 2A synchronous\nbuck converter, adjustable output via R8/R9 feedback divider (R8=453k, R9=100k,\nVOUT = 0.6V x (1+R1/R2) = 0.6V x 5.53 = ~3.318V per Eq.2 of the datasheet).\nL1=1uH + C20=4.7uF (VIN) + C21=22uF (VOUT) per the datasheet's own Table 8-3\nrecommended LC combination for VOUT>=1.8V; C22=120pF optional feedforward cap\nacross R8, per the datasheet's own PSM-ripple-reduction note.\nIntended rail names (not yet wired): input = +VSYS (from power_bms.kicad_sch's\nMCP73871 OUT/VBATT_PROT node), output = +3V3_SYS (new regulated rail feeding\nU3 on connectivity.kicad_sch and U4-U7 on uwb_array.kicad_sch). EN (pin 1) and\nPG (pin 5, unused/optional) are also left unconnected here -- EN needs to be tied\nto +VSYS (always-on) in a future wiring pass. See regulation_notes.md for the full\ncurrent-budget math and datasheet citations."
+		(at 59.69 38.10 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -713,7 +713,7 @@
 	)
 	(symbol
 		(lib_id "Regulator_Switching:TPS62A02PDDCR")
-		(at 110 90 0)
+		(at 110.49 90.17 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -723,7 +723,7 @@
 		(dnp no)
 		(uuid "8063ef2e-f179-4b49-936e-a84916af3216")
 		(property "Reference" "U8"
-			(at 110 78 0)
+			(at 110.49 77.47 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -733,7 +733,7 @@
 			)
 		)
 		(property "Value" "TPS62A02PDDCR"
-			(at 110 102 0)
+			(at 110.49 101.60 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -743,7 +743,7 @@
 			)
 		)
 		(property "Footprint" "Package_TO_SOT_SMD:SOT-23-6"
-			(at 110 90 0)
+			(at 110.49 90.17 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(hide yes)
@@ -754,7 +754,7 @@
 			)
 		)
 		(property "Datasheet" "https://www.ti.com/lit/gpn/tps62a02"
-			(at 110 90 0)
+			(at 110.49 90.17 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(hide yes)
@@ -765,7 +765,7 @@
 			)
 		)
 		(property "Description" "2.5-5.5V in, 2A synchronous buck, adjustable output, SOT-23-6. See lib_symbols description and regulation_notes.md for full verification."
-			(at 110 90 0)
+			(at 110.49 90.17 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(hide yes)
@@ -804,7 +804,7 @@
 	)
 	(symbol
 		(lib_id "Device:L")
-		(at 140 90 90)
+		(at 139.70 90.17 90)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -814,7 +814,7 @@
 		(dnp no)
 		(uuid "6e162879-265e-4115-adae-e34542036d68")
 		(property "Reference" "L1"
-			(at 148 90 0)
+			(at 148.59 90.17 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -824,7 +824,7 @@
 			)
 		)
 		(property "Value" "1uH"
-			(at 148 98 0)
+			(at 148.59 97.79 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -834,7 +834,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 140 90 90)
+			(at 139.70 90.17 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(hide yes)
@@ -845,7 +845,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 140 90 90)
+			(at 139.70 90.17 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(hide yes)
@@ -856,7 +856,7 @@
 			)
 		)
 		(property "Description" "Power inductor, 1uH, >=2A saturation current per TPS62A02 datasheet Table 8-3/Table 8-2 recommended component list -- e.g. Coilcraft XGL3520-102MEC (2A-rated) or Murata DFE252012F-1R0M (1A-rated, only if using the 1A TPS62A01 variant instead). No exact KiCad default footprint match found for XGL3520; pick exact footprint/PN at BOM time."
-			(at 140 90 90)
+			(at 139.70 90.17 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(hide yes)
@@ -883,7 +883,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 85 90 0)
+		(at 85.09 90.17 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -893,7 +893,7 @@
 		(dnp no)
 		(uuid "9d3242ba-004f-4094-bbe8-9a5e780366d3")
 		(property "Reference" "C20"
-			(at 85 77 0)
+			(at 85.09 77.47 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -903,7 +903,7 @@
 			)
 		)
 		(property "Value" "4.7uF"
-			(at 85 100 0)
+			(at 85.09 100.33 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -913,7 +913,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
-			(at 85 90 0)
+			(at 85.09 90.17 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(hide yes)
@@ -924,7 +924,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 85 90 0)
+			(at 85.09 90.17 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(hide yes)
@@ -935,7 +935,7 @@
 			)
 		)
 		(property "Description" "TPS62A02 VIN decoupling, 4.7uF X7R per datasheet Table 8-2 recommended component (Murata GRM21BR71A475KA73L, 0805) -- sized 0805 rather than 0603 given the DC-bias-derating concern already flagged for power_bms.kicad_sch's C1 (10uF/0603)."
-			(at 85 90 0)
+			(at 85.09 90.17 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(hide yes)
@@ -962,7 +962,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 160 90 0)
+		(at 160.02 90.17 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -972,7 +972,7 @@
 		(dnp no)
 		(uuid "f93c2ce0-7d71-4ac0-a38a-6530e6781e50")
 		(property "Reference" "C21"
-			(at 160 77 0)
+			(at 160.02 77.47 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -982,7 +982,7 @@
 			)
 		)
 		(property "Value" "22uF"
-			(at 160 100 0)
+			(at 160.02 100.33 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -992,7 +992,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
-			(at 160 90 0)
+			(at 160.02 90.17 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(hide yes)
@@ -1003,7 +1003,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 160 90 0)
+			(at 160.02 90.17 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(hide yes)
@@ -1014,7 +1014,7 @@
 			)
 		)
 		(property "Description" "TPS62A02 +3V3_SYS output decoupling, 22uF X7R per datasheet Table 8-2 recommended component (Murata GRM21BZ71A226KE15L, 0805) and Table 8-3's recommended L=1uH/Cout=22uF combination for VOUT>=1.8V (the '++' proven-stable combination)."
-			(at 160 90 0)
+			(at 160.02 90.17 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(hide yes)
@@ -1041,7 +1041,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 190 105 0)
+		(at 190.50 105.41 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -1051,7 +1051,7 @@
 		(dnp no)
 		(uuid "ea5aee1b-71b8-4d14-b302-54747aacd8ca")
 		(property "Reference" "C22"
-			(at 190 93 0)
+			(at 190.50 92.71 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1061,7 +1061,7 @@
 			)
 		)
 		(property "Value" "120pF"
-			(at 190 116 0)
+			(at 190.50 115.57 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1071,7 +1071,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 190 105 0)
+			(at 190.50 105.41 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(hide yes)
@@ -1082,7 +1082,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 190 105 0)
+			(at 190.50 105.41 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(hide yes)
@@ -1093,7 +1093,7 @@
 			)
 		)
 		(property "Description" "Optional feedforward capacitor across R8 (FB divider top resistor), 120pF per datasheet's own Application Information note ('a feedforward capacitor reduces output ripple in PSM and improves load transient response; a 120pF capacitor is good for the 1.8V output typical application') -- included here since this rail also uses PSM, per the same design intent."
-			(at 190 105 0)
+			(at 190.50 105.41 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(hide yes)
@@ -1120,7 +1120,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 175 105 0)
+		(at 175.26 105.41 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -1130,7 +1130,7 @@
 		(dnp no)
 		(uuid "21aaac9e-c41c-4bb2-8691-cb7c1b87ff79")
 		(property "Reference" "R8"
-			(at 167 105 0)
+			(at 166.37 105.41 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1140,7 +1140,7 @@
 			)
 		)
 		(property "Value" "453k"
-			(at 167 112 0)
+			(at 166.37 111.76 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1150,7 +1150,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 175 105 0)
+			(at 175.26 105.41 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(hide yes)
@@ -1161,7 +1161,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 175 105 0)
+			(at 175.26 105.41 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(hide yes)
@@ -1172,7 +1172,7 @@
 			)
 		)
 		(property "Description" "TPS62A02 feedback divider, top resistor (VOUT to FB). R1 = R2 x (VOUT/VFB - 1) = 100k x (3.3V/0.6V - 1) = 450k per datasheet Eq.2 -- 453k is the nearest standard E96 1% value (100k x 4.53), giving VOUT = 0.6V x (1 + 453k/100k) = 3.318V."
-			(at 175 105 0)
+			(at 175.26 105.41 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(hide yes)
@@ -1199,7 +1199,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 175 120 0)
+		(at 175.26 119.38 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -1209,7 +1209,7 @@
 		(dnp no)
 		(uuid "2dd517ae-a7c3-438a-8030-f8fa2b2c53f6")
 		(property "Reference" "R9"
-			(at 167 120 0)
+			(at 166.37 119.38 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1219,7 +1219,7 @@
 			)
 		)
 		(property "Value" "100k"
-			(at 167 127 0)
+			(at 166.37 127.00 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1229,7 +1229,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 175 120 0)
+			(at 175.26 119.38 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(hide yes)
@@ -1240,7 +1240,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 175 120 0)
+			(at 175.26 119.38 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(hide yes)
@@ -1251,7 +1251,7 @@
 			)
 		)
 		(property "Description" "TPS62A02 feedback divider, bottom resistor (FB to GND). R2 = 100k per datasheet's own worked example and its 'R2 must not be higher than 100k for acceptable noise sensitivity' guidance -- used at exactly the recommended ceiling value."
-			(at 175 120 0)
+			(at 175.26 119.38 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(hide yes)

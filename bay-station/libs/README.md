@@ -1,10 +1,10 @@
 # Bay-station-only libraries
 
 Symbols/footprints used **only** on the bay station board. If a part is also
-used on the wristband (e.g. the UWB IC once chosen), it belongs in
-`../../shared/` instead -- that's why the DWM3000 UWB module is *not* in this
-folder even though the bay station uses it (x4, one per anchor); see
-`../../shared/README.md`.
+used on the wristband it belongs in `../../shared/` instead -- though as of
+2026-09-19 nothing is actually shared between the boards any more, so in
+practice every bay-station part lives here or in a KiCad default library.
+See `../../shared/README.md`.
 
 See `components.csv` for the full part-by-part mapping (part -> symbol ->
 footprint -> datasheet URL -> verification notes).
@@ -12,14 +12,14 @@ footprint -> datasheet URL -> verification notes).
 ## What's in here
 
 ```
-bay_station.kicad_sym   # 1 hand-authored symbol: MAX17048G+T10
+bay_station.kicad_sym   # 3 hand-authored symbols: DW3210, BT840, MAX17048G+T10
 bay_station.pretty/     # 1 hand-authored footprint: MAX17048_TDFN8-EP_PLACEHOLDER
 sym-lib-table           # project-local library registration (symbols) -- not touched here
 fp-lib-table            # project-local library registration (footprints) -- not touched here
 components.csv          # BOM -> symbol/footprint mapping + verification notes
 ```
 
-Everything else this board needs -- the ESP32-S3-WROOM-1 radio/MCU, the
+Everything else this board needs -- the BT840 host (now in this library), the
 MCP73871 charge-management IC, the DC barrel jack, USB-C receptacle, battery
 connector/holder, protection diodes, LEDs, and passives -- matched something
 already in KiCad's own bundled default libraries (after checking pin-by-pin
@@ -44,7 +44,7 @@ search-result summaries or secondary "pinout" blog pages.
 
 | Part | What I found | What I did |
 |---|---|---|
-| **ESP32-S3-WROOM-1** | Went in assuming a 44-pin module per the task brief. The real Espressif datasheet v1.8 (Table 3-1, Section 3 "Pin Definitions") says the module has **41 pins**, and KiCad's own bundled `RF_Module:ESP32-S3-WROOM-1` symbol already matches all 41 pin names/numbers exactly, including the two footnoted Octal-PSRAM-shared pins and both GND/EPAD pins. | Reused KiCad's default symbol + footprint unmodified after the full pin-by-pin check. Chose the plain (non-`-U`) on-board-antenna variant over `ESP32-S3-WROOM-1U` since the bay station is a fixed unit with room for the on-board PCB antenna and no need for an external one. |
+| **ESP32-S3-WROOM-1** *(historical -- superseded by the Fanstel BT840, see `../../docs/decisions.md`)* | Went in assuming a 44-pin module per the task brief. The real Espressif datasheet v1.8 (Table 3-1, Section 3 "Pin Definitions") says the module has **41 pins**, and KiCad's own bundled `RF_Module:ESP32-S3-WROOM-1` symbol already matches all 41 pin names/numbers exactly, including the two footnoted Octal-PSRAM-shared pins and both GND/EPAD pins. | Reused KiCad's default symbol + footprint unmodified after the full pin-by-pin check. Chose the plain (non-`-U`) on-board-antenna variant over `ESP32-S3-WROOM-1U` since the bay station is a fixed unit with room for the on-board PCB antenna and no need for an external one. |
 | **MCP73871** | Assumed we'd need to hand-author this (QFN-20, no obvious default). KiCad's `Battery_Management.kicad_sym` already has a full `MCP73871` symbol. | Checked its 21 pin assignments (20 leads + EP) against the real Microchip datasheet DS20002090E page 2 pinout diagram -- all match exactly. Its assigned default footprint (`Package_DFN_QFN:QFN-20-1EP_4x4mm_P0.5mm_EP2.5x2.5mm`) uses a conservative EP size (2.5x2.5mm) versus Microchip's own nominal EP dimension (2.70x2.70mm, range 2.60-2.80mm per the datasheet's mechanical table) -- not wrong, just conservative; `Package_DFN_QFN:QFN-20-1EP_4x4mm_P0.5mm_EP2.7x2.7mm` (also a KiCad default) is available if an exact-nominal match is preferred. Reused as-is, not duplicated. |
 | **MAX17048** | No KiCad default symbol exists anywhere (checked `Battery_Management.kicad_sym` and others). Also discovered it ships in two very different packages. | Hand-authored `MAX17048G+T10` (the 8-pin **TDFN-EP**, 2x2mm variant) after reading the real Maxim/ADI datasheet 19-6171 Rev 2 (8/12), page 6 "Pin/Bump Configurations"/"Pin/Bump Descriptions" tables, which show both TDFN-pin and WLP-bump numbering side by side. Deliberately avoided the alternate **WLP** package (`MAX17048X+T10`, 0.9x1.7mm, 8-bump) confirmed on datasheet page 18's Ordering Information table -- WLP is not practical to hand-solder/rework on a bench-built board. Noteworthy pin nuance carried into the symbol description: pin 2 (CELL) is explicitly "Not internally connected" on the single-cell MAX17048 (it's only wired up on the dual-cell MAX17049), and pin 3 (VDD) does double duty as both the power input *and* the actual cell-voltage-sense input for the single-cell part. |
 
@@ -71,9 +71,10 @@ footprint, if one is published -- before sending this board to fab.
 |---|---|
 | **Hand-authored, fully verified pinout against a real datasheet table** | `MAX17048G+T10` |
 | **Hand-authored footprint, real body size + pin arrangement, PLACEHOLDER pad geometry** | `MAX17048_TDFN8-EP_PLACEHOLDER` |
-| **Reused unmodified from KiCad's own default libraries, pin-by-pin verified against the real datasheet** | `ESP32-S3-WROOM-1` (symbol + footprint), `MCP73871` (symbol; footprint reused as-is, slightly conservative EP size noted above) |
+| **Reused unmodified from KiCad's own default libraries, pin-by-pin verified against the real datasheet** | ~~`ESP32-S3-WROOM-1`~~ (superseded by BT840), `MCP73871` (symbol; footprint reused as-is, slightly conservative EP size noted above) |
 | **Reused unmodified from KiCad's own default libraries (generic parts, not IC-pinout-sensitive)** | `Barrel_Jack` + CUI PJ-063AH footprint, `USB_C_Receptacle_PowerOnly_6P` + GCT USB4125 footprint, `D_Schottky` + SMA, `D_TVS` + SOD-523, `Battery_Cell` + JST-PH or 18650 holder, `LED` + 0805, `R`/`C`/`Thermistor_NTC` |
-| **Shared, not duplicated here** | `DWM3000` (x4, one per anchor) -- see `../../shared/README.md` |
+| **Hand-authored 2026-09-19, all pins from the real datasheet via `pdftotext -raw`** | `DW3210` (40 pins, DW3000 Datasheet v1.3 Table 2 -- NOTE `-layout` mangles that table), `BT840` (61 pins, Fanstel Ver 1.15 Pin Function table) |
+| **Footprints outstanding** | `BT840` -- import from a vendor library (SnapMagic/Ultra Librarian/Fanstel EV Gerbers), do not hand-author. `DW3210` uses KiCad stock `QFN-40-1EP_5x5mm_P0.4mm_EP3.6x3.6mm`, verified geometrically, EP size unconfirmed against Figure 38 |
 
 ## Validation
 

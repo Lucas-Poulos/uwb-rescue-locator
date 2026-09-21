@@ -11,7 +11,7 @@ footprint -> datasheet URL -> verification notes).
 ## What's in here
 
 ```
-wristband.kicad_sym    # 4 hand-authored symbols: NINA-B111, MCP73831-2-OT, DW01A, FS8205A
+wristband.kicad_sym    # 5 hand-authored symbols: DWM3001C, NINA-B111 (unused), MCP73831-2-OT, DW01A, FS8205A
 wristband.pretty/      # 1 custom footprint: NINA111-42 (real u-blox Eagle-lib pad data)
 sym-lib-table          # project-local library registration (symbols) -- not touched here
 fp-lib-table           # project-local library registration (footprints) -- not touched here
@@ -47,7 +47,8 @@ gotchas worth knowing about before you order:
 
 | Part | What I found | What I did |
 |---|---|---|
-| **u-blox NINA-B111** | The sibling wristband-alarm project deliberately shipped this MCU with *no* footprint, because a castellated-edge LGA land pattern is easy to get wrong by eyeballing a mechanical drawing. | Found u-blox's own official Eagle library (`github.com/u-blox/CadSoft-Eagle-Library`, `ubloxLib.lbr`, package `NINA111-42`) and converted its exact pad coordinates (all 42 pads: 30 signal + 12 EGP thermal sub-pads) into a real KiCad footprint, cross-checked against the datasheet's own Table 19 mechanical dimensions (body size and two independent pin pitches matched exactly). Confident enough to ship without a PLACEHOLDER suffix. |
+| **Qorvo DWM3001C** | Hand-authored from the real DWM3001C Data Sheet Rev B (May 2022) Table 2, extracted with `pdftotext -raw` -- the `-layout` mode misaligns that table's columns and must not be trusted for it. All 48 pins transcribed; GND verified as 1/11/21/38/48, VDD as 12. **Pin 18 is undocumented in Table 2** (it lists 1-17 and 19-48) and is modelled as a passive NC so ERC assumes nothing -- confirm before fab. **Footprint not yet authored**: the land pattern is Figure 5, which does not extract as text. |
+| **u-blox NINA-B111** (no longer used -- kept in the library only) | The sibling wristband-alarm project deliberately shipped this MCU with *no* footprint, because a castellated-edge LGA land pattern is easy to get wrong by eyeballing a mechanical drawing. | Found u-blox's own official Eagle library (`github.com/u-blox/CadSoft-Eagle-Library`, `ubloxLib.lbr`, package `NINA111-42`) and converted its exact pad coordinates (all 42 pads: 30 signal + 12 EGP thermal sub-pads) into a real KiCad footprint, cross-checked against the datasheet's own Table 19 mechanical dimensions (body size and two independent pin pitches matched exactly). Confident enough to ship without a PLACEHOLDER suffix. |
 | **FS8205A** | Fortune Semiconductor's own part *literally* named "FS8205A" turned out to be a TSSOP-8 part, not the commonly-sold SOT-23-6 dual MOSFET everyone means by that name. | Found Fortune Semiconductor's real SOT-23-6 part, which is actually called **FS8205** (no trailing "A"), Rev 1.9 datasheet -- and independently cross-checked its pin diagram against Fuxinsemi's own separate "FS8205A" SOT-23-6 datasheet. Both show the identical physical pin arrangement, so the pinout used here (1=S1, 2=D12, 3=S2, 4=G2, 5=D12, 6=G1) is solid even though the exact part-number provenance is messier than it looks. Symbol kept named `FS8205A` to match what's actually stocked/ordered under that name. |
 
 Also worth knowing: KiCad's own default libraries already include
@@ -62,7 +63,7 @@ instead of duplicating it.
 
 | Status | Parts |
 |---|---|
-| **Hand-authored, fully verified against a real numbered pin diagram** | `NINA-B111`, `MCP73831-2-OT`, `DW01A`, `FS8205A` |
+| **Hand-authored, fully verified against a real numbered pin diagram** | `DWM3001C`, `NINA-B111` (unused), `MCP73831-2-OT`, `DW01A`, `FS8205A` |
 | **Hand-authored footprint, built from a real manufacturer CAD library (not a placeholder)** | `NINA111-42` |
 | **Reused unmodified from KiCad's own default libraries** | `Battery_Cell` + JST-PH footprint, `USB_C_Receptacle_PowerOnly_6P` + GCT USB4125 footprint, `D_TVS` + SOD-523, `LED` + 0805, `R`/`C`/`L` + 0603 |
 

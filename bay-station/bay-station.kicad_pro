@@ -650,7 +650,7 @@
     ],
     [
       "7a56b57e-fbec-43eb-be10-7a1a5f682193",
-      "UWB Anchors"
+      "UWB Array"
     ],
     [
       "adf6c49a-dc88-4f76-9bc6-0f3625bf3bc5",
@@ -663,6 +663,18 @@
     [
       "883ff08c-ad9f-4863-b9db-49772b53748e",
       "Programming / Debug"
+    ],
+    [
+      "6b2a9d38-4e15-4c7f-a093-2f5c8e1d70b4",
+      "Clock Distribution"
+    ],
+    [
+      "4d8f2b16-9c7a-4e35-8f60-1b3d5a8c2e09",
+      "Indicators"
+    ],
+    [
+      "9b2c3d4e-5f60-4172-8384-95a617b8c9da",
+      "Test Points"
     ]
   ],
   "text_variables": {},

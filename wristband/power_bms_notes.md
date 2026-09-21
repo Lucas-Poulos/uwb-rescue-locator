@@ -168,16 +168,13 @@ wants to `git checkout` it back.
 
 ## Design decisions / open concerns
 
-1. **NINA-B111 / DWM3000 are *not* placed on this sheet.** Both are
-   multi-pin parts (31 and ~24 pins respectively) that logically belong on
-   a dedicated `radio_mcu` sheet (per root `CONTRIBUTING.md`'s suggested
+1. **The UWB/MCU module is *not* placed on this sheet.** It is a multi-pin
+   part that logically belongs on a dedicated `radio_mcu` sheet (per root `CONTRIBUTING.md`'s suggested
    breakdown), not a "power_bms" sheet. Per the task's own item 7, this
    sheet instead terminates its output as the `VBAT` global label plus two
    representative bulk/bypass caps (C4 10uF, C5 100nF) -- a stand-in for
-   board-level bulk decoupling on the rail leaving this sheet. NINA-B111's
-   and DWM3000's own *per-IC* decoupling (u-blox recommends bypass caps
-   directly at VCC/VCC_IO; Qorvo's DW3000 hardware design guidelines
-   recommend bypass + bulk caps at the module's VDD pins) should be added
+   board-level bulk decoupling on the rail leaving this sheet. The module's
+   own decoupling (C6/C7 at the DWM3001C's VDD pin 12) is added
    directly on whichever future sheet places those parts, since decoupling
    caps belong physically/schematically adjacent to the IC they serve --
    putting them here with no IC present would be misleading busywork, not
