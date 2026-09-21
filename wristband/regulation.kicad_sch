@@ -1,7 +1,7 @@
 (kicad_sch
-	(version 20231120)
+	(version 20260306)
 	(generator "eeschema")
-	(generator_version "8.0")
+	(generator_version "10.0")
 	(uuid "17562a6d-a735-4d3e-8eb8-c44eb99380ce")
 	(paper "A4")
 	(title_block
@@ -9,6 +9,161 @@
 		(comment 1 "Wristband VBAT (up to 4.2V) -> +3V3 LDO rail for NINA-B400 (abs max VCC 3.9V) and DWM3000 (abs max VDD3V3 4.0V) -- placement only, not yet wired")
 	)
 	(lib_symbols
+		(symbol "Device:C"
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 0.254)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "C"
+				(at 0.635 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Value" "C"
+				(at 0.635 -2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Footprint" ""
+				(at 0.9652 -3.81 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Unpolarized capacitor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "cap capacitor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "C_*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "C_0_1"
+				(polyline
+					(pts
+						(xy -2.032 0.762) (xy 2.032 0.762)
+					)
+					(stroke
+						(width 0.508)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -2.032 -0.762) (xy 2.032 -0.762)
+					)
+					(stroke
+						(width 0.508)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "C_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 2.794)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 2.794)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "Regulator_Linear:MCP1700x-330xxTT"
 			(pin_names
 				(offset 0.254)
@@ -16,8 +171,12 @@
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
 			(property "Reference" "U"
 				(at -3.81 3.175 0)
+				(show_name no)
+				(do_not_autoplace no)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -26,6 +185,8 @@
 			)
 			(property "Value" "MCP1700T-3302E/TT"
 				(at 0 3.175 0)
+				(show_name no)
+				(do_not_autoplace no)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -35,56 +196,68 @@
 			)
 			(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
 				(at 0 5.715 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "Datasheet" "https://ww1.microchip.com/downloads/en/DeviceDoc/MCP1700-Low-Quiescent-Current-LDO-20001826E.pdf"
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "Description" "Microchip MCP1700T-3302E/TT, 250mA low-quiescent-current (1.6uA typ) CMOS LDO, fixed 3.3V output, SOT-23-3. Steps the protected VBAT rail (up to 4.2V full-charge) down to a safe, real-margin 3.3V rail for NINA-B111 (abs max VCC 3.9V, Table 8) and DWM3000 (abs max VDD3V3/VDD1 4.0V, Table 9) -- 3.3V sits comfortably inside BOTH parts' own operating-condition max too (NINA-B1 VCC operating max 3.6V per Table 11; DWM3000 VDD3V3 operating max 3.6V per Table 4), not just under the absolute-max ratings. Current budget (see regulation_notes.md for full math): NINA-B111 peak ~12mA (u-connectXpress active/advertising @3.3V VCC, Table 13) + DWM3000 worst-case CH9 RX 55mA typ (Table 5 DC Characteristics) = ~67mA combined peak, vs this part's 250mA max rating -- ~3.7x headroom, chosen deliberately over a tighter/higher-Iq-tradeoff part so the LDO itself never becomes the bottleneck. VIN operating range 2.3-6.0V (datasheet Table, Absolute Max VDD 6.5V) comfortably covers the whole VBAT range (~3.0-4.2V). PIN NOTE: KiCad's own real Regulator_Linear.kicad_sym defines this exact part (MCP1700x-330xxTT) via (extends \"MCP1700x-300xxTT\") -- confirmed empirically in this same project (see power_bms_notes.md item 5, AO3401A) that kicad-cli only resolves `extends` through the project's own sym-lib-table, which intentionally does not register a \"Regulator_Linear\" nickname. So this symbol is embedded here fully self-contained (graphics + all 3 pins inlined directly from the real MCP1700x-300xxTT base symbol, pin-for-pin identical, just with the 330 variant's own Value/Footprint/Description/Datasheet properties) instead of using `extends` -- same legitimate, zero-electrical-impact deviation already established and documented in this repo, not a new pattern. Pinout (1=GND, 2=VO, 3=VI) matches the datasheet's own 'Pin Function Table' / 3-Pin SOT-23 package diagram exactly."
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "MPN" "MCP1700T-3302E/TT"
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "ki_keywords" "regulator linear ldo"
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "ki_fp_filters" "SOT?23*"
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(symbol "MCP1700x-330xxTT_0_1"
@@ -156,140 +329,403 @@
 					)
 				)
 			)
+			(embedded_fonts no)
 		)
-		(symbol "Device:C"
-			(pin_numbers hide)
-			(pin_names
-				(offset 0.254)
+	)
+	(text "(abs-max VCC 3.9V) and DWM3000 (abs-max VDD3V3 4.0V) in spec --"
+		(exclude_from_sim no)
+		(at 76.2 50.8 0)
+		(effects
+			(font
+				(size 1.7 1.7)
+				(bold yes)
 			)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(property "Reference" "C"
-				(at 0.635 2.54 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify left)
+			(justify left)
+		)
+		(uuid "3a4773a6-0b01-4564-8870-0fc6f71d9cd9")
+	)
+	(text "VBAT (up to 4.2V) -> +3V3 rail"
+		(exclude_from_sim no)
+		(at 76.2 40.64 0)
+		(effects
+			(font
+				(size 1.7 1.7)
+				(bold yes)
+			)
+			(justify left)
+		)
+		(uuid "53e935a3-d13d-4116-a05e-055c58d921d9")
+	)
+	(text "a charged LiPo at 4.2V would otherwise exceed both."
+		(exclude_from_sim no)
+		(at 76.2 55.88 0)
+		(effects
+			(font
+				(size 1.7 1.7)
+				(bold yes)
+			)
+			(justify left)
+		)
+		(uuid "a4f48f2b-af91-46ed-b9cb-7b3d5914a535")
+	)
+	(text "C11/C12 are the datasheet's own 1uF in/out values"
+		(exclude_from_sim no)
+		(at 76.2 114.3 0)
+		(effects
+			(font
+				(size 1.7 1.7)
+				(bold yes)
+			)
+			(justify left)
+		)
+		(uuid "cea04c6c-55da-4939-bb02-632344d07611")
+	)
+	(text "Budget: 15.5mA + 55mA = ~70.5mA vs 250mA rated (~3.5x headroom)"
+		(exclude_from_sim no)
+		(at 76.2 60.96 0)
+		(effects
+			(font
+				(size 1.7 1.7)
+				(bold yes)
+			)
+			(justify left)
+		)
+		(uuid "db9464ab-39fe-4b33-ab82-234112436d9c")
+	)
+	(text "MCP1700T-3302E/TT, 250mA, 1.6uA typ Iq. Keeps both the NINA-B400"
+		(exclude_from_sim no)
+		(at 76.2 45.72 0)
+		(effects
+			(font
+				(size 1.7 1.7)
+				(bold yes)
+			)
+			(justify left)
+		)
+		(uuid "f5495edb-8ec5-4e66-9234-962e605a046c")
+	)
+	(wire
+		(pts
+			(xy 132.08 88.9) (xy 121.92 88.9)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0e195e52-9418-4545-8ee9-b7307eeaa975")
+	)
+	(wire
+		(pts
+			(xy 88.9 85.09) (xy 88.9 82.55)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "318c54c2-2b05-49ee-91af-5ff627ef14cc")
+	)
+	(wire
+		(pts
+			(xy 190.5 85.09) (xy 190.5 82.55)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "694105d8-5ebf-4084-a68b-f7086b85df2b")
+	)
+	(wire
+		(pts
+			(xy 88.9 92.71) (xy 88.9 95.25)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "753d03cf-a9b0-48a1-97f8-3ca504d3d155")
+	)
+	(wire
+		(pts
+			(xy 139.7 96.52) (xy 139.7 106.68)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8ef8c5ce-5329-4b5c-a9ab-ec6d79a86040")
+	)
+	(wire
+		(pts
+			(xy 190.5 92.71) (xy 190.5 95.25)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "99d70bcc-d9d7-4c44-89db-04dc7ba4bb6d")
+	)
+	(wire
+		(pts
+			(xy 147.32 88.9) (xy 157.48 88.9)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "da7b0f76-c7a8-4b34-970d-017903279cbf")
+	)
+	(global_label "VBAT"
+		(shape input)
+		(at 121.92 88.9 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "0178944e-1e99-420a-a767-3558b6e79a67")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 121.92 88.9 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
 				)
 			)
-			(property "Value" "C"
-				(at 0.635 -2.54 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify left)
+		)
+	)
+	(global_label "+3V3"
+		(shape input)
+		(at 157.48 88.9 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "2b375987-9ebd-429e-a807-a932d3d2eda1")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 157.48 88.9 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
 				)
 			)
-			(property "Footprint" ""
-				(at 0.9652 -3.81 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
+		)
+	)
+	(global_label "GND"
+		(shape input)
+		(at 139.7 106.68 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "2cab81b8-80b4-4607-8051-fe8e74727324")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 139.7 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
 				)
 			)
-			(property "Datasheet" "~"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
+		)
+	)
+	(global_label "VBAT"
+		(shape input)
+		(at 88.9 82.55 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "434dce63-062a-454e-848c-5bc058db3fbc")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 88.9 82.55 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
 				)
 			)
-			(property "Description" "Unpolarized capacitor"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
+		)
+	)
+	(global_label "GND"
+		(shape input)
+		(at 190.5 95.25 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "a4c70b61-fc7d-4b31-9eee-7fc9b4829126")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 190.5 95.25 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
 				)
 			)
-			(property "ki_keywords" "cap capacitor"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
+		)
+	)
+	(global_label "GND"
+		(shape input)
+		(at 88.9 95.25 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "d538fb5d-d7b1-4dde-98ff-96817bf8ce06")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 88.9 95.25 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
 				)
 			)
-			(property "ki_fp_filters" "C_*"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
+		)
+	)
+	(global_label "+3V3"
+		(shape input)
+		(at 190.5 82.55 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "f50ca5ea-321e-43f3-b172-8a6d697c408f")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 190.5 82.55 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
 				)
 			)
-			(symbol "C_0_1"
-				(polyline
-					(pts
-						(xy -2.032 -0.762) (xy 2.032 -0.762)
-					)
-					(stroke
-						(width 0.508)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 190.5 88.9 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "370f309c-e8b1-46f0-934c-9b4781bf7b90")
+		(property "Reference" "C12"
+			(at 191.135 91.44 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
 				)
-				(polyline
-					(pts
-						(xy -2.032 0.762) (xy 2.032 0.762)
-					)
-					(stroke
-						(width 0.508)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
+				(justify left)
+			)
+		)
+		(property "Value" "1uF"
+			(at 191.135 86.36 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+			(at 190.5 88.9 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
 				)
 			)
-			(symbol "C_1_1"
-				(pin passive line
-					(at 0 3.81 270)
-					(length 2.794)
-					(name "~"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
+		)
+		(property "Datasheet" ""
+			(at 190.5 88.9 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
 				)
-				(pin passive line
-					(at 0 -3.81 90)
-					(length 2.794)
-					(name "~"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
+			)
+		)
+		(property "Description" ""
+			(at 190.5 88.9 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "CL10B105KA8NNNC"
+			(at 191.135 91.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 191.135 91.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "b04cee24-6963-414a-9038-fda2e9dab453")
+		)
+		(pin "2"
+			(uuid "b16a2bf1-6bb2-4891-831b-ef43aef11b14")
+		)
+		(instances
+			(project "wristband"
+				(path "/b3417696-fb19-4c3e-bd30-28bb2d157bef/c8a62365-e5e1-4a35-95a0-d1447cde3053"
+					(reference "C12")
+					(unit 1)
 				)
 			)
 		)
@@ -298,13 +734,17 @@
 		(lib_id "Regulator_Linear:MCP1700x-330xxTT")
 		(at 139.7 88.9 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(uuid "737b835e-e6bd-4002-b36a-938628b1ba12")
 		(property "Reference" "U5"
 			(at 139.7 73.66 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -313,6 +753,8 @@
 		)
 		(property "Value" "MCP1700T-3302E/TT"
 			(at 139.7 76.2 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -321,38 +763,56 @@
 		)
 		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
 			(at 139.7 88.9 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" ""
 			(at 139.7 88.9 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 139.7 88.9 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
 			)
 		)
 		(property "MPN" "MCP1700T-3302E/TT"
 			(at 139.7 73.66 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Manufacturer" "Microchip"
 			(at 139.7 73.66 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "1"
@@ -377,13 +837,17 @@
 		(lib_id "Device:C")
 		(at 88.9 88.9 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(uuid "c801371a-1d4c-4451-9458-502a4a00e72b")
 		(property "Reference" "C11"
 			(at 89.535 91.44 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -393,6 +857,8 @@
 		)
 		(property "Value" "1uF"
 			(at 89.535 86.36 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -402,38 +868,56 @@
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 88.9 88.9 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" ""
 			(at 88.9 88.9 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 88.9 88.9 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
 			)
 		)
 		(property "MPN" "CL10B105KA8NNNC"
 			(at 89.535 91.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Manufacturer" "Samsung Electro-Mechanics"
 			(at 89.535 91.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(pin "1"
@@ -451,300 +935,9 @@
 			)
 		)
 	)
-	(symbol
-		(lib_id "Device:C")
-		(at 190.5 88.9 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "370f309c-e8b1-46f0-934c-9b4781bf7b90")
-		(property "Reference" "C12"
-			(at 191.135 91.44 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "1uF"
-			(at 191.135 86.36 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 190.5 88.9 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 190.5 88.9 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "MPN" "CL10B105KA8NNNC"
-			(at 191.135 91.44 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Manufacturer" "Samsung Electro-Mechanics"
-			(at 191.135 91.44 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "b04cee24-6963-414a-9038-fda2e9dab453")
-		)
-		(pin "2"
-			(uuid "b16a2bf1-6bb2-4891-831b-ef43aef11b14")
-		)
-		(instances
-			(project "wristband"
-				(path "/b3417696-fb19-4c3e-bd30-28bb2d157bef/c8a62365-e5e1-4a35-95a0-d1447cde3053"
-					(reference "C12")
-					(unit 1)
-				)
-			)
-		)
-	)
 	(sheet_instances
 		(path "/"
 			(page "1")
 		)
-	)
-	(wire
-		(pts
-			(xy 139.7 96.52) (xy 139.7 106.68)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "8ef8c5ce-5329-4b5c-a9ab-ec6d79a86040")
-	)
-	(global_label "GND"
-		(shape input)
-		(at 139.7 106.68 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "2cab81b8-80b4-4607-8051-fe8e74727324")
-	)
-	(wire
-		(pts
-			(xy 147.32 88.9) (xy 157.48 88.9)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "da7b0f76-c7a8-4b34-970d-017903279cbf")
-	)
-	(global_label "+3V3"
-		(shape input)
-		(at 157.48 88.9 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "2b375987-9ebd-429e-a807-a932d3d2eda1")
-	)
-	(wire
-		(pts
-			(xy 132.08 88.9) (xy 121.92 88.9)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "0e195e52-9418-4545-8ee9-b7307eeaa975")
-	)
-	(global_label "VBAT"
-		(shape input)
-		(at 121.92 88.9 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "0178944e-1e99-420a-a767-3558b6e79a67")
-	)
-	(wire
-		(pts
-			(xy 88.9 85.09) (xy 88.9 82.55)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "318c54c2-2b05-49ee-91af-5ff627ef14cc")
-	)
-	(global_label "VBAT"
-		(shape input)
-		(at 88.9 82.55 90)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "434dce63-062a-454e-848c-5bc058db3fbc")
-	)
-	(wire
-		(pts
-			(xy 88.9 92.71) (xy 88.9 95.25)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "753d03cf-a9b0-48a1-97f8-3ca504d3d155")
-	)
-	(global_label "GND"
-		(shape input)
-		(at 88.9 95.25 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "d538fb5d-d7b1-4dde-98ff-96817bf8ce06")
-	)
-	(wire
-		(pts
-			(xy 190.5 85.09) (xy 190.5 82.55)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "694105d8-5ebf-4084-a68b-f7086b85df2b")
-	)
-	(global_label "+3V3"
-		(shape input)
-		(at 190.5 82.55 90)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "f50ca5ea-321e-43f3-b172-8a6d697c408f")
-	)
-	(wire
-		(pts
-			(xy 190.5 92.71) (xy 190.5 95.25)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "99d70bcc-d9d7-4c44-89db-04dc7ba4bb6d")
-	)
-	(global_label "GND"
-		(shape input)
-		(at 190.5 95.25 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "a4c70b61-fc7d-4b31-9eee-7fc9b4829126")
-	)
-	(text "VBAT (up to 4.2V) -> +3V3 rail"
-		(at 76.2 40.64 0)
-		(effects
-			(font
-				(size 1.7 1.7)
-				(bold yes)
-			)
-			(justify left)
-		)
-		(uuid "53e935a3-d13d-4116-a05e-055c58d921d9")
-	)
-	(text "MCP1700T-3302E/TT, 250mA, 1.6uA typ Iq. Keeps both the NINA-B400"
-		(at 76.2 45.72 0)
-		(effects
-			(font
-				(size 1.7 1.7)
-				(bold yes)
-			)
-			(justify left)
-		)
-		(uuid "f5495edb-8ec5-4e66-9234-962e605a046c")
-	)
-	(text "(abs-max VCC 3.9V) and DWM3000 (abs-max VDD3V3 4.0V) in spec --"
-		(at 76.2 50.8 0)
-		(effects
-			(font
-				(size 1.7 1.7)
-				(bold yes)
-			)
-			(justify left)
-		)
-		(uuid "3a4773a6-0b01-4564-8870-0fc6f71d9cd9")
-	)
-	(text "a charged LiPo at 4.2V would otherwise exceed both."
-		(at 76.2 55.88 0)
-		(effects
-			(font
-				(size 1.7 1.7)
-				(bold yes)
-			)
-			(justify left)
-		)
-		(uuid "a4f48f2b-af91-46ed-b9cb-7b3d5914a535")
-	)
-	(text "Budget: 15.5mA + 55mA = ~70.5mA vs 250mA rated (~3.5x headroom)"
-		(at 76.2 60.96 0)
-		(effects
-			(font
-				(size 1.7 1.7)
-				(bold yes)
-			)
-			(justify left)
-		)
-		(uuid "db9464ab-39fe-4b33-ab82-234112436d9c")
-	)
-	(text "C11/C12 are the datasheet's own 1uF in/out values"
-		(at 76.2 114.3 0)
-		(effects
-			(font
-				(size 1.7 1.7)
-				(bold yes)
-			)
-			(justify left)
-		)
-		(uuid "cea04c6c-55da-4939-bb02-632344d07611")
 	)
 )
