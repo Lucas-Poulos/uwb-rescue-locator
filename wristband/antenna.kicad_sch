@@ -670,7 +670,7 @@
 	)
 	(text "Still pre-approved for NINA-B4: certification app note UBX-20037320 R05 s3.2."
 		(exclude_from_sim no)
-		(at 76.2 76.2 0)
+		(at 76.2 62.484 0)
 		(effects
 			(font
 				(size 1.7 1.7)
@@ -682,7 +682,7 @@
 	)
 	(text "Off-board antenna  --  Abracon PRO-IS-237 (formerly ProAnt InSide-2400)"
 		(exclude_from_sim no)
-		(at 76.2 50.8 0)
+		(at 76.2 37.084 0)
 		(effects
 			(font
 				(size 1.7 1.7)
@@ -694,7 +694,7 @@
 	)
 	(text "no PCB-side U.FL receptacle and no L/C matching network on this board --"
 		(exclude_from_sim no)
-		(at 76.2 66.04 0)
+		(at 76.2 52.324 0)
 		(effects
 			(font
 				(size 1.7 1.7)
@@ -706,7 +706,7 @@
 	)
 	(text "+3.0dBi, 50 ohm, 27x12mm triangular patch, 100mm U.FL pigtail."
 		(exclude_from_sim no)
-		(at 76.2 55.88 0)
+		(at 76.2 42.164 0)
 		(effects
 			(font
 				(size 1.7 1.7)
@@ -718,7 +718,7 @@
 	)
 	(text "the former J2 / L1 / C13 were removed with the NINA-B400 migration."
 		(exclude_from_sim no)
-		(at 76.2 71.12 0)
+		(at 76.2 57.404 0)
 		(effects
 			(font
 				(size 1.7 1.7)
@@ -730,7 +730,7 @@
 	)
 	(text "Plugs straight into the NINA-B400's ON-MODULE U.FL connector, so there is"
 		(exclude_from_sim no)
-		(at 76.2 60.96 0)
+		(at 76.2 47.244 0)
 		(effects
 			(font
 				(size 1.7 1.7)
@@ -741,12 +741,12 @@
 		(uuid "9b0f4ce9-71b5-470b-824e-0a409d9c8a97")
 	)
 	(no_connect
-		(at 142.24 81.28)
+		(at 140.97 85.09)
 		(uuid "ca559488-1a72-4404-bdf8-1ba1fb851c9a")
 	)
 	(symbol
 		(lib_id "Device:Antenna")
-		(at 142.24 76.2 0)
+		(at 140.97 80.01 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -756,7 +756,7 @@
 		(dnp no)
 		(uuid "02d6cd5a-c803-4c16-9048-b8ff62e88568")
 		(property "Reference" "AE1"
-			(at 140.335 78.105 0)
+			(at 139.065 81.915 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -767,7 +767,7 @@
 			)
 		)
 		(property "Value" "PRO-IS-237 (Abracon, ex-ProAnt InSide-2400)"
-			(at 140.335 76.2 0)
+			(at 139.065 80.01 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -778,7 +778,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 142.24 76.2 0)
+			(at 140.97 80.01 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -789,7 +789,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 142.24 76.2 0)
+			(at 140.97 80.01 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -800,7 +800,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 142.24 76.2 0)
+			(at 140.97 80.01 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -810,7 +810,7 @@
 			)
 		)
 		(property "MPN" "PRO-IS-237"
-			(at 140.335 78.105 0)
+			(at 139.065 81.915 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -821,7 +821,7 @@
 			)
 		)
 		(property "Manufacturer" "Abracon"
-			(at 140.335 78.105 0)
+			(at 139.065 81.915 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
