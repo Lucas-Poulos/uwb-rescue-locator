@@ -24,25 +24,36 @@ folder instead -- don't add it here.
 
 ### Part number resolved: DWM3000 (not DWM3000C, which doesn't exist)
 
+> **UPDATED 2026-09-23 — this section is still correct for the bay station,
+> but the wristband no longer uses DWM3000.** The wristband moved to the
+> **DWM3001C** described below as "not used", and dropped its NINA-B400 in the
+> same change, so the redundancy objection no longer applies there. DWM3001C is
+> a *wristband-only* part and therefore lives in `wristband/libs/`, not here.
+> `DWM3000` stays in this shared library because the bay station still places
+> four of them. See `../docs/decisions.md`.
+
 While sourcing this part, no exact "DWM3000C" SKU turned up in Qorvo's
 current catalog (checked their product pages and several distributor
 listings) -- an earlier version of this doc used that name by mistake.
 Qorvo's real lineup has two different, non-interchangeable parts that
 could have been meant:
 
-- **DWM3000** (confirmed choice) -- a bare UWB transceiver module (no
+- **DWM3000** (bay station, 4x) -- a bare UWB transceiver module (no
   onboard host MCU), 24-pin 1.4mm-pitch side-castellated package,
-  23x13x2.9mm, based on the DW3110 IC. Architecturally consistent with
-  this project, since the wristband already has a separate NINA-B400 BLE
-  MCU to act as the SPI host.
-- **DWM3001C** (not used) -- a larger, different module that additionally
-  integrates its own nRF52833 BLE SoC, a planar antenna, and an
-  accelerometer. Using this alongside a separate NINA-B400 would be
-  redundant (two BLE radios on one board) and it's a different footprint
-  entirely.
+  23x13x2.9mm, based on the DW3110 IC. Still the right choice for the bay
+  station, whose ESP32-S3 acts as the SPI host for all four anchors.
+- **DWM3001C** (wristband, 1x, as of 2026-09-23) -- a larger, different
+  module that additionally integrates its own nRF52833 BLE SoC, a UWB
+  antenna, a Bluetooth chip antenna and an accelerometer, in a 48-pin
+  castellated 19.13x27.1x3.2mm package. Originally rejected here because
+  pairing it with a separate NINA-B400 would have meant two BLE radios on
+  one board; it was adopted once the NINA-B400 was removed and the
+  DWM3001C's own nRF52833 became the wristband's host MCU.
 
 All data in the `DWM3000` symbol (pin names/numbers, package dimensions)
 was pulled from the real **Qorvo DWM3000 Data Sheet Rev B, May 2021**.
+The wristband's `DWM3001C` symbol was built the same way, from the real
+**Qorvo DWM3001C Data Sheet Rev B, May 2022** (Figure 1 and Table 2).
 See `../docs/decisions.md`, where this is now marked resolved.
 
 ### Footprint verification detail

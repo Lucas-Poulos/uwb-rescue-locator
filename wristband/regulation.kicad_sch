@@ -164,7 +164,7 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "Regulator_Linear:MCP1700x-330xxTT"
+		(symbol "wristband:TPS7A0233PDBVR"
 			(pin_names
 				(offset 0.254)
 			)
@@ -174,17 +174,7 @@
 			(in_pos_files yes)
 			(duplicate_pin_numbers_are_jumpers no)
 			(property "Reference" "U"
-				(at -3.81 3.175 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Value" "MCP1700T-3302E/TT"
-				(at 0 3.175 0)
+				(at -7.62 7.62 0)
 				(show_name no)
 				(do_not_autoplace no)
 				(effects
@@ -194,8 +184,19 @@
 					(justify left)
 				)
 			)
-			(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
-				(at 0 5.715 0)
+			(property "Value" "TPS7A0233PDBVR"
+				(at 7.62 7.62 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify right)
+				)
+			)
+			(property "Footprint" "Package_TO_SOT_SMD:SOT-23-5"
+				(at 0 -7.62 0)
 				(show_name no)
 				(do_not_autoplace no)
 				(hide yes)
@@ -205,7 +206,18 @@
 					)
 				)
 			)
-			(property "Datasheet" "https://ww1.microchip.com/downloads/en/DeviceDoc/MCP1700-Low-Quiescent-Current-LDO-20001826E.pdf"
+			(property "Datasheet" "https://www.ti.com/lit/ds/symlink/tps7a02.pdf"
+				(at 0 -10.16 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Texas Instruments TPS7A0233 nanopower-IQ 200mA low-dropout linear regulator, fixed 3.3V output, SOT-23-5 (DBV). Chosen 2026-09-23 to replace the MCP1700T-3302E/TT on this board: quiescent current drops from 1.6uA typ / 4uA max to 25nA typ / 46nA max at 25C (60nA max over -40..85C), which matters because the wristband spends most of its life asleep and the LDO was the single largest standby draw. Shutdown IQ 3nA. VIN 1.5-6.0V, output accuracy +/-1.5% over temperature, dropout 270mV max at 200mA (this board draws 45mA worst case), current limit 450mA typ, PSRR 55dB at 1kHz, output noise 130uVrms, UVLO 1.3V rising. Requires CIN 1uF and COUT 1uF nominal with at least 0.5uF EFFECTIVE output capacitance for stability (22uF derated max). NOTE the EN pin has an internal pulldown and the device is DISABLED when EN floats -- EN must be driven high; on this board it is tied to VBAT, since the MCU this rail powers cannot enable its own supply. All pin and electrical data verified directly against the real TI data sheet SBVS277C (Table 5-1 'Pin Functions', Figure 5-2 'DBV Package, 5-Pin SOT-23', Section 6.3 'Recommended Operating Conditions', Section 6.5 'Electrical Characteristics')."
 				(at 0 0 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -216,7 +228,7 @@
 					)
 				)
 			)
-			(property "Description" "Microchip MCP1700T-3302E/TT, 250mA low-quiescent-current (1.6uA typ) CMOS LDO, fixed 3.3V output, SOT-23-3. Steps the protected VBAT rail (up to 4.2V full-charge) down to a safe, real-margin 3.3V rail for NINA-B111 (abs max VCC 3.9V, Table 8) and DWM3000 (abs max VDD3V3/VDD1 4.0V, Table 9) -- 3.3V sits comfortably inside BOTH parts' own operating-condition max too (NINA-B1 VCC operating max 3.6V per Table 11; DWM3000 VDD3V3 operating max 3.6V per Table 4), not just under the absolute-max ratings. Current budget (see regulation_notes.md for full math): NINA-B111 peak ~12mA (u-connectXpress active/advertising @3.3V VCC, Table 13) + DWM3000 worst-case CH9 RX 55mA typ (Table 5 DC Characteristics) = ~67mA combined peak, vs this part's 250mA max rating -- ~3.7x headroom, chosen deliberately over a tighter/higher-Iq-tradeoff part so the LDO itself never becomes the bottleneck. VIN operating range 2.3-6.0V (datasheet Table, Absolute Max VDD 6.5V) comfortably covers the whole VBAT range (~3.0-4.2V). PIN NOTE: KiCad's own real Regulator_Linear.kicad_sym defines this exact part (MCP1700x-330xxTT) via (extends \"MCP1700x-300xxTT\") -- confirmed empirically in this same project (see power_bms_notes.md item 5, AO3401A) that kicad-cli only resolves `extends` through the project's own sym-lib-table, which intentionally does not register a \"Regulator_Linear\" nickname. So this symbol is embedded here fully self-contained (graphics + all 3 pins inlined directly from the real MCP1700x-300xxTT base symbol, pin-for-pin identical, just with the 330 variant's own Value/Footprint/Description/Datasheet properties) instead of using `extends` -- same legitimate, zero-electrical-impact deviation already established and documented in this repo, not a new pattern. Pinout (1=GND, 2=VO, 3=VI) matches the datasheet's own 'Pin Function Table' / 3-Pin SOT-23 package diagram exactly."
+			(property "MPN" "TPS7A0233PDBVR"
 				(at 0 0 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -227,7 +239,7 @@
 					)
 				)
 			)
-			(property "MPN" "MCP1700T-3302E/TT"
+			(property "Manufacturer" "Texas Instruments"
 				(at 0 0 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -238,7 +250,7 @@
 					)
 				)
 			)
-			(property "ki_keywords" "regulator linear ldo"
+			(property "ki_keywords" "ldo linear regulator low dropout nanopower 3.3V ti tps7a02"
 				(at 0 0 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -260,10 +272,10 @@
 					)
 				)
 			)
-			(symbol "MCP1700x-330xxTT_0_1"
+			(symbol "TPS7A0233PDBVR_0_1"
 				(rectangle
-					(start -5.08 1.905)
-					(end 5.08 -5.08)
+					(start -7.62 5.08)
+					(end 7.62 -5.08)
 					(stroke
 						(width 0.254)
 						(type default)
@@ -273,11 +285,11 @@
 					)
 				)
 			)
-			(symbol "MCP1700x-330xxTT_1_1"
+			(symbol "TPS7A0233PDBVR_1_1"
 				(pin power_in line
-					(at 0 -7.62 90)
-					(length 2.54)
-					(name "GND"
+					(at -12.7 2.54 0)
+					(length 5.08)
+					(name "IN"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -292,10 +304,64 @@
 						)
 					)
 				)
+				(pin input line
+					(at -12.7 -2.54 0)
+					(length 5.08)
+					(name "EN"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
 				(pin power_out line
-					(at 7.62 0 180)
-					(length 2.54)
-					(name "VO"
+					(at 12.7 2.54 180)
+					(length 5.08)
+					(name "OUT"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 12.7 -2.54 180)
+					(length 5.08)
+					(name "NC"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_in line
+					(at 0 -10.16 90)
+					(length 5.08)
+					(name "GND"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -310,17 +376,138 @@
 						)
 					)
 				)
+			)
+			(embedded_fonts no)
+		)
+		(symbol "power:+3V3"
+			(power global)
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 0)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "#PWR"
+				(at 0 -3.81 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "+3V3"
+				(at 0 3.556 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Power symbol creates a global label with name \"+3V3\""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "global power"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "+3V3_0_1"
+				(polyline
+					(pts
+						(xy -0.762 1.27) (xy 0 2.54)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 2.54) (xy 0.762 1.27)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 0) (xy 0 2.54)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "+3V3_1_1"
 				(pin power_in line
-					(at -7.62 0 0)
-					(length 2.54)
-					(name "VI"
+					(at 0 0 90)
+					(length 0)
+					(name ""
 						(effects
 							(font
 								(size 1.27 1.27)
 							)
 						)
 					)
-					(number "3"
+					(number "1"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -447,418 +634,8 @@
 			(embedded_fonts no)
 		)
 	)
-	(text "(abs-max VCC 3.9V) and DWM3000 (abs-max VDD3V3 4.0V) in spec --"
-		(exclude_from_sim no)
-		(at 76.2 50.8 0)
-		(effects
-			(font
-				(size 1.7 1.7)
-				(bold yes)
-			)
-			(justify left)
-		)
-		(uuid "3a4773a6-0b01-4564-8870-0fc6f71d9cd9")
-	)
-	(text "VBAT (up to 4.2V) -> +3V3 rail"
-		(exclude_from_sim no)
-		(at 76.2 40.64 0)
-		(effects
-			(font
-				(size 1.7 1.7)
-				(bold yes)
-			)
-			(justify left)
-		)
-		(uuid "53e935a3-d13d-4116-a05e-055c58d921d9")
-	)
-	(text "a charged LiPo at 4.2V would otherwise exceed both."
-		(exclude_from_sim no)
-		(at 76.2 55.88 0)
-		(effects
-			(font
-				(size 1.7 1.7)
-				(bold yes)
-			)
-			(justify left)
-		)
-		(uuid "a4f48f2b-af91-46ed-b9cb-7b3d5914a535")
-	)
-	(text "C11/C12 are the datasheet's own 1uF in/out values"
-		(exclude_from_sim no)
-		(at 75.184 127 0)
-		(effects
-			(font
-				(size 1.7 1.7)
-				(bold yes)
-			)
-			(justify left)
-		)
-		(uuid "cea04c6c-55da-4939-bb02-632344d07611")
-	)
-	(text "Budget: 15.5mA + 55mA = ~70.5mA vs 250mA rated (~3.5x headroom)"
-		(exclude_from_sim no)
-		(at 76.2 60.96 0)
-		(effects
-			(font
-				(size 1.7 1.7)
-				(bold yes)
-			)
-			(justify left)
-		)
-		(uuid "db9464ab-39fe-4b33-ab82-234112436d9c")
-	)
-	(text "MCP1700T-3302E/TT, 250mA, 1.6uA typ Iq. Keeps both the NINA-B400"
-		(exclude_from_sim no)
-		(at 76.2 45.72 0)
-		(effects
-			(font
-				(size 1.7 1.7)
-				(bold yes)
-			)
-			(justify left)
-		)
-		(uuid "f5495edb-8ec5-4e66-9234-962e605a046c")
-	)
-	(wire
-		(pts
-			(xy 132.08 88.9) (xy 121.92 88.9)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "0e195e52-9418-4545-8ee9-b7307eeaa975")
-	)
-	(wire
-		(pts
-			(xy 104.14 91.44) (xy 104.14 88.9)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "318c54c2-2b05-49ee-91af-5ff627ef14cc")
-	)
-	(wire
-		(pts
-			(xy 180.34 92.71) (xy 180.34 90.17)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "694105d8-5ebf-4084-a68b-f7086b85df2b")
-	)
-	(wire
-		(pts
-			(xy 104.14 99.06) (xy 104.14 101.6)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "753d03cf-a9b0-48a1-97f8-3ca504d3d155")
-	)
-	(wire
-		(pts
-			(xy 139.7 96.52) (xy 139.7 106.68)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "8ef8c5ce-5329-4b5c-a9ab-ec6d79a86040")
-	)
-	(wire
-		(pts
-			(xy 180.34 100.33) (xy 180.34 102.87)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "99d70bcc-d9d7-4c44-89db-04dc7ba4bb6d")
-	)
-	(wire
-		(pts
-			(xy 147.32 88.9) (xy 157.48 88.9)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "da7b0f76-c7a8-4b34-970d-017903279cbf")
-	)
-	(global_label "VBAT"
-		(shape input)
-		(at 121.92 88.9 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "0178944e-1e99-420a-a767-3558b6e79a67")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 121.92 88.9 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "+3V3"
-		(shape input)
-		(at 157.48 88.9 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "2b375987-9ebd-429e-a807-a932d3d2eda1")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 157.48 88.9 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "VBAT"
-		(shape input)
-		(at 104.14 88.9 90)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "434dce63-062a-454e-848c-5bc058db3fbc")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 104.14 88.9 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "+3V3"
-		(shape input)
-		(at 180.34 90.17 90)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "f50ca5ea-321e-43f3-b172-8a6d697c408f")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 180.34 90.17 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
 	(symbol
-		(lib_id "power:GND")
-		(at 104.14 101.6 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "1cc66267-6144-4f21-a70e-490366460a88")
-		(property "Reference" "#PWR011"
-			(at 104.14 107.95 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 104.14 106.68 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 104.14 101.6 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 104.14 101.6 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 104.14 101.6 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "ce1f1a3f-327a-4810-bbae-cbb2266beb54")
-		)
-		(instances
-			(project "wristband"
-				(path "/b3417696-fb19-4c3e-bd30-28bb2d157bef/c8a62365-e5e1-4a35-95a0-d1447cde3053"
-					(reference "#PWR011")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:C")
-		(at 180.34 96.52 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "370f309c-e8b1-46f0-934c-9b4781bf7b90")
-		(property "Reference" "C12"
-			(at 180.975 99.06 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "1uF"
-			(at 180.975 93.98 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 180.34 96.52 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 180.34 96.52 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 180.34 96.52 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "MPN" "CL10B105KA8NNNC"
-			(at 180.975 99.06 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Manufacturer" "Samsung Electro-Mechanics"
-			(at 180.975 99.06 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "b04cee24-6963-414a-9038-fda2e9dab453")
-		)
-		(pin "2"
-			(uuid "b16a2bf1-6bb2-4891-831b-ef43aef11b14")
-		)
-		(instances
-			(project "wristband"
-				(path "/b3417696-fb19-4c3e-bd30-28bb2d157bef/c8a62365-e5e1-4a35-95a0-d1447cde3053"
-					(reference "C12")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Regulator_Linear:MCP1700x-330xxTT")
+		(lib_id "wristband:TPS7A0233PDBVR")
 		(at 139.7 88.9 0)
 		(unit 1)
 		(body_style 1)
@@ -867,9 +644,32 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "737b835e-e6bd-4002-b36a-938628b1ba12")
+		(uuid "817a977c-6307-4243-ba5c-be478a3817b7")
 		(property "Reference" "U5"
-			(at 139.7 73.66 0)
+			(at 132.08 81.28 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "TPS7A0233PDBVR"
+			(at 147.32 81.28 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23-5"
+			(at 139.7 102.87 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -878,8 +678,9 @@
 				)
 			)
 		)
-		(property "Value" "MCP1700T-3302E/TT"
-			(at 139.7 76.2 0)
+		(property "Datasheet" "https://www.ti.com/lit/ds/symlink/tps7a02.pdf"
+			(at 139.7 105.41 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -888,7 +689,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
+		(property "MPN" "TPS7A0233PDBVR"
 			(at 139.7 88.9 0)
 			(hide yes)
 			(show_name no)
@@ -899,40 +700,8 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Manufacturer" "Texas Instruments"
 			(at 139.7 88.9 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 139.7 88.9 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "MPN" "MCP1700T-3302E/TT"
-			(at 139.7 73.66 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Manufacturer" "Microchip"
-			(at 139.7 73.66 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -943,13 +712,19 @@
 			)
 		)
 		(pin "1"
-			(uuid "5f0ae882-2d2e-43d7-b96d-9ff56231b2e2")
+			(uuid "e7ae5fd4-41e7-4be1-9911-5e4480afeb7a")
 		)
 		(pin "2"
-			(uuid "0533943e-855e-4b74-a003-b7fd92d253be")
+			(uuid "4899d96a-6dbe-456e-8f7a-25d0d687de32")
 		)
 		(pin "3"
-			(uuid "f44d76e8-32af-4b56-843f-2cd5bcebd221")
+			(uuid "f3c2ec1f-f83f-43fd-bf9d-cffc684a41c5")
+		)
+		(pin "4"
+			(uuid "c9506ef6-6bcc-44aa-b5ae-54fcc1ec2582")
+		)
+		(pin "5"
+			(uuid "28e98f15-d0bc-4f11-a171-c7d064255f32")
 		)
 		(instances
 			(project "wristband"
@@ -961,164 +736,8 @@
 		)
 	)
 	(symbol
-		(lib_id "power:GND")
-		(at 139.7 106.68 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "8f5bd738-c81e-41a4-8ca2-69da08e673e5")
-		(property "Reference" "#PWR012"
-			(at 139.7 113.03 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 139.7 111.76 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 139.7 106.68 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 139.7 106.68 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 139.7 106.68 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "9b487acd-611e-47c3-af34-d3284aa66697")
-		)
-		(instances
-			(project "wristband"
-				(path "/b3417696-fb19-4c3e-bd30-28bb2d157bef/c8a62365-e5e1-4a35-95a0-d1447cde3053"
-					(reference "#PWR012")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 180.34 102.87 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "b2cf5d6f-ab6b-4446-912f-b2879d051ab3")
-		(property "Reference" "#PWR013"
-			(at 180.34 109.22 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 180.34 107.95 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 180.34 102.87 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 180.34 102.87 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 180.34 102.87 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "7476a66a-537c-4ec7-b347-23ec5f30a33a")
-		)
-		(instances
-			(project "wristband"
-				(path "/b3417696-fb19-4c3e-bd30-28bb2d157bef/c8a62365-e5e1-4a35-95a0-d1447cde3053"
-					(reference "#PWR013")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:C")
-		(at 104.14 95.25 0)
+		(at 116.84 93.98 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -1128,7 +747,7 @@
 		(dnp no)
 		(uuid "c801371a-1d4c-4451-9458-502a4a00e72b")
 		(property "Reference" "C11"
-			(at 104.775 97.79 0)
+			(at 119.38 93.98 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1139,7 +758,7 @@
 			)
 		)
 		(property "Value" "1uF"
-			(at 104.775 92.71 0)
+			(at 119.38 93.98 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1150,7 +769,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 104.14 95.25 0)
+			(at 124.46 95.25 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1161,7 +780,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 104.14 95.25 0)
+			(at 124.46 95.25 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1172,7 +791,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 104.14 95.25 0)
+			(at 124.46 95.25 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1182,7 +801,7 @@
 			)
 		)
 		(property "MPN" "CL10B105KA8NNNC"
-			(at 104.775 97.79 0)
+			(at 125.095 97.79 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1193,7 +812,7 @@
 			)
 		)
 		(property "Manufacturer" "Samsung Electro-Mechanics"
-			(at 104.775 97.79 0)
+			(at 125.095 97.79 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1217,10 +836,595 @@
 				)
 			)
 		)
-	)
-	(sheet_instances
-		(path "/"
-			(page "1")
+	)	(symbol
+		(lib_id "Device:C")
+		(at 154.94 93.98 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "370f309c-e8b1-46f0-934c-9b4781bf7b90")
+		(property "Reference" "C12"
+			(at 157.48 93.98 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
 		)
+		(property "Value" "2.2uF"
+			(at 157.48 93.98 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+			(at 154.94 95.25 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 154.94 95.25 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 154.94 95.25 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "CL10B105KA8NNNC"
+			(at 155.575 97.79 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 155.575 97.79 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "b04cee24-6963-414a-9038-fda2e9dab453")
+		)
+		(pin "2"
+			(uuid "b16a2bf1-6bb2-4891-831b-ef43aef11b14")
+		)
+		(instances
+			(project "wristband"
+				(path "/b3417696-fb19-4c3e-bd30-28bb2d157bef/c8a62365-e5e1-4a35-95a0-d1447cde3053"
+					(reference "C12")
+					(unit 1)
+				)
+			)
+		)
+	)	(global_label "VBAT"
+		(shape input)
+		(at 109.22 86.36 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "3a33daa0-e2a7-4bb4-895a-d439e460eff8")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 109.22 86.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 109.22 86.36) (xy 127 86.36)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "34f12f65-4d9a-4581-8203-d0c651151cb3")
+	)
+	(wire
+		(pts
+			(xy 116.84 86.36) (xy 116.84 90.17)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c6558161-5ceb-4f31-a893-22c1df3108b8")
+	)
+	(junction
+		(at 116.84 86.36)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "edbf3d48-f306-4fa8-8318-f82e4c839d0c")
+	)
+	(wire
+		(pts
+			(xy 121.92 86.36) (xy 121.92 91.44)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e3ac813a-4083-4be2-be9e-cfc977d45c04")
+	)
+	(junction
+		(at 121.92 86.36)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "25dfc960-952b-473a-92b2-3aa1b29c743b")
+	)
+	(wire
+		(pts
+			(xy 121.92 91.44) (xy 127 91.44)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1d696aeb-fde6-4e4e-9653-7e1a54de531f")
+	)
+	(wire
+		(pts
+			(xy 116.84 97.79) (xy 116.84 100.33)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "385b0248-2769-48ed-ac73-355718011953")
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 116.84 100.33 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "b94b2bd1-5b4f-42b4-a58f-8073764b16a1")
+		(property "Reference" "#PWR011"
+			(at 116.84 96.52 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 116.84 104.14 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 116.84 100.33 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 116.84 100.33 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "468877b4-3b1d-4843-8bd0-dab795ce172d")
+		)
+		(instances
+			(project "wristband"
+				(path "/b3417696-fb19-4c3e-bd30-28bb2d157bef/c8a62365-e5e1-4a35-95a0-d1447cde3053"
+					(reference "#PWR011")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 152.4 86.36) (xy 160.02 86.36)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c74e086b-bc48-4ce2-bcef-b4f63192ab6b")
+	)
+	(symbol
+		(lib_id "power:+3V3")
+		(at 160.02 86.36 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "fc0ebead-dbf5-4005-a31f-faa28d1e0d95")
+		(property "Reference" "#PWR037"
+			(at 160.02 82.55 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "+3V3"
+			(at 160.02 90.17 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 160.02 86.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 160.02 86.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "144044e9-1916-415c-bd7f-07e29e4f39c1")
+		)
+		(instances
+			(project "wristband"
+				(path "/b3417696-fb19-4c3e-bd30-28bb2d157bef/c8a62365-e5e1-4a35-95a0-d1447cde3053"
+					(reference "#PWR037")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 154.94 86.36) (xy 154.94 90.17)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "81efa74c-988b-41ec-a632-a6a73e8c79ab")
+	)
+	(junction
+		(at 154.94 86.36)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "346fbb4b-e4ac-4644-93c6-d1e4c892ad0a")
+	)
+	(wire
+		(pts
+			(xy 154.94 97.79) (xy 154.94 100.33)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4dd14708-d51e-49df-8f58-216f652ebf46")
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 154.94 100.33 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "f3325cfa-7060-40f7-a85e-3ba8076dfd88")
+		(property "Reference" "#PWR013"
+			(at 154.94 96.52 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 154.94 104.14 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 154.94 100.33 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 154.94 100.33 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "848e9bae-c236-42d6-9bc7-86a7e3ed2969")
+		)
+		(instances
+			(project "wristband"
+				(path "/b3417696-fb19-4c3e-bd30-28bb2d157bef/c8a62365-e5e1-4a35-95a0-d1447cde3053"
+					(reference "#PWR013")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 139.7 99.06) (xy 139.7 101.6)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "93ab0e4c-8d06-418f-8923-54848c95f6f8")
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 139.7 101.6 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "0a51f907-c2fa-4914-8dac-cc29c605a001")
+		(property "Reference" "#PWR012"
+			(at 139.7 97.79 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 139.7 105.41 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 139.7 101.6 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 139.7 101.6 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "6201f0cf-700e-4845-91a7-f6da4c166a56")
+		)
+		(instances
+			(project "wristband"
+				(path "/b3417696-fb19-4c3e-bd30-28bb2d157bef/c8a62365-e5e1-4a35-95a0-d1447cde3053"
+					(reference "#PWR012")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(no_connect
+		(at 152.4 91.44)
+		(uuid "0bb6cafb-423f-4c0e-93ce-6837d39b459c")
+	)
+	(text "U5 TPS7A0233PDBVR  --  nanopower-IQ 3.3V LDO, SOT-23-5."
+		(exclude_from_sim no)
+		(at 101.6 72.39 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "61391808-fdf3-4d10-bafc-b3efb8fb16b9")
+	)
+	(text "Replaced MCP1700T-3302E/TT 2026-09-23: IQ 1.6uA -> 25nA typ,"
+		(exclude_from_sim no)
+		(at 101.6 77.47 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "04c5f6c1-a802-4cf7-991c-2fe3ce58de14")
+	)
+	(text "which was the board's largest standby draw. 200mA, 45mA used."
+		(exclude_from_sim no)
+		(at 101.6 82.55 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "9faea6ab-c5f5-4ee4-b5b6-cfa4b9c39f85")
+	)
+	(text "EN is tied to VBAT, not to a GPIO: TPS7A02 is DISABLED when EN"
+		(exclude_from_sim no)
+		(at 101.6 107.95 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "6c61b35f-9e54-4b00-a6d8-1dae80945280")
+	)
+	(text "floats (internal pulldown, SBVS277C Table 5-1), and the MCU this"
+		(exclude_from_sim no)
+		(at 101.6 113.03 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "4874150d-98e5-402f-b558-4bc722b5681e")
+	)
+	(text "rail powers cannot enable its own supply."
+		(exclude_from_sim no)
+		(at 101.6 118.11 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "0fd25bd0-bb8f-4bfd-91ab-3618978f9ba4")
+	)
+	(text "C12 is 2.2uF, not 1uF: SBVS277C s6.3 needs >=0.5uF EFFECTIVE"
+		(exclude_from_sim no)
+		(at 101.6 128.27 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "52052f98-ad11-4fc1-858f-5d84038ef760")
+	)
+	(text "output capacitance, and an 0603 1uF X7R derates under DC bias."
+		(exclude_from_sim no)
+		(at 101.6 133.35 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "37473cf1-0603-45b1-a495-b9a2b3d8c149")
 	)
 )

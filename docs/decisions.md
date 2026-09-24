@@ -104,16 +104,59 @@ relitigate them. Keep this updated as the team decides things.
     ~70 mA against 250 mA, still ~3.5x headroom.
   - **SWD pinout is unchanged**: SWDCLK=11, SWDIO=15, RESET_N=19, SWO=8 on both
     B111 and B400, so the `programming_debug.kicad_sch` mapping carries over.
-- **UWB IC/module**: Qorvo/Decawave **DWM3000** (bare UWB transceiver module,
-  no onboard host MCU -- the NINA-B400 is the SPI host on the wristband; the
-  bay station's 4 anchors use it the same way against the ESP32-S3).
-  Note: an earlier pass of this doc and the initial library work briefly
-  used the incorrect name "DWM3000C", which isn't a real Qorvo part number --
-  see `shared/README.md` for the full correction writeup. Symbol added to
-  `shared/symbols/` (fully verified against Qorvo DWM3000 Data Sheet Rev B,
-  May 2021); footprint is a flagged `DWM3000_PLACEHOLDER` pending one
-  land-pattern dimension that didn't cleanly resolve from the datasheet
-  figure -- verify before fab.
+  - **Entire NINA-B400 entry superseded 2026-09-23** — `U3` was deleted when the
+    wristband moved to the DWM3001C, whose own nRF52833 is now the host MCU.
+    The LDO still stands but the ceiling is tighter (3.6 V, not 3.9 V) and the
+    budget smaller (45 mA, not ~70 mA); the SWD pinout did finally move, to
+    SWD_CLK=2, SWD_DIO=3, RESET=47, SWO=28. Kept as the historical record of
+    the B111→B400 reasoning. See the UWB IC/module entry below.
+- **UWB IC/module**: now **two different parts, one per board** (changed
+  2026-09-23; the wristband and bay station previously shared DWM3000).
+  - **Wristband: Qorvo DWM3001C** (1x, `U4`). A fully integrated module --
+    DW3110 UWB transceiver + Nordic nRF52833 BLE MCU + ST LIS2DH12
+    accelerometer + UWB antenna + Bluetooth chip antenna + 38.4 MHz crystal +
+    power management, 48-pin castellated 19.13 x 27.1 x 3.2 mm. **This
+    replaced the NINA-B400 + DWM3000 pair outright**: the module's own
+    nRF52833 is the host, so `U3` was deleted. Because the DW3110↔nRF52833
+    SPI is internal to the module, the board-level UWB SPI bus
+    (`UWB_CS/CLK/MOSI/MISO`), the `UWB_IRQ`/`UWB_RSTn`/`UWB_WAKEUP` control
+    lines, the GPIO5/6 SPI-mode straps (`R7`/`R8`), the IRQ pull-down (`R9`),
+    the external 32.768 kHz LFXO (`Y1`/`C14`/`C15`) and the off-board antenna
+    (`AE1`) all disappeared with it. Single supply **VDD 2.5–3.6 V**, 4.0 V
+    abs max; worst-case **45 mA** (CH9 TX/RX). Symbol and footprint are
+    wristband-only, in `wristband/libs/`, built from the real **Qorvo
+    DWM3001C Data Sheet Rev B, May 2022** (Figure 1, Tables 2/4/5/9).
+    Footprint is a flagged `DWM3001C_PLACEHOLDER` -- see below.
+  - **Bay station: Qorvo/Decawave DWM3000** (4x, one per anchor, bare UWB
+    transceiver module with no onboard host MCU, SPI host is the ESP32-S3).
+    Unchanged. Stays in `shared/symbols/` even though only one board now uses
+    it, since moving it would churn four placements for no benefit.
+  - Note: an earlier pass of this doc and the initial library work briefly
+    used the incorrect name "DWM3000C", which isn't a real Qorvo part number
+    -- see `shared/README.md` for the full correction writeup. That writeup
+    also originally rejected DWM3001C as redundant, which was true only while
+    the NINA-B400 was still on the board.
+  - Both footprints are flagged `_PLACEHOLDER`. DWM3000's has one unresolved
+    land-pattern dimension. DWM3001C's has two: Figure 5's 17.77 mm side-column
+    span back-derives to a **1.06375 mm** pitch across 17 pads, which is not a
+    round number and is unlikely to be Qorvo's intent; and the bottom pad row's
+    individual pad width is never dimensioned, while a "3.10" annotation implies
+    it is offset right rather than centred. **Verify both before fab.**
+- **Wristband 3.3V LDO**: **TI TPS7A0233PDBVR** (SOT-23-5), replacing
+  Microchip MCP1700T-3302E/TT on 2026-09-23. The regulator is still required
+  (battery reaches 4.2V, DWM3001C tops out at 3.6V operating / 4.0V abs max),
+  but the MCP1700's 1.6uA typ / 4uA max quiescent current had become the
+  largest single standby draw on the board -- more than the DWM3001C's own
+  850nA sleep. TPS7A02 is 25nA typ / 46nA max at 25C, 3nA shut down, and also
+  improves accuracy to +/-1.5% over temperature. Board standby ~4.3uA ->
+  ~2.7uA. Verified against TI SBVS277C. Trade-offs accepted: 200mA rating
+  instead of 250mA (still 4.4x the 45mA load), ~$0.78 instead of ~$0.16, and
+  a 5-pin package with an EN input that must be tied high (TPS7A02 is disabled
+  when EN floats; it cannot be GPIO-driven because the MCU it powers cannot
+  enable its own supply). A buck converter was considered and rejected -- at
+  45mA it trades a few points of efficiency for an inductor, higher Iq and
+  switching noise next to a UWB receiver. **Open follow-up:** the 2MOhm
+  R11/R12 battery-sense divider (~1.85uA) is now the dominant standby term.
 - **Wristband BMS**: MCP73831 (LiPo linear charger) + DW01A/FS8205
   protection pair -- same proven pattern as the team's other wristband
   project (alarm-band). Symbols added to `wristband/libs/`; battery

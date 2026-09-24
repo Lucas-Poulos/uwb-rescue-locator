@@ -1,5 +1,66 @@
 # Regulation / Antenna / Programming-Debug -- design notes
 
+> **SUPERSEDED IN PART — 2026-09-23.** The wristband has migrated again, this time
+> from the two-chip **NINA-B400 + DWM3000** pair to a single **Qorvo DWM3001C**
+> module, which integrates the DW3110 UWB transceiver, the same Nordic nRF52833
+> BLE MCU, an ST LIS2DH12 accelerometer, a 38.4 MHz reference crystal, a UWB
+> antenna *and* a Bluetooth chip antenna. `U3` (NINA-B400) was deleted; `U4` is
+> now the DWM3001C. Everything below that reasons about *two separate parts*
+> should be read as historical. What changed concretely:
+>
+> - **THE LDO ITSELF WAS THEN REPLACED (same day).** `U5` is now a **TI
+>   TPS7A0233PDBVR** (SOT-23-5), not an MCP1700T-3302E/TT. The MCP1700's
+>   **1.6 µA typ / 4 µA max** quiescent current was the largest single standby
+>   draw on the board — larger than the DWM3001C's own 850 nA sleep current.
+>   The TPS7A02 draws **25 nA typ / 46 nA max at 25 °C** (60 nA max over
+>   −40…85 °C), 3 nA in shutdown. Board standby goes **~4.3 µA → ~2.7 µA
+>   (−37 %)**; the honest caveat is that the **2 MΩ R11/R12 battery-sense
+>   divider (~1.85 µA) is now the dominant term**, so gating it is the next
+>   real win — see the note already on `radio_mcu.kicad_sch`.
+>   Other deltas, all from TI SBVS277C: accuracy **±1.5 %** over temperature
+>   (vs ±2.5 %), 200 mA rated (vs 250 mA — still 4.4× our 45 mA), dropout
+>   270 mV max @200 mA ≈ 60 mV at our load so the rail still holds down to
+>   ~3.36 V in, PSRR 55 dB @1 kHz, UVLO 1.3 V.
+>   **Not a drop-in:** SOT-23-5 `1=IN 2=GND 3=EN 4=NC 5=OUT` replaces the
+>   SOT-23-3 `1=GND 2=VOUT 3=VIN`, so the sheet was re-laid-out. **EN has an
+>   internal pulldown and the part is disabled when EN floats**, so EN is tied
+>   to VBAT — it cannot come from a GPIO, because the MCU this rail powers
+>   cannot enable its own supply. `C12` went 1 µF → **2.2 µF**: SBVS277C §6.3
+>   requires ≥0.5 µF *effective* output capacitance, and an 0603 1 µF X7R
+>   derates under DC bias to uncomfortably near that floor.
+>   A buck was considered and rejected: at 45 mA it would buy a few points of
+>   efficiency in exchange for an inductor, higher Iq and switching noise
+>   beside a UWB receiver.
+> - **The LDO decision still stands, with more margin than before.** DWM3001C's
+>   operating supply is **VDD 2.5–3.6 V** (Qorvo DWM3001C Data Sheet Rev B,
+>   May 2022, Table 4) with a **4.0 V absolute max** (Table 9). The raw battery
+>   rail still reaches 4.2 V, so the MCP1700T-3302E/TT 3.3 V LDO is still
+>   required, and 3.3 V ±2% (3.23–3.37 V) sits comfortably inside 2.5–3.6 V.
+>   Note the operating ceiling is **tighter** than the old pair's (3.6 V vs
+>   NINA-B400's 3.9 V abs max) — still fine, but it removes the option of
+>   running the module straight off the battery.
+> - **Current budget is now smaller, not larger.** DWM3001C worst case is
+>   **45 mA** (Table 5: CH9 TX and CH9 RX both 45 mA; CH5 40 mA; CH9 IDLE 32 mA;
+>   SLEEP 850 nA), replacing the old NINA-B400 + DWM3000 combined ~70.5 mA.
+>   Against the MCP1700's 250 mA rating that is **~5.6x headroom**, up from ~3.5x.
+> - **Section 4 below (R7/R8 GPIO5/GPIO6 SPI-mode straps) is obsolete and the
+>   resistors were removed.** Those existed because the host MCU drove the
+>   DW3110's SPI across a board-level bus that needed its mode strapped at boot.
+>   On DWM3001C the DW3110↔nRF52833 SPI is *internal to the module*, so no SPI
+>   bus, no IRQ/RSTn/WAKEUP lines and no strapping resistors are exposed at all.
+>   `DW_GP0/1/2/3/5/6` are brought out only as spare DW3110 GPIOs.
+> - **The antenna sheet is now documentation-only and places nothing.** `AE1`
+>   (Abracon PRO-IS-237) was removed: it existed solely to plug into the
+>   NINA-B400's on-module U.FL, and DWM3001C has no U.FL and no external RF pin.
+> - **SWD pin numbers changed** (they had survived the B111→B400 move unchanged,
+>   so this is the first time they move): **SWD_CLK=2, SWD_DIO=3, RESET=47
+>   (P0.18), SWO=28 (P1.00)**. Qorvo DS Rev B Table 2 gives the first three;
+>   P1.00 = TRACEDATA[0]/SWO comes from the nRF52833 Product Specification v1.7,
+>   p825. The battery-sense divider also moved to **P0.02 = AIN0** (same source,
+>   p825) — the only ADC-capable pin DWM3001C brings out that this board needs.
+>
+> See `../docs/decisions.md` for the current state.
+
 > **SUPERSEDED IN PART — 2026-09-15.** This document records the analysis pass that
 > was done when the wristband's BLE MCU was the **u-blox NINA-B111** (nRF52832) and the
 > antenna fed through a PCB-side U.FL connector (`J2`) and an L/C matching network

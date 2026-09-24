@@ -40,7 +40,7 @@
 					(justify right bottom)
 				)
 			)
-			(property "Footprint" "Connector_PinHeader_1.27mm:PinHeader_2x05_P1.27mm_Vertical"
+			(property "Footprint" ""
 				(at 0 0 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -62,7 +62,7 @@
 					)
 				)
 			)
-			(property "Description" "Cortex Debug Connector, standard ARM Cortex-M SWD and JTAG interface -- real, common 2x5 1.27mm-pitch header (ARM CoreSight 10-pin 'Cortex Debug' connector, e.g. as used on Segger J-Link / ST-Link / Black Magic Probe adapters). Chosen for NINA-B111's SWD programming/debug: this module's SWDIO (pin 15) and SWDCLK (pin 11) are already placed as U3 on radio_mcu.kicad_sch (see programming_debug_notes in regulation_notes.md / README for the cross-sheet pin reference -- not re-placing U3 here per task constraints). RESET_N (U3 pin 19) maps to this connector's pin 10 (~RESET); module GND (U3 pins 6/12/14/26/30) maps to pins 3/5/9 here. VTref (pin 1) should be tied to the regulated +3V3 rail (see regulation.kicad_sch) once wiring is added, so debug-probe level-shifters reference the correct I/O voltage. SWO/TDO (pin 6) can optionally pick up NINA-B111's SWO/GPIO_8 pin (U3 pin 8) for trace output. JTAG-only pins (NC/TDI, KEY) are not used by NINA-B111 (SWD-only debug, per the nRF52-series MCU inside it) and stay unconnected by design, matching this connector's own standard 'SWD-only subset' usage pattern."
+			(property "Description" "Cortex Debug Connector, standard ARM Cortex-M SWD and JTAG interface"
 				(at 0 0 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -637,7 +637,19 @@
 			(embedded_fonts no)
 		)
 	)
-	(text "Standard 2x5 1.27mm pitch. Pin numbers are unchanged from the"
+	(text "and AIN mappings confirmed in nRF52833 PS v1.7 p825-826."
+		(exclude_from_sim no)
+		(at 101.6 60.96 0)
+		(effects
+			(font
+				(size 1.7 1.7)
+				(bold yes)
+			)
+			(justify left)
+		)
+		(uuid "3c1f9a02-7d44-4f1e-9b21-58e0a7c4d913")
+	)
+	(text "Standard 2x5 1.27mm pitch. Module-side pin numbers changed with"
 		(exclude_from_sim no)
 		(at 101.6 45.72 0)
 		(effects
@@ -649,7 +661,7 @@
 		)
 		(uuid "4bbdd709-a3de-407e-9874-937f14e3779a")
 	)
-	(text "NINA-B111 this board previously used: SWDCLK=11, SWDIO=15,"
+	(text "the DWM3001C migration: SWD_CLK=2, SWD_DIO=3, RESET=47 (P0.18),"
 		(exclude_from_sim no)
 		(at 101.6 50.8 0)
 		(effects
@@ -661,7 +673,7 @@
 		)
 		(uuid "b90bc5e0-086a-447f-be3d-db75b5e578d0")
 	)
-	(text "SWD / ARM Cortex Debug header for NINA-B400 (U3)"
+	(text "SWD / ARM Cortex Debug header for DWM3001C (U4)"
 		(exclude_from_sim no)
 		(at 101.6 40.64 0)
 		(effects
@@ -673,7 +685,7 @@
 		)
 		(uuid "cf154fbc-a2b9-4424-9c5f-2078f2c77920")
 	)
-	(text "RESET_N=19, SWO=8 -- verified against UBX-19049405 R09 Table 6."
+	(text "SWO=28 (P1.00) -- Qorvo DS Rev B Table 2; P1.00=TRACEDATA[0]/SWO"
 		(exclude_from_sim no)
 		(at 101.6 55.88 0)
 		(effects
@@ -687,7 +699,7 @@
 	)
 	(text "VTref takes the regulated +3V3 rail."
 		(exclude_from_sim no)
-		(at 101.6 60.96 0)
+		(at 101.6 66.04 0)
 		(effects
 			(font
 				(size 1.7 1.7)
@@ -980,7 +992,7 @@
 			)
 		)
 		(property "Value" "Conn_ARM_JTAG_SWD_10"
-			(at 137.922 96.774 0)
+			(at 136.652 93.98 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects

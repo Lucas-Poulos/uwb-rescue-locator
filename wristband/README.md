@@ -4,14 +4,21 @@ The worn tag. Open `wristband.kicad_pro` in KiCad.
 
 ## Scope
 
-- **MCU/radio**: u-blox **NINA-B400-00B** (NINA-B4 series, Nordic nRF52833,
-  Bluetooth 5.1, on-module U.FL antenna connector) -- confirmed.
-  Migrated from NINA-B111 on 2026-09-15; see `../docs/decisions.md`.
-- **UWB IC/module**: Qorvo **DWM3000** (confirmed). Its symbol/footprint live
-  in `../shared/`, not here, since the bay station uses it too.
+- **MCU/radio**: Qorvo **DWM3001C** -- a single module carrying the DW3110 UWB
+  transceiver, a Nordic nRF52833 BLE MCU, an ST LIS2DH12 accelerometer, a UWB
+  antenna, a Bluetooth chip antenna and a 38.4MHz crystal. **Migrated
+  2026-09-23**, replacing the separate u-blox NINA-B400 (`U3`) + Qorvo DWM3000
+  (`U4`) pair outright; the module's own nRF52833 is now the host, so `U3` was
+  deleted. Symbol and footprint are wristband-only, in `libs/`. See
+  `../docs/decisions.md`.
 - **BMS**: sized for "just enough" runtime to make core functionality work --
   size/weight compromises take priority over battery life here (contrast
   with the bay station, which optimizes for longevity instead).
+
+> **Earlier scope, kept for context:** the board previously used NINA-B111,
+> then NINA-B400 (migrated 2026-09-15), each paired with a bare DWM3000 whose
+> symbol lives in `../shared/` because the bay station uses it too. The bay
+> station still places four DWM3000s; the wristband no longer places any.
 
 ## Status
 
@@ -117,6 +124,88 @@ Still TBD: wiring all six placement-only sheets (`radio_mcu.kicad_sch`,
 `programming_debug.kicad_sch`, plus `R7`/`R8`'s own nets) -- nets, decoupling
 values, SPI/GPIO hookups, and the `VBAT`/`+3V3` rail handoff all still need
 real wires/global labels added.
+
+
+**DWM3001C migration (2026-09-23).** The wristband dropped the two-chip
+NINA-B400 + DWM3000 architecture for a single Qorvo **DWM3001C** (`U4`).
+`radio_mcu.kicad_sch` was rewritten around it and is **ERC-clean** (zero
+violations on that sheet). What changed:
+
+- **Deleted**: `U3` (NINA-B400), `Y1`/`C14`/`C15` (external 32.768kHz LFXO --
+  DWM3001C exposes no XL1/XL2), `R7`/`R8` (DWM3000 GPIO5/6 SPI-mode straps),
+  `R9` (UWB IRQ pull-down), `C8`-`C10` (DWM3000 decoupling), and `AE1`
+  (Abracon PRO-IS-237 off-board antenna). All of the `UWB_CS`/`UWB_CLK`/
+  `UWB_MOSI`/`UWB_MISO`/`UWB_IRQ`/`UWB_RSTn`/`UWB_WAKEUP`/`XTAL1`/`XTAL2` nets
+  went with them -- the DW3110-to-nRF52833 SPI is internal to the module.
+- **Kept**: `SW1` (SOS button, now on `P0.17`/pin 6), the `R11`/`R12`/`C16`
+  battery-sense divider (now on `P0.02` = `AIN0`/pin 46, the ADC-capable pin
+  DWM3001C brings out), and `C6`/`C7` decoupling -- now `100nF` + `4.7uF` on
+  the module's single `VDD` (pin 12). Qorvo publishes no application circuit
+  or decoupling figure for DWM3001C; those values are a conservative project
+  default, not a datasheet requirement.
+- **SWD moved** for the first time (it had survived B111->B400 unchanged):
+  `SWD_CLK`=2, `SWD_DIO`=3, `RESET`=47 (P0.18), `SWO`=28 (P1.00).
+  `programming_debug.kicad_sch` needed no rewiring -- it connects by global
+  label -- but its on-sheet pin notes were corrected.
+- **`antenna.kicad_sch` is now documentation-only and places nothing**:
+  DWM3001C carries both a UWB antenna and a Bluetooth chip antenna on-module.
+- **LDO unchanged but with more margin**: worst case is now 45mA (DWM3001C
+  Table 5, CH9 TX/RX) against the MCP1700's 250mA, ~5.6x headroom, up from
+  ~3.5x. The operating ceiling is tighter though -- 3.6V, vs NINA-B400's 3.9V
+  abs max -- so the regulator is still mandatory.
+- **`libs/DWM3001C_PLACEHOLDER` needs pre-fab verification** on two
+  dimensions; see `libs/README.md`.
+
+**ERC state: 0 errors, 1 warning** (was 1 error, 13 warnings). Fixed along
+the way:
+
+- **Real bug — the LDO input was floating.** `regulation.kicad_sch` had no
+  labels at all, so `U5` pin 3 (`VI`) and its input cap `C11` sat on an
+  isolated `Net-(U5-VI)` and the whole `+3V3` rail had no source. A `VBAT`
+  global label now ties it to the battery rail, where `U2.3/VBAT` (a power
+  output) drives it.
+- **Redundant duplicate label** — `power_bms.kicad_sch` carried both a local
+  and a global label named `VBAT` on the same wire; the local one was removed.
+- **Stale library symbols.** `DW01A`, `FS8205A` and `MCP73831-2-OT` had been
+  redrawn wider in the schematic (right-hand pins x=5.08 -> x=11.43) without
+  the change ever reaching `libs/wristband.kicad_sym`. The library was synced
+  *from* the schematic cache, so no wire moved.
+- **Latent USB-C bug fixed as a side effect.** The cached
+  `USB_C_Receptacle_PowerOnly_6P` predated a KiCad library change that renamed
+  the shield pin `S1` -> `SH`. The footprint (and the already-placed PCB pad)
+  uses `SH`, so the shield had no matching pad. Refreshing the cached symbols
+  from KiCad's bundled libraries corrected it.
+
+**LDO replaced (2026-09-23).** `U5` went from Microchip MCP1700T-3302E/TT to
+**TI TPS7A0233PDBVR** (SOT-23-5). The MCP1700's 1.6 uA typ / 4 uA max Iq was
+the board's largest standby draw -- bigger than the DWM3001C's own 850 nA
+sleep. TPS7A02 draws **25 nA typ / 46 nA max @25C**, 3 nA shut down, and is
+also tighter on accuracy (+/-1.5% vs +/-2.5%). Board standby: **~4.3 uA ->
+~2.7 uA (-37%)**. Be aware the **2 MOhm R11/R12 sense divider (~1.85 uA) is now
+the dominant standby term** -- gating it is the next real win.
+Not a drop-in: SOT-23-5 `1=IN 2=GND 3=EN 4=NC 5=OUT` vs SOT-23-3 `1=GND
+2=VOUT 3=VIN`, so the sheet was re-laid-out. **EN is tied to VBAT** because
+TPS7A02 is disabled when EN floats and the MCU on this rail cannot enable its
+own supply. `C12` 1 uF -> **2.2 uF** to stay clear of the 0.5 uF effective-
+capacitance stability floor after 0603 DC-bias derating.
+
+**The 1 remaining warning is deliberate and must NOT be "fixed":** `AO3401A`
+is a flattened copy of an `extends`-based library symbol. Re-syncing it would
+reintroduce `extends`, which makes `kicad-cli` silently report the entire file
+as empty (0 components, 0 violations) instead of erroring -- see "Known
+gotchas" in the top-level README. (The second such warning,
+`MCP1700x-330xxTT`, disappeared with the LDO swap: the hand-authored
+TPS7A02 symbol is self-contained, so there is no library copy to diverge from.)
+
+> **PCB IS NOT YET SYNCED.** `wristband.kicad_pcb` still carries the old
+> footprints -- `U3` (NINA-B400), `U4` (DWM3000), `Y1`, `C8`-`C10`, `C14`,
+> `C15`, `R7`-`R9` -- has no DWM3001C, and still has `U5` as a SOT-23-**3**
+> (the TPS7A02 is SOT-23-**5**). `kicad-cli` has no
+> update-PCB-from-schematic command, so this must be done in the GUI:
+> **Pcbnew -> Tools -> Update PCB from Schematic (F8)**. Expect it to delete
+> those 11 footprints and add one DWM3001C. Current `pcb drc` reports 10
+> violations / 123 unconnected items, essentially all from this mismatch.
+
 
 ## Libraries
 

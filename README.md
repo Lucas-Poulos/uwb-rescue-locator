@@ -70,7 +70,7 @@ Before pushing anything, also read `CONTRIBUTING.md` -- branch off `main`,
 don't edit a sheet someone else is actively working on, and PRs need review
 (branch protection is on).
 
-## Status (last updated 2026-08-15, revised same day)
+## Status (last updated 2026-09-23)
 
 **Schematic capture is in progress on both boards. Nothing is wired yet
 except each board's own Power/BMS sheet.** If you're an agent or a new
@@ -87,11 +87,11 @@ project-wide unique per board (checked, no collisions) -- see each
 | Sheet | Status | Contents |
 |---|---|---|
 | Power BMS | **Wired** (global labels, no drawn wires), ERC clean (0 errors, 1 cosmetic warning) | JST-PH battery -> AO3401A reverse-polarity FET -> TVS -> DW01A+FS8205A protection -> MCP73831 charger (USB-C in) |
-| Radio MCU | **Wired** (global labels) | NINA-B400 (U3, nRF52833) + DWM3000 (U4) + decoupling + GPIO5/6 SPI-mode straps + IRQ pull-down + 32.768kHz LFXO crystal (Y1/C14/C15) + SOS button (SW1) + battery-sense divider (R11/R12/C16) |
+| Radio MCU | **Wired** (global labels), ERC clean | DWM3001C (U4) -- single module, host MCU + UWB + both antennas + accel + LFXO all internal -- plus VDD decoupling (C6/C7), SOS button (SW1) and battery-sense divider (R11/R12/C16). U3/Y1/C8-C10/C14/C15/R7-R9 were all deleted with the 2026-09-23 migration |
 | Mechanical | Placement only | 4x M2 mounting holes |
-| Regulation | **Wired** (global labels) | MCP1700T-3302E/TT LDO (3.3V) -- steps the protected battery rail down to a safe voltage for NINA-B400/DWM3000 (see "Confirmed chips" below for why this exists) |
-| Antenna | Documentation only (off-board part) | Abracon PRO-IS-237 BLE patch antenna (ex-ProAnt InSide-2400). Plugs into the NINA-B400's **on-module** U.FL -- the old PCB-side U.FL (`J2`) and L/C match network (`L1`/`C13`) were removed as unnecessary |
-| Programming/Debug | **Wired** (global labels) | ARM Cortex Debug SWD header for NINA-B400 |
+| Regulation | **Wired** (global labels), ERC clean | TPS7A0233PDBVR nanopower LDO (3.3V, SOT-23-5) -- steps the protected battery rail down to a safe voltage for DWM3001C (2.5-3.6V operating). ~45mA worst case vs 200mA rating, 4.4x headroom; 25nA Iq. EN tied to VBAT |
+| Antenna | Documentation only, **places nothing** | No external antenna is required: DWM3001C carries both a UWB antenna and a Bluetooth chip antenna on-module. `AE1` (Abracon PRO-IS-237) was removed 2026-09-23, as `J2`/`L1`/`C13` had been earlier |
+| Programming/Debug | **Wired** (global labels) | ARM Cortex Debug SWD header for DWM3001C (SWD_CLK=2, SWD_DIO=3, RESET=47, SWO=28) |
 
 **Bay Station** (`bay-station/`):
 | Sheet | Status | Contents |
@@ -110,8 +110,8 @@ driven" warnings -- that's expected, not a bug, until they get wired.
 
 | Part number | Role | Board(s) | Qty |
 |---|---|---|---|
-| u-blox **NINA-B400-00B** | BLE MCU/radio (Nordic nRF52833, Bluetooth 5.1, on-module U.FL) | Wristband | 1 |
-| Qorvo **DWM3000** | UWB transceiver module (shared part, lives in `shared/`) | Wristband (1) + Bay Station (4, one per anchor) | 5 |
+| Qorvo **DWM3001C** | UWB + BLE module: DW3110 UWB transceiver + Nordic nRF52833 BLE MCU + LIS2DH12 accelerometer + UWB antenna + Bluetooth chip antenna, all on-module. Replaced the NINA-B400 + DWM3000 pair on the wristband (2026-09-23) | Wristband | 1 |
+| Qorvo **DWM3000** | UWB transceiver module, no onboard host MCU (lives in `shared/`; bay station only since 2026-09-23) | Bay Station (4, one per anchor) | 4 |
 | Microchip **MCP73831** | LiPo linear battery charger | Wristband | 1 |
 | Fortune Semiconductor **DW01A** | Battery protection IC | Wristband | 1 |
 | Fortune Semiconductor **FS8205** (commonly sold as "FS8205A" -- see `wristband/libs/README.md`) | Protection dual MOSFET, DW01A's partner IC | Wristband | 1 |
@@ -120,14 +120,16 @@ driven" warnings -- that's expected, not a bug, until they get wired.
 | Espressif **ESP32-S3-WROOM-1** | WiFi/BLE connectivity MCU | Bay Station | 1 |
 | Microchip **MCP73871** | Charge management + power-path IC | Bay Station | 1 |
 | Maxim/Analog Devices **MAX17048** | Battery fuel gauge (SOC monitor) | Bay Station | 1 |
-| Microchip **MCP1700T-3302E/TT** | LDO regulator (3.3V) -- battery rail can hit 4.2V, which exceeds NINA-B400/DWM3000's absolute max voltage without this | Wristband | 1 |
+| TI **TPS7A0233PDBVR** | LDO regulator (3.3V, SOT-23-5) -- battery rail can hit 4.2V, which exceeds DWM3001C's 3.6V operating max / 4.0V absolute max without this. Nanopower 25nA Iq; replaced the MCP1700T-3302E/TT (1.6uA Iq) on 2026-09-23 to cut board standby ~37% | Wristband | 1 |
 | TI **TPS62A02PDDCR** | Buck (switching) regulator -- same voltage-safety role as the wristband's LDO, sized for the bay station's higher combined load current | Bay Station | 1 |
-| Abracon **PRO-IS-237** (formerly ProAnt InSide-2400) | BLE patch antenna -- plugs into the NINA-B400's on-module U.FL; DWM3000 has its own onboard antenna already | Wristband | 1 |
 
-Footprint caveats: DWM3000 and MAX17048 are both flagged `_PLACEHOLDER` in
-their footprint files -- pin/electrical data is fully verified, but one
-land-pattern dimension on each needs re-checking against the real datasheet
-figure before fab (see `shared/README.md` and `bay-station/libs/README.md`).
+Footprint caveats: DWM3001C, DWM3000 and MAX17048 are all flagged
+`_PLACEHOLDER` in their footprint files -- pin/electrical data is fully
+verified, but land-pattern dimensions need re-checking against the real
+datasheet figure before fab. DWM3000 and MAX17048 each have one unresolved
+dimension; **DWM3001C has two** (a 1.06375mm back-derived side-pad pitch, and
+an undimensioned, off-centre bottom pad row) -- see `wristband/libs/README.md`,
+`shared/README.md` and `bay-station/libs/README.md`.
 
 Standard passive size for this whole project: **0603** for R/C/L (0-ohm
 0603 link/jumper resistors are documented as a standard available option in
@@ -169,9 +171,12 @@ decisions (anchor placement, uplink backend, etc.), is in
 
 ### Not done yet (in rough next-up order)
 
-1. Wire all placement-only sheets (net labels between MCU/radio pins, their
-   decoupling, the new regulator outputs, and power-rail connections in
-   from Power BMS).
+1. **Sync the wristband PCB from its schematic** (Pcbnew -> Tools -> Update
+   PCB from Schematic, F8). The DWM3001C migration changed the schematic
+   only; `wristband.kicad_pcb` still has U3/U4-DWM3000/Y1/C8-C10/C14/C15/
+   R7-R9 placed and no DWM3001C. No `kicad-cli` command can do this.
+2. Wire all remaining placement-only sheets on the **bay station** (the
+   wristband's are all wired now; its ERC is 0 errors / 2 known warnings).
 2. **Bay station: resolve the two-USB-C-connector situation** -- the
    original power-input USB-C has no data pins, so a second, data-capable
    USB-C got added for ESP32-S3 flashing rather than consolidating into
@@ -181,8 +186,9 @@ decisions (anchor placement, uplink backend, etc.), is in
    inductor, Coilcraft XGL3520-102MEC) -- no KiCad-default match exists yet.
 4. ~~Confirm/re-verify decoupling cap values against each part's exact
    datasheet application circuit~~ -- done, see `docs/passives-reference.md`.
-   One passive was found missing (100k IRQ/GPIO8 pulldowns, now added to all
-   5 DWM3000 instances); DWM3000's own decoupling was confirmed to exceed
+   One passive was found missing (100k IRQ/GPIO8 pulldowns, added to all
+   5 DWM3000 instances at the time -- now 4, since the wristband's DWM3000 was
+   replaced by a DWM3001C whose IRQ is internal); DWM3000's own decoupling was confirmed to exceed
    what Qorvo's minimal example circuit actually calls for (kept anyway, not
    wrong, just more conservative than strictly required).
 5. Antenna matching-network values on `wristband/antenna.kicad_sch` (parts
@@ -204,7 +210,8 @@ decisions (anchor placement, uplink backend, etc.), is in
                                                     Internet / backend (TBD)
 ```
 
-- **Wristband**: NINA-B400 (BLE MCU/radio, nRF52833) + Qorvo DWM3000 (UWB module) +
+- **Wristband**: Qorvo DWM3001C (single module: UWB radio + nRF52833 BLE MCU +
+  accelerometer + both antennas) +
   a compact BMS (MCP73831 charger + DW01A/FS8205 protection + AO3401A
   reverse-polarity protection). Design compromises favor small size and
   just enough battery life to get core functionality working.

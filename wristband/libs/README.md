@@ -11,8 +11,8 @@ footprint -> datasheet URL -> verification notes).
 ## What's in here
 
 ```
-wristband.kicad_sym    # 5 hand-authored symbols: NINA-B400, NINA-B111 (legacy), MCP73831-2-OT, DW01A, FS8205A
-wristband.pretty/      # 1 custom footprint: NINA111-42 (real u-blox Eagle-lib pad data)
+wristband.kicad_sym    # 7 hand-authored symbols: DWM3001C, TPS7A0233PDBVR, NINA-B400 (legacy), NINA-B111 (legacy), MCP73831-2-OT, DW01A, FS8205A
+wristband.pretty/      # 3 custom footprints: DWM3001C_PLACEHOLDER, NINA-B400-55_PLACEHOLDER, NINA111-42 (real u-blox Eagle-lib pad data)
 sym-lib-table          # project-local library registration (symbols) -- not touched here
 fp-lib-table           # project-local library registration (footprints) -- not touched here
 components.csv         # BOM -> symbol/footprint mapping + verification notes
@@ -23,6 +23,54 @@ charging receptacle, TVS diode, LEDs, passives) all matched something
 already in KiCad's own bundled default libraries, so nothing extra for
 those was added here -- see `components.csv` for exactly which
 `library:part` to use for each.
+
+
+## DWM3001C (added 2026-09-23)
+
+`DWM3001C` is wristband-only -- the bay station still uses the bare `DWM3000`
+from `../../shared/` -- so per this repo's own rule it lives here, not there.
+
+Symbol: all 48 pins taken from the real **Qorvo DWM3001C Data Sheet Rev B,
+May 2022**, Figure 1 "DWM3001C Pin Diagram" cross-checked against Table 2
+"DWM3001C Pin Functions". Two datasheet inconsistencies are worth knowing:
+
+- **Pin 18 (`VUSB`) is missing from Table 2 entirely** -- it appears only in
+  Figure 1. The symbol includes it, typed as a power input.
+- **Pins 44/45 are named inconsistently**: Table 2 calls them
+  `DW_GPIO3`/`DW_GPIO2`, Figure 1 calls them `DW_GP3`/`DW_GP2`. The symbol
+  uses the Figure 1 names, for consistency with `DW_GP0/1/5/6`.
+
+**Footprint `DWM3001C_PLACEHOLDER` -- VERIFY BEFORE FAB.** Pin count and edge
+assignment are confirmed (17 pads left edge pins 1-17, 14 bottom edge pins
+18-31, 17 right edge pins 32-48, none on the top edge, which carries the
+module's antenna). Body and land envelope come straight off Figures 4 and 5
+(19.13 x 27.1 x 3.2mm body; 19.10 x 27.10mm land; 16.27mm inner column gap;
+0.75mm side pad height; 17.77mm side column span; 1.00mm bottom-row pitch;
+1.15mm bottom pad length). **Two dimensions did not resolve:**
+
+1. The side-column pitch back-derives to **1.06375mm** from the 17.77mm span
+   across 17 pads. That is not a round number and is unlikely to be Qorvo's
+   intent.
+2. Figure 5's "3.10" annotation implies the bottom pad row is offset toward
+   the right rather than centred, and the individual bottom pad width is never
+   dimensioned at all. The footprint assumes 0.60mm, centred.
+
+Same PLACEHOLDER convention as `DWM3000_PLACEHOLDER` and
+`NINA-B400-55_PLACEHOLDER`.
+
+
+## TPS7A0233PDBVR (added 2026-09-23)
+
+Hand-authored and **self-contained on purpose**. KiCad ships no TPS7A02 symbol
+at all, and every TPS7A05 sibling in `Regulator_Linear` is `extends`-based
+(`TPS7A0533PDBV extends LP5907MFX-1.2`), which this repo forbids in anything
+`kicad-cli` must load. Pin numbers, names and types come from TI SBVS277C
+Table 5-1 "Pin Functions: DQN, DBV" and Figure 5-2: `1=IN 2=GND 3=EN 4=NC
+5=OUT`. Footprint is KiCad's stock `Package_TO_SOT_SMD:SOT-23-5` — **not a
+placeholder**, nothing to verify before fab.
+
+Watch the `EN` pin: it has an internal pulldown and the regulator is *disabled*
+when EN floats, so it must be driven high. On this board it ties to `VBAT`.
 
 ## Fix applied to the library file wrapper
 
