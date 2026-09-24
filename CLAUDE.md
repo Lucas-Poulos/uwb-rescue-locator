@@ -56,11 +56,13 @@ Consequences an agent must not "simplify" away:
   redundant. Absolute accuracy is sub-metre via host-side survey-in
   averaging, deliberately coarser than the 10-30 cm relative fix.
 
-  Outdoor operation has consequences beyond this sheet that are NOT yet
-  designed: enclosure ingress rating, weatherproofing the SMA/coax entries,
-  BOM temperature ranges, and -- the sharp one -- **most Li-Ion cells must
-  not be charged below 0 degC**. The MCP73871 has a THERM NTC but it has not
-  been sized for a cold-charge cutoff.
+  The station sits in an **enclosure**, which settles ingress and
+  weatherproofing -- don't reopen those. Two things a box does not fix, both
+  still open: the enclosure **must pass RF**, because the BT840's BLE antenna
+  is printed on the module and therefore inside it (a metal box kills the
+  laptop link); and **most Li-Ion cells must not be charged below 0 degC**,
+  which an unheated enclosure does nothing about -- the MCP73871 has a THERM
+  NTC but it has not been sized for a cold-charge cutoff.
 - **Channel 5 (6489.6 MHz) is chosen.** It sets antenna selection, cable-loss
   budget, and connector rating. Connectors on the UWB path must be SMA --
   U.FL/MMCX are rated only to 6 GHz and CH5 is above that. The wristband has

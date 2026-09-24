@@ -27,30 +27,39 @@ relitigate them. Keep this updated as the team decides things.
   Separately: **U8 has no row in `libs/components.csv`** -- only its inductor
   L1 does. The buck converter itself is missing from the BOM.
 
-### Outdoor deployment -- newly relevant, largely undesigned
+### Environment and georeferencing -- what the enclosure does not cover
 
-Confirmed 2026-09-23 that the bay station operates outdoors and is moved
-between sites. Almost none of this has been considered:
+The bay station gets an **enclosure** (resolved 2026-09-23), which settles
+ingress rating and weatherproofing the SMA/coax and GNSS antenna entries.
+Those are enclosure-design problems now, not board problems. What a box does
+not settle:
 
-- **Li-Ion charging below 0 degC.** The sharp one. Most single-cell Li-Ion
-  must not be charged below freezing -- doing so plates lithium and
-  permanently damages the cell. The MCP73871 has a THERM input and an NTC is
-  placed, but `power_bms_notes.md` records it only as "10k per the
-  datasheet's typical application circuit" -- it has never been sized for a
-  specific cold-charge cutoff. Outdoors this stops being theoretical.
-- **Enclosure ingress rating**, and weatherproofing the four UWB SMA entries
-  plus the GNSS antenna entry.
-- **Temperature range across the BOM.** Nothing has been checked against an
-  outdoor range; several parts are specified at Tamb = 25 degC in the notes.
-- **The rigid antenna frame** now has to survive weather and handling, not
-  just hold geometry.
-- **GNSS survey-in warm-up.** Absolute coordinates are not trustworthy until
-  the average settles, and that restarts at every site. Relative UWB
-  positioning is available immediately. Decide what the operator sees during
-  warm-up so a coarse early fix is not mistaken for a settled one.
+- **The enclosure has to pass RF.** The BT840's BLE link to the laptop runs
+  off an antenna printed on the module itself, which is inside the box. A
+  metal enclosure would kill that link. Either the enclosure is
+  plastic/RF-transparent, or the BLE antenna moves outside -- and no RF
+  connector is placed for that, so the first option is the assumption until
+  someone says otherwise. Only BLE is exposed to this: the four UWB antennas
+  are already remote on coax and the GNSS antenna is external on SMA.
+- **Li-Ion charging below 0 degC.** An enclosure keeps water out, not cold
+  out; an unheated box tracks ambient. Most single-cell Li-Ion must not be
+  charged below freezing -- doing so plates lithium and permanently damages
+  the cell. The MCP73871 has a THERM input and an NTC is placed, but
+  `power_bms_notes.md` records it only as "10k per the datasheet's typical
+  application circuit" -- it has never been sized for a specific cold-charge
+  cutoff.
+- **Temperature range across the BOM.** Same reason: the interior tracks
+  ambient plus self-heating. Nothing has been checked against a range;
+  several parts are specified at Tamb = 25 degC in the notes.
+- **GNSS survey-in warm-up.** Not environmental at all. Absolute coordinates
+  are not trustworthy until the average settles, and that restarts at every
+  site. Relative UWB positioning is available immediately. Decide what the
+  operator sees during warm-up so a coarse early fix is not mistaken for a
+  settled one.
 - **Magnetometer calibration procedure.** Hard-iron/soft-iron calibration is
-  needed per build, and arguably per deployment if anything ferrous moves
-  near the frame. No procedure exists.
+  needed per build, and the enclosure is now part of what gets calibrated
+  out -- ferrous fasteners or a steel lid sit fixed relative to U10. Calibrate
+  with the board in its enclosure, not on the bench. No procedure exists.
 
 ### Critical path for the bay station
 
@@ -183,6 +192,16 @@ between sites. Almost none of this has been considered:
   `+3V3_SYS` or `+VSYS`.
 
 ## Resolved
+
+- **The bay station gets an enclosure.** Resolved 2026-09-23. This closes the
+  items that opened when outdoor deployment was confirmed: ingress rating,
+  weatherproofing the four UWB SMA entries and the GNSS antenna entry, and
+  weather exposure of the rigid antenna frame. All of it is enclosure design
+  rather than board design, and it is not tracked here any further.
+
+  Not selected or costed yet, and it does not cover what a box cannot: cold
+  charging, BOM temperature range, and RF transparency for the BT840's
+  on-module BLE antenna. Those three stay Open above.
 
 - **GNSS + orientation added to the bay station** (`gnss.kicad_sch`, new
   sheet). Resolved 2026-09-23. The station is deployed outdoors and moved

@@ -252,7 +252,9 @@ decisions (anchor placement, uplink backend, etc.), is in
    transceivers on-board, antennas remote on coax to a rigid frame, see
    `docs/positioning.md`); the remaining piece is the frame's mechanical
    design, including A0's out-of-plane offset.
-8. Bay station uplink backend/protocol (open decision).
+8. Bay station uplink protocol -- what the laptop actually receives over BLE
+   (open decision). "Backend" no longer applies: there is no server, see
+   `docs/system-overview.md`.
 9. PCB footprint placement + layout (nothing placed on either `.kicad_pcb`
    yet -- this has all been schematic-only so far). Note the bay station's
    stackup is no longer a free choice -- DW3000 Section 7.3 forces a

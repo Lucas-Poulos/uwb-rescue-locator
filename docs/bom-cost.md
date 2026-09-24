@@ -131,7 +131,10 @@ not a line item.
   surveyed positions to better than the accuracy you are trying to achieve.
   Depending on how that is done it could be free or could dominate everything
   above.
-- Enclosure beyond the antenna frame, and cabling/PSU odds and ends.
+- **Enclosure.** Decided 2026-09-23 but neither selected nor costed. It has
+  to be RF-transparent or it blocks the BT840 on-module BLE antenna, which
+  rules out the cheap metal-box option. Plus the antenna frame beyond it, and
+  cabling/PSU odds and ends.
 
 ## Before ordering
 
