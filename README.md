@@ -255,10 +255,11 @@ decisions (anchor placement, uplink backend, etc.), is in
 8. Bay station uplink protocol -- what the laptop actually receives over BLE
    (open decision). "Backend" no longer applies: there is no server, see
    `docs/system-overview.md`.
-9. PCB footprint placement + layout (nothing placed on either `.kicad_pcb`
-   yet -- this has all been schematic-only so far). Note the bay station's
-   stackup is no longer a free choice -- DW3000 Section 7.3 forces a
-   controlled-impedance build of at least 4 layers.
+9. PCB layout. The bay station's `.kicad_pcb` now has its **4-layer
+   controlled-impedance stackup** set from DW3000 Section 7.3.2 Figure 35
+   (1.048mm finished) -- but nothing else: no footprints, no outline. The
+   wristband's is still an empty stub. The blocker is upstream of layout:
+   both boards are placement-only, so there are **zero nets** to import.
 
 ## System overview
 

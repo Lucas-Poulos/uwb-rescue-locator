@@ -148,5 +148,11 @@ are big and because the estimates behind them are the weakest:
    frame can be larger, the cable line item is the wrong place to economise.
 2. **Controlled-impedance 4-layer PCB** -- $40 for a qty-5 order varies a lot
    by vendor and by stackup. DW3000 Section 7.3 constrains the stackup (see
-   `positioning.md`), so get quotes against the actual spec, not a generic
-   4-layer.
+   `positioning.md`), and as of 2026-09-23 it is set in the board file:
+   35um copper throughout, 254um prepreg / 400um core / 254um prepreg,
+   **1.048 mm finished**. That is deliberately the datasheet's own figure and
+   **not a catalogue thickness** -- fabs quote 1.0 or 1.2 mm 4-layer, so
+   expect to work to their nearest stackup and re-solve the 50 ohm trace
+   widths against their real dielectric numbers. Get quotes against the
+   actual spec, not a generic 4-layer, and ask for the impedance-control
+   surcharge separately.

@@ -24,8 +24,19 @@ relitigate them. Keep this updated as the team decides things.
   `TPS62A02PDDC` and re-verify that ERC still reports a non-zero component
   count. Do not change it without that check.
 
-  Separately: **U8 has no row in `libs/components.csv`** -- only its inductor
-  L1 does. The buck converter itself is missing from the BOM.
+  Separately, three parts on the schematic have **no row in
+  `libs/components.csv`** at all, found 2026-09-23 while cross-checking the
+  board against a `kicad-cli sch export bom` run:
+
+  - **U8**, the buck converter itself -- only its inductor L1 has a row.
+  - **SW2** (RESET button) and **J3** (SWD header), both added when
+    `programming_debug.kicad_sch` was rebuilt for Nordic. The BOM was never
+    updated to match.
+
+  **SW2 additionally has no footprint assigned**, which puts it in the same
+  bucket as L1 and U3 (BT840) -- the three parts that cannot be placed on the
+  PCB today. L1 and U3 are recorded as known gaps; SW2 was not. None of the
+  three has a chosen part number yet, so no rows are being invented here.
 
 ### Environment and georeferencing -- what the enclosure does not cover
 
@@ -161,12 +172,9 @@ not settle:
   Taoglas UWC.01 (6-8 GHz SMD chip), ILA.68 (LTCC 6-8.5 GHz), UWCCP.01
   (circularly polarized). Abracon ACR1004U is 3-6 GHz and does **not** cover
   CH5. Verify before BOM.
-- **PCB layer count / stackup** -- no longer open for the bay station. DW3000
-  datasheet Section 7.3 mandates 50 ohm impedance-controlled RF1/RF2 lines,
-  ground removed from under the chip on the top and first inner layer, and
-  the first solid ground copper at least 0.25 mm below the top layer. That
-  forces a controlled-impedance stackup of at least 4 layers. The wristband
-  (still a module) remains a layout-phase call, likely 4-layer for RF.
+- **PCB layer count / stackup for the WRISTBAND** -- still a layout-phase
+  call, likely 4-layer for RF. The bay station's is resolved and is now in
+  the board file; see Resolved below.
 - **Wristband module keep-out and edge spacing** -- two real DWM3001C
   datasheet requirements, neither actionable until layout starts:
   - **Section 7.1**: minimum 10mm with no metal either side of the module
@@ -192,6 +200,47 @@ not settle:
   `+3V3_SYS` or `+VSYS`.
 
 ## Resolved
+
+- **Bay-station stackup: 4 layers, 1.048 mm, controlled impedance.** Resolved
+  2026-09-23 and now actually present in `bay-station.kicad_pcb`, which until
+  this point was an empty 2-layer default stub contradicting the decision
+  recorded here.
+
+  Taken from DW3000 Datasheet v1.3, Section 7.3.2 Figure 35 "Recommended QFN
+  Stack-up". The QFN variant is the one that applies -- this board uses the
+  DW3210 (QFN40), not the WLCSP DW3110 that Figure 34 covers:
+
+      F.Cu     35 um
+      prepreg 254 um
+      In1.Cu   35 um
+      core    400 um
+      In2.Cu   35 um
+      prepreg 254 um
+      B.Cu     35 um     = 1.048 mm finished
+
+  Section 7.3's remaining requirements are recorded as a text note on the
+  board's `Cmts.User` layer rather than repeated here, because they are
+  layout instructions and that is where whoever does layout will see them:
+  50 ohm impedance-controlled RF1/RF2 with the 2 pF DC-block pads embedded
+  in the track at full width; ground copper removed under each DW3210 on
+  F.Cu and In1.Cu, with In2.Cu as the first solid plane; analog, power and
+  digital groups kept apart. If the stackup is ever changed, that first solid
+  plane must stay at least 0.25 mm below F.Cu.
+
+  **The dielectric constants are NOT from the datasheet**, which gives
+  thicknesses only. KiCad's FR4 defaults (er 4.5, tan d 0.02) sit in the file
+  as placeholders. Controlled impedance means the fab's stackup governs, and
+  1.048 mm is not a catalogue thickness -- expect to take their numbers and
+  re-solve trace widths rather than trusting anything geometric in the file.
+
+- **Default netclass clearance cut from 0.2 mm to 0.15 mm.** Resolved
+  2026-09-23. The DW3210 cannot physically satisfy 0.2 mm: KiCad's
+  `QFN-40-1EP_5x5mm_P0.4mm_EP3.6x3.6mm` has 0.25 mm pads on a 0.4 mm pitch,
+  leaving exactly 0.15 mm between neighbours. At 0.2 mm every adjacent pad
+  pair on all four anchors would have failed DRC the moment footprints were
+  placed. 0.15 mm leaves zero margin on that one geometry -- which is the
+  part dictating the number -- and is comfortably inside standard fab
+  capability everywhere else on the board.
 
 - **The bay station gets an enclosure.** Resolved 2026-09-23. This closes the
   items that opened when outdoor deployment was confirmed: ingress rating,
