@@ -52,8 +52,8 @@
         "zones": {
           "border_display_style": 2,
           "border_hatch_pitch": 0.5,
-          "corner_radius": 0.0,
-          "corner_smoothing": 0,
+          "corner_radius": 0.0762,
+          "corner_smoothing": 1,
           "fill_mode": 0,
           "hatch_gap": 1.5,
           "hatch_orientation": 0.0,
@@ -61,7 +61,7 @@
           "hatch_smoothing_value": 0.1,
           "hatch_thickness": 1.0,
           "min_clearance": 0.5,
-          "min_island_area": 10.0,
+          "min_island_area": 9.99999999996,
           "min_thickness": 0.25,
           "pad_connection": 1,
           "remove_islands": 0,
@@ -154,7 +154,7 @@
         "min_text_height": 0.8,
         "min_text_thickness": 0.08,
         "min_through_hole_diameter": 0.3,
-        "min_track_width": 0.0,
+        "min_track_width": 0.127,
         "min_via_annular_width": 0.1,
         "min_via_diameter": 0.5,
         "solder_mask_to_copper_clearance": 0.0,
@@ -512,6 +512,21 @@
         "via_diameter": 0.6,
         "via_drill": 0.3,
         "wire_width": 6
+      },
+      {
+        "name": "FLASH_IC",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 0,
+        "schematic_color": "rgb(0, 72, 201)",
+        "tuning_profile": ""
+      },
+      {
+        "line_style": 0,
+        "name": "ULTRA_WIDE_BAND",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 1,
+        "schematic_color": "rgb(20, 145, 0)",
+        "tuning_profile": ""
       }
     ],
     "meta": {
@@ -519,7 +534,16 @@
     },
     "net_colors": null,
     "netclass_assignments": null,
-    "netclass_patterns": []
+    "netclass_patterns": [
+      {
+        "netclass": "ULTRA_WIDE_BAND",
+        "pattern": "UWB_(CLK|CS|IRQ|MISO|MOSI|RSTn|WAKEUP)"
+      },
+      {
+        "netclass": "FLASH_IC",
+        "pattern": "RESET_N|SWDCLK|SWDIO|SWO"
+      }
+    ]
   },
   "pcbnew": {
     "last_paths": {
@@ -665,7 +689,7 @@
         "uuid": "b3417696-fb19-4c3e-bd30-28bb2d157bef"
       }
     ],
-    "used_designators": "#PWR1-31",
+    "used_designators": "#PWR1-42",
     "variants": []
   },
   "sheets": [
