@@ -125,7 +125,7 @@ anything -- it's written to be a complete handoff.
 
 ### What exists, per board
 
-The wristband has 7 hierarchical sheets, the bay station 9. Reference designators are
+The wristband has 7 hierarchical sheets, the bay station 10. Reference designators are
 project-wide unique per board (checked, no collisions) -- see each
 `libs/components.csv` for the full part-by-part BOM.
 
@@ -150,7 +150,8 @@ project-wide unique per board (checked, no collisions) -- see each
 | Regulation | Placement only, not wired | TPS62A02PDDCR buck converter -- steps the unregulated `+VSYS` rail down to a safe ~3.3V for the BT840 host and the DW3210 anchors |
 | Clock Distribution | Placement only, **new** | Shared 38.4MHz reference for the 4x DW3210 array: AC-coupling + XTO caps placed, TCXO/buffer TBD |
 | Indicators | Placement only | Status LEDs: D4 charging, D5 charge-done, D6 power-good (all MCP73871), D7 system (host GPIO) |
-| Test Points | Placement only, **new** | TP1-TP14: rails, 2x GND, TCXO + 4x anchor clock, SPI, IRQ, reset |
+| Test Points | Placement only | TP1-TP14: rails, 2x GND, TCXO + 4x anchor clock, SPI, IRQ, reset |
+| GNSS / Orientation | Placement only, **new** | MAX-M10S GNSS (U9) + LIS3MDL magnetometer (U10) + LIS2DH accelerometer (U11) -- georeferences the array |
 | Programming/Debug | Placement only | **Rebuilt for Nordic**: SWD header (J3) + RESET button (SW2). ESP32 circuitry and the second USB-C deleted |
 
 "Placement only" sheets deliberately show a lot of ERC "not connected"/"not

@@ -4,7 +4,9 @@
 
 A worn **wristband** tag is located in 3D space by a fixed **bay station**
 with four UWB anchors. The bay station reports position **over Bluetooth LE
-to a nearby laptop**. Intended use: a safety/rescue tracking system.
+to a nearby laptop**, and georeferences itself with GNSS plus a magnetometer
+so those positions can be given as world coordinates. Intended use: an
+outdoor safety/rescue tracking system.
 
 Note this is narrower than the original concept, which had the station
 uploading to the internet. That was dropped deliberately on 2026-09-19 once
@@ -47,6 +49,7 @@ connectors.
 | MCU/radio | Nordic nRF52833, inside the DWM3001C (resolved) | Nordic nRF52840, in a Fanstel BT840 module (resolved) |
 | Power | Single-cell battery + BMS, sized for just enough runtime -- core function takes priority over battery life | Battery + BMS optimized for longevity, not size |
 | Link to the outside | None (talks only to the bay station over UWB) | BLE to a nearby laptop. No internet uplink -- see note above |
+| Georeferencing | n/a | MAX-M10S GNSS + LIS3MDL magnetometer + LIS2DH accelerometer. Position AND heading are both needed to place a frame-relative bearing on a map |
 
 ## UWB part status
 

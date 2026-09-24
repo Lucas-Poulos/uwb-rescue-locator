@@ -27,6 +27,31 @@ relitigate them. Keep this updated as the team decides things.
   Separately: **U8 has no row in `libs/components.csv`** -- only its inductor
   L1 does. The buck converter itself is missing from the BOM.
 
+### Outdoor deployment -- newly relevant, largely undesigned
+
+Confirmed 2026-09-23 that the bay station operates outdoors and is moved
+between sites. Almost none of this has been considered:
+
+- **Li-Ion charging below 0 degC.** The sharp one. Most single-cell Li-Ion
+  must not be charged below freezing -- doing so plates lithium and
+  permanently damages the cell. The MCP73871 has a THERM input and an NTC is
+  placed, but `power_bms_notes.md` records it only as "10k per the
+  datasheet's typical application circuit" -- it has never been sized for a
+  specific cold-charge cutoff. Outdoors this stops being theoretical.
+- **Enclosure ingress rating**, and weatherproofing the four UWB SMA entries
+  plus the GNSS antenna entry.
+- **Temperature range across the BOM.** Nothing has been checked against an
+  outdoor range; several parts are specified at Tamb = 25 degC in the notes.
+- **The rigid antenna frame** now has to survive weather and handling, not
+  just hold geometry.
+- **GNSS survey-in warm-up.** Absolute coordinates are not trustworthy until
+  the average settles, and that restarts at every site. Relative UWB
+  positioning is available immediately. Decide what the operator sees during
+  warm-up so a coarse early fix is not mistaken for a settled one.
+- **Magnetometer calibration procedure.** Hard-iron/soft-iron calibration is
+  needed per build, and arguably per deployment if anything ferrous moves
+  near the frame. No procedure exists.
+
 ### Critical path for the bay station
 
 - **Baseline length: 1 m as specified, but bigger is nearly free.** Corrected
@@ -43,15 +68,16 @@ relitigate them. Keep this updated as the team decides things.
   timestamp precision via SNR.
 - **Import vendor footprints for BT840 and DWM3001C.** Neither should be
   hand-authored: both land patterns exist only as mechanical drawings, and
-  guessing pad geometry on a 61- or 48-pad module is not a risk worth taking.
+  guessing pad geometry on a 65- or 48-pad module is not a risk worth taking.
   Sources found: SnapMagic/SnapEDA lists a **Qorvo-provided** DWM3001C
   symbol/footprint/3D model, and both SnapMagic and Ultra Librarian list
   BT840 -- plus Fanstel ships a 61-pin library component with its EV-BT840F
-  V4 Gerbers.
+  V4 Gerbers. Note that 61-pin part omits F0-F3, which are real solderable
+  ground pads; see the pin-count item below before trusting it.
 
   **When importing, check pad naming.** KiCad matches symbol pins to footprint
   pads *by name*. Both symbols here use the datasheets' own schemes -- BT840
-  as 1-16 then Z0-Z6/A0-A6/B0-B6/C0-C6/D0-D6/E0-E6/F4-F6, DWM3001C as 1-48.
+  as 1-16 then Z0-Z6/A0-A6/B0-B6/C0-C6/D0-D6/E0-E6/F0-F6, DWM3001C as 1-48.
   A vendor footprint numbered differently will silently connect nothing.
   Also confirm what the vendor does with DWM3001C pin 18, which its own
   datasheet leaves undocumented.
@@ -157,6 +183,49 @@ relitigate them. Keep this updated as the team decides things.
   `+3V3_SYS` or `+VSYS`.
 
 ## Resolved
+
+- **GNSS + orientation added to the bay station** (`gnss.kicad_sch`, new
+  sheet). Resolved 2026-09-23. The station is deployed outdoors and moved
+  between sites, and the array only ever produced position RELATIVE to its
+  own frame -- fine for an operator standing at it, useless as a coordinate
+  to hand anyone else.
+
+  **Position alone was not enough, and this is the part that is easy to
+  miss.** A GNSS fix says where the station is, not which way it faces. The
+  array reports a bearing relative to the frame, so without heading you get a
+  circle of possible tag locations rather than a point. Hence three parts,
+  not one:
+  - **U9 u-blox MAX-M10S** -- where the station is.
+  - **U10 ST LIS3MDL** magnetometer -- which way it faces.
+  - **U11 ST LIS2DH** accelerometer -- tilt compensation, because a
+    magnetometer only reads heading correctly when level and this station is
+    set down on varying terrain. It also detects the station being knocked,
+    which silently invalidates both the fix and the heading.
+
+  **All three are KiCad stock symbols AND footprints** -- deliberate. The
+  board already carries two outstanding vendor-footprint imports; a third was
+  not worth it. u-blox SAM-M10Q with its integrated patch antenna was the
+  alternative and would have deleted the GNSS antenna entirely, but KiCad has
+  neither symbol nor footprint for it. MAX-M10S needs an external antenna at
+  1.575 GHz, which is far easier routing than the 6.5 GHz UWB work already on
+  this board.
+
+  **Accuracy, recorded so it is not a surprise.** Uncorrected GNSS is 2-5 m
+  against the array's 10-30 cm -- the world-frame anchor is 10-30x coarser
+  than the relative fix hanging off it. Team chose **survey-in**: firmware
+  averages the station's own fix while stationary to reach sub-metre.
+  Operational cost, given the station moves between deployments: that
+  averaging restarts at every site, so absolute coordinates have a warm-up
+  that relative UWB positioning does not. Averaging is host-side on the
+  BT840 -- u-blox's own "Survey-In" is a timing/RTK-part feature, not M10
+  standard-precision, and host averaging is equivalent for static
+  self-positioning without a pricier module.
+
+  Pin data verified against u-blox Data Sheet UBX-20035208 R02 Table 9:
+  KiCad's symbol matches 17 of 18 pins. **Pin 15 differs** -- "Reserved" in
+  R02, `VIO_SEL` in KiCad, probably a later revision. Leave it open and check
+  the current datasheet. Datasheet also requires VCC (8) and V_IO (7) tied
+  together, and SAFEBOOT_N (18) left open.
 
 - **No power switch on the wristband.** Confirmed 2026-09-19. The tag is live
   from the moment a cell is connected, and the only thing that ever cuts the

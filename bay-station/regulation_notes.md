@@ -86,15 +86,19 @@ station's longevity/efficiency-focused design philosophy (see `README.md`).
   low-skew fan-out buffer driving four loads (~25 mA). **Neither part is
   selected yet** (open item, `../docs/decisions.md`), so both are
   order-of-magnitude allowances, not datasheet figures. Re-check once chosen.
+- **GNSS and orientation: ~11 mA.** MAX-M10S is quoted at 27-30 mW at 3V
+  (~10 mA); LIS3MDL ~0.27 mA; LIS2DH ~11 uA. Small against the anchors, but
+  note the GNSS runs CONTINUOUSLY during survey-in rather than duty-cycling.
 - **Status LEDs: 3-12 mA, depending on a decision not yet made.** `D7`
-  (system status, ESP32-S3 GPIO) sits on `+3V3_SYS` at ~3 mA. `D4`/`D5`/`D6`
+  (system status, BT840 GPIO) sits on `+3V3_SYS` at ~3 mA. `D4`/`D5`/`D6`
   are driven from MCP73871's open-drain `STAT1`/`STAT2`/`~PG`, and whether
   they pull from `+3V3_SYS` or `+VSYS` is still open -- if `+3V3_SYS`, add
   ~9 mA. Budgeted here at the worst case.
 - **Combined worst-case peak** (conservative: BLE TX + all 4 anchors in RX +
-  clock network + all LEDs lit): 20 + 288 + 27 + 12 = **~347 mA.**
+  clock network + GNSS/orientation + all LEDs lit): 20 + 288 + 27 + 11 + 12
+  = **~358 mA.**
 
-Against the TPS62A02's 2A rating that is **~5.8x headroom** -- up from 2.9x,
+Against the TPS62A02's 2A rating that is **~5.6x headroom** -- up from 2.9x,
 because dropping WiFi removed the largest single load on the board. **The
 part choice survives**, and is now substantially oversized.
 
@@ -149,15 +153,17 @@ single-cell-Li-Ion-powered scenario (TI markets the whole TPS62A0x family for
 "Battery-powered applications"), while its 6.5V absolute-max VIN still gives
 headroom over the documented ~5V-class wall/USB-present condition (and over
 MCP73871's own 7.0V IN absolute-max, so the buck won't be the first thing to
-fail if the input creeps toward that ceiling). **2A rated output gives ~5.8x
-headroom** over the ~347 mA worst-case combined peak budget above -- chosen
+fail if the input creeps toward that ceiling). **2A rated output gives ~5.6x
+headroom** over the ~358 mA worst-case combined peak budget above -- chosen
 deliberately generous since this board isn't size-constrained, prioritizing a
 modern, well-documented TI part with a straightforward datasheet-verified
 design over the smallest/cheapest option. That generosity is exactly what
-absorbed two architecture changes without a respin: the load first grew from
-575 mA to 682 mA when the DWM3000 modules became discrete DW3210s with a
-shared clock network, then fell to ~347 mA when the WiFi host was replaced by
-a BLE one. Sizing generously up front is what let both happen for free.
+absorbed three architecture changes without a respin: the load first grew
+from 575 mA to 682 mA when the DWM3000 modules became discrete DW3210s with
+a shared clock network, then fell to ~347 mA when the WiFi host was replaced
+by a BLE one, then rose slightly to ~358 mA when the GNSS and orientation
+sensors were added. Sizing generously up front is what let all three happen
+for free.
 
 ### Circuit built on `regulation.kicad_sch`
 

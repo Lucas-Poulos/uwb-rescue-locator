@@ -38,7 +38,13 @@ Roughly in dependency order.
    hyperboloids from the TDoA differences. Overdetermined by one, so use the
    residual as a live quality metric. Decide on-device vs. server-side.
 5. **Calibration table** -- load and apply per-anchor differential offsets.
-6. **Uplink** over WiFi. Backend protocol still open.
+6. **Georeferencing.** Average the MAX-M10S fix while stationary to reach
+   sub-metre (host-side survey-in -- the M10 standard-precision line has no
+   survey-in mode of its own). Read heading from the LIS3MDL, tilt-compensate
+   it with the LIS2DH, and apply hard-iron/soft-iron calibration. Watch the
+   accelerometer for the station being knocked, which invalidates both the
+   fix and the heading. Note the averaging restarts at every new site.
+7. **Uplink** over BLE to the laptop.
 
 ### wristband
 

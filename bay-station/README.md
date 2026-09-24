@@ -33,7 +33,7 @@ Target performance: **10-30 cm at ~10 m, on Channel 5 (6489.6 MHz)**.
 
 ## Status
 
-Nine hierarchical sheets, all registered in `bay-station.kicad_pro`'s
+Ten hierarchical sheets, all registered in `bay-station.kicad_pro`'s
 `sheets` list and wired into `bay-station.kicad_sch` as sheet symbols.
 
 | Sheet | Status | Contents |
@@ -46,13 +46,14 @@ Nine hierarchical sheets, all registered in `bay-station.kicad_pro`'s
 | `clock_dist` | Placement only, **new** | Shared 38.4MHz reference: AC-coupling + XTO caps placed, TCXO/buffer TBD |
 | `indicators` | Placement only, **new** | Status LEDs D4-D7 (charge, charge-done, power-good, system) |
 | `testpoints` | Placement only, **new** | TP1-TP14: rails, 2x GND, TCXO + 4x anchor clock, SPI, IRQ, reset |
+| `gnss` | Placement only, **new** | MAX-M10S GNSS (U9) + LIS3MDL magnetometer (U10) + LIS2DH accelerometer (U11) |
 | `mechanical` | Placement only | 4x M3 mounting holes |
 
 **"Placement only" means components are instantiated but nothing is wired**
 -- no wires, no global labels.
 
-**ERC, run 2026-09-19 with kicad-cli 10.0.6: 452 violations, ZERO errors.**
-All warnings: 315 pin_not_connected, 88 power_pin_not_driven, 25
+**ERC, re-run 2026-09-23 with kicad-cli 10.0.6: 518 violations, ZERO errors.**
+All warnings: 360 pin_not_connected, 98 power_pin_not_driven, 36
 pin_not_driven, 9 lib_symbol_mismatch, 8 ground_pin_not_ground (the DW3210
 VSS pins, which resolve once grounds are wired), 6 isolated_pin_label (the
 MCP73871 status outputs, which `indicators` will terminate), and 1
