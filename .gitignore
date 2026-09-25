@@ -71,3 +71,7 @@ __pycache__/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+
+# kicad-happy analyzer cache (regenerable; manifest excepted)
+wristband/analysis/
+bay-station/analysis/
