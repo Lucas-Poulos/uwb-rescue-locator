@@ -72,6 +72,44 @@ not settle:
   out -- ferrous fasteners or a steel lid sit fixed relative to U10. Calibrate
   with the board in its enclosure, not on the bench. No procedure exists.
 
+### Firmware
+
+- **No GPIO on either MCU is assigned to a function.** Recorded 2026-09-25
+  from `kicad-cli sch export netlist --format kicadsexpr` on both boards:
+  bay station reports 341 nets of which only 19 are named, all of them from
+  `power_bms`/`regulation`; every one of the BT840's 65 pins and all 40 pins
+  on each of U4-U7 (DW3210) sit on `unconnected-(...)` nets. The wristband on
+  `dwm3001c-migration` is further along but still thin -- 12 of the
+  DWM3001C's 48 pins are tied (power, GND, SWD, `RESET_N`, `VBAT_SENSE`, and
+  `P0.17` to the SOS button).
+
+  This is the gate on firmware, not the toolchain question below. Firmware
+  task #1 on the station is a multi-instance DW3000 driver, and it cannot be
+  written without knowing which SPI instance and which four CS and four IRQ
+  lines it owns. The specific decisions needed:
+
+  - SPI instance for the shared DW3210 bus, and whether it can clock at the
+    DW3000's rated maximum on the chosen pins.
+  - Four CS lines, four IRQ lines, and the shared RSTn.
+  - Whether A0 gets any distinct signal, given it is not a peer of A1-A3.
+  - Wristband: the DWM3001C's internal nRF52833-to-DW3110 wiring is fixed by
+    the module, so the open part is only what the remaining external pins do.
+
+  Until these land, firmware should write against named constants in
+  `firmware/common/` rather than pin numbers. See `firmware/CLAUDE.md`.
+
+  Minor, but it will end up in code: the wristband net is spelled
+  **`SOS_BNT`** (`/Radio MCU/SOS_BNT`). Almost certainly meant to be
+  `SOS_BTN`; worth fixing before firmware names a symbol after it.
+
+- **Toolchain: nRF5 SDK vs. Zephyr / nRF Connect SDK.** One choice for both
+  boards, since both are Nordic. Already flagged in `firmware/README.md`;
+  recorded here so it is tracked with every other open call. Note this also
+  decides the *form* of the generated pin map -- a devicetree overlay under
+  Zephyr, a plain C header under nRF5 SDK -- so it should be settled before
+  anyone builds that generator.
+
+
 ### Critical path for the bay station
 
 - **Baseline length: 1 m as specified, but bigger is nearly free.** Corrected

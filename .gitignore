@@ -23,3 +23,51 @@ fab-outputs/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# ---------------------------------------------------------------------------
+# Firmware
+# ---------------------------------------------------------------------------
+# Build output. Both candidate toolchains (nRF5 SDK and Zephyr/nRF Connect)
+# land here, as do CMake/Ninja by default. Anchored to firmware/ so these
+# generic names can never shadow something on the hardware side.
+firmware/**/build/
+firmware/**/build-*/
+firmware/**/_build/
+firmware/**/cmake-build-*/
+firmware/**/twister-out*/
+firmware/**/compile_commands.json
+*.elf
+*.hex
+*.bin
+*.map
+*.lst
+*.o
+*.d
+
+# Zephyr / nRF Connect SDK west workspace. The SDK is fetched, never
+# vendored -- `west init`/`west update` pull thousands of files that must not
+# land in this repo. See firmware/CLAUDE.md.
+firmware/.west/
+firmware/zephyr/
+firmware/modules/
+firmware/nrf/
+firmware/nrfxlib/
+firmware/bootloader/
+firmware/zephyr-sdk*/
+
+# nRF5 SDK, if that's the toolchain that wins -- likewise fetched, not vendored.
+firmware/nRF5_SDK*/
+
+# SEGGER / debug scratch
+*.jlink
+.gdb_history
+JLinkLog.txt
+
+# Host-side tooling under firmware/tools/
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
