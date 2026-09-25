@@ -24,8 +24,53 @@ relitigate them. Keep this updated as the team decides things.
   `TPS62A02PDDC` and re-verify that ERC still reports a non-zero component
   count. Do not change it without that check.
 
-  Separately: **U8 has no row in `libs/components.csv`** -- only its inductor
-  L1 does. The buck converter itself is missing from the BOM.
+  Separately, three parts on the schematic have **no row in
+  `libs/components.csv`** at all, found 2026-09-23 while cross-checking the
+  board against a `kicad-cli sch export bom` run:
+
+  - **U8**, the buck converter itself -- only its inductor L1 has a row.
+  - **SW2** (RESET button) and **J3** (SWD header), both added when
+    `programming_debug.kicad_sch` was rebuilt for Nordic. The BOM was never
+    updated to match.
+
+  **SW2 additionally has no footprint assigned**, which puts it in the same
+  bucket as L1 and U3 (BT840) -- the three parts that cannot be placed on the
+  PCB today. L1 and U3 are recorded as known gaps; SW2 was not. None of the
+  three has a chosen part number yet, so no rows are being invented here.
+
+### Environment and georeferencing -- what the enclosure does not cover
+
+The bay station gets an **enclosure** (resolved 2026-09-23), which settles
+ingress rating and weatherproofing the SMA/coax and GNSS antenna entries.
+Those are enclosure-design problems now, not board problems. What a box does
+not settle:
+
+- **The enclosure has to pass RF.** The BT840's BLE link to the laptop runs
+  off an antenna printed on the module itself, which is inside the box. A
+  metal enclosure would kill that link. Either the enclosure is
+  plastic/RF-transparent, or the BLE antenna moves outside -- and no RF
+  connector is placed for that, so the first option is the assumption until
+  someone says otherwise. Only BLE is exposed to this: the four UWB antennas
+  are already remote on coax and the GNSS antenna is external on SMA.
+- **Li-Ion charging below 0 degC.** An enclosure keeps water out, not cold
+  out; an unheated box tracks ambient. Most single-cell Li-Ion must not be
+  charged below freezing -- doing so plates lithium and permanently damages
+  the cell. The MCP73871 has a THERM input and an NTC is placed, but
+  `power_bms_notes.md` records it only as "10k per the datasheet's typical
+  application circuit" -- it has never been sized for a specific cold-charge
+  cutoff.
+- **Temperature range across the BOM.** Same reason: the interior tracks
+  ambient plus self-heating. Nothing has been checked against a range;
+  several parts are specified at Tamb = 25 degC in the notes.
+- **GNSS survey-in warm-up.** Not environmental at all. Absolute coordinates
+  are not trustworthy until the average settles, and that restarts at every
+  site. Relative UWB positioning is available immediately. Decide what the
+  operator sees during warm-up so a coarse early fix is not mistaken for a
+  settled one.
+- **Magnetometer calibration procedure.** Hard-iron/soft-iron calibration is
+  needed per build, and the enclosure is now part of what gets calibrated
+  out -- ferrous fasteners or a steel lid sit fixed relative to U10. Calibrate
+  with the board in its enclosure, not on the bench. No procedure exists.
 
 ### Critical path for the bay station
 
@@ -43,15 +88,16 @@ relitigate them. Keep this updated as the team decides things.
   timestamp precision via SNR.
 - **Import vendor footprints for BT840 and DWM3001C.** Neither should be
   hand-authored: both land patterns exist only as mechanical drawings, and
-  guessing pad geometry on a 61- or 48-pad module is not a risk worth taking.
+  guessing pad geometry on a 65- or 48-pad module is not a risk worth taking.
   Sources found: SnapMagic/SnapEDA lists a **Qorvo-provided** DWM3001C
   symbol/footprint/3D model, and both SnapMagic and Ultra Librarian list
   BT840 -- plus Fanstel ships a 61-pin library component with its EV-BT840F
-  V4 Gerbers.
+  V4 Gerbers. Note that 61-pin part omits F0-F3, which are real solderable
+  ground pads; see the pin-count item below before trusting it.
 
   **When importing, check pad naming.** KiCad matches symbol pins to footprint
   pads *by name*. Both symbols here use the datasheets' own schemes -- BT840
-  as 1-16 then Z0-Z6/A0-A6/B0-B6/C0-C6/D0-D6/E0-E6/F4-F6, DWM3001C as 1-48.
+  as 1-16 then Z0-Z6/A0-A6/B0-B6/C0-C6/D0-D6/E0-E6/F0-F6, DWM3001C as 1-48.
   A vendor footprint numbered differently will silently connect nothing.
   Also confirm what the vendor does with DWM3001C pin 18, which its own
   datasheet leaves undocumented.
@@ -126,12 +172,9 @@ relitigate them. Keep this updated as the team decides things.
   Taoglas UWC.01 (6-8 GHz SMD chip), ILA.68 (LTCC 6-8.5 GHz), UWCCP.01
   (circularly polarized). Abracon ACR1004U is 3-6 GHz and does **not** cover
   CH5. Verify before BOM.
-- **PCB layer count / stackup** -- no longer open for the bay station. DW3000
-  datasheet Section 7.3 mandates 50 ohm impedance-controlled RF1/RF2 lines,
-  ground removed from under the chip on the top and first inner layer, and
-  the first solid ground copper at least 0.25 mm below the top layer. That
-  forces a controlled-impedance stackup of at least 4 layers. The wristband
-  (still a module) remains a layout-phase call, likely 4-layer for RF.
+- **PCB layer count / stackup for the WRISTBAND** -- still a layout-phase
+  call, likely 4-layer for RF. The bay station's is resolved and is now in
+  the board file; see Resolved below.
 - **Wristband module keep-out and edge spacing** -- two real DWM3001C
   datasheet requirements, neither actionable until layout starts:
   - **Section 7.1**: minimum 10mm with no metal either side of the module
@@ -157,6 +200,100 @@ relitigate them. Keep this updated as the team decides things.
   `+3V3_SYS` or `+VSYS`.
 
 ## Resolved
+
+- **Bay-station stackup: 4 layers, 1.048 mm, controlled impedance.** Resolved
+  2026-09-23 and now actually present in `bay-station.kicad_pcb`, which until
+  this point was an empty 2-layer default stub contradicting the decision
+  recorded here.
+
+  Taken from DW3000 Datasheet v1.3, Section 7.3.2 Figure 35 "Recommended QFN
+  Stack-up". The QFN variant is the one that applies -- this board uses the
+  DW3210 (QFN40), not the WLCSP DW3110 that Figure 34 covers:
+
+      F.Cu     35 um
+      prepreg 254 um
+      In1.Cu   35 um
+      core    400 um
+      In2.Cu   35 um
+      prepreg 254 um
+      B.Cu     35 um     = 1.048 mm finished
+
+  Section 7.3's remaining requirements are recorded as a text note on the
+  board's `Cmts.User` layer rather than repeated here, because they are
+  layout instructions and that is where whoever does layout will see them:
+  50 ohm impedance-controlled RF1/RF2 with the 2 pF DC-block pads embedded
+  in the track at full width; ground copper removed under each DW3210 on
+  F.Cu and In1.Cu, with In2.Cu as the first solid plane; analog, power and
+  digital groups kept apart. If the stackup is ever changed, that first solid
+  plane must stay at least 0.25 mm below F.Cu.
+
+  **The dielectric constants are NOT from the datasheet**, which gives
+  thicknesses only. KiCad's FR4 defaults (er 4.5, tan d 0.02) sit in the file
+  as placeholders. Controlled impedance means the fab's stackup governs, and
+  1.048 mm is not a catalogue thickness -- expect to take their numbers and
+  re-solve trace widths rather than trusting anything geometric in the file.
+
+- **Default netclass clearance cut from 0.2 mm to 0.15 mm.** Resolved
+  2026-09-23. The DW3210 cannot physically satisfy 0.2 mm: KiCad's
+  `QFN-40-1EP_5x5mm_P0.4mm_EP3.6x3.6mm` has 0.25 mm pads on a 0.4 mm pitch,
+  leaving exactly 0.15 mm between neighbours. At 0.2 mm every adjacent pad
+  pair on all four anchors would have failed DRC the moment footprints were
+  placed. 0.15 mm leaves zero margin on that one geometry -- which is the
+  part dictating the number -- and is comfortably inside standard fab
+  capability everywhere else on the board.
+
+- **The bay station gets an enclosure.** Resolved 2026-09-23. This closes the
+  items that opened when outdoor deployment was confirmed: ingress rating,
+  weatherproofing the four UWB SMA entries and the GNSS antenna entry, and
+  weather exposure of the rigid antenna frame. All of it is enclosure design
+  rather than board design, and it is not tracked here any further.
+
+  Not selected or costed yet, and it does not cover what a box cannot: cold
+  charging, BOM temperature range, and RF transparency for the BT840's
+  on-module BLE antenna. Those three stay Open above.
+
+- **GNSS + orientation added to the bay station** (`gnss.kicad_sch`, new
+  sheet). Resolved 2026-09-23. The station is deployed outdoors and moved
+  between sites, and the array only ever produced position RELATIVE to its
+  own frame -- fine for an operator standing at it, useless as a coordinate
+  to hand anyone else.
+
+  **Position alone was not enough, and this is the part that is easy to
+  miss.** A GNSS fix says where the station is, not which way it faces. The
+  array reports a bearing relative to the frame, so without heading you get a
+  circle of possible tag locations rather than a point. Hence three parts,
+  not one:
+  - **U9 u-blox MAX-M10S** -- where the station is.
+  - **U10 ST LIS3MDL** magnetometer -- which way it faces.
+  - **U11 ST LIS2DH** accelerometer -- tilt compensation, because a
+    magnetometer only reads heading correctly when level and this station is
+    set down on varying terrain. It also detects the station being knocked,
+    which silently invalidates both the fix and the heading.
+
+  **All three are KiCad stock symbols AND footprints** -- deliberate. The
+  board already carries two outstanding vendor-footprint imports; a third was
+  not worth it. u-blox SAM-M10Q with its integrated patch antenna was the
+  alternative and would have deleted the GNSS antenna entirely, but KiCad has
+  neither symbol nor footprint for it. MAX-M10S needs an external antenna at
+  1.575 GHz, which is far easier routing than the 6.5 GHz UWB work already on
+  this board.
+
+  **Accuracy, recorded so it is not a surprise.** Uncorrected GNSS is 2-5 m
+  against the array's 10-30 cm -- the world-frame anchor is 10-30x coarser
+  than the relative fix hanging off it. Team chose **survey-in**: firmware
+  averages the station's own fix while stationary to reach sub-metre.
+  Operational cost, given the station moves between deployments: that
+  averaging restarts at every site, so absolute coordinates have a warm-up
+  that relative UWB positioning does not. Averaging is host-side on the
+  BT840 -- u-blox's own "Survey-In" is a timing/RTK-part feature, not M10
+  standard-precision, and host averaging is equivalent for static
+  self-positioning without a pricier module.
+
+  Pin data verified against u-blox Data Sheet UBX-20035208 R02 Table 9:
+  KiCad's symbol matches 17 of 18 pins. **Pin 15 differs** -- "Reserved" in
+  R02, `VIO_SEL` in KiCad, probably a later revision. Leave it open and check
+  the current datasheet. Datasheet also requires VCC (8) and V_IO (7) tied
+  together, and SAFEBOOT_N (18) left open.
 
 - **No power switch on the wristband.** Confirmed 2026-09-19. The tag is live
   from the moment a cell is connected, and the only thing that ever cuts the

@@ -47,6 +47,22 @@ Consequences an agent must not "simplify" away:
   the ESP32-S3). Both parts are now placed on the bay-station schematic with
   hand-authored, datasheet-verified symbols; their footprints are still
   outstanding.
+- **The bay station is deployed OUTDOORS and moved between sites**, and
+  georeferences itself: MAX-M10S GNSS for position, LIS3MDL magnetometer for
+  heading, LIS2DH accelerometer for tilt compensation (`gnss.kicad_sch`).
+  **Position and heading are both required** -- the array reports bearing
+  relative to its own frame, so a GNSS fix without heading gives a circle of
+  possible tag locations, not a point. Do not drop the magnetometer as
+  redundant. Absolute accuracy is sub-metre via host-side survey-in
+  averaging, deliberately coarser than the 10-30 cm relative fix.
+
+  The station sits in an **enclosure**, which settles ingress and
+  weatherproofing -- don't reopen those. Two things a box does not fix, both
+  still open: the enclosure **must pass RF**, because the BT840's BLE antenna
+  is printed on the module and therefore inside it (a metal box kills the
+  laptop link); and **most Li-Ion cells must not be charged below 0 degC**,
+  which an unheated enclosure does nothing about -- the MCP73871 has a THERM
+  NTC but it has not been sized for a cold-charge cutoff.
 - **Channel 5 (6489.6 MHz) is chosen.** It sets antenna selection, cable-loss
   budget, and connector rating. Connectors on the UWB path must be SMA --
   U.FL/MMCX are rated only to 6 GHz and CH5 is above that. The wristband has

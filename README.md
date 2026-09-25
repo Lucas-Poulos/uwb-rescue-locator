@@ -125,7 +125,7 @@ anything -- it's written to be a complete handoff.
 
 ### What exists, per board
 
-The wristband has 7 hierarchical sheets, the bay station 9. Reference designators are
+The wristband has 7 hierarchical sheets, the bay station 10. Reference designators are
 project-wide unique per board (checked, no collisions) -- see each
 `libs/components.csv` for the full part-by-part BOM.
 
@@ -150,7 +150,8 @@ project-wide unique per board (checked, no collisions) -- see each
 | Regulation | Placement only, not wired | TPS62A02PDDCR buck converter -- steps the unregulated `+VSYS` rail down to a safe ~3.3V for the BT840 host and the DW3210 anchors |
 | Clock Distribution | Placement only, **new** | Shared 38.4MHz reference for the 4x DW3210 array: AC-coupling + XTO caps placed, TCXO/buffer TBD |
 | Indicators | Placement only | Status LEDs: D4 charging, D5 charge-done, D6 power-good (all MCP73871), D7 system (host GPIO) |
-| Test Points | Placement only, **new** | TP1-TP14: rails, 2x GND, TCXO + 4x anchor clock, SPI, IRQ, reset |
+| Test Points | Placement only | TP1-TP14: rails, 2x GND, TCXO + 4x anchor clock, SPI, IRQ, reset |
+| GNSS / Orientation | Placement only, **new** | MAX-M10S GNSS (U9) + LIS3MDL magnetometer (U10) + LIS2DH accelerometer (U11) -- georeferences the array |
 | Programming/Debug | Placement only | **Rebuilt for Nordic**: SWD header (J3) + RESET button (SW2). ESP32 circuitry and the second USB-C deleted |
 
 "Placement only" sheets deliberately show a lot of ERC "not connected"/"not
@@ -251,11 +252,14 @@ decisions (anchor placement, uplink backend, etc.), is in
    transceivers on-board, antennas remote on coax to a rigid frame, see
    `docs/positioning.md`); the remaining piece is the frame's mechanical
    design, including A0's out-of-plane offset.
-8. Bay station uplink backend/protocol (open decision).
-9. PCB footprint placement + layout (nothing placed on either `.kicad_pcb`
-   yet -- this has all been schematic-only so far). Note the bay station's
-   stackup is no longer a free choice -- DW3000 Section 7.3 forces a
-   controlled-impedance build of at least 4 layers.
+8. Bay station uplink protocol -- what the laptop actually receives over BLE
+   (open decision). "Backend" no longer applies: there is no server, see
+   `docs/system-overview.md`.
+9. PCB layout. The bay station's `.kicad_pcb` now has its **4-layer
+   controlled-impedance stackup** set from DW3000 Section 7.3.2 Figure 35
+   (1.048mm finished) -- but nothing else: no footprints, no outline. The
+   wristband's is still an empty stub. The blocker is upstream of layout:
+   both boards are placement-only, so there are **zero nets** to import.
 
 ## System overview
 

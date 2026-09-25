@@ -33,7 +33,7 @@ Target performance: **10-30 cm at ~10 m, on Channel 5 (6489.6 MHz)**.
 
 ## Status
 
-Nine hierarchical sheets, all registered in `bay-station.kicad_pro`'s
+Ten hierarchical sheets, all registered in `bay-station.kicad_pro`'s
 `sheets` list and wired into `bay-station.kicad_sch` as sheet symbols.
 
 | Sheet | Status | Contents |
@@ -46,19 +46,45 @@ Nine hierarchical sheets, all registered in `bay-station.kicad_pro`'s
 | `clock_dist` | Placement only, **new** | Shared 38.4MHz reference: AC-coupling + XTO caps placed, TCXO/buffer TBD |
 | `indicators` | Placement only, **new** | Status LEDs D4-D7 (charge, charge-done, power-good, system) |
 | `testpoints` | Placement only, **new** | TP1-TP14: rails, 2x GND, TCXO + 4x anchor clock, SPI, IRQ, reset |
+| `gnss` | Placement only, **new** | MAX-M10S GNSS (U9) + LIS3MDL magnetometer (U10) + LIS2DH accelerometer (U11) |
 | `mechanical` | Placement only | 4x M3 mounting holes |
 
 **"Placement only" means components are instantiated but nothing is wired**
 -- no wires, no global labels.
 
-**ERC, run 2026-09-19 with kicad-cli 10.0.6: 452 violations, ZERO errors.**
-All warnings: 315 pin_not_connected, 88 power_pin_not_driven, 25
+**ERC, re-run 2026-09-23 with kicad-cli 10.0.6: 518 violations, ZERO errors.**
+All warnings: 360 pin_not_connected, 98 power_pin_not_driven, 36
 pin_not_driven, 9 lib_symbol_mismatch, 8 ground_pin_not_ground (the DW3210
 VSS pins, which resolve once grounds are wired), 6 isolated_pin_label (the
 MCP73871 status outputs, which `indicators` will terminate), and 1
 lib_symbol_issues on U8 -- investigated and deliberately left alone, see
 `../docs/decisions.md`. DRC reports one `invalid_outline`, because no board
 outline is drawn yet.
+
+### The PCB
+
+`bay-station.kicad_pcb` now carries the **4-layer controlled-impedance
+stackup** (F.Cu / prepreg 254um / In1.Cu / core 400um / In2.Cu / prepreg
+254um / B.Cu, 35um copper throughout, 1.048mm finished), taken from DW3000
+Datasheet v1.3 Section 7.3.2 Figure 35. Until 2026-09-23 the file was an
+empty 2-layer default stub, which contradicted a decision the docs had
+already recorded as settled. The rest of Section 7.3 -- 50 ohm RF1/RF2,
+ground cutouts under each DW3210, group separation -- is written as a note
+on the board's `Cmts.User` layer, where layout will actually see it.
+
+The dielectric numbers (er 4.5, tan d 0.02) are KiCad's FR4 defaults, not
+datasheet values. Controlled impedance means the fab's stackup wins.
+
+**Nothing else is on the board.** No footprints are placed and no outline is
+drawn, and neither is worth doing yet: every sheet is still placement-only,
+so `kicad-cli sch export netlist` returns **zero nets**. Importing footprints
+now would give an unconnected pile with no ratsnest to place against. Wire
+the sheets first.
+
+Three parts also could not be placed even if it were wired, because they
+have no footprint assigned: **L1** (no exact KiCad match for the Coilcraft
+XGL3520), **U3** (BT840, awaiting a vendor import) and **SW2** (RESET button,
+never assigned one -- newly found). See `../docs/decisions.md`.
 
 ### Sheet detail
 
@@ -185,13 +211,21 @@ outline is drawn yet.
 
 ### Next up
 
-1. **Author footprints for BT840 and DW3210.** Both symbols are done and
-   placed; neither footprint is. This now blocks layout, not schematic work.
-2. Select the TCXO and 1:4 fan-out buffer, and place them on `clock_dist`.
+1. **Wire the sheets.** Everything is placement-only, so there are zero nets
+   and the PCB has nothing to import. This is now the real blocker, ahead of
+   the footprint work: power rails from `power_bms`, SPI/GPIO between U3 and
+   the anchors, the clock fan-out, and the I2C bus U10/U11 share with U2.
+2. **Resolve the three unassigned footprints:** U3 (BT840 -- import a vendor
+   one, do not hand-author; check pad naming), L1 (pick the exact inductor
+   PN) and SW2 (RESET button, no part chosen). DW3210 already has one --
+   `Package_DFN_QFN:QFN-40-1EP_5x5mm_P0.4mm_EP3.6x3.6mm`, still to be
+   verified against the datasheet package drawing.
+3. **Draw the board outline.** Edge.Cuts is empty, which is the single open
+   DRC violation. No dimensions have been decided anywhere, so this is a
+   decision to make rather than a task to do.
+4. Select the TCXO and 1:4 fan-out buffer, and place them on `clock_dist`.
    Add the four SMA antenna connectors to `uwb_array`.
-3. Wire the remaining placement-only sheets (power rails from `power_bms`,
-   SPI/GPIO between U3 and the anchors).
-4. Work through the open items in `../docs/decisions.md` -- cable loss,
+5. Work through the open items in `../docs/decisions.md` -- cable loss,
    TCXO/buffer selection, and array calibration all gate layout. (No FCC/CE
    work: university prototype, not certified.)
 

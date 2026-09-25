@@ -256,6 +256,11 @@ than WLCSP.
   copper at least 0.25 mm below the top layer. This forces a
   controlled-impedance stackup of **at least 4 layers**.
 
+  Section 7.3.2 Figure 35 gives the recommended QFN stackup outright, and it
+  is now the one in `bay-station.kicad_pcb`: 35 um copper throughout, 254 um
+  prepreg / 400 um core / 254 um prepreg, 1.048 mm finished. Note Figure 34
+  is the WLCSP variant -- not this board.
+
 ### Connectors: SMA on the UWB path
 
 CH5 at 6489.6 MHz is **above** the DC-6 GHz rating of U.FL, W.FL, MMCX and

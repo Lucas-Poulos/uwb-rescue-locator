@@ -57,10 +57,13 @@ lines are visible early.
 | AO3401A, 2x ESD5B5.0ST1G | 3 | $0.35 | $1.05 | [E] |
 | Tactile buttons | 2 | $0.30 | $0.60 | [E] |
 | Status LEDs 0805 (D4-D7) | 4 | $0.15 | $0.60 | [E] |
-| Passives, ~50x 0603/0805 | 50 | $0.05 | $2.50 | [E] |
-| | | | **~$251** | |
+| u-blox MAX-M10S GNSS | 1 | $12 | $12 | [E] |
+| Active GNSS antenna, SMA | 1 | $10 | $10 | [E] -- not yet selected |
+| LIS3MDL magnetometer + LIS2DH accelerometer | 2 | $2 | $4 | [E] |
+| Passives, ~55x 0603/0805 | 55 | $0.05 | $2.75 | [E] |
+| | | | **~$278** | |
 
-**System total: roughly $318 for one prototype pair.**
+**System total: roughly $345 for one prototype pair.**
 
 ## Wristband consolidation (2026-09-19)
 
@@ -75,6 +78,15 @@ firmware for the exact module.
 
 **The $38 is an estimate and the weakest number in this document** -- I could
 not find qty-1 pricing. Get a real quote before planning around it.
+
+## Georeferencing (2026-09-23)
+
+GNSS, magnetometer, accelerometer and an antenna add about **$26**. Worth
+noting all three ICs are KiCad stock symbols AND footprints, so they add no
+footprint-import work -- unlike the BT840 and DWM3001C. u-blox SAM-M10Q with
+its integrated patch antenna would have deleted the $10 antenna line, but
+KiCad has neither symbol nor footprint for it, so it would have traded $10
+of BOM for a third outstanding vendor import.
 
 ## Two things the table makes obvious
 
@@ -119,7 +131,10 @@ not a line item.
   surveyed positions to better than the accuracy you are trying to achieve.
   Depending on how that is done it could be free or could dominate everything
   above.
-- Enclosure beyond the antenna frame, and cabling/PSU odds and ends.
+- **Enclosure.** Decided 2026-09-23 but neither selected nor costed. It has
+  to be RF-transparent or it blocks the BT840 on-module BLE antenna, which
+  rules out the cheap metal-box option. Plus the antenna frame beyond it, and
+  cabling/PSU odds and ends.
 
 ## Before ordering
 
@@ -133,5 +148,11 @@ are big and because the estimates behind them are the weakest:
    frame can be larger, the cable line item is the wrong place to economise.
 2. **Controlled-impedance 4-layer PCB** -- $40 for a qty-5 order varies a lot
    by vendor and by stackup. DW3000 Section 7.3 constrains the stackup (see
-   `positioning.md`), so get quotes against the actual spec, not a generic
-   4-layer.
+   `positioning.md`), and as of 2026-09-23 it is set in the board file:
+   35um copper throughout, 254um prepreg / 400um core / 254um prepreg,
+   **1.048 mm finished**. That is deliberately the datasheet's own figure and
+   **not a catalogue thickness** -- fabs quote 1.0 or 1.2 mm 4-layer, so
+   expect to work to their nearest stackup and re-solve the 50 ohm trace
+   widths against their real dielectric numbers. Get quotes against the
+   actual spec, not a generic 4-layer, and ask for the impedance-control
+   surcharge separately.

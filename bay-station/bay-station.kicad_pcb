@@ -3,7 +3,7 @@
 	(generator "pcbnew")
 	(generator_version "8.0")
 	(general
-		(thickness 1.6)
+		(thickness 1.048)
 		(legacy_teardrops no)
 	)
 	(paper "A4")
@@ -12,6 +12,8 @@
 	)
 	(layers
 		(0 "F.Cu" signal)
+		(1 "In1.Cu" signal)
+		(2 "In2.Cu" signal)
 		(31 "B.Cu" signal)
 		(32 "B.Adhes" user "B.Adhesive")
 		(33 "F.Adhes" user "F.Adhesive")
@@ -42,6 +44,67 @@
 		(58 "User.9" user)
 	)
 	(setup
+		(stackup
+			(layer "F.SilkS"
+				(type "Top Silk Screen")
+			)
+			(layer "F.Paste"
+				(type "Top Solder Paste")
+			)
+			(layer "F.Mask"
+				(type "Top Solder Mask")
+				(thickness 0.01)
+			)
+			(layer "F.Cu"
+				(type "copper")
+				(thickness 0.035)
+			)
+			(layer "dielectric 1"
+				(type "prepreg")
+				(thickness 0.254)
+				(material "FR4")
+				(epsilon_r 4.5)
+				(loss_tangent 0.02)
+			)
+			(layer "In1.Cu"
+				(type "copper")
+				(thickness 0.035)
+			)
+			(layer "dielectric 2"
+				(type "core")
+				(thickness 0.4)
+				(material "FR4")
+				(epsilon_r 4.5)
+				(loss_tangent 0.02)
+			)
+			(layer "In2.Cu"
+				(type "copper")
+				(thickness 0.035)
+			)
+			(layer "dielectric 3"
+				(type "prepreg")
+				(thickness 0.254)
+				(material "FR4")
+				(epsilon_r 4.5)
+				(loss_tangent 0.02)
+			)
+			(layer "B.Cu"
+				(type "copper")
+				(thickness 0.035)
+			)
+			(layer "B.Mask"
+				(type "Bottom Solder Mask")
+				(thickness 0.01)
+			)
+			(layer "B.Paste"
+				(type "Bottom Solder Paste")
+			)
+			(layer "B.SilkS"
+				(type "Bottom Silk Screen")
+			)
+			(copper_finish "None")
+			(dielectric_constraints no)
+		)
 		(pad_to_mask_clearance 0)
 		(allow_soldermask_bridges_in_footprints no)
 		(pcbplotparams
@@ -80,6 +143,18 @@
 			(drillshape 1)
 			(scaleselection 1)
 			(outputdirectory "")
+		)
+	)
+	(gr_text "BAY STATION -- 4-LAYER CONTROLLED-IMPEDANCE STACKUP\nSet 2026-09-23 from DW3000 Datasheet v1.3, Section 7.3.2 Figure 35\n(Recommended QFN Stack-up) -- the variant that applies to the DW3210 QFN40:\n  F.Cu 35um / prepreg 254um / In1.Cu 35um / core 400um /\n  In2.Cu 35um / prepreg 254um / B.Cu 35um  =  1.048mm finished\n\nSection 7.3 also requires the following, NONE of which is done yet:\n  - RF1/RF2 routed as 50 ohm impedance-controlled lines, with the 2pF\n    DC-block pads embedded in the track at the same width so there is\n    no discontinuity.\n  - Ground copper REMOVED under each DW3210 on F.Cu and In1.Cu. In2.Cu\n    is the first SOLID ground plane. If this stackup is ever changed,\n    that first solid plane must stay at least 0.25mm below F.Cu.\n  - Analog (RF1, RF2, XIN, XOUT), power and digital groups kept apart.\n\nMaterial is KiCad's FR4 default (er 4.5, tan d 0.02). That is NOT from\nthe datasheet, which gives thicknesses only. Controlled impedance means\nthe fab's real stackup governs -- get their numbers and re-solve trace\nwidths before trusting any 50 ohm geometry.\n\nNo board outline exists yet (Edge.Cuts is empty), which is the one open\nDRC violation, and no footprints are placed. See bay-station/README.md."
+		(at 20 20 0)
+		(layer "Cmts.User")
+		(uuid "c0de0001-0000-4000-8000-0000000000b1")
+		(effects
+			(font
+				(size 1.5 1.5)
+				(thickness 0.25)
+			)
+			(justify left top)
 		)
 	)
 	(net 0 "")
