@@ -652,12 +652,30 @@ not settle:
   abs-max VCC is 3.9V, DWM3000 abs-max VDD3V3 is 4.0V, but a charged LiPo
   hits 4.2V -- both ICs were about to be fed straight off the unregulated
   battery/system rail with no margin against permanent damage):
-  - Wristband: **Microchip MCP1700T-3302E/TT** LDO (fixed 3.3V, low-Iq),
-    `wristband/regulation.kicad_sch`. **Re-run 2026-09-19 for the DWM3001C**:
-    module 40mA (CH5 TX or RX, DWM3001C Datasheet Rev B Table 5) + D3 status
-    LED ~3mA = **~43mA vs. the part's 250mA rating, ~5.8x headroom** -- up
-    from 3.6x, because one module doing both jobs draws less than two modules
-    doing one each.
+  - Wristband: **TI TPS7A0233PDBVR** LDO (fixed 3.3V, SOT-23-5),
+    `wristband/regulation.kicad_sch`. **Replaced Microchip MCP1700T-3302E/TT
+    on 2026-09-23.** The regulator is still required (battery reaches 4.2V,
+    DWM3001C tops out at 3.6V operating / 4.0V abs max), but the MCP1700's
+    1.6uA typ / 4uA max quiescent current had become the largest single
+    standby draw on the board -- more than the DWM3001C's own 850nA sleep.
+    TPS7A02 is 25nA typ / 46nA max at 25C, 3nA shut down, and also improves
+    accuracy to +/-1.5% over temperature. Board standby ~4.3uA -> ~2.7uA.
+    Verified against TI SBVS277C.
+
+    Trade-offs accepted: 200mA rating instead of 250mA, ~$0.78 instead of
+    ~$0.16, and a 5-pin package with an EN input that must be tied high
+    (TPS7A02 is disabled when EN floats; it cannot be GPIO-driven, because
+    the MCU it powers cannot enable its own supply). A buck converter was
+    considered and rejected -- at this load it trades a few points of
+    efficiency for an inductor, higher Iq and switching noise next to a UWB
+    receiver.
+
+    Load re-run 2026-09-19 for the DWM3001C: module 40mA (CH5 TX or RX,
+    DWM3001C Datasheet Rev B Table 5) + D3 status LED ~3mA = **~43mA**,
+    against the TPS7A02's 200mA rating -- 4.6x headroom.
+
+    **Open follow-up:** with the LDO down to tens of nA, the 2MOhm R11/R12
+    battery-sense divider (~1.85uA) is now the dominant standby term.
   - Bay station: **TI TPS62A02PDDCR** buck converter (2A, single-cell-Li-Ion
     input range), `bay-station/regulation.kicad_sch`. Current budget:
     **Re-run 2026-09-19 for the discrete architecture**: ESP32-S3-WROOM-1

@@ -152,14 +152,27 @@ Per the datasheet's "Simplified Operating Circuit."
 CTG tied to GND, QSTRT tied to GND, CELL left unconnected (correct for the
 single-cell MAX17048 variant) -- no passives involved in any of those three.
 
-## Microchip MCP1700T-3302E/TT (wristband LDO, U5)
+## TI TPS7A0233PDBVR (wristband LDO, U5)
 
-Real datasheet "Typical Application Circuit," page 2.
+Real datasheet TI SBVS277C. Replaced the Microchip MCP1700T-3302E/TT on
+2026-09-23 (`decisions.md`); the MCP1700's 1.6uA Iq had become the board's
+largest standby draw.
 
 | Passive | Value | Role | Status |
 |---|---|---|---|
-| C11 (Cin) | 1uF X7R | Input decoupling (datasheet's exact shown value; the part is stable with only 1uF) | Placed (`regulation.kicad_sch`) |
-| C12 (Cout) | 1uF X7R | Output decoupling (same) | Placed |
+| C11 (Cin) | 1uF X7R | Input decoupling | Placed (`regulation.kicad_sch`) |
+| C12 (Cout) | 2.2uF X7R | Output decoupling -- SBVS277C S6.3. **Sized up from the MCP1700's 1uF**, so don't "restore" it | Placed |
+
+Note this part has an **EN pin that must be tied high** (pin 3). It is
+disabled when EN floats, and it cannot be GPIO-gated, because the MCU it
+powers cannot enable its own supply. Pin 4 is NC. The package is SOT-23-**5**
+-- the PCB carried a 3-pad SOT-23 for it until 2026-09-25.
+
+**Superseded:** this section previously covered the MCP1700T-3302E/TT with
+C11/C12 both at 1uF X7R, from that part's page-2 "Typical Application
+Circuit." The older MCP1700 walkthrough still sitting in
+`../wristband/regulation_notes.md` under "Capacitors: C11 (Cin), C12 (Cout)"
+is stale for the same reason and should be rewritten.
 
 ## TI TPS62A02PDDCR (bay-station buck, U8)
 
