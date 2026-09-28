@@ -40,13 +40,25 @@ Consequences an agent must not "simplify" away:
   still -- **1 cm of differential path error ≈ 10 cm of position error at 10 m
   range**. Anything touching the clock path, the coax, the connectors, or
   timestamp handling is precision-critical, not incidental.
-- **Both boards are Nordic.** Bay station: Fanstel **BT840** (nRF52840).
-  Wristband: nRF52833 inside the DWM3001C. One toolchain for the project.
-  The station links to a **laptop over BLE** -- there is no WiFi and no
-  internet uplink, and that is deliberate (it is what allowed the move off
-  the ESP32-S3). Both parts are now placed on the bay-station schematic with
-  hand-authored, datasheet-verified symbols; their footprints are still
-  outstanding.
+- **Both host MCUs are Nordic.** Bay station: Fanstel **BT840** (nRF52840).
+  Wristband: nRF52833 inside the DWM3001C. Both parts are placed on the
+  bay-station schematic with hand-authored, datasheet-verified symbols; their
+  footprints are still outstanding.
+- **The station links to a laptop over BLE, and as of 2026-09-28 also carries
+  a Wi-Fi uplink** on an **ESP32-C5-WROOM-1** co-processor (`wifi.kicad_sch`).
+  Read this carefully before "correcting" it, because an older rule said the
+  opposite:
+  - The ESP32-C5 is **not a host MCU**. It is an SPI peripheral that runs the
+    Wi-Fi and TCP/IP stacks itself. The BT840 remains the host. The 2026-09-19
+    decision that removed the **ESP32-S3 as host** still stands and must not
+    be reverted.
+  - It is there because the nRF52840 **cannot** host a Wi-Fi stack: Nordic's
+    own figures put station mode at 224 KB RAM against the part's 256 KB
+    total, and an MQTT uplink at 384 KB. That is the reason for the
+    co-processor, not preference.
+  - **2.4 GHz and 5 GHz only. Never specify a 6 GHz / Wi-Fi 6E part here.**
+    6E spans 5925-7125 MHz, directly on top of UWB channel 5 at 6489.6 MHz.
+    A co-located 6E transmitter would sit inside the UWB receive band.
 - **The bay station is deployed OUTDOORS and moved between sites**, and
   georeferences itself: MAX-M10S GNSS for position, LIS3MDL magnetometer for
   heading, LIS2DH accelerometer for tilt compensation (`gnss.kicad_sch`).

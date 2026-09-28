@@ -47,6 +47,7 @@ Ten hierarchical sheets, all registered in `bay-station.kicad_pro`'s
 | `indicators` | Placement only, **new** | Status LEDs D4-D7 (charge, charge-done, power-good, system) |
 | `testpoints` | Placement only, **new** | TP1-TP14: rails, 2x GND, TCXO + 4x anchor clock, SPI, IRQ, reset |
 | `gnss` | Placement only, **new** | MAX-M10S GNSS (U9) + LIS3MDL magnetometer (U10) + LIS2DH accelerometer (U11) |
+| `wifi` | Placement only, **new** | **ESP32-C5-WROOM-1 (U12)** dual-band Wi-Fi co-processor on SPI + C37/C38. Symbol authored; footprint still needed |
 | `mechanical` | Placement only | 4x M3 mounting holes |
 
 **"Placement only" means components are instantiated but nothing is wired**

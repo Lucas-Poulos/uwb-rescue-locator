@@ -8,10 +8,13 @@ to a nearby laptop**, and georeferences itself with GNSS plus a magnetometer
 so those positions can be given as world coordinates. Intended use: an
 outdoor safety/rescue tracking system.
 
-Note this is narrower than the original concept, which had the station
-uploading to the internet. That was dropped deliberately on 2026-09-19 once
-the team confirmed a laptop will always be present -- and it is what allowed
-the host MCU to move to Nordic. See `decisions.md`.
+The internet uplink was dropped on 2026-09-19 once the team confirmed a
+laptop will always be present -- and that is what allowed the host MCU to
+move to Nordic. **As of 2026-09-28 it is back**, but as an ESP32-C5-WROOM-1
+Wi-Fi co-processor on SPI (`bay-station/wifi.kicad_sch`), not by changing the
+host: the nRF52840 has 256 KB of RAM and Nordic's own figures put a Wi-Fi
+station at 224 KB, so the stack runs on the co-processor instead. BLE to a
+laptop remains the primary link. See `decisions.md`.
 
 Positioning is a **hybrid of two-way ranging and TDoA**: a center anchor
 ranges to the tag for distance, and three outer anchors measure arrival-time
@@ -48,7 +51,7 @@ connectors.
 | UWB | 1x DWM3001C module (UWB + MCU + antennas in one part) | 4x DW3210 IC, all on one PCB; 1 center + 3 outer roles, antennas remote on coax |
 | MCU/radio | Nordic nRF52833, inside the DWM3001C (resolved) | Nordic nRF52840, in a Fanstel BT840 module (resolved) |
 | Power | Single-cell battery + BMS, sized for just enough runtime -- core function takes priority over battery life | Battery + BMS optimized for longevity, not size |
-| Link to the outside | None (talks only to the bay station over UWB) | BLE to a nearby laptop. No internet uplink -- see note above |
+| Link to the outside | None (talks only to the bay station over UWB) | BLE to a nearby laptop, plus a dual-band Wi-Fi uplink on an ESP32-C5 co-processor -- see note above |
 | Georeferencing | n/a | MAX-M10S GNSS + LIS3MDL magnetometer + LIS2DH accelerometer. Position AND heading are both needed to place a frame-relative bearing on a map |
 
 ## UWB part status

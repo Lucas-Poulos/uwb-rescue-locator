@@ -94,20 +94,34 @@ station's longevity/efficiency-focused design philosophy (see `README.md`).
   are driven from MCP73871's open-drain `STAT1`/`STAT2`/`~PG`, and whether
   they pull from `+3V3_SYS` or `+VSYS` is still open -- if `+3V3_SYS`, add
   ~9 mA. Budgeted here at the worst case.
+- **Wi-Fi co-processor: 403 mA peak.** Added 2026-09-28. ESP32-C5-WROOM-1
+  (U12, `wifi.kicad_sch`). Real Espressif **ESP32-C5-WROOM-1 & WROOM-1U
+  Datasheet v1.3**, Table 6-5 "Current Consumption for Wi-Fi (5 GHz) in
+  Active Mode": highest listed peak is 802.11a, 6 Mbps, OFDM @16.5 dBm =
+  **403 mA**. The 2.4 GHz table (6-4) peaks lower at 313 mA (802.11b 1 Mbps
+  @19 dBm), so 5 GHz TX is the worst case. RX is 87-113 mA.
+
+  Note Table 6-2 separately requires the **external supply deliver >=0.6 A**
+  to this module. That is a supply-capability floor, not an average draw.
 - **Combined worst-case peak** (conservative: BLE TX + all 4 anchors in RX +
-  clock network + GNSS/orientation + all LEDs lit): 20 + 288 + 27 + 11 + 12
-  = **~358 mA.**
+  clock network + GNSS/orientation + all LEDs lit + Wi-Fi 5 GHz TX):
+  20 + 288 + 27 + 11 + 12 + 403 = **~761 mA.**
 
-Against the TPS62A02's 2A rating that is **~5.6x headroom** -- up from 2.9x,
-because dropping WiFi removed the largest single load on the board. **The
-part choice survives**, and is now substantially oversized.
+Against the TPS62A02's 2A rating that is **~2.6x headroom**. **The part
+choice survives**, and the oversizing that looked excessive a week ago is
+now doing real work.
 
-That is worth a deliberate note rather than silent acceptance: a smaller,
-cheaper buck would now do. **Not changing it** -- the TPS62A02 is drawn,
-datasheet-verified, and its headroom has already absorbed two architecture
-changes without a respin. Revisit only if board area or BOM cost becomes
-tight. The 4x DW3210 anchors are now the dominant load by a wide margin,
-which is the right thing for the dominant load to be.
+The history here is worth keeping, because the number has swung twice:
+2.9x with the ESP32-S3 as host, 5.6x once WiFi was dropped, and 2.6x now
+that WiFi is back as a co-processor. The previous revision of this section
+observed that a smaller, cheaper buck would do and declined to change it --
+**that restraint was correct**, and a respin would now have had to be undone.
+
+Two loads now dominate rather than one: the 4x DW3210 anchors at 288 mA and
+the Wi-Fi module at 403 mA. They are unlikely to peak together in practice
+(the anchors are in RX during an exchange; the uplink transmits between
+exchanges), so scheduling Wi-Fi TX outside the ranging window is worth doing
+in firmware -- for timestamp integrity as much as for current.
 
 This remains a genuinely conservative stack-up (in practice the anchor array
 is unlikely to have all four units in RX at the exact instant of a BLE TX
