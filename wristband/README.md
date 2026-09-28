@@ -33,15 +33,20 @@ list and wired into `wristband.kicad_sch` as sheet symbols.
 | Sheet | Status | Contents |
 |---|---|---|
 | `power_bms` | **Wired** (global labels, no drawn wires), ERC clean | Full battery/charging/protection chain |
-| `radio_mcu` | Placement only | DWM3001C (U3) + decoupling |
-| `regulation` | Placement only | MCP1700T-3302E/TT LDO -> 3.3V |
-| `programming_debug` | Placement only | ARM Cortex Debug SWD header |
-| `indicators` | Placement only | Status LEDs D2 (charge) + D3 (system) |
-| `testpoints` | Placement only, **new** | TP1-TP5: both rails, 2x GND, firmware timing marker |
+| `radio_mcu` | **Wired**, ERC clean | DWM3001C (U4) + decoupling; SWD, RESET_N, SWO, VBAT_SENSE, SOS button |
+| `regulation` | **Wired**, ERC clean | TPS7A0233PDBVR LDO -> 3.3V (U5) |
+| `programming_debug` | **Wired**, ERC clean | ARM Cortex Debug SWD header |
+| `indicators` | Placement only -- **8 ERC errors** (unconnected pins) | Status LEDs D2 (charge) + D3 (system) |
+| `testpoints` | Placement only -- **5 ERC errors** (unconnected pins) | TP1-TP5: both rails, 2x GND, firmware timing marker |
 | `mechanical` | Placement only | 4x M2 mounting holes |
 
 **"Placement only" means components are instantiated and laid out, but
 nothing is wired** -- no drawn wires, no global labels, no net identity.
+
+`indicators` and `testpoints` are the two sheets still in that state. They
+came across from the positioning-architecture redesign on `main`, where they
+were never wired, and they account for all 13 of the wristband's remaining
+ERC errors. Everything else on this board is wired and ERC clean.
 
 **ERC, run 2026-09-19 with kicad-cli 10.0.6: 104 violations, ZERO errors.**
 All warnings, and all the expected unwired-sheet state: 80 pin_not_connected,
@@ -67,8 +72,11 @@ because no board outline is drawn yet.
   pin. ERC: 0 errors, 1 harmless documented warning. Full rationale in
   `power_bms_notes.md`.
 
-- **`radio_mcu.kicad_sch`** -- one `wristband:DWM3001C` (`U3`) plus VDD
-  decoupling (`C6` 100nF, `C7` 10uF). That is the entire sheet.
+- **`radio_mcu.kicad_sch`** -- one `wristband:DWM3001C` (`U4`) plus VDD
+  decoupling (`C6` 100nF, `C7` 10uF). Now wired: SWD (`SWDCLK`/`SWDIO`/
+  `SWO`), `RESET_N`, `VBAT_SENSE` on P0.02/AIN0, and the SOS button on
+  P0.17. 12 of the module's 48 pins are tied; the rest await the pin
+  assignments still open in `../docs/decisions.md`.
 
   Pin data verified against the real Qorvo DWM3001C Data Sheet Rev B (May
   2022), Table 2. One caveat carried in the symbol: **pin 18 is not
@@ -84,11 +92,13 @@ because no board outline is drawn yet.
   1 cm from the PCB edge** (Section 7.2), which reduces the horizontally
   polarized radiation component and improves multipath resilience.
 
-- **`regulation.kicad_sch`** -- Microchip **MCP1700T-3302E/TT** LDO (`U5`,
-  SOT-23, 3.3V fixed, 250mA, 1.6uA typ Iq) steps the protected `VBAT` rail
-  (up to 4.2V at full charge) down to `+3V3`. Still required: the DWM3001C's
-  operating maximum is 3.6V (Table 4), well under a full battery. The load is
-  now much lighter than it was -- see `regulation_notes.md`.
+- **`regulation.kicad_sch`** -- TI **TPS7A0233PDBVR** LDO (`U5`, SOT-23-5,
+  3.3V fixed, 200mA, 25nA typ Iq) steps the protected `VBAT` rail (up to
+  4.2V at full charge) down to `+3V3`. Replaced the MCP1700T-3302E/TT on
+  2026-09-23, whose 1.6uA Iq had become the board's largest standby draw --
+  see `../docs/decisions.md`. Still required: the DWM3001C's operating
+  maximum is 3.6V (Table 4), well under a full battery. **EN must be tied
+  high**; the part is disabled when EN floats. See `regulation_notes.md`.
 
 - **`programming_debug.kicad_sch`** -- ARM Cortex Debug SWD connector (`J3`,
   `Connector:Conn_ARM_JTAG_SWD_10`, 2x5 1.27mm). Now targets the nRF52833

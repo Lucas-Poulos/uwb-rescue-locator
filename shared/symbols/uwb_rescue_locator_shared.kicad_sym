@@ -1,7 +1,7 @@
 (kicad_symbol_lib
-	(version 20231120)
+	(version 20251024)
 	(generator "kicad_symbol_editor")
-	(generator_version "8.0")
+	(generator_version "10.0")
 	(symbol "DWM3000"
 		(pin_names
 			(offset 0.254)
@@ -9,8 +9,12 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
+		(duplicate_pin_numbers_are_jumpers no)
 		(property "Reference" "U"
 			(at -10.16 12.7 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20,6 +24,8 @@
 		)
 		(property "Value" "DWM3000"
 			(at 10.16 12.7 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -29,62 +35,74 @@
 		)
 		(property "Footprint" "uwb_rescue_locator_shared:DWM3000_PLACEHOLDER"
 			(at 0 -12.7 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" "https://download.mikroe.com/documents/datasheets/DWM3000_datasheet.pdf"
 			(at 0 -15.24 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
-		(property "Description" "Qorvo/Decawave DWM3000 UWB transceiver module, IEEE 802.15.4-2015 and IEEE 802.15.4z BPRF compliant, based on the Qorvo DW3110 IC, 24-pin 1.4mm-pitch side-castellated package 23x13x2.9mm, no onboard host MCU (matches this design, which uses a separate NINA-B111 BLE MCU as the SPI host). Confirmed choice over DWM3001C (which integrates its own nRF52833 BLE MCU + antenna + accelerometer -- would be redundant with NINA-B111 here). All pin/electrical data verified directly against the real Qorvo DWM3000 Data Sheet Rev B, May 2021 (Table 2 'DWM3000 Pin Functions' and Figure 8 'DWM3000 Pin Diagram')."
+		(property "Description" "Qorvo/Decawave DWM3000 UWB transceiver module, IEEE 802.15.4-2015 and IEEE 802.15.4z BPRF compliant, based on the Qorvo DW3110 IC, 24-pin 1.4mm-pitch side-castellated package 23x13x2.9mm, no onboard host MCU. Used on the BAY STATION only (4x, one per anchor, with the ESP32-S3 as SPI host); the wristband moved to a Qorvo DWM3001C on 2026-09-23, which integrates its own nRF52833 BLE MCU, antennas and accelerometer and so needs no separate host. All pin/electrical data verified directly against the real Qorvo DWM3000 Data Sheet Rev B, May 2021 (Table 2 'DWM3000 Pin Functions' and Figure 8 'DWM3000 Pin Diagram')."
 			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "MPN" "DWM3000"
 			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "ki_keywords" "uwb ultra wideband transceiver decawave qorvo dw3110"
 			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "ki_fp_filters" "DWM3000*"
 			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(symbol "DWM3000_0_1"
 			(rectangle
-				(start -10.16 10.16)
-				(end 10.16 -10.16)
+				(start -27.94 20.32)
+				(end 27.94 -20.32)
 				(stroke
 					(width 0.254)
 					(type default)
@@ -96,7 +114,7 @@
 		)
 		(symbol "DWM3000_1_1"
 			(pin output line
-				(at -15.24 10.16 0)
+				(at -33.02 -7.62 0)
 				(length 5.08)
 				(name "EXTON"
 					(effects
@@ -114,7 +132,7 @@
 				)
 			)
 			(pin bidirectional line
-				(at -15.24 7.62 0)
+				(at -33.02 -10.16 0)
 				(length 5.08)
 				(name "WAKEUP"
 					(effects
@@ -132,7 +150,7 @@
 				)
 			)
 			(pin bidirectional line
-				(at -15.24 5.08 0)
+				(at -33.02 -12.7 0)
 				(length 5.08)
 				(name "RSTn"
 					(effects
@@ -150,7 +168,7 @@
 				)
 			)
 			(pin bidirectional line
-				(at -15.24 2.54 0)
+				(at 33.02 0 180)
 				(length 5.08)
 				(name "GPIO7/SYNC"
 					(effects
@@ -168,7 +186,7 @@
 				)
 			)
 			(pin power_in line
-				(at -15.24 0.0 0)
+				(at -33.02 17.78 0)
 				(length 5.08)
 				(name "VDD1"
 					(effects
@@ -186,7 +204,7 @@
 				)
 			)
 			(pin power_in line
-				(at -15.24 -2.54 0)
+				(at -33.02 15.24 0)
 				(length 5.08)
 				(name "VDD3V3"
 					(effects
@@ -204,7 +222,7 @@
 				)
 			)
 			(pin power_in line
-				(at -15.24 -5.08 0)
+				(at -33.02 12.7 0)
 				(length 5.08)
 				(name "VDD3V3"
 					(effects
@@ -222,7 +240,7 @@
 				)
 			)
 			(pin power_in line
-				(at -15.24 -7.62 0)
+				(at -33.02 7.62 0)
 				(length 5.08)
 				(name "GND"
 					(effects
@@ -239,152 +257,8 @@
 					)
 				)
 			)
-			(pin power_in line
-				(at 15.24 10.16 180)
-				(length 5.08)
-				(name "GND"
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-				(number "24"
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-			)
-			(pin power_in line
-				(at 15.24 7.62 180)
-				(length 5.08)
-				(name "GND"
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-				(number "23"
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-			)
 			(pin bidirectional line
-				(at 15.24 5.08 180)
-				(length 5.08)
-				(name "GPIO8/IRQ"
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-				(number "22"
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-			)
-			(pin power_in line
-				(at 15.24 2.54 180)
-				(length 5.08)
-				(name "GND"
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-				(number "21"
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-			)
-			(pin input line
-				(at 15.24 0.0 180)
-				(length 5.08)
-				(name "SPICLK"
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-				(number "20"
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-			)
-			(pin output line
-				(at 15.24 -2.54 180)
-				(length 5.08)
-				(name "SPIMISO"
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-				(number "19"
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-			)
-			(pin input line
-				(at 15.24 -5.08 180)
-				(length 5.08)
-				(name "SPIMOSI"
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-				(number "18"
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-			)
-			(pin input line
-				(at 15.24 -7.62 180)
-				(length 5.08)
-				(name "SPICSn"
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-				(number "17"
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-			)
-			(pin bidirectional line
-				(at -10.16 -15.24 90)
+				(at 33.02 -2.54 180)
 				(length 5.08)
 				(name "GPIO6/EXTRXE/SPIPHA"
 					(effects
@@ -402,7 +276,7 @@
 				)
 			)
 			(pin bidirectional line
-				(at -7.62 -15.24 90)
+				(at 33.02 -5.08 180)
 				(length 5.08)
 				(name "GPIO5/EXTTXE/SPIPOL"
 					(effects
@@ -420,7 +294,7 @@
 				)
 			)
 			(pin bidirectional line
-				(at -5.08 -15.24 90)
+				(at 33.02 -7.62 180)
 				(length 5.08)
 				(name "GPIO4"
 					(effects
@@ -438,7 +312,7 @@
 				)
 			)
 			(pin bidirectional line
-				(at -2.54 -15.24 90)
+				(at 33.02 -10.16 180)
 				(length 5.08)
 				(name "GPIO3/TXLED"
 					(effects
@@ -456,7 +330,7 @@
 				)
 			)
 			(pin bidirectional line
-				(at 0.0 -15.24 90)
+				(at 33.02 -12.7 180)
 				(length 5.08)
 				(name "GPIO2/RXLED"
 					(effects
@@ -474,7 +348,7 @@
 				)
 			)
 			(pin bidirectional line
-				(at 2.54 -15.24 90)
+				(at 33.02 -15.24 180)
 				(length 5.08)
 				(name "GPIO1/SFDLED"
 					(effects
@@ -492,7 +366,7 @@
 				)
 			)
 			(pin bidirectional line
-				(at 5.08 -15.24 90)
+				(at 33.02 -17.78 180)
 				(length 5.08)
 				(name "GPIO0/RXOKLED"
 					(effects
@@ -510,7 +384,7 @@
 				)
 			)
 			(pin power_in line
-				(at 7.62 -15.24 90)
+				(at -33.02 5.08 0)
 				(length 5.08)
 				(name "GND"
 					(effects
@@ -527,6 +401,151 @@
 					)
 				)
 			)
+			(pin input line
+				(at 33.02 17.78 180)
+				(length 5.08)
+				(name "SPICSn"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "17"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin input line
+				(at 33.02 12.7 180)
+				(length 5.08)
+				(name "SPIMOSI"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "18"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin output line
+				(at 33.02 10.16 180)
+				(length 5.08)
+				(name "SPIMISO"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "19"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin input line
+				(at 33.02 15.24 180)
+				(length 5.08)
+				(name "SPICLK"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "20"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin power_in line
+				(at -33.02 2.54 0)
+				(length 5.08)
+				(name "GND"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "21"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin bidirectional line
+				(at 33.02 5.08 180)
+				(length 5.08)
+				(name "GPIO8/IRQ"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "22"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin power_in line
+				(at -33.02 0 0)
+				(length 5.08)
+				(name "GND"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "23"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin power_in line
+				(at -33.02 -2.54 0)
+				(length 5.08)
+				(name "GND"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "24"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
 		)
+		(embedded_fonts no)
 	)
 )
