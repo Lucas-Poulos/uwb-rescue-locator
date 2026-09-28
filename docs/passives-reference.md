@@ -94,18 +94,67 @@ circuit to work from -- C5/C6/C7 on `connectivity.kicad_sch` are conservative
 
 ## Qorvo DW3210 (bay-station uwb_array, U4-U7, x4)
 
-**Decoupling is deliberately NOT yet placed.** The previous C8-C19 were sized
-for a DWM3000 module with a single VDD3V3 rail and do not map onto a bare IC.
-The DW3210 has three separate supply rails -- VDD1 (pin 29, main + I/O),
-VDD2a/VDD2b (28/23) and VDD3 (26) -- **plus two decoupling-only pins**,
-VTX_D (27) and VIO_D (38), which each need their own capacitor to ground and
-must NOT be tied to a rail. Re-derive the whole set from the DW3000 datasheet
-before wiring.
+**Placed 2026-09-28**, derived from the real **Qorvo DW3000 Datasheet v1.1,
+Figure 32 "DW3000 WLCSP Application Circuit"** -- Qorvo's own reference
+design. Note Figure 32 is an image, so none of this extracts as text; it was
+read by rendering the page. The earlier C8-C19 were sized for a DWM3000
+*module* with a single VDD3V3 rail and did not map onto a bare IC; they are
+gone and none of their values were reused.
+
+The DW3210 has three supply rails -- VDD1 (29, main + I/O), VDD2a/VDD2b
+(28/23) and VDD3 (26) -- **plus two decoupling-only pins**, VTX_D (27) and
+VIO_D (38), which each take their own capacitor to ground and **must not be
+tied to a rail**. That distinction is the whole reason the module values were
+wrong.
+
+Per anchor (x4: U4-U7). Refdes run in consecutive blocks -- **U4 = C40-C47,
+U5 = C48-C55, U6 = C56-C63, U7 = C64-C71** -- so the offset within each block
+identifies the function. Figure 32's own designators in brackets:
+
+| Offset | U4 | U5 | U6 | U7 | Value | Role |
+|---|---|---|---|---|---|---|
+| +0 | C40 | C48 | C56 | C64 | 100nF | VDD1 (29) + VDD2b (23) decoupling [C5] |
+| +1 | C41 | C49 | C57 | C65 | 4.7nF | VDD2a (28) decoupling, at the pad [C1] |
+| +2 | C42 | C50 | C58 | C66 | 4.7nF | VDD3 (26) decoupling [C10] |
+| +3 | C43 | C51 | C59 | C67 | 100nF | VDD3 (26) decoupling [C11] |
+| +4 | C44 | C52 | C60 | C68 | 10uF | VDD3 (26) bulk [C12] |
+| +5 | C45 | C53 | C61 | C69 | 220nF | **VTX_D (27)** -- cap to ground only [C9] |
+| +6 | C46 | C54 | C62 | C70 | 100nF | **VIO_D (38)** -- cap to ground only [C21] |
+| +7 | C47 | C55 | C63 | C71 | 2.0pF | RF1 (18) series DC block [C2] |
+| -- | FB1 | FB2 | FB3 | FB4 | BLM03PG330SN1D | Ferrite bead feeding VDD2a (28) [FB1] |
+| -- | R33 | R34 | R35 | R36 | 49R9 | RF2 (13) 50 ohm termination [R1, DW3110 inset] |
+
+Shared across all four anchors, on the +3V3 UWB rail: **C72 10uF [C6], C73
+100nF [C7], C74 4.7nF [C8]**.
+
+**Two things in that table are not ordinary decoupling and should not be
+"tidied":**
+- The **2.0pF on RF1** is not merely a DC block. Qorvo: *"C2 and C3 are not
+  only a DC blocking capacitor, these capacitors are a part of the RF
+  transmission line, this line was simulated in design and this capacitance
+  value was chosen as the result of the simulation."* Section 7.3 adds that
+  its pads must be embedded in the track at track width to avoid a
+  discontinuity.
+- The **ferrite bead is placed per anchor, not once on the rail.** Figure 32
+  shows one because it shows one chip. Four transceivers sharing a supply is
+  a different problem: a bead each keeps one anchor's TX transient out of the
+  others' references, which matters on a board whose product is timestamp
+  accuracy.
 
 Also required per anchor and already placed: 10k GPIO5/GPIO6 SPI-mode straps
-(R10-R17) and a 100k IRQ pull-down (R25-R28, Qorvo Figure 11). RF1 (pin 18)
-needs a series 2pF cap; RF2 (pin 13) is unused on this non-PDoA variant and
-must be terminated into 50 ohm through a 50 ohm trace.
+(R10-R17) and a 100k IRQ pull-down (R25-R28, Qorvo Figure 11).
+
+**Not placed, deliberately:** Figure 32's X1/C100/C101 crystal network. Each
+DW3210's XTI/XTO would form its own oscillator, which is exactly what the
+shared-clock architecture forbids -- the four anchors take one TCXO through
+`clock_dist.kicad_sch` instead (`docs/positioning.md`). Section 7.1 also
+notes a **BPF on RF1/RF2 may be required for certification** in regions that
+mandate conducted testing; not placed, flagged as an open item.
+
+**Revision caveat:** these values come from datasheet **v1.1**, the copy that
+could be obtained. This repo's DW3210 *pin* data was verified against
+**v1.3**. The rails and decoupling scheme are unlikely to have changed, but
+re-check Figure 32 against v1.3 before fab.
 
 ## Espressif ESP32-S3-WROOM-1 -- HISTORICAL (superseded by the BT840)
 

@@ -40,7 +40,7 @@ Ten hierarchical sheets, all registered in `bay-station.kicad_pro`'s
 |---|---|---|
 | `power_bms` | **Wired** (global labels), 8 known/expected ERC items | Barrel jack + USB-C in -> MCP73871 power-path -> MAX17048 gauge |
 | `connectivity` | Placement only | **BT840 (U3) placed** + C5/C6/C7 decoupling. Symbol authored; footprint still needed |
-| `uwb_array` | Placement only | **4x DW3210 placed** (U4=A0 center, U5-U7=A1-A3 outer) + R10-R17 straps + R25-R28 IRQ pulldowns |
+| `uwb_array` | Placement only | **4x DW3210 placed** (U4=A0 center, U5-U7=A1-A3 outer) + R10-R17 straps + R25-R28 IRQ pulldowns + **full per-anchor decoupling from Qorvo Figure 32** (C40-C74, FB1-FB4 beads, R33-R36 RF2 terminations) |
 | `regulation` | Placement only | TPS62A02PDDCR buck -> +3V3_SYS |
 | `programming_debug` | Placement only | **Rebuilt for Nordic**: SWD header (J3) + RESET button (SW2). ESP32 circuitry and the second USB-C deleted |
 | `clock_dist` | Placement only, **new** | Shared 38.4MHz reference: AC-coupling + XTO caps placed, TCXO/buffer TBD |
