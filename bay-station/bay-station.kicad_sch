@@ -437,6 +437,44 @@
 			)
 		)
 	)
+	(sheet
+		(at 300 100)
+		(size 60 40)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "c5f1a2b3-4d5e-4f60-8a7b-9c0d1e2f3a4b")
+		(property "Sheetname" "Wi-Fi Uplink"
+			(at 300 98.5 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "wifi.kicad_sch"
+			(at 300 141.5 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c"
+					(page "11")
+				)
+			)
+		)
+	)
 	(sheet_instances
 		(path "/"
 			(page "1")

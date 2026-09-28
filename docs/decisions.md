@@ -110,6 +110,101 @@ not settle:
   anyone builds that generator.
 
 
+### Bay-station Wi-Fi uplink
+
+- **Dual-band Wi-Fi added via an ESP32-C5-WROOM-1 co-processor on SPI.**
+  Placed 2026-09-28 as `bay-station/wifi.kicad_sch` (U12, C37, C38),
+  placement only. This reverses part of the 2026-09-19 "no WiFi" call, so the
+  reasoning matters more than usual.
+
+  **Why a co-processor and not the host.** The nRF52840 cannot run a Wi-Fi
+  stack alongside this application. Nordic's own memory tables, measured on
+  an nRF52840 DK, give station mode at **224 KB RAM / 499 KB ROM** and an
+  MQTT sample at **384 KB RAM**. The nRF52840 has **256 KB of RAM total**, so
+  station mode alone leaves ~32 KB for the BLE stack, the four-instance
+  DW3210 driver, timestamp collection and the position solve, and MQTT
+  exceeds the part outright. Nordic lists nRF52840 as supported but "not
+  recommended due to performance", with nRF5340 / nRF54L as the intended
+  hosts. The ESP32-C5 runs Wi-Fi *and* TCP/IP itself (ESP-Hosted or ESP-AT),
+  so the host cost is a transport driver rather than a stack.
+
+  **This does NOT reopen the host-MCU decision.** The 2026-09-19 call that
+  removed the ESP32-S3 was about the ESP32 as *host*. Here it is a dumb
+  peripheral and the BT840 remains the host. Do not "simplify" this back into
+  a single ESP32.
+
+  **2.4 + 5 GHz only -- never 6 GHz.** Wi-Fi 6E spans 5925-7125 MHz, which
+  sits directly on top of **UWB channel 5 at 6489.6 MHz**. A co-located 6E
+  transmitter would be inside the UWB receive band on a board measuring
+  timestamps where 1 ns is 30 cm. This ruled out most "tri-band" parts. The
+  ESP32-C5 is Wi-Fi 6 dual-band and does not touch 6 GHz.
+
+  **Why not the Nordic nRF7002**, the obvious first choice: it is genuinely
+  good silicon (dual-band, SPI/QSPI, IOVDD 1.62-3.6 V so no level shifting,
+  built-in BLE coexistence interface) but it is a *radio* companion, not a
+  stack companion -- the Wi-Fi stack still runs on the host, which is exactly
+  what the nRF52840 cannot afford. It would also need a 2.4/5 GHz diplexer or
+  two antennas. Revisit it if the host ever becomes an nRF5340.
+
+  Verified against Espressif ESP32-C5-WROOM-1 & WROOM-1U Datasheet **v1.3**:
+  dual-band 2.4/5 GHz Wi-Fi 6 (Section 1); 29 pins, Table 3-1; VDD33 3.0-3.6 V
+  and supply must deliver **>=0.6 A**, Table 6-2; peak TX **313 mA at 2.4 GHz**
+  (802.11b 1 Mbps @19 dBm, Table 6-4) and **403 mA at 5 GHz** (802.11a 6 Mbps
+  @16.5 dBm, Table 6-5). The WROOM-1 variant has an **on-board PCB antenna**
+  covering both bands, so no diplexer, connector or matching network is
+  needed -- the WROOM-1U is the external-connector variant and is not what is
+  placed here.
+
+  **Open sub-items:**
+  - **EN must not float** (datasheet Table 3-1, explicit note). Figure 9-1
+    marks its pull-up `R1` as TBD, so no value has been invented. Decide the
+    EN drive and the power-on state -- the module should probably stay off
+    until the host is ready, which argues for a pull-down plus host-driven
+    enable.
+  - Footprint not yet imported. Do not hand-author it; Espressif publishes
+    land-pattern data (datasheet Chapter 11.1).
+  - C37 (22uF) and C38 (100nF) are taken from datasheet Figure 9-1 (C1, C2).
+    The other externals in that figure (C3, C7, C8, R1, R6, R7) are marked
+    TBD by Espressif and are not placed.
+  - Whether the uplink is MQTT, plain TCP, or something else is still the
+    open "Bay station uplink backend" item above.
+
+- **Bay-station GPIO allocation -- PROPOSED, needs team sign-off.** Recorded
+  2026-09-28 in answer to "will we run out of GPIO". Short answer: **no, with
+  room to spare.** The nRF52840 has 48 GPIO (P0.00-P0.31, P1.00-P1.15).
+
+  | Block | Signals | Pins |
+  |---|---|---|
+  | UWB array, 4x DW3210 | shared SPI (SCK/MOSI/MISO), 4x CS, 4x IRQ, shared RSTn | 12 |
+  | Wi-Fi co-processor | SPI (SCK/MOSI/MISO/CS), HANDSHAKE, DATA_READY, EN | 7 |
+  | GNSS MAX-M10S | UART TX/RX, TIMEPULSE (PPS), RESET_N | 4 |
+  | LIS3MDL + LIS2DH + MAX17048 | shared I2C (SDA/SCL), 2x INT | 4 |
+  | Clock distribution | TCXO / fan-out buffer enable | 1 |
+  | Indicators | D7 system LED (D4-D6 are driven by MCP73871, not GPIO) | 1 |
+  | Programming / debug | SWO (SWDIO/SWDCLK are dedicated pins, not GPIO) | 1 |
+  | Test points | firmware timing markers | 3 |
+  | **Total** | | **33 of 48** |
+
+  **15 spare.** No GPIO expander is needed, and one should not be added: it
+  would land in the DW3210 CS/IRQ path, where added latency and jitter are
+  exactly what this design cannot absorb. 1 ns is 30 cm.
+
+  **Pin count is not the real constraint -- peripheral assignment is.** Two
+  things have first claim and must be allocated before anything else:
+  - The **DW3210 bus needs the fast SPI instance.** On nRF52840 only one SPIM
+    reaches the top clock rate; the others cap far lower. Verify which, and
+    which pins it can use, against the nRF52840 Product Specification before
+    assigning. This bus is the measurement path.
+  - The **Wi-Fi SPI must be a different instance** so it cannot stall the UWB
+    exchange. Convenient here: the ESP32-C5 link has no timing requirement
+    worth defending, and the nRF52840 has a dedicated QSPI peripheral as well.
+
+  Pins to treat as reserved until checked: **P0.00/P0.01** (XL1/XL2, gone if
+  a 32.768 kHz crystal is used -- confirm whether the BT840 module carries
+  its own), **P0.09/P0.10** (NFC by default, need configuring to act as
+  GPIO), **P0.18** (RESET). Losing all of those still leaves comfortable
+  headroom.
+
 ### Critical path for the bay station
 
 - **Baseline length: 1 m as specified, but bigger is nearly free.** Corrected
@@ -405,11 +500,16 @@ not settle:
   map onto a bare IC with separate VDD1/VDD2/VDD3 rails. `connectivity` kept
   its generic 3V3 decoupling. `programming_debug` was rebuilt outright.
 
-- **Bay station uplink: BLE to a laptop, not WiFi to the internet.** Resolved
-  2026-09-19. The station now talks Bluetooth LE to a nearby computer. Note
-  this is a real scope change from the original concept, which had the bay
-  station uploading position data to the internet -- that is no longer what
-  it does, and `system-overview.md` has been corrected accordingly.
+- **Bay station uplink: BLE to a laptop** -- **PARTIALLY SUPERSEDED
+  2026-09-28**, see "Bay-station Wi-Fi uplink" under Open. A Wi-Fi uplink is
+  back, but as an **ESP32-C5 co-processor on SPI**, not by reverting the host
+  MCU. The clause below that says "both decisions reopen together" did not
+  come true: this one reopened, the MCU one did not. BLE-to-laptop remains
+  the primary link.
+
+  Original entry, resolved 2026-09-19: the station talks Bluetooth LE to a
+  nearby computer. Note this was a real scope change from the original
+  concept, which had the bay station uploading position data to the internet.
 
   Confirmed with the team that a laptop will always be present, which is what
   made the MCU change below possible. **If that ever stops being true, both
