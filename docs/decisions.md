@@ -110,6 +110,63 @@ not settle:
   anyone builds that generator.
 
 
+### Level shifting and pull-ups -- audited 2026-09-28
+
+- **No level shifters are needed anywhere in this design, on either board.**
+  Audited in answer to a direct question. The result depends on one choice,
+  recorded here so it does not get reversed by accident: **pull the I2C bus
+  up to `+3V3`, never to `VBATT_PROT`.**
+
+  Every digital part is 3.3 V-native or 3.3 V-tolerant: DW3210 (VDD1
+  1.62-3.6 V, and VDD1 supplies the I/O), Fanstel BT840 / nRF52840
+  (1.7-3.6 V), MAX-M10S (V_IO tied to VCC per u-blox), LIS3MDL and LIS2DH
+  (separate VDD_IO), ESP32-C5-WROOM-1 (3.0-3.6 V).
+
+  The one part that looked like a problem is the **MAX17048 fuel gauge**,
+  whose VDD *is* the battery rail (2.5-4.5 V) because it senses cell voltage
+  through that pin. It is not a problem, for three reasons, all from
+  datasheet 19-6171 Rev 7:
+  - I2C is **open-drain**. No device drives the bus high; the bus voltage is
+    set entirely by the pull-up rail. A part on a 4.2 V supply still sees a
+    3.3 V bus.
+  - Its **VIH is a fixed 1.4 V**, not the usual 0.7*VDD. A 3.3 V bus is read
+    correctly even at full charge. (A ratiometric part would have needed
+    0.7 x 4.2 = 2.94 V, which 3.3 V still clears -- but the fixed threshold
+    removes the question.)
+  - **SDA/SCL/ALRT are rated -0.3 V to +5.5 V absolute max**, so 3.3 V is
+    well inside.
+
+  The hazard runs the *other* way and is the reason this was deferred for so
+  long: pulling the bus to `VBATT_PROT` would be fine for the MAX17048 but
+  would put ~4.2 V on nRF52840 GPIO rated to 3.6 V.
+
+- **Pull-ups: three are required, and they were missing.** Placed 2026-09-28
+  as **R37 (SDA), R38 (SCL), R39 (ALRT), 2.2k to `+3V3`** on
+  `connectivity.kicad_sch`.
+
+  "Do we need pull-ups anywhere" has a hard answer: **yes, unavoidably.**
+  I2C is open-drain and cannot return to a logic high without them -- this
+  is not a design preference. Before this, the bay station had **zero** I2C
+  pull-ups while carrying three devices on the bus (MAX17048 0x36, LIS3MDL
+  0x1C/0x1E, LIS2DH 0x18/0x19). MAX17048's ALRT is separately open-drain and
+  needs its own.
+
+  **2.2k is derived, not a default:**
+  - Lower bound, from the strongest sink on the bus: Rp(min) =
+    (3.3 - 0.4)/4 mA = **725 ohm** (MAX17048 VOL 0.4 V at IOL 4 mA). 2.2k
+    sinks 1.32 mA, comfortably inside.
+  - Upper bound, from the I2C-bus specification (NXP UM10204,
+    tr = 0.8473 x Rp x Cb): 2.2k allows **161 pF** of bus capacitance at
+    400 kHz, versus only **75 pF** for a default 4.7k. This bus runs from
+    `power_bms` to `gnss` across the board; 75 pF is too tight to assume.
+    At 100 kHz the margin is 536 pF.
+  - Re-check against measured Cb if the bus is ever run above 400 kHz.
+
+  The existing pulls elsewhere are all correct and unrelated: R10-R17 (10k
+  DW3210 SPI-mode straps), R25-R28 (100k DW3210 IRQ pull-downs, Qorvo
+  Figure 11), and the wristband's 5.1k CC resistors, which are mandatory
+  USB-C pull-*downs*.
+
 ### Critical path for the bay station
 
 - **Baseline length: 1 m as specified, but bigger is nearly free.** Corrected
