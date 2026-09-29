@@ -10,7 +10,7 @@
 	)
 	(lib_symbols)
 	(sheet
-		(at 30 30)
+		(at 210 100)
 		(size 60 40)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -24,9 +24,9 @@
 		(fill
 			(color 0 0 0 0)
 		)
-		(uuid "b2362bec-be69-491d-a07e-a9d16de4ad17")
-		(property "Sheetname" "Power BMS"
-			(at 30 28.5 0)
+		(uuid "4d8f2b16-9c7a-4e35-8f60-1b3d5a8c2e09")
+		(property "Sheetname" "Indicators"
+			(at 210 98.5 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -36,8 +36,8 @@
 				(justify left bottom)
 			)
 		)
-		(property "Sheetfile" "power_bms.kicad_sch"
-			(at 30 71.5 0)
+		(property "Sheetfile" "indicators.kicad_sch"
+			(at 210 141.5 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -50,145 +50,7 @@
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c"
-					(page "2")
-				)
-			)
-		)
-	)
-	(sheet
-		(at 120 30)
-		(size 60 40)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(stroke
-			(width 0.1524)
-			(type solid)
-		)
-		(fill
-			(color 0 0 0 0)
-		)
-		(uuid "615db515-37ad-4c26-9aab-9d4c2fc23c63")
-		(property "Sheetname" "Connectivity"
-			(at 120 28.5 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left bottom)
-			)
-		)
-		(property "Sheetfile" "connectivity.kicad_sch"
-			(at 120 71.5 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-			)
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c"
-					(page "3")
-				)
-			)
-		)
-	)
-	(sheet
-		(at 30 100)
-		(size 60 40)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(stroke
-			(width 0.1524)
-			(type solid)
-		)
-		(fill
-			(color 0 0 0 0)
-		)
-		(uuid "7a56b57e-fbec-43eb-be10-7a1a5f682193")
-		(property "Sheetname" "UWB Array"
-			(at 30 98.5 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left bottom)
-			)
-		)
-		(property "Sheetfile" "uwb_array.kicad_sch"
-			(at 30 141.5 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-			)
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c"
-					(page "4")
-				)
-			)
-		)
-	)
-	(sheet
-		(at 120 100)
-		(size 60 40)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(stroke
-			(width 0.1524)
-			(type solid)
-		)
-		(fill
-			(color 0 0 0 0)
-		)
-		(uuid "adf6c49a-dc88-4f76-9bc6-0f3625bf3bc5")
-		(property "Sheetname" "Mechanical"
-			(at 120 98.5 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left bottom)
-			)
-		)
-		(property "Sheetfile" "mechanical.kicad_sch"
-			(at 120 141.5 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-			)
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c"
-					(page "5")
+					(page "9")
 				)
 			)
 		)
@@ -240,6 +102,144 @@
 		)
 	)
 	(sheet
+		(at 120 30)
+		(size 60 40)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "615db515-37ad-4c26-9aab-9d4c2fc23c63")
+		(property "Sheetname" "Connectivity"
+			(at 120 28.5 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "connectivity.kicad_sch"
+			(at 120 71.5 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c"
+					(page "3")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 210 30)
+		(size 60 40)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "6b2a9d38-4e15-4c7f-a093-2f5c8e1d70b4")
+		(property "Sheetname" "Clock Distribution"
+			(at 210 28.5 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "clock_dist.kicad_sch"
+			(at 210 71.5 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c"
+					(page "8")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 30 100)
+		(size 60 40)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "7a56b57e-fbec-43eb-be10-7a1a5f682193")
+		(property "Sheetname" "UWB Array"
+			(at 30 98.5 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "uwb_array.kicad_sch"
+			(at 30 141.5 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c"
+					(page "4")
+				)
+			)
+		)
+	)
+	(sheet
 		(at 120 170)
 		(size 60 40)
 		(exclude_from_sim no)
@@ -286,95 +286,25 @@
 		)
 	)
 	(sheet
-		(at 210 30)
-		(size 60 40)
-		(fields_autoplaced yes)
-		(stroke
-			(width 0.1524)
-			(type solid)
-		)
-		(fill
-			(color 0 0 0 0.0000)
-		)
-		(uuid "6b2a9d38-4e15-4c7f-a093-2f5c8e1d70b4")
-		(property "Sheetname" "Clock Distribution"
-			(at 210 28.5 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left bottom)
-			)
-		)
-		(property "Sheetfile" "clock_dist.kicad_sch"
-			(at 210 71.5 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-			)
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c"
-					(page "8")
-				)
-			)
-		)
-	)
-	(sheet
-		(at 210 100)
-		(size 60 40)
-		(fields_autoplaced yes)
-		(stroke
-			(width 0.1524)
-			(type solid)
-		)
-		(fill
-			(color 0 0 0 0.0000)
-		)
-		(uuid "4d8f2b16-9c7a-4e35-8f60-1b3d5a8c2e09")
-		(property "Sheetname" "Indicators"
-			(at 210 98.5 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left bottom)
-			)
-		)
-		(property "Sheetfile" "indicators.kicad_sch"
-			(at 210 141.5 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-			)
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c"
-					(page "9")
-				)
-			)
-		)
-	)
-	(sheet
 		(at 210 170)
 		(size 60 40)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
 		(fields_autoplaced yes)
 		(stroke
 			(width 0.1524)
 			(type solid)
 		)
 		(fill
-			(color 0 0 0 0.0000)
+			(color 0 0 0 0)
 		)
 		(uuid "9b2c3d4e-5f60-4172-8384-95a617b8c9da")
 		(property "Sheetname" "Test Points"
 			(at 210 168.5 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -384,6 +314,8 @@
 		)
 		(property "Sheetfile" "testpoints.kicad_sch"
 			(at 210 211.5 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -394,7 +326,7 @@
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c"
-					(page "9")
+					(page "11")
 				)
 			)
 		)
@@ -402,17 +334,23 @@
 	(sheet
 		(at 300 30)
 		(size 60 40)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
 		(fields_autoplaced yes)
 		(stroke
 			(width 0.1524)
 			(type solid)
 		)
 		(fill
-			(color 0 0 0 0.0000)
+			(color 0 0 0 0)
 		)
 		(uuid "a1c2e3f4-5b6d-4708-9a1b-2c3d4e5f6071")
 		(property "Sheetname" "GNSS / Orientation"
 			(at 300 28.5 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -422,6 +360,8 @@
 		)
 		(property "Sheetfile" "gnss.kicad_sch"
 			(at 300 71.5 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -433,6 +373,98 @@
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c"
 					(page "10")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 120 100)
+		(size 60 40)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "adf6c49a-dc88-4f76-9bc6-0f3625bf3bc5")
+		(property "Sheetname" "Mechanical"
+			(at 120 98.5 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "mechanical.kicad_sch"
+			(at 120 141.5 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c"
+					(page "5")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 30 30)
+		(size 60 40)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "b2362bec-be69-491d-a07e-a9d16de4ad17")
+		(property "Sheetname" "Power BMS"
+			(at 30 28.5 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "power_bms.kicad_sch"
+			(at 30 71.5 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c"
+					(page "2")
 				)
 			)
 		)

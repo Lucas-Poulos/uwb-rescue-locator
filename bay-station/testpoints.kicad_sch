@@ -1,7 +1,7 @@
 (kicad_sch
-	(version 20231120)
+	(version 20260306)
 	(generator "eeschema")
-	(generator_version "8.0")
+	(generator_version "10.0")
 	(uuid "2a3b4c5d-6e7f-4809-9172-3b4c5d6e7f80")
 	(paper "A4")
 	(title_block
@@ -10,14 +10,22 @@
 	)
 	(lib_symbols
 		(symbol "Connector:TestPoint"
-			(pin_numbers hide)
+			(pin_numbers
+				(hide yes)
+			)
 			(pin_names
-				(offset 0.762) hide)
+				(offset 0.762)
+				(hide yes)
+			)
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
 			(property "Reference" "TP"
 				(at 0 6.858 0)
+				(show_name no)
+				(do_not_autoplace no)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -26,6 +34,8 @@
 			)
 			(property "Value" "TestPoint"
 				(at 0 5.08 0)
+				(show_name no)
+				(do_not_autoplace no)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -34,47 +44,57 @@
 			)
 			(property "Footprint" ""
 				(at 5.08 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
-			(property "Datasheet" "~"
+			(property "Datasheet" ""
 				(at 5.08 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "Description" "test point"
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "ki_keywords" "test point tp"
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "ki_fp_filters" "Pin* Test*"
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(symbol "TestPoint_0_1"
@@ -110,10 +130,12 @@
 					)
 				)
 			)
+			(embedded_fonts no)
 		)
 	)
 	(text "Test Points -- bring-up probing"
-		(at 25.40 20.32 0)
+		(exclude_from_sim no)
+		(at 114.046 20.32 0)
 		(effects
 			(font
 				(size 2.5 2.5)
@@ -122,7 +144,8 @@
 		(uuid "88888888-0000-4000-8000-000000000001")
 	)
 	(text "Placement only: no wires or global labels yet.\n\nThis board's whole difficulty is sub-nanosecond timing and per-anchor delay\ncalibration, and bring-up will involve real measurement against real\nhardware. Without probe points that measurement is guesswork. These cost\nnothing now and cannot be added after layout.\n\nChosen for the specific risks this design actually has:\n\n  CLOCK -- the defining signal. If the shared reference is absent, wrong\n  frequency, or missing at one anchor, TDoA silently produces nonsense\n  rather than failing loudly. TP5 checks the TCXO itself; TP6-TP9 confirm\n  the buffer actually reaches each of the four DW3210 XTI pins.\n\n  SPI -- the driver work (restoring multi-instance support) is on the\n  critical path and will need a logic analyser. TP10-TP12 give it somewhere\n  to clip on. TP13 (A0 IRQ) and TP14 (shared anchor reset) make the\n  exchange timing visible.\n\n  POWER -- TP1/TP2 confirm the rails before anything else is debugged.\n\n  GROUND -- TWO of them, deliberately. TP3 sits next to the clock points so\n  a scope probe can use a short ground spring rather than a long flying\n  lead; at 38.4MHz a clip lead's inductance distorts what you are trying to\n  measure. TP4 is a general-purpose ground elsewhere on the board."
-		(at 25.40 27.94 0)
+		(exclude_from_sim no)
+		(at 118.364 51.308 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -131,7 +154,8 @@
 		(uuid "88888888-0000-4000-8000-000000000002")
 	)
 	(text "LAYOUT NOTE, important: a test point on the clock network is a STUB, and\nstubs degrade exactly the signal integrity this design depends on. Keep\nTP5-TP9 as small pads with the shortest possible stub -- ideally a bare\nprobe pad rather than a through-hole post -- and place them ON the existing\nrouting rather than spurring off it where possible. If a clean layout\ncannot accommodate all four anchor clock points, drop TP8/TP9 and keep\nTP6/TP7: two is enough to compare skew between channels."
-		(at 25.40 77.47 0)
+		(exclude_from_sim no)
+		(at 112.268 87.63 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -143,13 +167,17 @@
 		(lib_id "Connector:TestPoint")
 		(at 35.56 115.57 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
-		(uuid "88888888-0000-4000-8000-000000000001")
+		(uuid "88888888-0000-4000-8000-000000000004")
 		(property "Reference" "TP1"
 			(at 35.56 111.76 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -158,6 +186,8 @@
 		)
 		(property "Value" "+3V3_SYS"
 			(at 35.56 119.38 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -166,30 +196,39 @@
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
 			(at 35.56 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" ""
 			(at 35.56 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "Regulated 3.3V rail from the TPS62A02 (regulation.kicad_sch). Check first when anything misbehaves."
 			(at 35.56 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
+		)
+		(pin "1"
+			(uuid "c1edb144-0922-4ad5-bb7e-25b168778960")
 		)
 		(instances
 			(project "bay-station"
@@ -204,13 +243,17 @@
 		(lib_id "Connector:TestPoint")
 		(at 54.61 115.57 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
-		(uuid "88888888-0000-4000-8000-000000000002")
+		(uuid "88888888-0000-4000-8000-000000000005")
 		(property "Reference" "TP2"
 			(at 54.61 111.76 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -219,6 +262,8 @@
 		)
 		(property "Value" "+VSYS"
 			(at 54.61 119.38 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -227,30 +272,39 @@
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
 			(at 54.61 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" ""
 			(at 54.61 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "Unregulated system rail out of the MCP73871 power path (power_bms.kicad_sch)."
 			(at 54.61 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
+		)
+		(pin "1"
+			(uuid "b8fa8b1f-b67f-4362-b965-33763963e289")
 		)
 		(instances
 			(project "bay-station"
@@ -265,13 +319,17 @@
 		(lib_id "Connector:TestPoint")
 		(at 74.93 115.57 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
-		(uuid "88888888-0000-4000-8000-000000000003")
+		(uuid "88888888-0000-4000-8000-000000000006")
 		(property "Reference" "TP3"
-			(at 74.93 111.76 0)
+			(at 74.422 125.476 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -279,7 +337,9 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 74.93 119.38 0)
+			(at 69.342 110.744 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -288,30 +348,39 @@
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
 			(at 74.93 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" ""
 			(at 74.93 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "Scope ground, to be placed adjacent to TP5-TP9. Use a short ground spring here, not a flying clip lead -- at 38.4MHz the lead inductance distorts the measurement."
 			(at 74.93 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
+		)
+		(pin "1"
+			(uuid "108e3d65-845b-42f2-a372-5e0e36402242")
 		)
 		(instances
 			(project "bay-station"
@@ -326,13 +395,17 @@
 		(lib_id "Connector:TestPoint")
 		(at 95.25 115.57 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
-		(uuid "88888888-0000-4000-8000-000000000004")
+		(uuid "88888888-0000-4000-8000-000000000007")
 		(property "Reference" "TP4"
 			(at 95.25 111.76 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -341,6 +414,8 @@
 		)
 		(property "Value" "GND"
 			(at 95.25 119.38 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -349,30 +424,39 @@
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
 			(at 95.25 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" ""
 			(at 95.25 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "General-purpose ground, placed away from the clock area."
 			(at 95.25 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
+		)
+		(pin "1"
+			(uuid "0a774f38-dbe9-40ec-bf80-61c6b1da8d4d")
 		)
 		(instances
 			(project "bay-station"
@@ -387,13 +471,17 @@
 		(lib_id "Connector:TestPoint")
 		(at 35.56 115.57 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
-		(uuid "88888888-0000-4000-8000-000000000005")
+		(uuid "88888888-0000-4000-8000-000000000008")
 		(property "Reference" "TP5"
 			(at 35.56 111.76 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -402,6 +490,8 @@
 		)
 		(property "Value" "REF_38M4"
 			(at 35.56 119.38 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -410,30 +500,39 @@
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
 			(at 35.56 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" ""
 			(at 35.56 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "TCXO output, before the fan-out buffer. Confirms the shared reference exists and is on frequency at all."
 			(at 35.56 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
+		)
+		(pin "1"
+			(uuid "b8d53ca7-0e00-4d4f-a170-c0c7823e72e4")
 		)
 		(instances
 			(project "bay-station"
@@ -448,13 +547,17 @@
 		(lib_id "Connector:TestPoint")
 		(at 54.61 115.57 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
-		(uuid "88888888-0000-4000-8000-000000000006")
+		(uuid "88888888-0000-4000-8000-000000000009")
 		(property "Reference" "TP6"
 			(at 54.61 111.76 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -463,6 +566,8 @@
 		)
 		(property "Value" "CLK_A0"
 			(at 54.61 119.38 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -471,30 +576,39 @@
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
 			(at 54.61 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" ""
 			(at 54.61 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "Buffer output to the A0 (center) DW3210 XTI pin."
 			(at 54.61 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
+		)
+		(pin "1"
+			(uuid "e0a730a3-1d36-4e40-adfa-0d482c419e0d")
 		)
 		(instances
 			(project "bay-station"
@@ -509,13 +623,17 @@
 		(lib_id "Connector:TestPoint")
 		(at 74.93 115.57 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
-		(uuid "88888888-0000-4000-8000-000000000007")
+		(uuid "88888888-0000-4000-8000-00000000000a")
 		(property "Reference" "TP7"
-			(at 74.93 111.76 0)
+			(at 81.026 122.428 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -523,7 +641,9 @@
 			)
 		)
 		(property "Value" "CLK_A1"
-			(at 74.93 119.38 0)
+			(at 68.072 118.872 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -532,30 +652,39 @@
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
 			(at 74.93 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" ""
 			(at 74.93 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "Buffer output to the A1 DW3210 XTI pin."
 			(at 74.93 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
+		)
+		(pin "1"
+			(uuid "8140796b-761b-4c32-ae15-0821921db0f3")
 		)
 		(instances
 			(project "bay-station"
@@ -570,13 +699,17 @@
 		(lib_id "Connector:TestPoint")
 		(at 95.25 115.57 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
-		(uuid "88888888-0000-4000-8000-000000000008")
+		(uuid "88888888-0000-4000-8000-00000000000b")
 		(property "Reference" "TP8"
 			(at 95.25 111.76 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -585,6 +718,8 @@
 		)
 		(property "Value" "CLK_A2"
 			(at 95.25 119.38 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -593,30 +728,39 @@
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
 			(at 95.25 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" ""
 			(at 95.25 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "Buffer output to the A2 DW3210 XTI pin."
 			(at 95.25 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
+		)
+		(pin "1"
+			(uuid "c9ab5163-34fd-4c71-ac37-9ae528c96f56")
 		)
 		(instances
 			(project "bay-station"
@@ -631,13 +775,17 @@
 		(lib_id "Connector:TestPoint")
 		(at 115.57 115.57 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
-		(uuid "88888888-0000-4000-8000-000000000009")
+		(uuid "88888888-0000-4000-8000-00000000000c")
 		(property "Reference" "TP9"
 			(at 115.57 111.76 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -646,6 +794,8 @@
 		)
 		(property "Value" "CLK_A3"
 			(at 115.57 119.38 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -654,30 +804,39 @@
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
 			(at 115.57 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" ""
 			(at 115.57 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "Buffer output to the A3 DW3210 XTI pin."
 			(at 115.57 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
+		)
+		(pin "1"
+			(uuid "a0fd7954-250f-48ff-bc7d-8656ba90acee")
 		)
 		(instances
 			(project "bay-station"
@@ -692,13 +851,17 @@
 		(lib_id "Connector:TestPoint")
 		(at 35.56 115.57 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(uuid "88888888-0000-4000-8000-000000000010")
 		(property "Reference" "TP10"
 			(at 35.56 111.76 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -707,6 +870,8 @@
 		)
 		(property "Value" "SPI_SCLK"
 			(at 35.56 119.38 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -715,30 +880,39 @@
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
 			(at 35.56 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" ""
 			(at 35.56 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "Shared SPI clock to all four anchors. Must be on SPIM3 -- the only high-speed SPI instance on the nRF52840."
 			(at 35.56 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
+		)
+		(pin "1"
+			(uuid "49359a94-73ef-41fa-bbe6-5ce53dac5a93")
 		)
 		(instances
 			(project "bay-station"
@@ -753,13 +927,17 @@
 		(lib_id "Connector:TestPoint")
 		(at 54.61 115.57 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(uuid "88888888-0000-4000-8000-000000000011")
 		(property "Reference" "TP11"
 			(at 54.61 111.76 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -767,7 +945,9 @@
 			)
 		)
 		(property "Value" "SPI_MOSI"
-			(at 54.61 119.38 0)
+			(at 54.356 124.714 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -776,30 +956,39 @@
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
 			(at 54.61 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" ""
 			(at 54.61 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "Shared SPI MOSI to all four anchors."
 			(at 54.61 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
+		)
+		(pin "1"
+			(uuid "4bd79ca7-ffc6-46c7-b09a-0e6251809c81")
 		)
 		(instances
 			(project "bay-station"
@@ -814,13 +1003,17 @@
 		(lib_id "Connector:TestPoint")
 		(at 74.93 115.57 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(uuid "88888888-0000-4000-8000-000000000012")
 		(property "Reference" "TP12"
-			(at 74.93 111.76 0)
+			(at 82.042 117.094 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -828,7 +1021,9 @@
 			)
 		)
 		(property "Value" "SPI_MISO"
-			(at 74.93 119.38 0)
+			(at 81.788 114.046 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -837,30 +1032,39 @@
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
 			(at 74.93 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" ""
 			(at 74.93 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "Shared SPI MISO from all four anchors."
 			(at 74.93 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
+		)
+		(pin "1"
+			(uuid "af42d6da-eff0-414c-96f0-95121be2fd32")
 		)
 		(instances
 			(project "bay-station"
@@ -875,13 +1079,17 @@
 		(lib_id "Connector:TestPoint")
 		(at 95.25 115.57 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(uuid "88888888-0000-4000-8000-000000000013")
 		(property "Reference" "TP13"
 			(at 95.25 111.76 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -890,6 +1098,8 @@
 		)
 		(property "Value" "IRQ_A0"
 			(at 95.25 119.38 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -898,30 +1108,39 @@
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
 			(at 95.25 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" ""
 			(at 95.25 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "Interrupt from the A0 center anchor. Makes the ranging exchange timing visible on a scope."
 			(at 95.25 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
+		)
+		(pin "1"
+			(uuid "58d65ad5-58c2-4f27-8e81-5c3819b7e0d9")
 		)
 		(instances
 			(project "bay-station"
@@ -936,13 +1155,17 @@
 		(lib_id "Connector:TestPoint")
 		(at 115.57 115.57 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(uuid "88888888-0000-4000-8000-000000000014")
 		(property "Reference" "TP14"
 			(at 115.57 111.76 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -951,6 +1174,8 @@
 		)
 		(property "Value" "ANCHOR_RSTn"
 			(at 115.57 119.38 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -959,30 +1184,39 @@
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
 			(at 115.57 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" ""
 			(at 115.57 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "Shared reset to all four DW3210s."
 			(at 115.57 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
+		)
+		(pin "1"
+			(uuid "3908e0e5-7142-4e0d-a28c-23aa75ee82af")
 		)
 		(instances
 			(project "bay-station"

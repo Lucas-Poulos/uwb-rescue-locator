@@ -1,7 +1,7 @@
 (kicad_sch
-	(version 20231120)
+	(version 20260306)
 	(generator "eeschema")
-	(generator_version "8.0")
+	(generator_version "10.0")
 	(uuid "9a5e3c04-7f21-4b8d-93a6-c40e18b7f52d")
 	(paper "A4")
 	(title_block
@@ -10,14 +10,22 @@
 	)
 	(lib_symbols
 		(symbol "Device:LED"
-			(pin_numbers hide)
+			(pin_numbers
+				(hide yes)
+			)
 			(pin_names
-				(offset 1.016) hide)
+				(offset 1.016)
+				(hide yes)
+			)
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
 			(property "Reference" "D"
 				(at 0 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -26,6 +34,8 @@
 			)
 			(property "Value" "LED"
 				(at 0 -2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -34,56 +44,78 @@
 			)
 			(property "Footprint" ""
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
-			(property "Datasheet" "~"
+			(property "Datasheet" ""
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "Description" "Light emitting diode"
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "ki_keywords" "LED diode"
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "ki_fp_filters" "LED* LED_SMD:* LED_THT:*"
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(symbol "LED_0_1"
 				(polyline
 					(pts
-						(xy -1.27 -1.27) (xy -1.27 1.27)
+						(xy -3.048 -0.762) (xy -4.572 -2.286) (xy -3.81 -2.286) (xy -4.572 -2.286) (xy -4.572 -1.524)
 					)
 					(stroke
-						(width 0.254)
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.778 -0.762) (xy -3.302 -2.286) (xy -2.54 -2.286) (xy -3.302 -2.286) (xy -3.302 -1.524)
+					)
+					(stroke
+						(width 0)
 						(type default)
 					)
 					(fill
@@ -104,7 +136,7 @@
 				)
 				(polyline
 					(pts
-						(xy 1.27 -1.27) (xy 1.27 1.27) (xy -1.27 0) (xy 1.27 -1.27)
+						(xy -1.27 -1.27) (xy -1.27 1.27)
 					)
 					(stroke
 						(width 0.254)
@@ -116,22 +148,10 @@
 				)
 				(polyline
 					(pts
-						(xy -3.048 -0.762) (xy -4.572 -2.286) (xy -3.81 -2.286) (xy -4.572 -2.286) (xy -4.572 -1.524)
+						(xy 1.27 -1.27) (xy 1.27 1.27) (xy -1.27 0) (xy 1.27 -1.27)
 					)
 					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy -1.778 -0.762) (xy -3.302 -2.286) (xy -2.54 -2.286) (xy -3.302 -2.286) (xy -3.302 -1.524)
-					)
-					(stroke
-						(width 0)
+						(width 0.254)
 						(type default)
 					)
 					(fill
@@ -177,17 +197,24 @@
 					)
 				)
 			)
+			(embedded_fonts no)
 		)
 		(symbol "Device:R"
-			(pin_numbers hide)
+			(pin_numbers
+				(hide yes)
+			)
 			(pin_names
 				(offset 0)
 			)
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
 			(property "Reference" "R"
 				(at 2.032 0 90)
+				(show_name no)
+				(do_not_autoplace no)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -196,6 +223,8 @@
 			)
 			(property "Value" "R"
 				(at 0 0 90)
+				(show_name no)
+				(do_not_autoplace no)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -204,47 +233,57 @@
 			)
 			(property "Footprint" ""
 				(at -1.778 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
-			(property "Datasheet" "~"
+			(property "Datasheet" ""
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "Description" "Resistor"
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "ki_keywords" "R res resistor"
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(property "ki_fp_filters" "R_*"
 				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(hide yes)
 				)
 			)
 			(symbol "R_0_1"
@@ -264,7 +303,7 @@
 				(pin passive line
 					(at 0 3.81 270)
 					(length 1.27)
-					(name "~"
+					(name ""
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -282,7 +321,7 @@
 				(pin passive line
 					(at 0 -3.81 90)
 					(length 1.27)
-					(name "~"
+					(name ""
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -298,10 +337,12 @@
 					)
 				)
 			)
+			(embedded_fonts no)
 		)
 	)
 	(text "Indicators -- status LEDs (D4-D7)"
-		(at 30.48 25.40 0)
+		(exclude_from_sim no)
+		(at 30.48 25.4 0)
 		(effects
 			(font
 				(size 2.5 2.5)
@@ -310,6 +351,7 @@
 		(uuid "22222222-0000-4000-8000-000000000001")
 	)
 	(text "Placement only: no wires or global labels yet, same convention as this\nboard's other unwired sheets.\n\nD4/D5/D6 are driven from MCP73871's open-drain status outputs on\npower_bms.kicad_sch, all three currently unconnected:\n  D4 <- STAT1 (pin 8)   charging\n  D5 <- STAT2 (pin 7)   charge complete\n  D6 <- ~PG   (pin 6)   external power good\nMicrochip's own typical application circuit (DS20002090E page 2) drives\nLEDs from these pins through series resistors.\n\nD7 = system status, intended to be driven from a BT840 (nRF52840) GPIO so firmware\ncan indicate ranging / uplink / fault. GPIO not yet allocated.\n\nThis board had no user-visible indication of any kind before these were\nadded -- no way to tell whether it was powered, charging, or ranging, which\nmatters for a device whose whole purpose is locating someone in trouble.\n\n0805 LEDs (this board is not size-constrained; matches the existing\nlibs/components.csv status-LED row). Series resistors 0603 per the project\nstandard. R = 1k is indicative; set it once the drive rail is fixed."
+		(exclude_from_sim no)
 		(at 30.48 33.02 0)
 		(effects
 			(font
@@ -322,13 +364,17 @@
 		(lib_id "Device:LED")
 		(at 39.37 95.25 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(uuid "22222222-0000-4000-8000-000000000003")
 		(property "Reference" "D4"
 			(at 39.37 91.44 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -337,6 +383,8 @@
 		)
 		(property "Value" "LED"
 			(at 39.37 99.06 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -345,30 +393,42 @@
 		)
 		(property "Footprint" "LED_SMD:LED_0805_2012Metric"
 			(at 39.37 95.25 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" ""
 			(at 39.37 95.25 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "Charging-status LED -- driven from MCP73871 STAT1 (pin 8, power_bms.kicad_sch)"
 			(at 39.37 95.25 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
+		)
+		(pin "1"
+			(uuid "27977b83-02a1-48dc-83a2-1b59c047aa56")
+		)
+		(pin "2"
+			(uuid "f0b12017-e8b8-4508-88ea-3549333b822f")
 		)
 		(instances
 			(project "bay-station"
@@ -383,13 +443,17 @@
 		(lib_id "Device:R")
 		(at 54.61 95.25 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(uuid "22222222-0000-4000-8000-000000000004")
 		(property "Reference" "R29"
 			(at 54.61 91.44 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -398,6 +462,8 @@
 		)
 		(property "Value" "1k"
 			(at 54.61 99.06 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -406,30 +472,42 @@
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 54.61 95.25 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" ""
 			(at 54.61 95.25 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "Series resistor for D4 (STAT1)."
 			(at 54.61 95.25 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
+		)
+		(pin "1"
+			(uuid "b4a50255-895c-4f43-8dff-159ca1167248")
+		)
+		(pin "2"
+			(uuid "8d3ec20b-cea5-4fc5-b74e-76e74d33e204")
 		)
 		(instances
 			(project "bay-station"
@@ -444,13 +522,17 @@
 		(lib_id "Device:LED")
 		(at 39.37 110.49 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(uuid "22222222-0000-4000-8000-000000000005")
 		(property "Reference" "D5"
 			(at 39.37 106.68 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -458,7 +540,9 @@
 			)
 		)
 		(property "Value" "LED"
-			(at 39.37 114.30 0)
+			(at 39.37 114.3 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -467,30 +551,42 @@
 		)
 		(property "Footprint" "LED_SMD:LED_0805_2012Metric"
 			(at 39.37 110.49 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" ""
 			(at 39.37 110.49 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "Charge-complete LED -- driven from MCP73871 STAT2 (pin 7, power_bms.kicad_sch)"
 			(at 39.37 110.49 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
+		)
+		(pin "1"
+			(uuid "81cf67c0-4f7b-4a22-9ebf-e333dca3b184")
+		)
+		(pin "2"
+			(uuid "58ab6e00-4eef-49a4-8f7d-8a01a2cee134")
 		)
 		(instances
 			(project "bay-station"
@@ -505,13 +601,17 @@
 		(lib_id "Device:R")
 		(at 54.61 110.49 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(uuid "22222222-0000-4000-8000-000000000006")
 		(property "Reference" "R30"
 			(at 54.61 106.68 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -519,7 +619,9 @@
 			)
 		)
 		(property "Value" "1k"
-			(at 54.61 114.30 0)
+			(at 54.61 114.3 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -528,30 +630,42 @@
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 54.61 110.49 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" ""
 			(at 54.61 110.49 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "Series resistor for D5 (STAT2)."
 			(at 54.61 110.49 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
+		)
+		(pin "1"
+			(uuid "a021aebc-79d2-422e-9ea7-8e4467ffba8c")
+		)
+		(pin "2"
+			(uuid "c8647a9f-3fb9-4b17-9b8c-dae8bb8c0072")
 		)
 		(instances
 			(project "bay-station"
@@ -566,13 +680,17 @@
 		(lib_id "Device:LED")
 		(at 39.37 124.46 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(uuid "22222222-0000-4000-8000-000000000007")
 		(property "Reference" "D6"
 			(at 39.37 120.65 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -581,6 +699,8 @@
 		)
 		(property "Value" "LED"
 			(at 39.37 128.27 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -589,30 +709,42 @@
 		)
 		(property "Footprint" "LED_SMD:LED_0805_2012Metric"
 			(at 39.37 124.46 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" ""
 			(at 39.37 124.46 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "External-power-good LED -- driven from MCP73871 ~PG (pin 6, power_bms.kicad_sch)"
 			(at 39.37 124.46 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
+		)
+		(pin "1"
+			(uuid "05fcd10f-254f-493e-a346-1ea74f941e30")
+		)
+		(pin "2"
+			(uuid "80ebc0ed-92d5-4a0a-b262-ae5ab95b4f14")
 		)
 		(instances
 			(project "bay-station"
@@ -627,13 +759,17 @@
 		(lib_id "Device:R")
 		(at 54.61 124.46 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(uuid "22222222-0000-4000-8000-000000000008")
 		(property "Reference" "R31"
 			(at 54.61 120.65 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -642,6 +778,8 @@
 		)
 		(property "Value" "1k"
 			(at 54.61 128.27 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -650,30 +788,42 @@
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 54.61 124.46 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" ""
 			(at 54.61 124.46 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "Series resistor for D6 (~PG)."
 			(at 54.61 124.46 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
+		)
+		(pin "1"
+			(uuid "8d6c5db6-6db0-45a0-b6a3-0d705f7c26ed")
+		)
+		(pin "2"
+			(uuid "b57198de-6164-4f02-965e-0f9512c27b63")
 		)
 		(instances
 			(project "bay-station"
@@ -686,15 +836,19 @@
 	)
 	(symbol
 		(lib_id "Device:LED")
-		(at 39.37 139.70 0)
+		(at 39.37 139.7 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(uuid "22222222-0000-4000-8000-000000000009")
 		(property "Reference" "D7"
 			(at 39.37 135.89 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -703,6 +857,8 @@
 		)
 		(property "Value" "LED"
 			(at 39.37 143.51 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -710,31 +866,43 @@
 			)
 		)
 		(property "Footprint" "LED_SMD:LED_0805_2012Metric"
-			(at 39.37 139.70 0)
+			(at 39.37 139.7 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
-			(at 39.37 139.70 0)
+		(property "Datasheet" ""
+			(at 39.37 139.7 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "System status LED -- intended to be driven from a BT840 (nRF52840) GPIO (not yet allocated)"
-			(at 39.37 139.70 0)
+			(at 39.37 139.7 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
+		)
+		(pin "1"
+			(uuid "3098f95f-9a0e-4665-bf39-8e1d9752e765")
+		)
+		(pin "2"
+			(uuid "dc99e125-7ba9-4297-a704-4eaccef0e61a")
 		)
 		(instances
 			(project "bay-station"
@@ -747,15 +915,19 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 54.61 139.70 0)
+		(at 54.61 139.7 0)
 		(unit 1)
+		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
 		(dnp no)
 		(uuid "22222222-0000-4000-8000-00000000000a")
 		(property "Reference" "R32"
 			(at 54.61 135.89 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -764,6 +936,8 @@
 		)
 		(property "Value" "1k"
 			(at 54.61 143.51 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -771,31 +945,43 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 54.61 139.70 0)
+			(at 54.61 139.7 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
-			(at 54.61 139.70 0)
+		(property "Datasheet" ""
+			(at 54.61 139.7 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Description" "Series resistor for D7 system-status LED."
-			(at 54.61 139.70 0)
+			(at 54.61 139.7 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
+		)
+		(pin "1"
+			(uuid "798a1768-6bc1-42a9-b62f-e10728466853")
+		)
+		(pin "2"
+			(uuid "075a708a-b15d-4c97-8167-e61656ad04d7")
 		)
 		(instances
 			(project "bay-station"
