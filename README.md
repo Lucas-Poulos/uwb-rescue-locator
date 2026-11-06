@@ -301,6 +301,82 @@ their only interface is the UWB radio link. The bay station's own antennas
 are wired to it over SMA coax (CH5 at 6489.6 MHz is above U.FL's 6 GHz
 rating). See `docs/system-overview.md` and `docs/positioning.md`.
 
+## Design specifications
+
+Quick-reference only -- full reasoning, error budgets, and datasheet
+citations live in `docs/positioning.md` (RF/clock/mechanical) and
+`docs/decisions.md` (every component/architecture call). Anything not listed
+here as resolved is still an open decision; check there before assuming a
+number is final.
+
+**Performance target**
+| | |
+|---|---|
+| Accuracy | 10-30 cm |
+| Range | ~10 m |
+| Baseline (A0-to-outer-antenna spacing) | ~1 m as built; frame size is the real limit, not cable loss |
+
+**RF**
+| | |
+|---|---|
+| UWB channel | Channel 5, 6489.6 MHz |
+| UWB IC, bay station | 4x Qorvo DW3210 (QFN40, non-PDoA) -- U4=A0 center, U5-U7=A1-A3 outer |
+| UWB IC, wristband | Qorvo DW3110 (WLCSP), inside the DWM3001C module |
+| UWB connectors | SMA -- CH5 is above U.FL/W.FL/MMCX/MCX's 6 GHz rating and SMB's 4 GHz rating |
+| Link budget | 86 dB available (CH5, 850 kbps, 1024-symbol preamble); ~17 dB margin at 10 m |
+| Antennas (bay station) | Not yet selected -- candidates covering CH5: Taoglas UWC.01 / ILA.68 / UWCCP.01 |
+
+**Clock (bay station array)**
+| | |
+|---|---|
+| Reference | One 38.4 MHz TCXO -> 1:4 low-skew fan-out buffer -> all 4 DW3210 XTI pins |
+| Coupling | 2200 pF AC-coupled into each XTI; 1 pF from each XTO to ground |
+| TCXO spec | 0.8 V-VDD2 Vpp, -132 dBc/Hz @ 1 kHz, -145 dBc/Hz @ 10 kHz, 40-60% duty (DW3000 Datasheet Table 10) |
+| TCXO + buffer part numbers | Open |
+
+**Positioning architecture**
+Hybrid two-way-ranging + TDoA, not symmetric multilateration -- see
+`docs/positioning.md` for the full derivation.
+| | |
+|---|---|
+| Center anchor (A0) | Two-way ranging with the wristband -> range |
+| Outer anchors (A1-A3) | TDoA vs. A0 on the same tag transmission -> direction |
+| System | 4 equations, 3 unknowns -- overdetermined by 1; use the residual as a quality metric |
+| Mechanical | Rigid frame fixes geometry (no install-time survey); A0 offset 20-30 cm out of the A1-A3 plane to avoid a mirror ambiguity |
+| Array calibration | Required, not optional (generic +/-6 cm spec is 3x too loose at this baseline); procedure/fixture still open |
+
+**Power**
+| | Wristband | Bay station |
+|---|---|---|
+| Regulator | TI TPS7A0233PDBVR LDO, 3.3V | TI TPS62A02PDDCR buck, 2A |
+| Load vs. rating | ~43 mA (4.6x headroom) | ~347-682 mA depending on estimate (3-6x headroom; recheck once clock parts are chosen) |
+| Standby | ~2.7 uA | n/a -- BMS optimized for runtime, not size |
+
+**Connectivity**
+| | |
+|---|---|
+| Wristband <-> bay station | UWB only -- one tag transmission per exchange, no other radio link |
+| Bay station -> laptop | Bluetooth LE (GATT service) -- no WiFi, no internet uplink |
+| Georeferencing | u-blox MAX-M10S GNSS + ST LIS3MDL magnetometer + ST LIS2DH accelerometer (bay station only; position + heading both required) |
+
+**Cost** (one prototype pair, hobbyist qty-1 pricing -- see `docs/bom-cost.md`)
+| | |
+|---|---|
+| Wristband | ~$67 |
+| Bay station | ~$278 |
+| Total | ~$345 |
+
+**Regulatory**
+No FCC/CE certification -- university prototype, not sold or deployed as a
+product. Revisit as a first-class schedule item if that ever changes.
+
+**Toolchain**
+| | |
+|---|---|
+| KiCad | 10.0.5 (files on disk still in 8.0 format) |
+| MCUs | Both Nordic -- nRF52833 (wristband, inside DWM3001C) / nRF52840 (bay station, inside the Fanstel BT840) |
+| Firmware SDK | Open -- nRF5 SDK vs. Zephyr / nRF Connect SDK |
+
 ## Repo layout
 
 ```
