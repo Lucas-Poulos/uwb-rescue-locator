@@ -38,8 +38,8 @@ Ten hierarchical sheets, all registered in `bay-station.kicad_pro`'s
 
 | Sheet | Status | Contents |
 |---|---|---|
-| `power_bms` | **Wired** (62 explicit wires added 2026-09-29 over the existing global-label connectivity; same nets, now drawn), 1 ERC item left (U2 SCL has no I2C pull-up -- fix held in PR #9) | Barrel jack + USB-C in -> MCP73871 power-path -> MAX17048 gauge |
-| `connectivity` | Placement only | **BT840 (U3) placed** + C5/C6/C7 decoupling. Symbol authored; footprint still needed |
+| `power_bms` | **Wired** (62 explicit wires added 2026-09-29 over the existing global-label connectivity; same nets, now drawn), 1 ERC item left (U2 SCL has no I2C pull-up -- its fix, R37-R39 below, landed via PR #9) | Barrel jack + USB-C in -> MCP73871 power-path -> MAX17048 gauge |
+| `connectivity` | Placement only | **BT840 (U3) placed** + C5/C6/C7 decoupling + **R37-R39 I2C pull-ups (2.2k to +3V3, placed not wired)**. Symbol authored; footprint still needed |
 | `uwb_array` | Placement only | **4x DW3210 placed** (U4=A0 center, U5-U7=A1-A3 outer) + R10-R17 straps + R25-R28 IRQ pulldowns |
 | `regulation` | **Partially wired** (11 wires, 3 junctions, 5 GND symbols added 2026-09-29); U8's VIN, EN, and PG still unconnected per ERC | TPS62A02PDDCR buck -> +3V3_SYS |
 | `programming_debug` | Placement only in practice (1 wire, 1 junction, 1 GND symbol added 2026-09-29 -- just the ground tie; J3 and SW2 still fully unwired) | **Rebuilt for Nordic**: SWD header (J3) + RESET button (SW2). ESP32 circuitry and the second USB-C deleted |

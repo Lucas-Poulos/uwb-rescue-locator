@@ -40,17 +40,26 @@ footprints placed on the PCB, no wires drawn -- every net is carried by
   surface for no functional benefit at this stage. The three pins are still
   brought out via global labels (`nPG`, `nSTAT2`, `nSTAT1_LBO`) so a future
   sheet can add LEDs or read them into a host MCU without any rework here.
-- **MAX17048 ALRT/SCL/SDA have no pull-ups on this sheet.** ALRT is
-  open-drain and SCL/SDA need I2C pull-ups per the datasheet, but the
-  correct pull-up rail is whatever logic-level supply the future I2C host
-  (ESP32-S3, on the not-yet-built connectivity sheet) actually uses -- not
-  necessarily the raw ~3.0-4.4V `VBATT_PROT` rail present on this sheet
-  (MAX17048's own VDD). Pulling SCL/SDA/ALRT up to `VBATT_PROT` now would be
-  a guess that could exceed a 3.3V-only MCU GPIO's absolute max rating at
-  high state-of-charge. All three are brought out as bare global labels
-  (`FG_ALRT`, `FG_SCL`, `FG_SDA`) for the connectivity sheet to terminate
-  correctly once the host's supply rail is defined. See "Known ERC finding"
-  below for the one ERC error this produces.
+- **MAX17048 ALRT/SCL/SDA pull-ups: RESOLVED 2026-09-28**, on
+  `connectivity.kicad_sch` as **R37 (SDA), R38 (SCL), R39 (ALRT), all 2.2k
+  to `+3V3`** -- exactly as this note anticipated, once the host's rail was
+  defined. They are deliberately NOT on this sheet: the pull-up rail belongs
+  to the host's logic supply, not to the battery rail that happens to pass
+  through here.
+
+  The caution below was correct and is worth keeping. `VBATT_PROT` reaches
+  ~4.2 V at full charge, which would exceed the nRF52840's 3.6 V I/O
+  maximum. **Pull to `+3V3`, never to `VBATT_PROT`.**
+
+  What makes `+3V3` safe in the other direction -- the MAX17048 being
+  powered from the battery rail while its bus sits at 3.3 V -- is that I2C
+  is open-drain, so no device ever drives above the pull-up rail, and the
+  MAX17048's **VIH is a fixed 1.4 V, not 0.7*VDD** (datasheet 19-6171 Rev 7),
+  so it reads a 3.3 V bus correctly even at 4.2 V VDD. Its SDA/SCL/ALRT pins
+  are rated to **+5.5 V absolute max**. No level shifter is needed.
+
+  The three global labels (`FG_ALRT`, `FG_SCL`, `FG_SDA`) are unchanged; the
+  connectivity sheet now terminates them. See "Known ERC finding" below.
 - **Barrel jack and USB-C share one `+5V_IN` net.** Per
   `libs/components.csv`, the USB-C receptacle is documented as an
   *alternate* continuous-power input to the barrel jack, not a simultaneous
