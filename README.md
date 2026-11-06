@@ -148,7 +148,7 @@ project-wide unique per board (checked, no collisions) -- see each
 |---|---|---|
 | Power BMS | **Wired** (global labels), ERC has 8 known/expected items (see `power_bms_notes.md`) | Barrel jack + USB-C power-only input -> MCP73871 power-path charger -> MAX17048 fuel gauge; separate backup-battery input with its own AO3401A reverse-polarity FET + TVS |
 | Connectivity | Placement only, not wired | Fanstel BT840 (U3, nRF52840) + decoupling. Symbol authored from the real datasheet |
-| UWB Array | Placement only, not wired | 4x DW3210 (U4=A0 center, U5-U7=A1-A3 outer) + GPIO5/6 straps (R10-R17) + IRQ pulldowns (R25-R28) |
+| UWB Array | Placement only, not wired | 4x DW3210 (U4=A0 center, U5-U7=A1-A3 outer) + GPIO5/6 straps (R10-R17) + IRQ pulldowns (R25-R28) + full per-anchor decoupling from Qorvo Figure 32 (C40-C74, FB1-FB4 beads, R33-R36 RF2 terminations) |
 | Mechanical | Placement only | 4x M3 mounting holes |
 | Regulation | **Partially wired** (11 wires, 3 junctions, 5 GND symbols added 2026-09-29); U8's VIN, EN, and PG still unconnected (ERC) | TPS62A02PDDCR buck converter -- steps the unregulated `+VSYS` rail down to a safe ~3.3V for the BT840 host and the DW3210 anchors |
 | Clock Distribution | Placement only, **new** | Shared 38.4MHz reference for the 4x DW3210 array: AC-coupling + XTO caps placed, TCXO/buffer TBD |
@@ -230,22 +230,23 @@ decisions (anchor placement, uplink backend, etc.), is in
 ### In-flight work on GitHub (as of 2026-11-06)
 
 Merged into `main` today: this Design Specifications section, the bay
-station's power/regulation/programming-debug wiring pass described above,
-and the decision not to add an external wristband IMU (`docs/decisions.md`
--- the DWM3001C's built-in LIS2DH12 covers it).
+station's power/regulation/programming-debug wiring pass, the decision not
+to add an external wristband IMU (`docs/decisions.md` -- the DWM3001C's
+built-in LIS2DH12 covers it), PR #9 (the bay station's missing I2C pull-ups,
+R37-R39), and PR #8 (the full per-anchor DW3210 decoupling set, C40-C74 +
+FB1-FB4 + R33-R36, from Qorvo's own reference design).
 
-Two PRs are **blocked on a rebase, not a design problem**. Both were written
-against the bay station schematic before the wiring pass above touched the
-same sheets, so they now conflict textually rather than logically:
-- **#9** `fix/i2c-pullups` -- the missing bay-station I2C pull-ups (R37-R39),
-  conflicts in `bay-station/connectivity.kicad_sch`.
-- **#8** `feat/uwb-decoupling` -- the DW3210 decoupling network imported from
-  Qorvo's own reference design, conflicts in `bay-station/uwb_array.kicad_sch`.
-
-Re-resolving a KiCad schematic merge conflict by hand in a text editor is
-exactly what `CONTRIBUTING.md` warns silently corrupts a sheet -- rebase each
-onto current `main` and re-check in the KiCad GUI instead of resolving the
-`<<<<<<<` markers directly.
+#8 and #9 both textually conflicted with the power-wiring pass on
+`bay-station/connectivity.kicad_sch` and `uwb_array.kicad_sch` respectively,
+because those files got reserialized to KiCad 10 format in between. Each was
+hand-ported onto the reserialized files rather than text-merged -- see
+`b7ab51f` and `4ef1099` for exactly what that involved and how it was
+verified (balanced parens, no duplicate references, ERC recognizing every
+new component with precisely the expected violation delta). This is the one
+case where resolving a KiCad schematic conflict by hand was done carefully
+and checked, not the norm -- `CONTRIBUTING.md`'s warning about silent
+corruption from hand-resolving `.kicad_sch` conflicts still stands for
+anything less thoroughly verified.
 
 One PR needs a **team decision, not a merge**: **#7**
 `feat/bay-station-wifi` adds an ESP32-C5 Wi-Fi co-processor and explicitly
