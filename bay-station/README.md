@@ -38,11 +38,11 @@ Ten hierarchical sheets, all registered in `bay-station.kicad_pro`'s
 
 | Sheet | Status | Contents |
 |---|---|---|
-| `power_bms` | **Wired** (global labels), 8 known/expected ERC items | Barrel jack + USB-C in -> MCP73871 power-path -> MAX17048 gauge |
+| `power_bms` | **Wired** (62 explicit wires added 2026-09-29 over the existing global-label connectivity; same nets, now drawn), 1 ERC item left (U2 SCL has no I2C pull-up -- fix held in PR #9) | Barrel jack + USB-C in -> MCP73871 power-path -> MAX17048 gauge |
 | `connectivity` | Placement only | **BT840 (U3) placed** + C5/C6/C7 decoupling. Symbol authored; footprint still needed |
 | `uwb_array` | Placement only | **4x DW3210 placed** (U4=A0 center, U5-U7=A1-A3 outer) + R10-R17 straps + R25-R28 IRQ pulldowns |
-| `regulation` | Placement only | TPS62A02PDDCR buck -> +3V3_SYS |
-| `programming_debug` | Placement only | **Rebuilt for Nordic**: SWD header (J3) + RESET button (SW2). ESP32 circuitry and the second USB-C deleted |
+| `regulation` | **Partially wired** (11 wires, 3 junctions, 5 GND symbols added 2026-09-29); U8's VIN, EN, and PG still unconnected per ERC | TPS62A02PDDCR buck -> +3V3_SYS |
+| `programming_debug` | Placement only in practice (1 wire, 1 junction, 1 GND symbol added 2026-09-29 -- just the ground tie; J3 and SW2 still fully unwired) | **Rebuilt for Nordic**: SWD header (J3) + RESET button (SW2). ESP32 circuitry and the second USB-C deleted |
 | `clock_dist` | Placement only, **new** | Shared 38.4MHz reference: AC-coupling + XTO caps placed, TCXO/buffer TBD |
 | `indicators` | Placement only, **new** | Status LEDs D4-D7 (charge, charge-done, power-good, system) |
 | `testpoints` | Placement only, **new** | TP1-TP14: rails, 2x GND, TCXO + 4x anchor clock, SPI, IRQ, reset |
@@ -52,14 +52,25 @@ Ten hierarchical sheets, all registered in `bay-station.kicad_pro`'s
 **"Placement only" means components are instantiated but nothing is wired**
 -- no wires, no global labels.
 
-**ERC, re-run 2026-09-23 with kicad-cli 10.0.6: 518 violations, ZERO errors.**
-All warnings: 360 pin_not_connected, 98 power_pin_not_driven, 36
-pin_not_driven, 9 lib_symbol_mismatch, 8 ground_pin_not_ground (the DW3210
-VSS pins, which resolve once grounds are wired), 6 isolated_pin_label (the
-MCP73871 status outputs, which `indicators` will terminate), and 1
-lib_symbol_issues on U8 -- investigated and deliberately left alone, see
-`../docs/decisions.md`. DRC reports one `invalid_outline`, because no board
-outline is drawn yet.
+**ERC, re-run 2026-11-06 with kicad-cli 10.0.5: 497 violations.** 342
+pin_not_connected, 96 power_pin_not_driven, 35 pin_not_driven, 9
+lib_symbol_mismatch, 8 ground_pin_not_ground (the DW3210 VSS pins, still
+unresolved), 6 isolated_pin_label (the MCP73871 status outputs, which
+`indicators` will terminate), and 1 lib_symbol_issues on U8 -- investigated
+and deliberately left alone, see `../docs/decisions.md`. Down from 518
+violations before the 2026-09-29 power/regulation/programming-debug wiring
+pass, entirely from pin_not_connected (360->342), power_pin_not_driven
+(98->96) and pin_not_driven (36->35) dropping as wiring landed -- nothing
+regressed.
+
+**Correction: this was never "ZERO errors."** The previous version of this
+line said so; it wasn't true then either. KiCad's default ERC ruleset marks
+most unconnected-input and unconnected-power-pin findings as `error`
+severity, not `warning` -- 473 of the 497 violations above are `error`
+severity. "Expected, documented, and left for a sheet that isn't wired yet"
+is not the same claim as "warning-level," and conflating them here was a
+real documentation bug, not a wiring one. DRC reports one `invalid_outline`,
+because no board outline is drawn yet.
 
 ### The PCB
 
@@ -76,10 +87,14 @@ The dielectric numbers (er 4.5, tan d 0.02) are KiCad's FR4 defaults, not
 datasheet values. Controlled impedance means the fab's stackup wins.
 
 **Nothing else is on the board.** No footprints are placed and no outline is
-drawn, and neither is worth doing yet: every sheet is still placement-only,
-so `kicad-cli sch export netlist` returns **zero nets**. Importing footprints
-now would give an unconnected pile with no ratsnest to place against. Wire
-the sheets first.
+drawn, and neither is worth doing yet. `power_bms`, `regulation` and
+`programming_debug` now have some real wiring (see Status above), but most
+sheets are still placement-only -- as of 2026-11-06,
+`kicad-cli sch export netlist` reports 372 nets, of which 341 are still
+single-pin `unconnected-(...)` placeholders, leaving ~31 real nets, mostly
+grounds and rail handoffs. Importing footprints now would still give a
+mostly-unconnected pile with little ratsnest to place against. Wire the
+remaining sheets first.
 
 Three parts also could not be placed even if it were wired, because they
 have no footprint assigned: **L1** (no exact KiCad match for the Coilcraft
@@ -211,10 +226,13 @@ never assigned one -- newly found). See `../docs/decisions.md`.
 
 ### Next up
 
-1. **Wire the sheets.** Everything is placement-only, so there are zero nets
-   and the PCB has nothing to import. This is now the real blocker, ahead of
-   the footprint work: power rails from `power_bms`, SPI/GPIO between U3 and
-   the anchors, the clock fan-out, and the I2C bus U10/U11 share with U2.
+1. **Wire the remaining sheets.** `power_bms`, `regulation`, and
+   `programming_debug` have a start (see Status above); `connectivity`,
+   `uwb_array`, `clock_dist`, `gnss`, `indicators`, and `testpoints` are
+   still placement-only, so the PCB has little to import yet. This is now
+   the real blocker, ahead of the footprint work: power rails from
+   `power_bms`, SPI/GPIO between U3 and the anchors, the clock fan-out, and
+   the I2C bus U10/U11 share with U2.
 2. **Resolve the three unassigned footprints:** U3 (BT840 -- import a vendor
    one, do not hand-author; check pad naming), L1 (pick the exact inductor
    PN) and SW2 (RESET button, no part chosen). DW3210 already has one --

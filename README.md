@@ -78,12 +78,15 @@ Before pushing anything, also read `CONTRIBUTING.md` -- branch off `main`,
 don't edit a sheet someone else is actively working on, and PRs need review
 (branch protection is on).
 
-## Status (last updated 2026-09-19)
+## Status (last updated 2026-11-06)
 
-**Schematic capture is in progress on both boards. Nothing is wired yet
-except each board's own Power/BMS sheet.** If you're an agent or a new
-teammate picking this up cold, read this whole section before touching
-anything -- it's written to be a complete handoff.
+**Schematic capture is in progress on both boards.** Each board's Power/BMS
+sheet is wired. The bay station's Regulation and Programming/Debug sheets
+are now partially wired (grounds tied, some signal paths still open as of
+2026-09-29) -- see the per-sheet table below. Everything else is still
+placement-only. If you're an agent or a new teammate picking this up cold,
+read this whole section before touching anything -- it's written to be a
+complete handoff.
 
 > ### Architecture change in flight: the bay station's anchors
 >
@@ -147,12 +150,12 @@ project-wide unique per board (checked, no collisions) -- see each
 | Connectivity | Placement only, not wired | Fanstel BT840 (U3, nRF52840) + decoupling. Symbol authored from the real datasheet |
 | UWB Array | Placement only, not wired | 4x DW3210 (U4=A0 center, U5-U7=A1-A3 outer) + GPIO5/6 straps (R10-R17) + IRQ pulldowns (R25-R28) |
 | Mechanical | Placement only | 4x M3 mounting holes |
-| Regulation | Placement only, not wired | TPS62A02PDDCR buck converter -- steps the unregulated `+VSYS` rail down to a safe ~3.3V for the BT840 host and the DW3210 anchors |
+| Regulation | **Partially wired** (11 wires, 3 junctions, 5 GND symbols added 2026-09-29); U8's VIN, EN, and PG still unconnected (ERC) | TPS62A02PDDCR buck converter -- steps the unregulated `+VSYS` rail down to a safe ~3.3V for the BT840 host and the DW3210 anchors |
 | Clock Distribution | Placement only, **new** | Shared 38.4MHz reference for the 4x DW3210 array: AC-coupling + XTO caps placed, TCXO/buffer TBD |
 | Indicators | Placement only | Status LEDs: D4 charging, D5 charge-done, D6 power-good (all MCP73871), D7 system (host GPIO) |
 | Test Points | Placement only | TP1-TP14: rails, 2x GND, TCXO + 4x anchor clock, SPI, IRQ, reset |
 | GNSS / Orientation | Placement only, **new** | MAX-M10S GNSS (U9) + LIS3MDL magnetometer (U10) + LIS2DH accelerometer (U11) -- georeferences the array |
-| Programming/Debug | Placement only | **Rebuilt for Nordic**: SWD header (J3) + RESET button (SW2). ESP32 circuitry and the second USB-C deleted |
+| Programming/Debug | Placement only in practice (1 wire, 1 junction, 1 GND symbol added 2026-09-29 -- just the ground tie) | **Rebuilt for Nordic**: SWD header (J3) + RESET button (SW2), both still fully unwired per ERC. ESP32 circuitry and the second USB-C deleted |
 
 "Placement only" sheets deliberately show a lot of ERC "not connected"/"not
 driven" warnings -- that's expected, not a bug, until they get wired.
@@ -224,6 +227,32 @@ decisions (anchor placement, uplink backend, etc.), is in
   long-standing uncommitted working-tree state -- don't touch it, don't
   assume its README reflects its actual working tree.
 
+### In-flight work on GitHub (as of 2026-11-06)
+
+Merged into `main` today: this Design Specifications section, the bay
+station's power/regulation/programming-debug wiring pass described above,
+and the decision not to add an external wristband IMU (`docs/decisions.md`
+-- the DWM3001C's built-in LIS2DH12 covers it).
+
+Two PRs are **blocked on a rebase, not a design problem**. Both were written
+against the bay station schematic before the wiring pass above touched the
+same sheets, so they now conflict textually rather than logically:
+- **#9** `fix/i2c-pullups` -- the missing bay-station I2C pull-ups (R37-R39),
+  conflicts in `bay-station/connectivity.kicad_sch`.
+- **#8** `feat/uwb-decoupling` -- the DW3210 decoupling network imported from
+  Qorvo's own reference design, conflicts in `bay-station/uwb_array.kicad_sch`.
+
+Re-resolving a KiCad schematic merge conflict by hand in a text editor is
+exactly what `CONTRIBUTING.md` warns silently corrupts a sheet -- rebase each
+onto current `main` and re-check in the KiCad GUI instead of resolving the
+`<<<<<<<` markers directly.
+
+One PR needs a **team decision, not a merge**: **#7**
+`feat/bay-station-wifi` adds an ESP32-C5 Wi-Fi co-processor and explicitly
+reopens part of the 2026-09-19 "no WiFi" call (see `docs/decisions.md`,
+"Bay-station Wi-Fi uplink"). Its own GPIO allocation table is marked
+"PROPOSED, needs team sign-off" -- read that section before merging it.
+
 ### Not done yet (in rough next-up order)
 
 1. **Bay station: rework the anchor design** for four discrete DW3210s on
@@ -255,11 +284,19 @@ decisions (anchor placement, uplink backend, etc.), is in
 8. Bay station uplink protocol -- what the laptop actually receives over BLE
    (open decision). "Backend" no longer applies: there is no server, see
    `docs/system-overview.md`.
-9. PCB layout. The bay station's `.kicad_pcb` now has its **4-layer
+9. PCB layout. The bay station's `.kicad_pcb` has its **4-layer
    controlled-impedance stackup** set from DW3000 Section 7.3.2 Figure 35
-   (1.048mm finished) -- but nothing else: no footprints, no outline. The
-   wristband's is still an empty stub. The blocker is upstream of layout:
-   both boards are placement-only, so there are **zero nets** to import.
+   (1.048mm finished) but is otherwise still genuinely empty: 0 footprints,
+   no outline. Blocked upstream, same as before -- the schematic is mostly
+   placement-only, so there's nothing to import yet.
+
+   **Correction, 2026-11-06: the wristband's `.kicad_pcb` is not an empty
+   stub.** It already carries 36 footprints, a routed board outline, and
+   real DRC findings (100 unrouted ratsnest items, plus silkscreen/clearance
+   violations) from the DWM3001C migration (PR #5, merged). U3 (the
+   DWM3001C itself) has no footprint assigned yet, so it isn't among those
+   36 and can't be placed until one is imported -- see the footprint-caveats
+   note above.
 
 ## System overview
 
