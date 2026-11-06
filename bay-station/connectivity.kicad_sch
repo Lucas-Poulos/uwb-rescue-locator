@@ -164,6 +164,146 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "Device:R"
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 0)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "R"
+				(at 2.032 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "R"
+				(at 0 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at -1.778 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "R res resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "R_*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "R_0_1"
+				(rectangle
+					(start -1.016 -2.54)
+					(end 1.016 2.54)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "R_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "bay_station:BT840"
 			(pin_names
 				(offset 1.016)
@@ -1954,6 +2094,243 @@
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/615db515-37ad-4c26-9aab-9d4c2fc23c63"
 					(reference "C7")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 152.4 88.9 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "52b48099-f5a7-4135-b9d9-e04f0a0d4c92")
+		(property "Reference" "R37"
+			(at 152.4 85.09 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "2.2k"
+			(at 152.4 92.71 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 152.4 88.9 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 152.4 88.9 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "I2C SDA pull-up for the shared housekeeping bus (MAX17048 0x36, LIS3MDL 0x1C/0x1E, LIS2DH 0x18/0x19). Value derived, not defaulted: Rp(min) = (3V3 - VOL)/IOL = (3.3-0.4)/4mA = 725 ohm from the strongest sink on the bus (MAX17048 datasheet 19-6171 Rev 7: VOL 0.4 V at IOL 4 mA). 2.2k sinks 1.32 mA, well inside that, and by the I2C-bus spec (NXP UM10204, tr = 0.8473*Rp*Cb) allows 161 pF of bus capacitance at 400 kHz versus only 75 pF for a default 4.7k -- too tight for a bus that crosses from power_bms to gnss. MUST pull up to +3V3, NEVER to VBATT_PROT: the MAX17048's VDD is the battery rail and reaches 4.2 V at full charge, which would exceed the nRF52840's 3.6 V I/O maximum. No level shifter is needed in the other direction -- I2C is open-drain so no device drives above the pull-up rail, and the MAX17048 reads a 3.3 V bus correctly because its VIH is a fixed 1.4 V (not 0.7*VDD), with SDA/SCL/ALRT rated to +5.5 V absolute max."
+			(at 152.4 88.9 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "491133f5-f88a-4d3e-9638-08d5b4e81829")
+		)
+		(pin "2"
+			(uuid "182d6db5-b9cd-453a-b49c-9cade9a8c7d0")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/615db515-37ad-4c26-9aab-9d4c2fc23c63"
+					(reference "R37")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 167.64 88.9 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "5ee4134e-4175-4df5-bb51-775cb829452c")
+		(property "Reference" "R38"
+			(at 167.64 85.09 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "2.2k"
+			(at 167.64 92.71 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 167.64 88.9 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 167.64 88.9 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "I2C SCL pull-up for the same bus. Value derived, not defaulted: Rp(min) = (3V3 - VOL)/IOL = (3.3-0.4)/4mA = 725 ohm from the strongest sink on the bus (MAX17048 datasheet 19-6171 Rev 7: VOL 0.4 V at IOL 4 mA). 2.2k sinks 1.32 mA, well inside that, and by the I2C-bus spec (NXP UM10204, tr = 0.8473*Rp*Cb) allows 161 pF of bus capacitance at 400 kHz versus only 75 pF for a default 4.7k -- too tight for a bus that crosses from power_bms to gnss. MUST pull up to +3V3, NEVER to VBATT_PROT: the MAX17048's VDD is the battery rail and reaches 4.2 V at full charge, which would exceed the nRF52840's 3.6 V I/O maximum. No level shifter is needed in the other direction -- I2C is open-drain so no device drives above the pull-up rail, and the MAX17048 reads a 3.3 V bus correctly because its VIH is a fixed 1.4 V (not 0.7*VDD), with SDA/SCL/ALRT rated to +5.5 V absolute max."
+			(at 167.64 88.9 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "c5826d6f-90ce-43b7-8d27-c32b051135e5")
+		)
+		(pin "2"
+			(uuid "bf973082-6c3b-4e17-87f2-4194179c3408")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/615db515-37ad-4c26-9aab-9d4c2fc23c63"
+					(reference "R38")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 182.88 88.9 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "2f70db77-a51a-4dc1-bf85-e99aa05e3bc7")
+		(property "Reference" "R39"
+			(at 182.88 85.09 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "2.2k"
+			(at 182.88 92.71 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 182.88 88.9 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 182.88 88.9 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Pull-up for the MAX17048 ALRT output, which is open-drain and cannot assert a high level on its own (datasheet 19-6171 Rev 7). Value derived, not defaulted: Rp(min) = (3V3 - VOL)/IOL = (3.3-0.4)/4mA = 725 ohm from the strongest sink on the bus (MAX17048 datasheet 19-6171 Rev 7: VOL 0.4 V at IOL 4 mA). 2.2k sinks 1.32 mA, well inside that, and by the I2C-bus spec (NXP UM10204, tr = 0.8473*Rp*Cb) allows 161 pF of bus capacitance at 400 kHz versus only 75 pF for a default 4.7k -- too tight for a bus that crosses from power_bms to gnss. MUST pull up to +3V3, NEVER to VBATT_PROT: the MAX17048's VDD is the battery rail and reaches 4.2 V at full charge, which would exceed the nRF52840's 3.6 V I/O maximum. No level shifter is needed in the other direction -- I2C is open-drain so no device drives above the pull-up rail, and the MAX17048 reads a 3.3 V bus correctly because its VIH is a fixed 1.4 V (not 0.7*VDD), with SDA/SCL/ALRT rated to +5.5 V absolute max."
+			(at 182.88 88.9 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "c67b0e62-576c-4697-8d1a-b261d8cc0c59")
+		)
+		(pin "2"
+			(uuid "f47fde22-bb07-4846-8fb9-5be48f2420ba")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/615db515-37ad-4c26-9aab-9d4c2fc23c63"
+					(reference "R39")
 					(unit 1)
 				)
 			)
