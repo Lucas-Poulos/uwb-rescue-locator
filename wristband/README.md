@@ -48,13 +48,25 @@ came across from the positioning-architecture redesign on `main`, where they
 were never wired, and they account for all 13 of the wristband's remaining
 ERC errors. Everything else on this board is wired and ERC clean.
 
-**ERC, run 2026-09-19 with kicad-cli 10.0.6: 104 violations, ZERO errors.**
-All warnings, and all the expected unwired-sheet state: 80 pin_not_connected,
-10 power_pin_not_driven, 3 pin_not_driven, plus 11 lib_symbol_mismatch from
-the embedded 8.0-format symbol copies differing from the 10.x libraries
-(pre-existing and by design -- see the flattened-copy workaround in
-`../CLAUDE.md`). DRC reports one violation per board, `invalid_outline`,
-because no board outline is drawn yet.
+**ERC, re-run 2026-11-06 with kicad-cli 10.0.5: 16 violations (13 of them
+`error` severity, not "ZERO errors" as this line used to claim -- stale
+since before the sheets above got wired).** 13 pin_not_connected (the two
+sheets still placement-only, `indicators` and `testpoints`) plus 3
+lib_symbol_mismatch from the embedded 8.0-format symbol copies differing
+from the 10.x libraries (pre-existing and by design -- see the
+flattened-copy workaround in `../CLAUDE.md`).
+
+**DRC, re-run 2026-11-06: 210 violations.** This line also used to say "one
+violation, `invalid_outline`, because no board outline is drawn yet" --
+stale since PR #5 landed the actual PCB (36 footprints, a real outline).
+Current breakdown: 100 unconnected_items (the unrouted ratsnest -- expected,
+nothing is routed yet), 91 silk_over_copper, 71 silk_overlap, 33
+via_dangling, 10 copper_edge_clearance, 3 silk_edge_clearance, 2 clearance.
+The silk_over_copper/silk_overlap counts jumped from 57/7 on 2026-11-06 when
+every footprint's Value was moved from hidden-on-F.Fab to visible on
+F.SilkS (see `docs/decisions.md`) -- expected and accepted: 0402/0603
+passive values often don't fit silkscreen cleanly, and resolving the
+overlaps is layout work, not a reason to hide the values again.
 
 ### Sheet detail
 

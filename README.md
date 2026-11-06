@@ -153,7 +153,7 @@ project-wide unique per board (checked, no collisions) -- see each
 | Regulation | **Partially wired** (11 wires, 3 junctions, 5 GND symbols added 2026-09-29); U8's VIN, EN, and PG still unconnected (ERC) | TPS62A02PDDCR buck converter -- steps the unregulated `+VSYS` rail down to a safe ~3.3V for the BT840 host and the DW3210 anchors |
 | Clock Distribution | Placement only, **new** | Shared 38.4MHz reference for the 4x DW3210 array: AC-coupling + XTO caps placed, TCXO/buffer TBD |
 | Indicators | Placement only | Status LEDs: D4 charging, D5 charge-done, D6 power-good (all MCP73871), D7 system (host GPIO) |
-| Test Points | Placement only | TP1-TP14: rails, 2x GND, TCXO + 4x anchor clock, SPI, IRQ, reset |
+| Test Points | Placement only | TP1-TP21: rails, 2x GND, TCXO + 4x anchor clock, SPI bus, reset, per-anchor CS x4 + IRQ x4 |
 | GNSS / Orientation | Placement only, **new** | MAX-M10S GNSS (U9) + LIS3MDL magnetometer (U10) + LIS2DH accelerometer (U11) -- georeferences the array |
 | Programming/Debug | Placement only in practice (1 wire, 1 junction, 1 GND symbol added 2026-09-29 -- just the ground tie) | **Rebuilt for Nordic**: SWD header (J3) + RESET button (SW2), both still fully unwired per ERC. ESP32 circuitry and the second USB-C deleted |
 

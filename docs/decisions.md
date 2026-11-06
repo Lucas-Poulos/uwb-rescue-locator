@@ -338,6 +338,26 @@ not settle:
 
 ## Resolved
 
+- **Footprint convention: component Value on real silkscreen (F.SilkS), for
+  every part, both boards.** Decided 2026-11-06. Previously inconsistent on
+  the wristband (the only board with footprints placed): some Values hidden
+  entirely, some visible but on F.Fab (CAD/Gerber-viewer only, not printed on
+  the physical board) -- a non-obvious, undocumented split rather than a
+  deliberate choice.
+
+  **Known cost, accepted rather than worked around:** 0402/0603 passive
+  values often don't fit cleanly in real silkscreen text at standard size.
+  Applying this to the wristband's 36 already-placed footprints moved DRC's
+  `silk_over_copper` from 57 to 91 and `silk_overlap` from 7 to 71 (kicad-cli
+  10.0.5, 2026-11-06). Resolving those overlaps is layout work (repositioning
+  text, shrinking font, or moving some values to F.Fab after all on a
+  per-part basis) -- it is not a reason to hide the values again, and no
+  such per-part exception has been made yet.
+
+  Applies going forward to the bay station too, which has no footprints
+  placed yet -- when they land, Value should go straight to F.SilkS rather
+  than needing a second pass.
+
 - **Bay-station stackup: 4 layers, 1.048 mm, controlled impedance.** Resolved
   2026-09-23 and now actually present in `bay-station.kicad_pcb`, which until
   this point was an empty 2-layer default stub contradicting the decision
@@ -447,13 +467,22 @@ not settle:
   have meant measuring a board with nowhere to attach a probe. Free now,
   impossible after layout.
 
-  Bay station, 14 points chosen against this design's actual risks: the
-  shared clock (TP5 at the TCXO, TP6-TP9 at each DW3210 XTI -- if the
-  reference is missing at one anchor, TDoA produces nonsense rather than
+  Bay station, originally 14 points chosen against this design's actual
+  risks: the shared clock (TP5 at the TCXO, TP6-TP9 at each DW3210 XTI -- if
+  the reference is missing at one anchor, TDoA produces nonsense rather than
   failing loudly), the SPI bus and anchor IRQ/reset for the multi-instance
   driver work, both power rails, and **two** grounds. TP3 is deliberately
   sited next to the clock points so a scope can use a short ground spring:
   at 38.4MHz a flying clip lead's inductance distorts the measurement.
+
+  **Expanded to 21 points, 2026-11-06.** The original 14 probed the shared
+  SPI bus and only A0's IRQ -- enough to see traffic, not enough to debug the
+  multi-instance driver, since the bus alone doesn't show which anchor is
+  being addressed and only one of four IRQs was visible. Added TP15-TP18
+  (CS_A0-CS_A3) and TP19-TP21 (IRQ_A1-IRQ_A3): every anchor's chip-select and
+  interrupt now has its own point instead of one anchor standing in for all
+  four. None of these touch the clock network, so the stub caution below is
+  unaffected.
 
   Wristband, 5: both rails, two grounds, and a firmware timing marker on a
   spare GPIO so tag-side exchange timing is visible on a scope.

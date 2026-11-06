@@ -45,14 +45,14 @@ Ten hierarchical sheets, all registered in `bay-station.kicad_pro`'s
 | `programming_debug` | Placement only in practice (1 wire, 1 junction, 1 GND symbol added 2026-09-29 -- just the ground tie; J3 and SW2 still fully unwired) | **Rebuilt for Nordic**: SWD header (J3) + RESET button (SW2). ESP32 circuitry and the second USB-C deleted |
 | `clock_dist` | Placement only, **new** | Shared 38.4MHz reference: AC-coupling + XTO caps placed, TCXO/buffer TBD |
 | `indicators` | Placement only, **new** | Status LEDs D4-D7 (charge, charge-done, power-good, system) |
-| `testpoints` | Placement only, **new** | TP1-TP14: rails, 2x GND, TCXO + 4x anchor clock, SPI, IRQ, reset |
+| `testpoints` | Placement only, **new** | TP1-TP21: rails, 2x GND, TCXO + 4x anchor clock, SPI bus, reset, per-anchor CS x4 + IRQ x4 |
 | `gnss` | Placement only, **new** | MAX-M10S GNSS (U9) + LIS3MDL magnetometer (U10) + LIS2DH accelerometer (U11) |
 | `mechanical` | Placement only | 4x M3 mounting holes |
 
 **"Placement only" means components are instantiated but nothing is wired**
 -- no wires, no global labels.
 
-**ERC, re-run 2026-11-06 with kicad-cli 10.0.5: 589 violations.** 434
+**ERC, re-run 2026-11-06 with kicad-cli 10.0.5: 596 violations.** 441
 pin_not_connected, 96 power_pin_not_driven, 35 pin_not_driven, 9
 lib_symbol_mismatch, 8 ground_pin_not_ground (the DW3210 VSS pins, still
 unresolved), 6 isolated_pin_label (the MCP73871 status outputs, which
@@ -63,7 +63,9 @@ power/regulation/programming-debug wiring pass (pin_not_connected
 360->342, power_pin_not_driven 98->96, pin_not_driven 36->35 -- wiring
 landing, nothing regressed) -> 503 after PR #9's 3 I2C pull-ups (+6, two
 unconnected pins each, placed not wired) -> 589 after PR #8's 43-component
-DW3210 decoupling set (+86, same reason, all landing in pin_not_connected).
+DW3210 decoupling set (+86, same reason, all landing in pin_not_connected)
+-> 596 after adding 7 per-anchor CS/IRQ test points (+7, one unconnected pin
+each, placed not wired -- same as every other test point on this sheet).
 
 **Correction: this was never "ZERO errors."** The previous version of this
 line said so; it wasn't true then either. KiCad's default ERC ruleset marks
@@ -203,12 +205,20 @@ never assigned one -- newly found). See `../docs/decisions.md`.
   BT840 GPIO for firmware-driven system status. 0805 LEDs, 0603 series
   resistors at an indicative 1k.
 
-- **`testpoints.kicad_sch`** *(new)* -- 14 probe points, chosen against this
+- **`testpoints.kicad_sch`** *(new)* -- 21 probe points, chosen against this
   board's real risks rather than sprinkled evenly. `TP5` on the TCXO and
   `TP6`-`TP9` on each DW3210 XTI cover the shared clock, which is the signal
   that silently produces nonsense rather than failing loudly if it is missing
-  at one anchor. `TP10`-`TP12` (SPI) plus `TP13` (A0 IRQ) and `TP14` (anchor
-  reset) serve the multi-instance driver bring-up. `TP1`/`TP2` are the rails.
+  at one anchor. `TP10`-`TP12` (shared SPI bus: SCLK/MOSI/MISO) plus `TP14`
+  (shared anchor reset) serve the multi-instance driver bring-up. `TP1`/`TP2`
+  are the rails.
+
+  **Per-anchor CS and IRQ, added 2026-11-06.** The shared SPI bus alone
+  doesn't tell you which anchor is actually being addressed, and only A0's
+  IRQ was probed -- added `TP15`-`TP18` (`CS_A0`-`CS_A3`) and `TP19`-`TP21`
+  (`IRQ_A1`-`IRQ_A3`; `IRQ_A0` was already `TP13`), so every anchor's
+  chip-select and interrupt line has its own point rather than one anchor
+  standing in for all four.
 
   **Two grounds, deliberately.** `TP3` is sited next to the clock points so a
   scope can use a short ground spring -- at 38.4 MHz a flying clip lead's
