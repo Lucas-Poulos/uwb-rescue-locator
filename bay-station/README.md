@@ -40,7 +40,7 @@ Ten hierarchical sheets, all registered in `bay-station.kicad_pro`'s
 |---|---|---|
 | `power_bms` | **Wired** (62 explicit wires added 2026-09-29 over the existing global-label connectivity; same nets, now drawn), 1 ERC item left (U2 SCL has no I2C pull-up -- its fix, R37-R39 below, landed via PR #9) | Barrel jack + USB-C in -> MCP73871 power-path -> MAX17048 gauge |
 | `connectivity` | Placement only | **BT840 (U3) placed** + C5/C6/C7 decoupling + **R37-R39 I2C pull-ups (2.2k to +3V3, placed not wired)**. Symbol authored; footprint still needed |
-| `uwb_array` | Placement only | **4x DW3210 placed** (U4=A0 center, U5-U7=A1-A3 outer) + R10-R17 straps + R25-R28 IRQ pulldowns |
+| `uwb_array` | Placement only | **4x DW3210 placed** (U4=A0 center, U5-U7=A1-A3 outer) + R10-R17 straps + R25-R28 IRQ pulldowns + **full per-anchor decoupling from Qorvo Figure 32** (C40-C74, FB1-FB4 beads, R33-R36 RF2 terminations, placed not wired) |
 | `regulation` | **Partially wired** (11 wires, 3 junctions, 5 GND symbols added 2026-09-29); U8's VIN, EN, and PG still unconnected per ERC | TPS62A02PDDCR buck -> +3V3_SYS |
 | `programming_debug` | Placement only in practice (1 wire, 1 junction, 1 GND symbol added 2026-09-29 -- just the ground tie; J3 and SW2 still fully unwired) | **Rebuilt for Nordic**: SWD header (J3) + RESET button (SW2). ESP32 circuitry and the second USB-C deleted |
 | `clock_dist` | Placement only, **new** | Shared 38.4MHz reference: AC-coupling + XTO caps placed, TCXO/buffer TBD |
@@ -52,16 +52,18 @@ Ten hierarchical sheets, all registered in `bay-station.kicad_pro`'s
 **"Placement only" means components are instantiated but nothing is wired**
 -- no wires, no global labels.
 
-**ERC, re-run 2026-11-06 with kicad-cli 10.0.5: 497 violations.** 342
+**ERC, re-run 2026-11-06 with kicad-cli 10.0.5: 589 violations.** 434
 pin_not_connected, 96 power_pin_not_driven, 35 pin_not_driven, 9
 lib_symbol_mismatch, 8 ground_pin_not_ground (the DW3210 VSS pins, still
 unresolved), 6 isolated_pin_label (the MCP73871 status outputs, which
 `indicators` will terminate), and 1 lib_symbol_issues on U8 -- investigated
-and deliberately left alone, see `../docs/decisions.md`. Down from 518
-violations before the 2026-09-29 power/regulation/programming-debug wiring
-pass, entirely from pin_not_connected (360->342), power_pin_not_driven
-(98->96) and pin_not_driven (36->35) dropping as wiring landed -- nothing
-regressed.
+and deliberately left alone, see `../docs/decisions.md`. Chain of how this
+number moved: 518 originally -> 497 after the 2026-09-29
+power/regulation/programming-debug wiring pass (pin_not_connected
+360->342, power_pin_not_driven 98->96, pin_not_driven 36->35 -- wiring
+landing, nothing regressed) -> 503 after PR #9's 3 I2C pull-ups (+6, two
+unconnected pins each, placed not wired) -> 589 after PR #8's 43-component
+DW3210 decoupling set (+86, same reason, all landing in pin_not_connected).
 
 **Correction: this was never "ZERO errors."** The previous version of this
 line said so; it wasn't true then either. KiCad's default ERC ruleset marks
