@@ -110,6 +110,48 @@ not settle:
   anyone builds that generator.
 
 
+### Wristband IMU -- proposed and rejected 2026-09-28
+
+- **No external IMU on the wristband.** Asked for directly; declined, because
+  the DWM3001C already contains an ST **LIS2DH12** accelerometer and adding a
+  second one costs board area and standby current on the one board in this
+  system that can least afford either. The tag is the power-constrained side
+  -- the whole TDoA scheme is built around it transmitting once.
+
+  This also upholds the standing rule in `CLAUDE.md`: *"Its BLE radio and
+  accelerometer are unused -- do not add parts to 'use' them."* The module was
+  bought for its M4 and its UWB radio; the accelerometer is dormant silicon
+  that comes along with it.
+
+  **What the module cannot do is measure angular rate.** LIS2DH12 is a 3-axis
+  accelerometer and nothing more. Motion detection, wake-on-motion, tilt,
+  free-fall and impact are all covered; orientation *during* motion, and
+  anything resembling dead reckoning between UWB fixes, are not. **If a gyro
+  is ever genuinely required, this decision reopens** -- that would be a real
+  gap rather than a duplicate.
+
+  Note the bay station took the opposite decision on the same day, and the
+  asymmetry is deliberate: the station is mains-or-large-battery powered,
+  fixed, and its orientation feeds the heading that georeferences every fix.
+  The tag is worn, tiny and battery-critical.
+
+- **OPEN: is motion-gating actually free?** `wristband/README.md` has long
+  described motion-gating the UWB as "the largest battery lever available"
+  costing "nothing in hardware". The second half is **not established.**
+
+  `I2C0_SDA` (pin 14) and `I2C0_SCL` (pin 15) are real module pins and are
+  **unconnected in the schematic** -- a netlist export puts both on
+  `unconnected-(...)` nets. I2C is open-drain and cannot return to a logic
+  high without a pull-up, so exactly one of these is true:
+  - Qorvo fitted pull-ups inside the module, and motion-gating is genuinely
+    firmware-only; or
+  - they did not, and the bus needs **two external pull-ups to `+3V3`** --
+    making the claim wrong and the change a hardware one after all.
+
+  Resolve against the real **DWM3001C Data Sheet Rev B (May 2022)**, the same
+  document `wristband/libs/` was authored from. Until then, do not plan
+  firmware on the assumption that the accelerometer is reachable for free.
+
 ### Critical path for the bay station
 
 - **Baseline length: 1 m as specified, but bigger is nearly free.** Corrected

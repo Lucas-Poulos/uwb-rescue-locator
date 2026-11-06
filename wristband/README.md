@@ -132,9 +132,32 @@ because no board outline is drawn yet.
 
 **Motion-gating the UWB.** The LIS2DH12 accelerometer inside the DWM3001C is
 unused, but the tag is the power-constrained side of the whole system. Only
-ranging when the wearer actually moves is the largest battery lever available
-and costs nothing in hardware -- the accelerometer is already on the module's
-I2C bus (pins 14/15). Worth doing once basic ranging works.
+ranging when the wearer actually moves is the largest battery lever
+available. Worth doing once basic ranging works.
+
+An external IMU was proposed on 2026-09-28 and **rejected** -- the module
+already carries an accelerometer, and adding a second one costs board area
+and standby current on the one board that can least afford either. See
+`../docs/decisions.md`. The one thing the LIS2DH12 cannot give you is
+**angular rate**; if a gyro is ever genuinely required, that is a real gap
+and reopens the question.
+
+**One assumption here needs checking before anyone calls this free.** The
+earlier wording said motion-gating "costs nothing in hardware". That is not
+yet established. `I2C0_SDA` (pin 14) and `I2C0_SCL` (pin 15) are brought out
+as module pins and are **unconnected in this schematic** -- a netlist export
+confirms both sit on `unconnected-(...)` nets. Whether the LIS2DH12 is
+reachable with no external parts depends on whether Qorvo fitted pull-ups
+*inside* the module:
+
+- If internal pull-ups exist, motion-gating really is firmware-only.
+- If not, the bus needs two external pull-ups to `+3V3`, and "costs nothing
+  in hardware" is wrong.
+
+I2C is open-drain and cannot return to a logic high without a pull-up
+somewhere, so one of those two must be true. Resolve it against the real
+**DWM3001C Data Sheet Rev B (May 2022)** -- the same document the symbol in
+`libs/` was authored from -- before planning firmware around it.
 
 ## Libraries
 

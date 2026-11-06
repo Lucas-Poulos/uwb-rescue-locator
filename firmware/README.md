@@ -52,6 +52,17 @@ The tag is deliberately simple: transmit, participate in the ranging
 exchange with A0, sleep. It is the power-constrained side, so the whole
 scheme is built around it transmitting once.
 
+**Motion-gating.** The DWM3001C carries an unused LIS2DH12 accelerometer.
+Ranging only when the wearer actually moves is the largest battery lever
+available on this board, and it is firmware work rather than hardware -- an
+external IMU was proposed on 2026-09-28 and rejected (`../docs/decisions.md`).
+
+**Check before you build on it:** the module's `I2C0_SDA`/`I2C0_SCL` (pins
+14/15) are unconnected in the schematic, and whether the accelerometer is
+reachable with no external parts depends on whether Qorvo put pull-ups inside
+the module. That is an open item in `../docs/decisions.md`. If the answer is
+no, this needs two resistors before any firmware can talk to it.
+
 ### tools
 
 - **Array calibration.** Place the tag at surveyed positions, measure actual
