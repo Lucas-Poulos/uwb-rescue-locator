@@ -1,0 +1,25 @@
+menu "UWB rescue locator bay station (nRF9151)"
+
+config UWBRL_BRINGUP_SHELL
+	bool "Board bring-up shell commands ('bringup ...') on DBG_UART"
+	default y
+	select SHELL
+	help
+	  Per-block tests used by docs/verification-plan.md. Keep enabled on
+	  every hardware revision until the board passes system tests.
+
+config UWBRL_UWB_SPI_SLOW_HZ
+	int "Anchor SPI clock before the DW3000 leaves INIT_RC (Hz)"
+	default 2000000
+	help
+	  DW3000 Datasheet v1.1 Table 21: SPI is limited to 7 MHz while the
+	  chip runs from its RC oscillator in INIT_RC. Bring-up uses a margin
+	  well below that.
+
+config UWBRL_BRIDGE_PING_TIMEOUT_MS
+	int "Bridge ping timeout (ms)"
+	default 200
+
+endmenu
+
+source "Kconfig.zephyr"

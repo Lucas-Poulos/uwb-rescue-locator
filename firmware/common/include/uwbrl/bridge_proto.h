@@ -85,7 +85,7 @@ enum uwbrl_e2e_type {
 struct uwbrl_hdr {
 	uint8_t  ver;   /* UWBRL_PROTO_VERSION */
 	uint8_t  type;  /* enum uwbrl_link_type / uwbrl_e2e_type */
-	uint8_t  seq;   /* per-sender, per-direction, wraps */
+	uint8_t  seq;   /* per-sender, per-direction, wraps. PONG and ACK echo the seq they answer. */
 	uint8_t  flags; /* UWBRL_F_* */
 	uint16_t len;   /* payload length, <= UWBRL_MAX_PAYLOAD */
 } UWBRL_PACKED;
