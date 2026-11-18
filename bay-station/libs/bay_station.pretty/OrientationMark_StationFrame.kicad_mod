@@ -1,0 +1,78 @@
+(footprint "OrientationMark_StationFrame"
+	(version 20240108)
+	(generator "uwb_rescue_locator_lib_builder")
+	(layer "F.Cu")
+	(descr "Silkscreen-only station-frame marker: bold FWD arrow. docs/positioning.md (Mechanical) defines only that A0 is offset forward out of the A1-A3 plane; it defines no x/y/z or heading-zero convention and does not say which board edge faces forward, so the arrow direction is a placeholder set by silkscreen.py --fwd (default: toward the top of the board). No pads, no courtyard, excluded from BOM/pos.")
+	(tags "orientation marker station frame forward arrow silkscreen")
+	(property "Reference" "REF**"
+		(at 0 -9 0)
+		(layer "F.SilkS")
+		(hide yes)
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "OrientationMark_StationFrame"
+		(at 0 9 0)
+		(layer "F.Fab")
+		(hide yes)
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr exclude_from_pos_files exclude_from_bom allow_missing_courtyard)
+	(fp_poly
+		(pts (xy -0.6 4) (xy 0.6 4) (xy 0.6 -2.5) (xy -0.6 -2.5))
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill solid)
+		(layer "F.SilkS")
+	)
+	(fp_poly
+		(pts (xy 0 -7) (xy 2.2 -2.5) (xy -2.2 -2.5))
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill solid)
+		(layer "F.SilkS")
+	)
+	(fp_text user "STATION"
+		(at 0 6)
+		(layer "F.SilkS")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(fp_text user "FWD"
+		(at 0 7.4)
+		(layer "F.SilkS")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(fp_text user "Frame axes/heading zero NOT defined in docs/positioning.md; arrow direction is a placeholder"
+		(at 0 9)
+		(layer "F.Fab")
+		(effects
+			(font
+				(size 0.5 0.5)
+				(thickness 0.08)
+			)
+		)
+	)
+)
