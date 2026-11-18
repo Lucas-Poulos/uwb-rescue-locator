@@ -58,8 +58,10 @@ footprints placed on the PCB, no wires drawn -- every net is carried by
   so it reads a 3.3 V bus correctly even at 4.2 V VDD. Its SDA/SCL/ALRT pins
   are rated to **+5.5 V absolute max**. No level shifter is needed.
 
-  The three global labels (`FG_ALRT`, `FG_SCL`, `FG_SDA`) are unchanged; the
-  connectivity sheet now terminates them. See "Known ERC finding" below.
+  **Renamed 2026-11-17:** `FG_SCL`/`FG_SDA` are now **`I2C_SCL`/`I2C_SDA`**
+  (`docs/net-contract.md` Sec 4: one housekeeping bus for the MAX17048,
+  LIS3MDL and LIS2DH). `FG_ALRT` keeps its name. The connectivity sheet
+  terminates them. See "Known ERC finding" below.
 - **Barrel jack and USB-C share one `+5V_IN` net.** Per
   `libs/components.csv`, the USB-C receptacle is documented as an
   *alternate* continuous-power input to the barrel jack, not a simultaneous
@@ -91,7 +93,7 @@ footprints placed on the PCB, no wires drawn -- every net is carried by
 | R3 | 20.0k 0603 (PROG3) | `Device:R` | -- | Sets termination current. See math below. |
 | R4 | 330k 0603 (VPCC divider, top) | `Device:R` | -- | VPCC power-path-priority divider, values taken directly from the datasheet's own Section 3.3 worked example (assumes ~5V nominal input, which matches this design's `+5V_IN`). |
 | R5 | 110k 0603 (VPCC divider, bottom) | `Device:R` | -- | See R4. |
-| TH1 | 10k NTC | `Device:Thermistor_NTC` | n/a (generic, pick exact curve at BOM time) | MCP73871 THERM battery-temperature bias, 10k per the datasheet's typical application circuit. |
+| TH1 | 10k NTC, B25/50 ~3380 K | `Device:Thermistor_NTC` | n/a (generic; see "THERM cold-charge window") | MCP73871 THERM battery-temperature sense. A plain 10k/B3380 NTC gives a +1.1 to +5.0 C cold cut-off with no trim resistor -- see below. Must be on the cell, not the PCB. |
 | C1 | 10uF 0603 | `Device:C` | -- | MCP73871 `IN` decoupling, value from the datasheet's typical application circuit (page 2 diagram) -- note Section 3.1's *minimum* is 4.7uF; 10uF is the diagram's actual shown value. See "open concerns" re: 10uF in a 0603 case. |
 | C2 | 4.7uF 0603 | `Device:C` | -- | MCP73871 `OUT` decoupling / `+VSYS` rail bulk cap, per datasheet typical application circuit. |
 | C3 | 4.7uF 0603 | `Device:C` | -- | MCP73871 `VBAT`/`VBATT_PROT` decoupling, per datasheet typical application circuit. |
@@ -183,7 +185,7 @@ warnings**, all understood and left as-is:
 
 - **1 error** -- `pin_not_driven` on U2 (MAX17048) pin 7, `SCL`. SCL is an
   `input`-type pin (the fuel gauge is always an I2C slave) tied to global
-  label `FG_SCL`, which currently has no other member anywhere in the
+  label `I2C_SCL` (formerly `FG_SCL`), which currently has no other member anywhere in the
   hierarchy (no host MCU sheet exists yet) -- so nothing drives it. This is
   **not** a dangling/unconnected pin (a `no_connect` marker would be wrong
   here and would actually conflict with the global label already present on
@@ -193,8 +195,8 @@ warnings**, all understood and left as-is:
   SCL. SDA doesn't trigger the equivalent check because its pin type is
   `bidirectional`, which KiCad's ERC doesn't subject to the same
   must-be-driven rule.
-- **6 warnings** -- `global_label_dangling` on `FG_ALRT`, `FG_SDA`, `nPG`,
-  `nSTAT2`, `nSTAT1_LBO` (and `FG_SCL`, alongside its error above): each is
+- **6 warnings** -- `global_label_dangling` on `FG_ALRT`, `I2C_SDA`, `nPG`,
+  `nSTAT2`, `nSTAT1_LBO` (and `I2C_SCL`, alongside its error above): each is
   a single-member net by design (brought out for a future sheet), so KiCad
   correctly flags them as "not connected anywhere else in the schematic" --
   a soft warning, not an error, and expected until those future sheets
@@ -246,8 +248,53 @@ referenced/ordered), only the embedded cache representation differs.
   the VPCC divider's 5V-nominal assumption) -- flag this explicitly on the
   BOM/silkscreen so nobody plugs in a 9V/12V wall-wart barrel adapter, which
   would exceed MCP73871's input rating.
-- **Downstream 3.3V regulation** for the ESP32-S3/DWM3000 loads is not yet
-  designed (see "No dedicated 3.3V buck/LDO regulator" above) -- needed
-  before those sheets can be built.
-- **MAX17048 ALRT/SCL/SDA pull-ups** deferred to the connectivity sheet (see
-  scope decisions above) -- don't forget them when that sheet is built.
+- **Downstream regulation** lives on `regulation.kicad_sch`: `+3V3` (U8
+  TPS62A02) and `+VBAT_LTE` (U40 TPS63802, nRF9151 VDD). The battery-side
+  drop matters there: the MCP73871 BAT-to-OUT pass FET is 200 mOhm typ
+  (DS20002090E Sec 1.0), which is one reason the nRF9151 is not fed from
+  `+VSYS` directly (`regulation_notes.md` Sec 1).
+- **MAX17048 ALRT/SCL/SDA pull-ups** are R37-R39 on the connectivity sheet
+  (resolved 2026-09-28, see above).
+
+## THERM cold-charge window (sized 2026-11-17)
+
+Open item from `CLAUDE.md` / `decisions.md`: "the MCP73871 has a THERM NTC
+but it has not been sized for a cold-charge cutoff." Numbers from
+**DS20002090E Sec 1.0 (DC characteristics, Thermistor Bias / Comparator)**:
+ITHERM = 47 / 50 / 53 uA (min/typ/max, 2k < RTHERM < 50k);
+VT1 (upper, cold) = 1.20 / 1.24 / 1.26 V; VT2 (lower, hot) = 0.23 / 0.25 /
+0.27 V; hysteresis +/-40 mV. Sec 5.1.4: outside the window "the MCP73871
+device immediately suspends the charge cycle", and resumes when back
+inside.
+
+Charging stops when R_NTC > VT1/ITHERM, i.e. **22.6k (worst-low) to 26.8k
+(worst-high)**, and when R_NTC < VT2/ITHERM = **4.3k to 5.7k**. With the
+beta model R(T) = 10k x exp(B(1/T - 1/298.15)):
+
+| NTC B25/50 | Cold cut-off | Hot cut-off |
+|---|---|---|
+| 3380 K | +1.1 to +5.0 C (typ +2.9 C) | +40.4 to +48.7 C (typ +44.7 C) |
+| 3435 K | +1.5 to +5.3 C (typ +3.2 C) | +40.1 to +48.3 C (typ +44.3 C) |
+
+**Result: no trim resistors are needed.** A plain 10k NTC in the common
+B = 3380-3435 K range already stops charging above 0 C across the
+MCP73871's full ITHERM/VT1 tolerance (NTC 1% resistance tolerance adds
+~0.25 C). The ~40 mV hysteresis means charging resumes ~1 C warmer.
+
+B = 3380 K was checked for one real part, **Murata NCP18XH103F03RB**
+(10k 1%, 0603), from a Murata-generated product sheet (reached via a TI E2E
+attachment; Murata's own PDF endpoint did not return a PDF). DigiKey lists
+that part "Not For New Designs", so pick the actual part at BOM time and
+re-run the table with its B value.
+
+What actually matters more than the resistor maths: **the NTC must measure
+the cell.** TH1 on the PCB measures the board. Either use a 3-wire pack
+with an integrated 10k NTC (wire it to THERM/GND in place of TH1) or bond
+TH1 to the cell. Unchanged in this pass because the pack is not chosen.
+
+Test pads added on this sheet (2026-11-17): TP414 `+5V_IN`, TP415
+`VBATT_PROT`, TP416 `THERM`, TP417 `BATT_RAW`. `+VSYS` already has one on
+`testpoints.kicad_sch`. No current-break link was added here: the two
+regulator break points (`regulation_notes.md` Sec 5) cover the loads, and a
+battery-side break would have to carry the 500 mA charge current plus ~1.2 A
+board peak, beyond a PPK2's 1 A range.

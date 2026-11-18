@@ -1,122 +1,248 @@
-# regulation.kicad_sch + programming_debug.kicad_sch -- design notes
+# regulation.kicad_sch -- design notes
 
-> **2026-09-19:** this file predates two architecture changes. The bay station
-> now uses a Fanstel BT840 (nRF52840) host and four discrete DW3210s, not an
-> ESP32-S3 and four DWM3000 modules, and Section 3 below documents ESP32-S3
-> programming circuitry that has since been DELETED from the schematic
-> (`programming_debug` is now just an SWD header and a reset button). The
-> current-budget section has been re-run and is live; everything else naming
-> those parts is historical. See `../docs/decisions.md`.
+Hierarchical sub-sheet "Regulation" (sheet-symbol uuid
+`5c2a31d1-5b69-4a48-a195-eba324445020`). Two converters, both fed from
+`+VSYS` (MCP73871 `OUT`, `power_bms.kicad_sch`):
 
-Two new hierarchical sub-sheets fixing three confirmed hardware gaps on the bay
-station: (1) no regulated 3.3V rail for the ESP32-S3-WROOM-1 / 4x DWM3000 loads
-(they were tracking the unregulated `+VSYS` rail directly, up to ~4.2V+), (2)
-floating DWM3000 GPIO5/GPIO6 SPI-mode-strapping pins, (3) missing ESP32-S3
-boot-strapping pulls, reset/boot buttons, and a flashing interface. Wired into
-`bay-station.kicad_sch` as sheets "Regulation" (sheet-symbol uuid
-`5c2a31d1-5b69-4a48-a195-eba324445020`) and "Programming / Debug" (sheet-symbol
-uuid `883ff08c-ad9f-4863-b9db-49772b53748e`), registered in
-`bay-station.kicad_pro`'s `sheets` list. **Placement only, same as
-`connectivity`/`uwb_array`/`mechanical`: no wires, no global labels.**
+| Rail | Converter | Loads | Nominal |
+|---|---|---|---|
+| `+3V3` | U8, TI TPS62A02PDDCR buck | 4x DW3210, BT840, nRF9151 `VDD_GPIO`, LIS3MDL/LIS2DH, TCXO + fan-out buffer, LEDs, I2C pull-ups | 3.318 V |
+| `+VBAT_LTE` | U40, TI TPS63802DLAR buck-boost | nRF9151 `VDD` only | 3.588 V |
 
-## 1. Buck converter selection: TI TPS62A02 (TPS62A02PDDCR)
+**Wired 2026-11-17** (nRF9151 host redesign). Every pin now lands on a wire
+and a label; the sheet is ERC-clean apart from the long-standing U8
+`lib_symbol_issues` warning (see "Symbol note"). The ESP32-era programming
+section that used to live in this file moved to
+`programming_debug_notes.md` (history section).
 
-### The problem being fixed
+Sources read for this pass (PDF/HTML actually opened, not recalled):
 
-`power_bms.kicad_sch`'s `+VSYS` rail (MCP73871's power-path `OUT` pin) is
-explicitly documented in `power_bms_notes.md` as **not regulated**: it tracks
-close to whichever of (current-limited `IN`, `VBAT`) has priority -- i.e.
-roughly the ~5V-class input when external power is present, or the raw
-single-cell Li-Ion range (~3.0-4.4V) when running from battery alone. Both the
-ESP32-S3-WROOM-1 and the DWM3000 need a real regulated ~3.3V supply that can't
-exceed their absolute-maximum ratings:
+- TI **TPS62A02** datasheet SLUSEG9E (Dec 2021, rev. June 2024), `https://www.ti.com/lit/gpn/tps62a02`.
+- TI **TPS63802** datasheet SLVSEU9D (Nov 2018, rev. Jan 2021), `https://www.ti.com/lit/gpn/tps63802`.
+- Nordic **nRF9151 Product Specification**, "Recommended operating conditions" page, and the
+  **nRF9151 Hardware Design Guidelines** (bundle nwp_056) pages *Operating conditions*,
+  *Schematic design*, *VDD_GPIO*, *ENABLE*, *nRESET*, *nRESET circuit example*,
+  *VDD supply impedance*, *LTE-M and NB-IoT TX current consumption for Power Class 3*,
+  *LTE-M and NB-IoT RX*. Read as HTML on docs.nordicsemi.com; **the PS and HDG PDFs are
+  behind a Cloudflare challenge and could not be downloaded**, so no PDF revision number is
+  quoted. Re-check against the PDF revision before fab.
+- Qorvo **DW3000 Datasheet Version 1.1** (Decawave 2020), Table 4 and Table 5.
+- Nordic **nRF52840 Product Brief v2.3** (radio current only).
+- Microchip **MCP73871** DS20002090E (BAT-to-OUT and IN-to-OUT RDS_ON).
+- Coilcraft **XFL4020** Document 745-1 (revised 03/10/26).
 
-- **DWM3000 abs-max VDD3V3/VDD1: -0.3V to 4.0V.** Verified directly from the
-  real Qorvo DWM3000 Data Sheet Rev B, May 2021, Table 9 "DWM3000 Absolute
-  Maximum Ratings" (`https://download.mikroe.com/documents/datasheets/DWM3000_datasheet.pdf`,
-  already the datasheet URL cited in `libs/components.csv`/`uwb_array.kicad_sch`).
-- **ESP32-S3-WROOM-1 abs-max VDD33: -0.3V to 3.6V.** Verified directly from the
-  real Espressif ESP32-S3-WROOM-1 & WROOM-1U Datasheet v1.8, Table 6-1
-  "Absolute Maximum Ratings" (`https://www.espressif.com/sites/default/files/documentation/esp32-s3-wroom-1_wroom-1u_datasheet_en.pdf`,
-  already the datasheet URL cited in `libs/components.csv`/`connectivity.kicad_sch`).
+## 1. Why `+VBAT_LTE` is its own regulator, not a jumper off `+VSYS`
 
-An unregulated ~4.2V+ rail directly violates the ESP32-S3's 3.6V abs-max (and
-gets uncomfortably close to the DWM3000's 4.0V abs-max too, with essentially no
-margin once any ripple/tolerance is considered). The user decided this needs a
-**switching buck converter** (not the wristband's LDO), consistent with the bay
-station's longevity/efficiency-focused design philosophy (see `README.md`).
+nRF9151 `VDD` limits (PS, Recommended operating conditions): **3.0 V min,
+3.7 V nom, 5.5 V max**, "includes voltage drop, ripple, and spikes". The HDG
+*Operating conditions* page adds: "The LTE and DECT NR+ transceiver requires
+a minimum voltage of 3.0 V" and "For optimal RF performance in LTE, a
+minimum operating voltage of 3.2 V is recommended." HDG *VDD supply
+impedance*: "keep supply network impedance at the VDD pin below 0.2 Ohm from
+3.75 kHz to 50 kHz."
 
-### Current-draw budget (real datasheet numbers, not estimates)
+On battery, `+VSYS` = cell - Q1 drop - MCP73871 BAT-to-OUT pass FET. That FET
+is **200 mOhm typ** (DS20002090E Sec 1.0, at VDD 4.5 V, 105 C); Q1 adds tens
+of mOhm. At the ~1.2 A worst-case board peak (Sec 3) the path drops ~0.3 V,
+so a 3.4 V cell -- still ~10-15% capacity on a typical Li-ion curve -- puts
+`+VSYS` near **3.1 V during each TX burst, under the 3.2 V recommendation**,
+and a 3.3 V cell crosses the 3.0 V floor. The path impedance alone
+(0.2 + Q1 + cell ESR) is already above Nordic's 0.2 Ohm target. A jumper
+from `+VSYS` would therefore work on wall power and fail at the low end of
+the battery, which is exactly the condition the outdoor station is built to
+survive.
 
-- **Host MCU: ~20 mA [ESTIMATE].** The BT840 (nRF52840) replaced the
-  ESP32-S3-WROOM-1 on 2026-09-19. **The Fanstel BT840 datasheet
-  (BT840/F/E/X/XE Ver 1.15) contains no current-consumption table**, so this
-  is an order-of-magnitude allowance based on the nRF52840 running BLE at
-  +8dBm with its on-module DC-DC, not a datasheet figure. Confirm against the
-  Nordic nRF52840 Product Specification before relying on it.
+At the top end `+VSYS` is the input (<= 5.25 V USB / ~5 V barrel), inside
+5.5 V but with only ~0.25 V margin against a high USB source plus ringing.
+A regulator removes that concern too.
 
-  This is the single biggest change to this budget: the ESP32-S3 figure it
-  replaced was **355 mA**, and it dominated everything else. Retained below
-  for the record.
+**Decision: U40 TPS63802 buck-boost, 3.59 V.** Reasons for the part
+(SLVSEU9D): VIN 1.3-5.5 V (start-up > 1.8 V) covers both battery and wall
+cases; "2-A output current for VI >= 2.3 V, VO = 3.3 V"; 11 uA IQ for LTE
+PSM/eDRX idle; defined buck / buck-boost / boost transitions; PG output
+usable for sequencing (Sec 9.3.10); true shutdown with load disconnect.
+Output 3.59 V rather than 3.7 V so it stays in the single-22 uF case
+(Sec 10.2.2.3: "a single 22 uF for all programmed output voltages <= 3.6 V")
+and uses TI's own Table 10-5 divider (562k/91k), while keeping 0.39 V over
+Nordic's 3.2 V LTE recommendation.
 
-  *Superseded:* **ESP32-S3-WROOM-1 peak current: 355 mA.** Real Espressif ESP32-S3-WROOM-1
-  Datasheet v1.8, Section 6.4.1 "Current Consumption in Active Mode", Table
-  6-4 "Current Consumption for Wi-Fi (2.4 GHz) in Active Mode": the highest
-  listed peak is 802.11b, 1 Mbps, @20.5 dBm TX = **355 mA** (the Bluetooth LE
-  TX table peaks lower, at 344 mA @20.0 dBm, so Wi-Fi TX is the worst case).
-- **DW3210 peak current: 72 mA each (CH5 RX).** Real Qorvo **DW3000 Datasheet
-  v1.3**, Table 5 "DC Characteristics" (`Tamb=25C`, supplies at 3.0V), row
-  "Peak current continuous Tx/Rx": **RX CH5 = 72 mA**, RX CH9 = 88 mA, TX CH5
-  at nominal -41.3 dBm/MHz = 23 mA (VDD2) + 25 mA (VDD3). RX is the worst
-  case, and CH5 is this design's chosen channel. Worst-case simultaneous
-  4-anchor RX: **4 x 72 mA = 288 mA.**
+Rejected: KiCad-library TPS63000 (DRC0010J, verified footprint available) --
+its datasheet quotes "up to 800-mA output current at 3.3 V in boost", too
+close to the 505 mA LTE figure at low cell voltage.
 
-  *Why this number went up from the 220 mA in the previous revision:* that
-  figure was 4 x 55 mA taken from the **module** datasheet's "total current
-  drawn from all supplies", which is a typical figure. This design now uses
-  the **bare DW3210 IC**, and the IC datasheet quotes *peak current
-  continuous* -- a stricter metric, and the correct one for sizing a
-  regulator. The part did not get worse; the measurement basis got more
-  conservative.
+## 2. `+VBAT_LTE` circuit (U40)
 
-  *Caveat:* Table 5 extracts with scrambled column alignment from the PDF.
-  The RX CH5 = 72 mA and RX CH9 = 88 mA rows are unambiguous, but confirm the
-  sleep/idle rows against the rendered table before relying on them.
-- **Clock network: ~27 mA, estimated.** One 38.4 MHz TCXO (~2 mA) plus a 1:4
-  low-skew fan-out buffer driving four loads (~25 mA). **Neither part is
-  selected yet** (open item, `../docs/decisions.md`), so both are
-  order-of-magnitude allowances, not datasheet figures. Re-check once chosen.
-- **GNSS and orientation: ~11 mA.** MAX-M10S is quoted at 27-30 mW at 3V
-  (~10 mA); LIS3MDL ~0.27 mA; LIS2DH ~11 uA. Small against the anchors, but
-  note the GNSS runs CONTINUOUSLY during survey-in rather than duty-cycling.
-- **Status LEDs: 3-12 mA, depending on a decision not yet made.** `D7`
-  (system status, BT840 GPIO) sits on `+3V3_SYS` at ~3 mA. `D4`/`D5`/`D6`
-  are driven from MCP73871's open-drain `STAT1`/`STAT2`/`~PG`, and whether
-  they pull from `+3V3_SYS` or `+VSYS` is still open -- if `+3V3_SYS`, add
-  ~9 mA. Budgeted here at the worst case.
-- **Combined worst-case peak** (conservative: BLE TX + all 4 anchors in RX +
-  clock network + GNSS/orientation + all LEDs lit): 20 + 288 + 27 + 11 + 12
-  = **~358 mA.**
+| Ref | Value | Why (citation) |
+|---|---|---|
+| U40 | TPS63802DLAR | Pins (Table 7-1, checked in `-raw` and `-layout`): 1 EN, 2 MODE, 3 AGND, 4 FB, 5 PG, 6 VOUT, 7 L2, 8 GND, 9 L1, 10 VIN. Abs max 6 V all pins (Sec 8.1). Symbol hand-authored in `libs/bay_station.kicad_sym`. Footprint `bay_station:TI_DLA0010A_VSON-HR-10_2x3mm_P0.5mm_PLACEHOLDER` -- **placeholder**, see Sec 7. |
+| L300 | 0.47 uH, Coilcraft XFL4020-471MEC | L = 0.47 uH nominal, 0.37-0.57 uH effective (Sec 8.3, Table 10-1). XFL4020-471: DCR 4.40/5.10 mOhm, Isat 4.6 A (10%)/6.6 A (20%), Irms 7.5 A (Coilcraft 745-1). TI's Table 10-2 lists XFL4015-471ME; XFL4020 chosen because KiCad ships `Inductor_SMD:L_Coilcraft_XxL4020`. |
+| C300 | 10 uF 0805 10 V | "A 10 uF input capacitor is recommended" (Sec 10.2.2.4); effective >= 4 uF (Sec 8.3). 0805/10 V because `+VSYS` sits at ~5 V on wall power. |
+| C301 | 22 uF 0805 10 V | Single 22 uF for VO <= 3.6 V (Sec 10.2.2.3); effective >= 7 uF for VO > 2.3 V. |
+| C302 | 22 uF, **DNP** | Second output cap, TI's recommendation above 3.6 V; fit if VOUT is raised or droop is high. |
+| R306 / R307 | 562k / 91k | Eq. 3, VFB = 500 mV: VOUT = 0.5 x (1 + 562/91) = **3.588 V** (Table 10-5 lists this pair for 3.6 V). VFB +/-1% (PWM) -> 3.55-3.62 V. R2 <= 100k (Sec 10.2.2.5). |
+| R308 / R309 | 191k / 100k | EN as a precise UVLO: EN rising 1.07/1.10/1.13 V, falling 0.97/1.00/1.03 V (Sec 8.5). Ratio 2.91: **off below +VSYS = 2.91 V (2.82-3.00), on above 3.20 V (3.11-3.29)**. 12 uA standing load. |
+| R310 | 0R **DNP** | Rework: EN to +VSYS (always-on); remove R309 when fitted. |
+| R311 / R312 | 0R / 0R **DNP** | MODE strap: R311 to GND = power-save mode (default); R312 to +VSYS = forced PWM. "It must not be left floating" (Table 7-1). |
+| R302 + J31 | 0R 0805 + DNP 2-pin | Current break point, Sec 5. |
 
-Against the TPS62A02's 2A rating that is **~5.6x headroom** -- up from 2.9x,
-because dropping WiFi removed the largest single load on the board. **The
-part choice survives**, and is now substantially oversized.
+The nRF9151's own `VDD` bank (Nordic HDG *Schematic design* Table 1: C3
+47 uF 0805, C4 10 uF 0603, C1/C2 1 uF, C6/C7 4.7 uF, C5/C8 0.1 uF, FB1
+BLM18SD220SN1) belongs at the SiP on `connectivity.kicad_sch`, downstream
+of R302. It is in addition to C301, and TPS63802 has no upper limit on
+output capacitance (Sec 10.2.2.3).
 
-That is worth a deliberate note rather than silent acceptance: a smaller,
-cheaper buck would now do. **Not changing it** -- the TPS62A02 is drawn,
-datasheet-verified, and its headroom has already absorbed two architecture
-changes without a respin. Revisit only if board area or BOM cost becomes
-tight. The 4x DW3210 anchors are now the dominant load by a wide margin,
-which is the right thing for the dominant load to be.
+**Operating point check.** Worst case: 0.505 A out at 3.59 V from
+VIN = 2.9 V (just above UVLO). Boost duty D = 1 - 2.9/3.59 = 0.19; average
+inductor current = 0.505 / (0.9 x 0.81) = 0.69 A, plus ripple -- around
+1 A peak, far under L300's 4.6 A Isat and the 4-5.75 A boost current limit
+(Sec 8.5). Input current at that point ~0.69 A.
 
-This remains a genuinely conservative stack-up (in practice the anchor array
-is unlikely to have all four units in RX at the exact instant of a BLE TX
-burst, with every LED lit), but it is the right number to size against.
+## 3. Power budget
 
-**Re-run this again** when the TCXO and clock buffer are selected and when the
-LED drive rails are fixed -- those are the two estimated lines above.
+Full table (per load, typ/peak, rail, source) is in
+`handoff/power.md`. Summary:
 
-### Part chosen and why
+| Rail | Typical | Peak (design) | Regulator rating | Headroom |
+|---|---|---|---|---|
+| `+3V3` | ~325 mA (4 anchors in RX) | ~356 mA; ~446 mA with nRF9151 `VDD_GPIO` at its 100 mA momentary ceiling | TPS62A02 2 A | >= 4.5x |
+| `+VBAT_LTE` | 41 mA LTE-M RX avg (3.7 V, 25 C) | 505 mA LTE-M TX subframe (B1, 3.0 V, 85 C, VSWR 3:1) | TPS63802 2 A (VI >= 2.3 V) | ~4x |
+| `+VSYS` (input to both) | ~0.3 A at 5 V | ~1.2 A at 3.0 V battery / ~0.75 A at 5 V (both converters at peak, 90% efficiency assumed) | MCP73871 1.8 A input limit (SEL high) on wall power | OK; on battery the cell supplies it |
+
+Which numbers are datasheet figures and which are allowances is marked
+row by row in the handoff table. The four estimate rows are: BT840 total
+(the Fanstel datasheet has no current table; 16.4 mA radio TX +8 dBm is
+from the nRF52840 Product Brief v2.3), nRF9151 `VDD_GPIO` (Nordic gives
+only the 100 mA ceiling), TCXO and fan-out buffer (not yet selected).
+
+The previous "~358 mA vs 2 A" budget (2026-09-19) is superseded: the
+MAX-M10S (~10 mA) is gone (GNSS moved into the nRF9151), and the nRF9151's
+modem current is on its own rail instead of on `+3V3`.
+
+## 4. Sequencing: `+3V3` after `+VBAT_LTE`
+
+Nordic HDG *VDD_GPIO*: "VDD_GPIO should be applied at least 6 ms after
+ENABLE and VDD have been supplied", "VDD_GPIO should be removed before
+removing ENABLE or VDD", and "If the ENABLE pin is low, VDD_GPIO should also
+be low"; violating it makes GPIO states undefined during boot ("short
+high-state pulses"). `VDD_GPIO` is `+3V3`, which also powers everything the
+nRF9151 talks to, so a glitch here would toggle UWB resets/chip-selects and
+the BT840 reset at power-up.
+
+Implementation (U8 EN, net `EN_3V3`):
+
+- **R303 100k** from `+VBAT_LTE_REG` to `EN_3V3`, **C303 1 uF** to GND:
+  tau = 100 ms.
+- **R304 4.7k** from U40 PG to `EN_3V3`. While U40 PG is low, EN_3V3 =
+  3.588 x 4.7/104.7 = 0.16 V, under U8's 0.4 V falling threshold
+  (SLUSEG9E Table 6.5). Discharge current into PG <= 0.76 mA, inside its
+  1 mA rating (SLVSEU9D Sec 9.3.10).
+- When U40 reaches 95% of VOUT, PG releases and EN_3V3 charges. U8's EN
+  rising threshold is **1.2 V** (Table 6.5; only one value is given):
+  t = 100 ms x ln(3.588/2.388) = **40.7 ms**. If the real threshold were as
+  low as the 0.4 V falling threshold, t = 11.8 ms. Either way >= 6 ms, then
+  U8's 1 ms soft start. ENABLE of the nRF9151 is assumed tied to
+  `+VBAT_LTE` (HDG *ENABLE*: "In products where nRF9151 is always enabled,
+  the ENABLE pin can be connected to VDD ... with a series resistor") --
+  **connectivity must do this**, or the 6 ms is measured from whatever
+  drives ENABLE instead.
+- Power-down: U40 PG drops when VOUT < 90% or when U40 EN goes low (Table
+  9-1), discharging EN_3V3 through R304 in ~5 ms; U8 also has its own 2.3 V
+  UVLO, while U40 keeps regulating down to 1.25 V in. `+3V3` therefore goes
+  first.
+- Rework: remove R304 and fit **R305 (DNP 0R)** to tie EN_3V3 to `+VSYS`
+  -- the old always-on plan -- if U40 is not fitted or the delay is
+  suspected.
+
+Consequence of R308/R309: below `+VSYS` = 2.91 V the whole board shuts off
+(U40 off -> PG low -> U8 off). That is intended: a flat cell browns out
+cleanly instead of cycling through LTE-burst resets. It also means a cell
+below ~3.2 V will not restart the board until external power returns.
+
+**U8 PG** (net `PG_3V3`): open drain, R301 100k pull-up to `+3V3_REG`, to
+TP405. **It gates nothing**: every `+3V3` consumer shares the one rail, so
+there is no later rail to hold off, and the nRF9151 could only read it
+while it is itself powered from `+3V3`. It is a bring-up observable.
+
+## 5. Current-measurement break points
+
+| Rail | Link | Header | Regulator side net | Load side net |
+|---|---|---|---|---|
+| `+3V3` | R300 0R 0805 | J30, DNP 1x2 2.54 mm | `+3V3_REG` | `+3V3` |
+| `+VBAT_LTE` | R302 0R 0805 | J31, DNP 1x2 2.54 mm | `+VBAT_LTE_REG` | `+VBAT_LTE` |
+
+Remove the 0R and connect a Nordic Power Profiler Kit II in ampere-meter
+mode (VIN to pin 1 = regulator side, VOUT to pin 2 = load side). Both FB
+dividers (R8/R9, R306/R307), U8's PG pull-up and the EN_3V3 pull-up are on
+the **regulator side**, so removing a link never opens a control loop or
+changes the sequencing. 0805 rather than the house 0603 because 0R jumpers
+are rated ~2 A in 0805 against ~1 A in 0603 and `+VBAT_LTE` carries 0.5 A
+TX subframes (check the chosen jumper's rating at BOM time). The PPK2's
+1 A ampere-meter limit covers both rails' peaks. A `PWR_FLAG` sits on each
+load-side net because the only `power_out` pin is behind the link.
+
+## 6. +3V3 circuit (U8), as wired
+
+| Ref | Part | Value | Notes |
+|---|---|---|---|
+| U8 | TPS62A02PDDCR | -- | SOT-23-6, pins 1 EN, 2 GND, 3 SW, 4 VIN, 5 PG, 6 FB (Table 5-1). VIN on `+VSYS`; EN on `EN_3V3` (Sec 4); PG on `PG_3V3`. |
+| L1 | Coilcraft XFL4020-102MEC | 1.0 uH | **Footprint now assigned** (`Inductor_SMD:L_Coilcraft_XxL4020`). DCR 10.8/11.9 mOhm, Isat 4.5 A (10%), Irms 5.4 A (745-1) -- above the TPS62A02 3.4 A max high-side limit (Table 6.5). Replaces the footprint-less XGL3520-102MEC. Same 1 uH / 22 uF "++" pair from Table 8-3. |
+| C20 | 4.7 uF 0805 X7R | -- | VIN (Table 8-2). |
+| C21 | 22 uF 0805 X7R | -- | Output (Table 8-2/8-3). |
+| C22 | 120 pF, **DNP** | -- | Feedforward across R8. **Bug fixed:** it was wired `+3V3`-to-GND, contradicting its own description. TI's 120 pF is for the 1.8 V example; at 3.3 V (R1 = 453k) the zero is at 2.9 kHz, unverified -- fit only after measuring PSM ripple. Table 8-3 note 4: requires Cout >= 22 uF (met). |
+| R8 / R9 | 453k / 100k | -- | Eq. 2: VOUT = 0.6 x (1 + 4.53) = **3.318 V**; with VFB 594-606 mV (0-125 C) -> 3.285-3.351 V before resistor tolerance. Under the 3.6 V maxima of DW3210 VDD1/2/3 (DW3000 DS v1.1 Table 4), BT840 and nRF9151 `VDD_GPIO` (1.7-3.6 V). |
+| R301 | 100k | -- | PG pull-up to `+3V3_REG`. |
+| R303/C303/R304/R305 | 100k / 1 uF / 4.7k / 0R DNP | -- | EN_3V3 delay, Sec 4. |
+| R300 + J30 | 0R 0805 + DNP header | -- | Break point, Sec 5. |
+
+Low-battery behaviour: below ~3.45 V on `+VSYS` the TPS62A02 enters 100%
+duty-cycle mode (SLUSEG9E Sec 7.3.2) and `+3V3` tracks `+VSYS` minus the
+high-side FET (100 mOhm) and L1 DCR. At the 2.91 V UVLO point that is still
+~2.8 V -- above the DW3210's 2.4 V VDD2 minimum (DW3000 DS v1.1 Table 4)
+and the 1.7 V floors of the Nordic parts.
+
+Footnote from SLUSEG9E Table 6.3: "Operating continuously at 2-A with
+input voltages < 3.3V ... might result in thermal shutdown" -- irrelevant
+at ~0.45 A.
+
+## 7. Test pads (local nets, `TestPoint:TestPoint_Pad_D1.0mm`)
+
+| TP | Net | Expect |
+|---|---|---|
+| TP400 | `+3V3_REG` | 3.32 V |
+| TP401 | `+3V3` | 3.32 V (0 V with R300 removed) |
+| TP402 | `SW_3V3` | 2.4 MHz switching (PWM) or bursts (PSM) |
+| TP403 | `FB_3V3` | 0.600 V |
+| TP404 | `EN_3V3` | RC ramp to 3.59 V, ~40 ms after PG_LTE |
+| TP405 | `PG_3V3` | high once +3V3 >= 96% |
+| TP406 | `+VBAT_LTE_REG` | 3.59 V |
+| TP407 | `+VBAT_LTE` | 3.59 V (0 V with R302 removed) |
+| TP408 | `EN_LTE` | +VSYS x 0.344 (1.72 V at 5 V) |
+| TP409 | `PG_LTE` | high once VOUT >= 95% |
+| TP410 | `FB_LTE` | 0.500 V |
+| TP411 / TP412 | `L1_LTE` / `L2_LTE` | buck/boost switch nodes |
+| TP413 | `MODE_LTE` | 0 V (PSM) |
+
+**Layout rule for TP402/TP411/TP412 (switch nodes):** place the pad on the
+existing switch-node copper with no stub; if that is not possible, leave
+the pad off the board -- a stub on a switch node is an antenna. FB pads are
+high impedance: probe with >= 10 MOhm.
+
+## 8. U40 footprint -- PLACEHOLDER
+
+`libs/bay_station.pretty/TI_DLA0010A_VSON-HR-10_2x3mm_P0.5mm_PLACEHOLDER.kicad_mod`.
+Confirmed from SLVSEU9D package outline 4223750/D: 2.1/1.9 x 3.1/2.9 mm body,
+5 pins per long side at 0.5 mm, pin 1 opposite pin 10, no exposed pad.
+Estimated from the "Example board layout" text (dimension leaders lost in
+extraction): pins 1-5 lands 0.6 x 0.25 mm, pins 6-10 lands 0.9 x 0.25 mm,
+column centres 1.3 mm apart. The drawing also carries "4X (0.75)" and
+"4X (0.25)" that were not assigned -- some power pins (VIN/L1/GND/L2/VOUT)
+may have wider lands. **Verify against the rendered datasheet page or TI's
+CAD model before fab.** TI also publishes a HotRod QFN PCB-attachment
+application report (cited in SLVSEU9D Sec 13.2.1).
+
+## 9. Why TPS62A02 for +3V3 (original selection, 2026-09)
+
+Kept for the reasoning; the load figures in it are historical -- Sec 3 is current.
 
 **U8 = TPS62A02PDDCR** (Texas Instruments), a 2.5V-5.5V input, 2A synchronous
 step-down buck converter, SOT-23-6 (DDC package), PSM+PWM auto power-save
@@ -165,36 +291,7 @@ by a BLE one, then rose slightly to ~358 mA when the GNSS and orientation
 sensors were added. Sizing generously up front is what let all three happen
 for free.
 
-### Circuit built on `regulation.kicad_sch`
-
-| Ref | Part | Value | Notes |
-|---|---|---|---|
-| U8 | TPS62A02PDDCR | -- | Buck converter, SOT-23-6. See "Symbol note" below. |
-| L1 | Power inductor | 1uH | Between SW (pin 3) and the output node, per Table 8-3. No exact KiCad-default footprint for the Coilcraft XGL3520-102MEC (2A-rated) was found; pick footprint/PN at BOM time, same convention as this board's other generic parts. |
-| C20 | Ceramic cap | 4.7uF | VIN decoupling, 0805 (per Table 8-2's Murata GRM21BR71A475KA73L) -- sized up from 0603 given the same DC-bias-derating concern already flagged for `power_bms.kicad_sch`'s C1. |
-| C21 | Ceramic cap | 22uF | Output (`+3V3_SYS`) decoupling, 0805 (Murata GRM21BZ71A226KE15L), matching Table 8-3's recommended L=1uH/Cout=22uF pair for VOUT>=1.8V. |
-| C22 | Ceramic cap | 120pF | Optional feedforward cap across R8, per the datasheet's own PSM-ripple-reduction note ("a 120pF capacitor is good for the 1.8V output typical application" -- reused here since this rail also runs PSM). |
-| R8 | Resistor | 453k | FB divider top (VOUT to FB). See math below. |
-| R9 | Resistor | 100k | FB divider bottom (FB to GND) -- at the datasheet's own stated ceiling ("R2 must not be higher than 100 kOhm to provide acceptable noise sensitivity"). |
-
-**Output voltage math (Eq. 2):** `R1 = R2 x (VOUT/VFB - 1)`. Target VOUT =
-3.3V, VFB = 0.6V typ, R2 = 100k (datasheet ceiling): `R1 = 100k x (3.3/0.6 - 1)
-= 100k x 4.5 = 450k`. 453k is the nearest standard 1% E96 value (100k x 4.53),
-giving `VOUT = 0.6V x (1 + 453k/100k) = 0.6V x 5.53 = 3.318V` -- within 0.5% of
-the 3.3V target, and with comfortable margin under both abs-max ratings above
-(0.28V margin to ESP32-S3's 3.6V, 0.68V margin to DWM3000's 4.0V).
-
-**Intended rail names (not yet wired, per the placement-only rule):** input =
-`+VSYS` (from `power_bms.kicad_sch`'s MCP73871 `OUT`/`VBATT_PROT` node, once a
-future wiring pass connects the two sheets), output = **`+3V3_SYS`** (a new
-regulated rail intended to feed U3 on `connectivity.kicad_sch` and U4-U7 on
-`uwb_array.kicad_sch`). EN (pin 1) is left unconnected here -- it needs to be
-tied to `+VSYS` (always-on) in a future wiring pass, since "EN must be
-terminated and not left floating" per the datasheet. PG (pin 5, power-good) is
-intentionally left unconnected/unused -- the datasheet explicitly allows this
-("If not used, leave the power-good pin open or connect to GND").
-
-### Symbol note (flattened cache, same precedent as AO3401A)
+## 10. U8 symbol note (flattened cache, same precedent as AO3401A)
 
 KiCad's own default `Regulator_Switching:TPS62A02PDDCR` symbol is defined as
 `(extends "TPS62A01PDDC")` (inherits the 1A variant's graphics/pins). Per the
@@ -210,7 +307,7 @@ produces one expected, benign `lib_symbol_issues` ERC warning ("Symbol
 'TPS62A02PDDCR' not found in symbol library 'Regulator_Switching'"), the same
 category and cause as the existing AO3401A warning.
 
-## 2. DWM3000 GPIO5/GPIO6 SPI-mode-strap pull resistors (uwb_array.kicad_sch)
+## 11. DWM3000 GPIO5/GPIO6 SPI-mode-strap pull resistors (uwb_array.kicad_sch)
 
 **The gap:** the real Qorvo DWM3000 Data Sheet Rev B explicitly shows, in both
 Figure 1 ("Timing diagram for cold start POR") and Figure 2 ("Timing diagram
@@ -249,113 +346,31 @@ is also what the DWM3000's own internal pull-down default already selects --
 this reinforces/guarantees that default in hardware rather than leaving it to
 chance.
 
-## 3. ESP32-S3-WROOM-1 boot-strapping, buttons, and flashing interface -- HISTORICAL
+## Reference designators
 
-> **All of the circuitry in this section has been deleted from the schematic.**
-> The BT840 programs over SWD, so the boot straps, the EN RC delay, the BOOT
-> button and the data-capable USB-C are all gone -- which also resolved the
-> two-USB-C open item. `programming_debug.kicad_sch` is now a 2x5 1.27mm ARM
-> Cortex Debug header (J3) plus the RESET button (SW2). Kept below as a record
-> of why each part was there.
-
-### Boot-strapping pull resistors
-
-Per the real Espressif ESP32-S3-WROOM-1 & WROOM-1U Datasheet v1.8 (already
-cited above), Section 4 "Boot Configurations" and Table 4-1 "Default
-Configuration of Strapping Pins":
-
-| Ref | Pin (U3) | Direction | Value | Why |
-|---|---|---|---|---|
-| R18 | GPIO0 (pin 27) | pull-up to `+3V3_SYS` | 10k | GPIO0=1 selects SPI Boot (normal boot) per Table 4-3 "Chip Boot Mode Control". Default strap state is already weak-pull-up (Table 4-1, ~45k per Table 6-3's `RPU`), but the datasheet's own guidance ("It is recommended to place a pull-up resistor at the GPIO0 pin") is followed to make it explicit/robust. |
-| R19 | GPIO3 (pin 15) | pull-down to GND | 10k | Section 4.4 "JTAG Signal Source Control" states verbatim: "This pin does not have any internal pull resistors and the strapping value must be controlled by the external circuit that cannot be in a high impedance state." Default eFuse JTAG-source config (Table 4-5, all-zero) ignores GPIO3 for source selection, so the pull *direction* isn't functionally critical yet, but an external pull is required by the datasheet's own text regardless of eFuse state. |
-| R20 | GPIO45 (pin 26) | pull-down to GND | 10k | Table 4-4 "VDD_SPI Voltage Control": GPIO45=0 selects the 3.3V VDD3P3_RTC-derived SPI-flash voltage (matching this module's standard 3.3V-flash variant, not the `-N16R16VA` 1.8V variant). Matches GPIO45's own default weak-pull-down (Table 4-1), made explicit. |
-| R21 | GPIO46 (pin 16) | pull-down to GND | 10k | Table 4-1 default is weak-pull-down; Espressif explicitly states the combination "GPIO46=1 with GPIO0=0 is invalid and may trigger unexpected behavior" -- pulling GPIO46 down guarantees a valid boot-mode strap combination alongside R18/SW1. |
-| R22 + C23 | EN (pin 3) | RC delay: 10k pull-up to `+3V3_SYS` + 1uF to GND | 10k / 1uF | Not a strapping pin, but Espressif's real **ESP32-S3 Hardware Design Guidelines** (`docs.espressif.com/projects/esp-hardware-design-guidelines/en/latest/esp32s3/schematic-checklist.html`, the "Schematic Checklist" section, distinct from the module datasheet) states verbatim: "The recommended setting for the RC delay circuit is usually R = 10 kOhm and C = 1 uF." |
-
-### Buttons
-
-- **SW1 (BOOT):** momentary switch from GPIO0 to GND. Pulling GPIO0 low at
-  reset enters Joint Download Boot mode (Table 4-3) for flashing -- standard
-  practice on essentially every ESP32-S3 dev/breakout board.
-- **SW2 (RESET):** momentary switch from EN to GND, alongside the R22/C23 RC
-  delay -- standard manual-reset practice.
-
-Both use KiCad's default `Switch:SW_Push` (a real, generic, 2-pin part already
-in KiCad's bundled `Switch.kicad_sym`) -- footprint left blank, pick an exact
-tactile-switch PN (e.g. Panasonic EVQ-PUJ or C&K PTS645-series) at BOM time,
-matching this board's existing convention for generic connectors/passives
-(see `libs/components.csv`).
-
-### Flashing/programming interface decision: native USB, with a caveat
-
-**Chosen: native USB via the ESP32-S3's built-in USB-OTG peripheral**, not a
-separate UART-to-USB bridge IC (e.g. CH340/CP2102). Reasoning, backed by the
-real datasheet:
-
-- Espressif ESP32-S3-WROOM-1 Datasheet v1.8, Section 5.2.1.7 "USB 2.0 OTG
-  Full-Speed Interface" and 5.2.1.8 "USB Serial/JTAG Controller": the chip has
-  a full-speed USB 2.0 OTG peripheral *and* a separate USB-Serial/JTAG
-  controller with CDC-ACM (virtual serial port) emulation built in --
-  "Internal PHY, so no or very few external components needed to connect to a
-  host computer" and "CDC-ACM supports host controllable chip reset and entry
-  into download mode."
-- Table 4-3 "Chip Boot Mode Control" explicitly lists "USB-Serial-JTAG
-  Download Boot" and "USB-OTG Download Boot" as supported Joint Download Boot
-  methods -- flashing over native USB is a first-class, Espressif-supported
-  path, not a hack.
-- No extra bridge IC is needed, saving part count/cost/board area on a board
-  that already has USB-C connectors for power.
-
-**The caveat (a real finding, not glossed over):** the board's *existing*
-USB-C receptacle (`J2` on `power_bms.kicad_sch`) is
-`Connector:USB_C_Receptacle_PowerOnly_6P` -- **it has no D+/D- pins at all**,
-so it physically cannot carry the native-USB data lines (U3's `USB_D-`/`USB_D+`
-pins, pins 13/14 on `connectivity.kicad_sch`). Since `power_bms.kicad_sch` is
-explicitly out of scope for this task (must not be edited), this sheet places
-a **second, dedicated data-capable USB-C receptacle**:
-
-| Ref | Part | Notes |
-|---|---|---|
-| J3 | `Connector:USB_C_Receptacle_USB2.0_14P` | Real KiCad-default part with D+/D- pins (A6/A7/B6/B7). Intended to carry U3's native USB (D+/D- to U3 pins 14/13) for programming/debug. |
-| R23 | 5.1k, J3 CC1 to GND | Standard USB-C UFP-device pulldown, matching the identical R6/R7 convention already used for J2 on `power_bms.kicad_sch`. |
-| R24 | 5.1k, J3 CC2 to GND | See R23. |
-
-**Open concern, flagged rather than fixed:** this leaves the board with *two*
-USB-C connectors (J2 for power-only, J3 for programming/debug) instead of one
-combined connector. A future hardware revision could swap J2 for a
-power+data-capable USB-C receptacle (e.g.
-`Connector:USB_C_Receptacle_USB2.0_16P`) to consolidate to a single connector
-and drop J3/R23/R24 entirely -- not done here since `power_bms.kicad_sch`
-cannot be touched in this pass.
-
-## Reference designators used
-
-`U8, L1, C20, C21, C22, R8, R9` (regulation.kicad_sch); `R10-R17`
-(uwb_array.kicad_sch additions); `SW1, SW2, J3, R18-R24, C23`
-(programming_debug.kicad_sch). All within the pre-cleared next-available
-ranges for this board.
+Regulation sheet: U8, L1, C20-C22, R8, R9 (existing); U40, L300, C300-C303,
+R300-R312, J30, J31, TP400-TP413, #FLG300, #FLG301 (added 2026-11-17).
+**TP4xx is outside the power block in the coordinator's designator table
+(TP100-TP399 is io's); TP400-TP449 were used because the power block had
+no TP range -- confirm with the coordinator.**
 
 ## Open concerns / not fully confident about
 
-- **Two USB-C connectors** (J2 power-only, J3 data) instead of one combined
-  connector -- see "flashing/programming interface" section above.
-- **L1's exact footprint** (Coilcraft XGL3520-102MEC or equivalent 1uH/2A+
-  shielded power inductor) has no exact match in KiCad's default
-  `Inductor_SMD.pretty` library under that part number -- verify/source at BOM
-  time, same spirit as this repo's other flagged footprint estimates.
-- **EN (U8 pin 1) and PG (U8 pin 5) are unconnected** on this placement-only
-  pass -- EN needs to be tied to `+VSYS` (always-on) in the future wiring
-  pass, per the datasheet's "must be terminated and not left floating"
-  requirement.
-- **`+VSYS`'s exact worst-case high-side voltage** (when wall/USB power is
-  present and MCP73871's power-path FETs are conducting) was not independently
-  re-derived here -- it's assumed to stay within TPS62A02's 6.5V absolute-max
-  VIN based on `power_bms_notes.md`'s existing "~5V-class input" assumption
-  and MCP73871's own 7.0V IN absolute-max, but this chain of assumptions is
-  worth double-checking against real measured `+VSYS` behavior once
-  `power_bms.kicad_sch` is actually wired and prototyped.
-- **GPIO3's pull direction** (chosen pull-down here) is not functionally
-  forced by the datasheet's default eFuse JTAG-source configuration (which
-  ignores GPIO3) -- it's a conservative "don't leave it floating" choice, not
-  a datasheet-mandated direction; revisit if a future revision intentionally
-  changes the JTAG-source eFuse configuration.
+- **U40 footprint is a placeholder** (Sec 8).
+- **Nordic PDFs not opened.** All nRF9151 facts come from the
+  docs.nordicsemi.com HTML pages (PS and HDG); the PDFs are behind a
+  Cloudflare challenge. Quote the PDF revision once someone downloads it.
+- **nRF9151 ENABLE wiring is assumed** (tied to `+VBAT_LTE` through a
+  series resistor). If connectivity drives ENABLE from something else, the
+  `VDD_GPIO` sequencing argument in Sec 4 must be redone.
+- **U8 EN rising threshold** is given as a single 1.2 V figure; the delay
+  is checked against both 1.2 V and 0.4 V to bracket it.
+- **C22 value** at 3.3 V is not verified (DNP until measured).
+- **UVLO at 2.91 V `+VSYS`** includes the BAT-to-OUT and Q1 drops, so the
+  cell-side cut-off under LTE bursts is ~0.2-0.3 V higher (~3.1-3.2 V
+  cell). Tune R308 once the cell and its protection IC are chosen.
+- **`+VSYS` high side** still rests on the "~5 V-class input" assumption
+  from `power_bms_notes.md`; both converters are 5.5 V-recommended / 6 V
+  (TPS63802) or 6.5 V (TPS62A02) abs max.
+- **0R jumper current rating** (0805, ~2 A typical) to be confirmed for
+  the chosen part.
