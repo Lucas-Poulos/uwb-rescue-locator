@@ -51,7 +51,7 @@ CLASS_RANK = {"POWER_HI": 0, "POWER_MID": 1, "FASTDIG": 2, "POWER_LO": 3, "CLK":
 
 
 class Router:
-    def __init__(self, model, seconds=900.0, skip_classes=("RF50",), do_gnd=True, verbose=True, only=None):
+    def __init__(self, model, seconds=900.0, skip_classes=("RF50", "CLK"), do_gnd=True, verbose=True, only=None):
         self.only = set(only) if only else None
         self.m = model
         self.g = model.grid
@@ -65,6 +65,7 @@ class Router:
         self.rips = {}
         self.access_cache = {}
         self.failed = {}         # net -> number of unconnected components left
+        self.necked = {}         # net -> narrowest width it had to be routed at
         self.iid = 0
         self.stats = dict(expanded=0, searches=0)
         self.limit = 350000
@@ -82,11 +83,11 @@ class Router:
         iy, ix = divmod(i, self.g.W)
         return ix, iy, l
 
-    def tiers(self, net):
+    def tiers(self, net, hw=None):
         info = self.m.nets[net]
-        return self.g.tier(info["track"] / 2), self.g.tier(info["via_dia"] / 2)
+        return self.g.tier((info["track"] / 2) if hw is None else hw), self.g.tier(info["via_dia"] / 2)
 
-    VIA_SPACING = 0.65      # centre to centre of two vias: drill-to-drill 0.25 with 0.3 drills + margin
+    VIA_SPACING = 0.70      # centre to centre of two vias: drill-to-drill 0.25 with 0.3 drills + margin
 
     def via_block(self, x, y, delta):
         g = self.g
@@ -98,6 +99,29 @@ class Router:
                 gx, gy = g.xy(ix, iy)
                 if math.hypot(gx - x, gy - y) < rr:
                     g.viablk[iy * g.W + ix] += delta
+
+    def verify_runs(self, net, path, width, ignore):
+        """Exact check of every run and via of a found path against the obstacle set
+        (nets in `ignore` are about to be ripped)."""
+        info = self.m.nets[net]
+        g = self.g
+        k, n = 0, len(path)
+        while k < n:
+            ix, iy, l = self.dec(path[k])
+            j = k
+            while j + 1 < n and self.dec(path[j + 1])[2] == l:
+                j += 1
+            ix2, iy2, _ = self.dec(path[j])
+            x0, y0 = g.xy(ix, iy)
+            x1, y1 = g.xy(ix2, iy2)
+            if not self.obst.seg_ok(net, l, x0, y0, x1, y1, width / 2, ignore=ignore):
+                return False
+            if j + 1 < n:
+                for ll in (F, B):
+                    if not self.obst.seg_ok(net, ll, x1, y1, x1, y1, info["via_dia"] / 2, ignore=ignore):
+                        return False
+            k = j + 1
+        return True
 
     def stub_ok(self, net, layer, poly):
         if not poly:
@@ -264,14 +288,14 @@ class Router:
         return comps
 
     # ------------------------------------------------------------------ search
-    def search(self, net, sources, goals, soft, margin_cells):
+    def search(self, net, sources, goals, soft, margin_cells, hw=None):
         """A* from `sources` ({node:(cost,poly)}) to any node in `goals` ({node:(cost,poly)}).
         Returns (path_nodes, src_poly, goal_poly, conflicts) or None."""
         g = self.g
         W, H = g.W, g.H
         if not sources or not goals:
             return None
-        tier, vtier = self.tiers(net)
+        tier, vtier = self.tiers(net, hw)
         S0, S1 = tier.S
         D0, D1 = tier.D
         VS = vtier.S
@@ -355,9 +379,19 @@ class Router:
                     par[nn] = nd
                     h = hfun(jx, jy, l)
                     heapq.heappush(heap, (ng + WEIGHT * h, ng, nn))
-            # via
+            # via (not within 6 steps of the previous via on this path: drill-to-drill 0.25)
             idx = i2
-            if not nopad[idx] and not viablk[idx]:
+            near_via = False
+            q = nd
+            for _k in range(7):
+                pq = par.get(q)
+                if pq is None:
+                    break
+                if (pq & 1) != (q & 1):
+                    near_via = True
+                    break
+                q = pq
+            if not near_via and not nopad[idx] and not viablk[idx]:
                 ol = 1 - l
                 s0, s1 = VS[0][idx], VS[1][idx]
                 if (not s0 or s0 == net) and (not s1 or s1 == net):
@@ -414,9 +448,9 @@ class Router:
         return path, sources[path[0]][1], goals[found][1], conflicts
 
     # ------------------------------------------------------------------ commit / rip
-    def commit(self, net, path, src_poly, goal_poly):
+    def commit(self, net, path, src_poly, goal_poly, width=None):
         info = self.m.nets[net]
-        w = info["track"]
+        w = info["track"] if width is None else width
         recs = self.rec.setdefault(net, [])
         g = self.g
 
@@ -424,7 +458,8 @@ class Router:
             if math.hypot(x1 - x0, y1 - y0) < 1e-6:
                 return
             self.iid += 1
-            pr = Prim("seg", (x0, y0, x1, y1, width / 2), (l,), net, CLR, static=False, owner_item=self.iid)
+            kclr = CLR_KEEPOFF if info["cls"] in ("CLK", "RF50") else CLR
+            pr = Prim("seg", (x0, y0, x1, y1, width / 2), (l,), net, kclr, static=False, owner_item=self.iid)
             g.add_dyn(self.iid, pr)
             oid = self.obst.add(pr)
             recs.append(("seg", l, x0, y0, x1, y1, width, stub, self.iid, oid))
@@ -472,12 +507,18 @@ class Router:
             self.obst.remove(oid)
 
     # ------------------------------------------------------------------ net routing
+    def width_ladder(self, net):
+        t = self.m.nets[net]["track"]
+        return [t] + [x for x in (0.5, 0.3, 0.2) if x < t - 1e-9]
+
     def connect(self, net, comp, tree_nodes):
-        """Join `comp` to the tree. Returns ('ok'|'ripped'|'fail', conflicts)."""
-        for soft in (True,):
+        """Join `comp` to the tree, trying the class width first and necking the
+        track down (0.5, 0.3, 0.2 mm) if it will not fit.  Returns ('ok'|'ripped'|'fail', conflicts)."""
+        for width in self.width_ladder(net):
+            hw = width / 2
             for margin in (150, 100000):
                 for _retry in range(25):
-                    res = self.search(net, comp["nodes"], tree_nodes, soft, margin)
+                    res = self.search(net, comp["nodes"], tree_nodes, True, margin, hw)
                     if res is None:
                         break
                     path, sp, gp, conf = res
@@ -496,10 +537,15 @@ class Router:
                     if conf and any(self.rips.get(c, 0) >= MAX_RIPS for c in conf):
                         res = None
                         break
+                    if not self.verify_runs(net, path, width, conf):
+                        self.stats["verify_rejects"] = self.stats.get("verify_rejects", 0) + 1
+                        break
                     for c in conf:
                         self.rips[c] = self.rips.get(c, 0) + 1
                         self.rip(c)
-                    self.commit(net, path, sp, gp)
+                    self.commit(net, path, sp, gp, width)
+                    if width < self.m.nets[net]["track"] - 1e-9:
+                        self.necked[net] = min(self.necked.get(net, 9), width)
                     return ("ripped" if conf else "ok"), conf
                 if time.time() > self.deadline:
                     return "fail", set()
@@ -582,6 +628,12 @@ class Router:
         for i in order:
             total_conn += max(0, len(self.components(i)) - 1)
         self.total_conn = total_conn
+        self.skipped_open = {}
+        for idx, info in self.m.nets.items():
+            if info["cls"] in self.skip and len(info["pads"]) >= 2 and not info["name"].startswith("unconnected-"):
+                k = len(self.components(idx)) - 1
+                if k > 0:
+                    self.skipped_open[info["name"]] = k
         self.log("nets to route: %d, connections: %d, grid %dx%d" % (len(order), total_conn, self.g.W, self.g.H))
         q = deque(order)
         done = 0
@@ -635,8 +687,14 @@ class Router:
                 continue
             cost, nd, poly = best
             ix, iy, l = self.dec(nd)
-            self.commit(net, [nd], poly, None)
             x, y = self.g.xy(ix, iy)
+            if not (self.stub_ok(net, LAYER_OF[l], poly) and
+                    self.obst.seg_ok(net, F, x, y, x, y, info["via_dia"] / 2) and
+                    self.obst.seg_ok(net, B, x, y, x, y, info["via_dia"] / 2)):
+                failed += 1
+                self.gnd_fail.append((pd["ref"], pd["num"]))
+                continue
+            self.commit(net, [nd], poly, None)
             self.iid += 1
             pr = Prim("circ", (x, y, info["via_dia"] / 2), (F, B), net, CLR, static=False, owner_item=self.iid)
             self.g.add_dyn(self.iid, pr)
@@ -682,10 +740,12 @@ class Router:
             connections_total=tc, connections_unrouted=left,
             completion_pct=round(100.0 * (tc - left) / tc, 2),
             nets_failed=sorted(self.m.nets[n]["name"] for n in self.failed),
+            nets_necked_down={self.m.nets[n]["name"]: w for n, w in sorted(self.necked.items())},
             tracks=tracks, vias=vias, stub_segments=stubs, stub_length_mm=round(stub_len, 1),
             gnd_pads_without_via=getattr(self, "gnd_fail", []),
             rip_ups=sum(self.rips.values()), astar_searches=self.stats["searches"],
-            astar_expanded=self.stats["expanded"], astar_limit_hits=self.stats.get("limit_hits", 0))
+            astar_expanded=self.stats["expanded"], astar_limit_hits=self.stats.get("limit_hits", 0), verify_rejects=self.stats.get("verify_rejects", 0),
+            skipped_classes=sorted(self.skip), skipped_class_open_connections=getattr(self, "skipped_open", {}))
 
 
 def main():
@@ -694,16 +754,16 @@ def main():
     ap.add_argument("--out", help="write here (default: overwrite --board)")
     ap.add_argument("--pitch", type=float, default=0.1)
     ap.add_argument("--seconds", type=float, default=900.0)
-    ap.add_argument("--skip-class", action="append", default=None, help="netclass to leave alone (default RF50)")
+    ap.add_argument("--skip-class", action="append", default=None, help="netclass to leave alone (default RF50 and CLK: hand-first classes)")
     ap.add_argument("--no-gnd", action="store_true", help="skip the GND fan-out vias")
     ap.add_argument("--report", help="write the JSON report here")
     ap.add_argument("--only", action="append", help="route only this net (repeatable); for debugging")
     a = ap.parse_args()
     board = U.load_board(a.board)
     t0 = time.time()
-    model = Model(board, a.pitch, skip_classes=tuple(a.skip_class or ["RF50"]))
+    model = Model(board, a.pitch, skip_classes=tuple(a.skip_class or ["RF50", "CLK"]))
     print("model built in %.1fs" % (time.time() - t0), flush=True)
-    r = Router(model, seconds=a.seconds, skip_classes=tuple(a.skip_class or ["RF50"]), do_gnd=not a.no_gnd, only=a.only)
+    r = Router(model, seconds=a.seconds, skip_classes=tuple(a.skip_class or ["RF50", "CLK"]), do_gnd=not a.no_gnd, only=a.only)
     r.run()
     ntrk, nvia = r.write(board)
     U.save_board(board, a.out or a.board)

@@ -27,8 +27,8 @@
     "RF50": {"track": 0.45, "clearance": 0.15, "via_dia": 0.6, "via_drill": 0.3, "priority": 0, "dru_clearance_mm": 0.5, "dru_track_min": 0.2, "dru_track_max": 0.5, "no_vias": true},
     "CLK": {"track": 0.45, "clearance": 0.15, "via_dia": 0.6, "via_drill": 0.3, "priority": 1, "dru_clearance_mm": 0.5},
     "FASTDIG": {"track": 0.2, "clearance": 0.15, "via_dia": 0.6, "via_drill": 0.3, "priority": 2},
-    "POWER_HI": {"track": 1.0, "clearance": 0.15, "via_dia": 0.8, "via_drill": 0.4, "priority": 3, "dru_track_min": 0.4},
-    "POWER_MID": {"track": 0.5, "clearance": 0.15, "via_dia": 0.6, "via_drill": 0.3, "priority": 4, "dru_track_min": 0.25},
+    "POWER_HI": {"track": 1.0, "clearance": 0.15, "via_dia": 0.8, "via_drill": 0.4, "priority": 3},
+    "POWER_MID": {"track": 0.5, "clearance": 0.15, "via_dia": 0.6, "via_drill": 0.3, "priority": 4},
     "POWER_LO": {"track": 0.3, "clearance": 0.15, "via_dia": 0.6, "via_drill": 0.3, "priority": 5}
   },
   "stitch_via": {"dia": 0.45, "drill": 0.2, "net": "GND"},

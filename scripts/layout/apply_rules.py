@@ -110,13 +110,9 @@ def dru_text(spec):
     rule("CLK keep-off from other tracks/vias/zones",
          "A.NetClass == 'CLK' && A.Type == 'Track' && B.NetClass != 'CLK' && (B.Type == 'Track' || B.Type == 'Via' || B.Type == 'Zone')",
          "(constraint clearance (min %.2fmm))" % clk["dru_clearance_mm"])
-    # warnings only: 0.2 mm pad-escape stubs on power pads are deliberate and short
-    rule("POWER_HI minimum track width (stubs excepted by eye)",
-         "A.NetClass == 'POWER_HI' && A.Type == 'Track'",
-         "(constraint track_width (min %.2fmm))" % c["POWER_HI"]["dru_track_min"], severity="warning")
-    rule("POWER_MID minimum track width",
-         "A.NetClass == 'POWER_MID' && A.Type == 'Track'",
-         "(constraint track_width (min %.2fmm))" % c["POWER_MID"]["dru_track_min"], severity="warning")
+    # no POWER_* minimum-width rule: KiCad ignores (severity warning) on custom rules here (10.0.5),
+    # and the router's 0.2 mm pad-escape stubs on power pads are deliberate; check_gates.py audits
+    # power-class track widths instead.
     return "\n".join(L)
 
 

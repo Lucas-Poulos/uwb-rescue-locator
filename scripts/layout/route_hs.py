@@ -58,6 +58,7 @@ def bend_points(pts, style="chamfer", cut=None, radius=BEND_R):
     at 45 degrees (for a 90 degree turn two 45 degree turns); the cut distance
     along each leg is `cut` (default 0.6 mm, limited to 40 % of the leg)."""
     cut = 0.6 if cut is None else cut
+    pts = [p for i, p in enumerate(pts) if i == 0 or math.dist(p, pts[i - 1]) > 1e-6]
     n = len(pts)
     out = []
     cur = pts[0]
@@ -348,6 +349,8 @@ def via_fence(board, items, gnd="GND", pitch=FENCE_PITCH, offset=FENCE_OFFSET,
     net = U.get_net(board, gnd)
     placed = []
     r = via[0] / 2
+    from stitch import dw3210_cutouts       # no vias under a DW3210 body (DS v1.1 Fig 35)
+    cuts = dw3210_cutouts(board)
     for (a, b) in _polyline_pts(items):
         ux, uy, L = _unit(*a, *b)
         if L < 2 * skip_ends:
@@ -360,6 +363,8 @@ def via_fence(board, items, gnd="GND", pitch=FENCE_PITCH, offset=FENCE_OFFSET,
                 d = skip_ends + i * step
                 x = a[0] + ux * d + nx * offset * side
                 y = a[1] + uy * d + ny * offset * side
+                if any(abs(x - cx) < w / 2 + r and abs(y - cy) < h / 2 + r for (cx, cy, w, h) in cuts):
+                    continue
                 if _via_site_ok(board, net, x, y, via, min_pad_clear):
                     v = U.add_via(board, net, x, y, via[0], via[1], locked)
                     placed.append(v)
@@ -481,26 +486,38 @@ def meander_capacity(L, width=RF_W, gap_factor=3.0, amp_max=10.0):
 
 def _try_meander(board, net, layer, trk, extra, pa, pb, style):
     """Replace straight track `trk` by a meandered polyline adding ~extra mm.
-    Tries both sides of the leg; returns (new_items, added_len) or None."""
+    Tries both sides of the leg; the meander is built on a chamfer-length model, so
+    with arcs (or any style) the length actually placed is measured and the request
+    corrected, up to 4 rounds.  Returns (new_items, added_len) or None."""
     s, e = trk.GetStart(), trk.GetEnd()
     a, b = (U.mm(s.x), U.mm(s.y)), (U.mm(e.x), U.mm(e.y))
     w = U.mm(trk.GetWidth())
     old_len = U.mm(trk.GetLength())
-    for side in (1, -1):
-        try:
-            cand = meander_points(a, b, extra, w, side=side)
-        except ValueError:
-            return None
-        # the leg itself is the track being replaced: remove it for the probe
-        board.Remove(trk)
-        ok = all(seg_clearance_ok(board, net, layer, cand[i], cand[i + 1], w,
-                                  ignore_pads={tuple(pa), tuple(pb)}, clearance_trk=0.5)
-                 for i in range(len(cand) - 1))
-        if ok:
-            new, ln = microstrip_path(board, net, layer, cand, w, style, cut=0.45)
-            return new, ln - old_len
+    board.Remove(trk)
+    try:
+        for side in (1, -1):
+            want = extra
+            for _round in range(4):
+                try:
+                    cand = meander_points(a, b, want, w, side=side)
+                except ValueError:
+                    break
+                if not all(seg_clearance_ok(board, net, layer, cand[i], cand[i + 1], w,
+                                            ignore_pads={tuple(pa), tuple(pb)}, clearance_trk=0.5)
+                           for i in range(len(cand) - 1)):
+                    break
+                new, ln = microstrip_path(board, net, layer, cand, w, style, cut=0.45)
+                added = ln - old_len
+                if abs(added - extra) <= 0.1 or _round == 3:
+                    return new, added
+                for it in new:
+                    board.Remove(it)
+                want += extra - added
         board.Add(trk)
-    return None
+        return None
+    except Exception:
+        board.Add(trk)
+        raise
 
 
 def match_group(board, group, layer=U.F_CU, width=RF_W, tol_mm=0.5, style="chamfer"):

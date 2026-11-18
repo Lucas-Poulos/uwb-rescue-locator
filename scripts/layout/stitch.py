@@ -267,16 +267,23 @@ def main():
     ap.add_argument("--board", required=True)
     ap.add_argument("--out")
     ap.add_argument("--zones", action="store_true", help="also add DW3210 cut-outs and the four GND pours")
+    ap.add_argument("--cutouts-only", action="store_true", help="only add the DW3210 cut-out rule areas (run BEFORE routing so the router and the GND fan-out keep out of them) and exit")
     ap.add_argument("--pitch", type=float, default=GEN_PITCH)
     a = ap.parse_args()
     GEN_PITCH = a.pitch
     pcbnew.KIID.SeedGenerator(0x57175)
     b = U.load_board(a.board)
+    if a.cutouts_only:
+        n = len(add_dw3210_cutouts(b))
+        print("added %d DW3210 cut-out rule areas" % n)
+        U.save_board(b, a.out or a.board)
+        return
     st = Stitcher(b)
     stats = st.run()
     print("candidates/placed:", json.dumps(stats), "-> %d GND vias" % len(st.placed))
     if a.zones:
-        add_dw3210_cutouts(b)
+        if not any(str(z.GetZoneName()).startswith("DW3210_CUTOUT") for z in b.Zones()):
+            add_dw3210_cutouts(b)
         add_gnd_zones(b)
     U.save_board(b, a.out or a.board)
 

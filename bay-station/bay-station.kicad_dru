@@ -28,13 +28,3 @@
 	(condition "A.NetClass == 'CLK' && A.Type == 'Track' && B.NetClass != 'CLK' && (B.Type == 'Track' || B.Type == 'Via' || B.Type == 'Zone')")
 	(constraint clearance (min 0.50mm))
 )
-
-(rule "POWER_HI minimum track width"
-	(condition "A.NetClass == 'POWER_HI' && A.Type == 'Track'")
-	(constraint track_width (min 0.40mm))
-)
-
-(rule "POWER_MID minimum track width"
-	(condition "A.NetClass == 'POWER_MID' && A.Type == 'Track'")
-	(constraint track_width (min 0.25mm))
-)

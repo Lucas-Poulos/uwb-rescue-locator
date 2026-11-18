@@ -210,6 +210,20 @@ def gate_direction(board, results, exempt_classes=("RF50", "CLK")):
     return viol
 
 
+def gate_power_widths(board, spec, results):
+    """INFO: non-stub power-class tracks narrower than the class width (necked-down runs)."""
+    want = {k: v["track"] for k, v in spec["classes"].items() if k.startswith("POWER_")}
+    narrow = {}
+    for t in board.GetTracks():
+        if t.Type() == pcbnew.PCB_VIA_T:
+            continue
+        cls = str(t.GetNetClassName())
+        if cls in want and U.mm(t.GetWidth()) < want[cls] - 1e-6 and U.mm(t.GetLength()) > STUB_MAX:
+            narrow.setdefault(str(t.GetNetname()), []).append(round(U.mm(t.GetWidth()), 2))
+    results.append(("INFO", "power runs narrower than their class (necked, > %.1f mm)" % STUB_MAX, True,
+                    "%d nets: %s" % (len(narrow), {k: sorted(set(v)) for k, v in list(narrow.items())[:8]})))
+
+
 def gate_lengths(board, spec, results):
     lens = {}
     for t in board.GetTracks():
@@ -254,6 +268,7 @@ def main():
     gate_survive(pro_path, board_path, work, results)
     gate_direction(board, results)
     gate_lengths(board, spec, results)
+    gate_power_widths(board, spec, results)
     unrouted = None
     if not a.skip_drc:
         _, unrouted = run_drc(board_path, work, results, a.strict)

@@ -24,9 +24,10 @@ Order of work on the placed board:
 KP=/Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/Current/bin/python3
 $KP scripts/layout/apply_rules.py                         # once; rewrites .kicad_pro netclasses + .kicad_dru
 # on a SCRATCH copy (never the file under version control until the result is reviewed):
+$KP scripts/layout/stitch.py --board SCRATCH/bay-station.kicad_pcb --cutouts-only  # DW3210 keep-out rule areas FIRST
 $KP scripts/layout/route_hs_uwb.py all --board SCRATCH/bay-station.kicad_pcb     # RF x4 + fence, UWB_CLK group
 $KP scripts/layout/route_manhattan.py --board SCRATCH/bay-station.kicad_pcb --report r.json
-$KP scripts/layout/stitch.py --board SCRATCH/bay-station.kicad_pcb --zones
+$KP scripts/layout/stitch.py --board SCRATCH/bay-station.kicad_pcb --zones       # stitching vias + GND pours
 $KP scripts/layout/check_gates.py --board SCRATCH/bay-station.kicad_pcb --workdir /tmp/gates
 ```
 
@@ -261,9 +262,11 @@ rule would override all netclasses):
 * RF50 track width window 0.2 (neck) to 0.5 mm.
 * RF50 carries no vias.
 * CLK track to foreign track/via/zone: 0.5 mm (CLK next to CLK exempt, 0.15).
-* POWER_HI >= 0.4 mm, POWER_MID >= 0.25 mm track width, as warnings only.
+* No POWER_* minimum-width rule: KiCad 10.0.5 reported a custom rule marked `(severity warning)`
+  as an error, and the router's 0.2 mm power-pad stubs are deliberate, so `check_gates.py`
+  audits power-class track widths (INFO) instead.
 
-All five rule types were exercised: a deliberate violation of the no-via and keep-off
+All four rule types were exercised: a deliberate violation of the no-via and keep-off
 rules on the fixture produced exactly those `items_not_allowed` / `clearance` errors.
 
 ## 4. `route_hs.py` (hand-first library)
@@ -289,6 +292,14 @@ per-class widths and the via sizes from the netclass, locked copper as obstacle,
 rip-up and retry (<= 3 rips per net), nets in classes named by `--skip-class` (default
 RF50) left alone. It does not do GND (see `gnd_fanout`: a via to the planes within 3 mm
 of every SMD GND pad), differential pairs, length matching or 45 degree bends.
+
+Details that matter: a path is checked exactly (distance to every pad, track, via, hole,
+fiducial clearance override, footprint keep-out) before it is committed and rejected if the
+raster let something through; vias keep 0.7 mm centre to centre (drill to drill 0.25); a
+connection that will not fit at the class width is retried necked down to 0.5, 0.3, 0.2 mm
+(reported as `nets_necked_down`); RF50 and CLK nets are skipped (hand-first; their DNP-shunt and
+test-pad leftovers are listed as `skipped_class_open_connections`). The DW3210 cut-out rule
+areas must exist **before** the router runs, otherwise its vias land in them.
 
 Policy exceptions it makes, all listed in its report and accepted by
 `check_gates.py`: pad escape stubs (0.2 mm wide, at most 2 mm, any orthogonal direction)
@@ -328,7 +339,68 @@ mm, all 428 footprints, chips and RF chains hand-placed on the bottom edge, ever
 else shelf-packed by sheet; courtyard fill ~24 %, so **sparser than a real board**).
 It is test scaffolding, not a layout proposal.
 
-RESULTS_PLACEHOLDER
+Flow run on a fresh fixture, in this order (cut-outs first, because everything after must
+see them): `stitch --cutouts-only`, `route_hs_uwb all`, `route_manhattan` (700 s budget),
+`stitch --zones`, `check_gates`. DRC is `kicad-cli pcb drc --all-track-errors`, zones filled
+on a scratch copy.
+
+**Hand-first library.**
+
+* RF: all four RF1 -> C47 -> R220 -> SMA chains are 15.042 mm, identical geometry, no vias,
+  0.24 mm neck at the pad, 0.45 mm line, GND fence (0.45/0.20 vias, 1.5 mm pitch,
+  0.96 mm off-axis; sites inside the DW3210 cut-out skipped). DRC: zero violations.
+* Clock group: before meandering the four buffer-to-XTI paths were 59.2, 26.4, 42.3 and 29.3 mm
+  (the fixture is deliberately unbalanced); after `match_group` all four measure 59.222 mm
+  (chamfer bends) and 59.138 mm (arc bends, 29 arcs), measured independently by summing
+  `GetLength()` per net on the saved board; spread < 1e-9 mm against a 0.5 mm tolerance.
+  Meander legs are 3 x width apart, up to 10 mm tall. DRC clean, every item locked.
+* Negative tests: a foreign track 0.3 mm from an RF line and a via on an RF50 net each
+  raised exactly the `.kicad_dru` rule that should fire.
+
+**Stitching.** 1301 vias on the un-routed fixture and 1162 on the routed one (candidates:
+690 general lattice, 448 near RF/CLK, 214 edge; roughly 2-25 % are rejected by pads, tracks
+and keep-outs); DRC clean. After the kicad-cli zone fill, GND pads left unconnected fell
+from 495 to 77 on the un-routed board (pads the pours cannot reach).
+
+**Manhattan router** (fixture: 197 routable nets, 480 connections, 118 x 151 mm; repeated
+runs of the final code differ by a point or two because the time budget is wall-clock):
+
+| Result | Value |
+|---|---|
+| connections completed | **72-74 %** (final flow run 72.1 %: 346 of 480; 134 unrouted, 100+ nets left partial) |
+| time | 600 s (budget 700 s, 15 % reserved for GND fan-out); ~180 M A* node expansions, 58 searches hit the expansion cap |
+| copper | 1845 tracks, 944 vias, 199 rip-ups |
+| GND fan-out | 234 vias to the planes, 65 SMD GND pads with no site within 3 mm |
+| shorts / clearance / crossing / hole violations (final code) | 0 of each in the flow run (one same-net hole-to-hole, 0.2 vs 0.25 mm, in an earlier run before the via-spacing fix) |
+| direction policy | 0 violations: every non-stub F.Cu track horizontal, B.Cu vertical |
+| pad-escape stubs | 1018 segments, 454 mm of copper, about half of all segments: pad centres are off the 0.1 mm grid and fine-pitch pads need a jog |
+| necked power nets | +3V3 0.3, +5V_IN 0.3, +3V3_REG 0.3, L1_LTE 0.5 mm and some at 0.2 mm; the rest at class width |
+
+That is **not good enough to finish a board.** What it gives is a DRC-clean set of ordinary
+connections that respects the direction policy, plus a list of the nets it could not do.
+Why it is weak, from watching it:
+
+* Pad escape is the bottleneck: every pad gets an exact-geometry stub to a grid node, and
+  a congested neighbourhood runs out of nodes before it runs out of copper area.
+* The H/V rule costs vias: 944 vias for 346 connections, and each needs a 0.7 mm
+  neighbourhood on both layers, so the vias become obstacles.
+* Rip-up is shallow (3 per net, no cost memory); long nets late in the queue lose to short
+  ones already placed. The fixture has 90-110 mm nets because the sheets are packed
+  apart, which a real placement should not.
+* 197 nets in about ten minutes of pure python (no numpy in KiCad's interpreter).
+
+On a real placement I expect better completion (shorter nets, sensible neighbourhoods) but
+would not assume 100 %. Plan on using it for the bulk of the 2-3 pad nets and finishing by
+hand, or try an external router and run `check_gates.py` on its output.
+
+**Gates** on the final board: 7 netclasses and 65 patterns present and proven (98 nets in
+non-Default classes, none misassigned, no dead pattern); classes survive `save_board()`; the
+`.kicad_dru` loads; RF_PATH and CLK_PATH spreads 0.000 mm; direction policy 0 violations.
+The only hard-gate failure in the flow run was 6 `items_not_allowed` GND fence vias inside
+the DW3210 cut-outs, because the fence ran before the cut-outs existed; the fence now skips
+the cut-outs and the flow creates them first (re-verified clean on a fresh fixture, without
+the router). Remaining DRC items are fixture artefacts (courtyards 6, copper-to-edge 20,
+silk) and zone notes (starved thermals, isolated copper); none come from routing.
 
 ## 9. Uncertainties and things I could not do
 

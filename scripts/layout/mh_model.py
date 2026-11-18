@@ -125,12 +125,12 @@ class Obst:
                     seen.add(i)
                     yield self.items[i]
 
-    def seg_ok(self, net, layer, ax, ay, bx, by, hw, slack=0.004):
+    def seg_ok(self, net, layer, ax, ay, bx, by, hw, slack=0.004, ignore=()):
         """Exact: does a track AB of half-width hw on `layer` clear all copper of other nets?"""
         pad = hw + CLR_KEEPOFF + 0.3
         bb = (min(ax, bx) - pad, min(ay, by) - pad, max(ax, bx) + pad, max(ay, by) + pad)
         for p in self.near(bb):
-            if p.net == net or layer not in p.layers:
+            if p.net == net or layer not in p.layers or p.net in ignore:
                 continue
             need = hw + p.clr
             if p.dist_seg(ax, ay, bx, by) < need - slack:
