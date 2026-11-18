@@ -72967,6 +72967,68 @@
 	)
 	(zone
 		(layers "F.Cu" "In1.Cu")
+		(uuid "003374fb-63c4-4031-8dd8-6edc3c3409fb")
+		(name "DW3210_CUTOUT_2")
+		(hatch edge 0.5)
+		(connect_pads
+			(clearance 0)
+		)
+		(min_thickness 0.25)
+		(keepout
+			(tracks allowed)
+			(vias not_allowed)
+			(pads allowed)
+			(copperpour not_allowed)
+			(footprints allowed)
+		)
+		(placement
+			(enabled no)
+			(sheetname "")
+		)
+		(fill
+			(thermal_gap 0.5)
+			(thermal_bridge_width 0.5)
+			(island_removal_mode 0)
+		)
+		(polygon
+			(pts
+				(xy 72.25 61.25) (xy 77.75 61.25) (xy 77.75 66.75) (xy 72.25 66.75)
+			)
+		)
+	)
+	(zone
+		(layers "F.Cu" "In1.Cu")
+		(uuid "0db8f461-b61b-4792-b506-e4098a34c030")
+		(name "DW3210_CUTOUT_3")
+		(hatch edge 0.5)
+		(connect_pads
+			(clearance 0)
+		)
+		(min_thickness 0.25)
+		(keepout
+			(tracks allowed)
+			(vias not_allowed)
+			(pads allowed)
+			(copperpour not_allowed)
+			(footprints allowed)
+		)
+		(placement
+			(enabled no)
+			(sheetname "")
+		)
+		(fill
+			(thermal_gap 0.5)
+			(thermal_bridge_width 0.5)
+			(island_removal_mode 0)
+		)
+		(polygon
+			(pts
+				(xy 94.25 61.25) (xy 99.75 61.25) (xy 99.75 66.75) (xy 94.25 66.75)
+			)
+		)
+	)
+	(zone
+		(layers "F.Cu" "In1.Cu")
 		(uuid "4f78b61f-53cb-48ff-8834-04a529a653e6")
 		(name "KO_DW3210_A1_body")
 		(hatch edge 0.5)
@@ -73029,6 +73091,37 @@
 	)
 	(zone
 		(layers "F.Cu" "In1.Cu")
+		(uuid "988ad7bd-d146-48e5-860b-3e0f74544098")
+		(name "DW3210_CUTOUT_1")
+		(hatch edge 0.5)
+		(connect_pads
+			(clearance 0)
+		)
+		(min_thickness 0.25)
+		(keepout
+			(tracks allowed)
+			(vias not_allowed)
+			(pads allowed)
+			(copperpour not_allowed)
+			(footprints allowed)
+		)
+		(placement
+			(enabled no)
+			(sheetname "")
+		)
+		(fill
+			(thermal_gap 0.5)
+			(thermal_bridge_width 0.5)
+			(island_removal_mode 0)
+		)
+		(polygon
+			(pts
+				(xy 94.25 101.25) (xy 99.75 101.25) (xy 99.75 106.75) (xy 94.25 106.75)
+			)
+		)
+	)
+	(zone
+		(layers "F.Cu" "In1.Cu")
 		(uuid "a45611ec-0422-4b97-b94e-b8f4a0e98ad3")
 		(name "KO_DW3210_A2_body")
 		(hatch edge 0.5)
@@ -73086,6 +73179,37 @@
 		(polygon
 			(pts
 				(xy 95 102) (xy 99 102) (xy 99 106) (xy 95 106)
+			)
+		)
+	)
+	(zone
+		(layers "F.Cu" "In1.Cu")
+		(uuid "eaccfda9-33ea-499f-8c9a-6a2008e9757f")
+		(name "DW3210_CUTOUT_0")
+		(hatch edge 0.5)
+		(connect_pads
+			(clearance 0)
+		)
+		(min_thickness 0.25)
+		(keepout
+			(tracks allowed)
+			(vias not_allowed)
+			(pads allowed)
+			(copperpour not_allowed)
+			(footprints allowed)
+		)
+		(placement
+			(enabled no)
+			(sheetname "")
+		)
+		(fill
+			(thermal_gap 0.5)
+			(thermal_bridge_width 0.5)
+			(island_removal_mode 0)
+		)
+		(polygon
+			(pts
+				(xy 72.25 101.25) (xy 77.75 101.25) (xy 77.75 106.75) (xy 72.25 106.75)
 			)
 		)
 	)
