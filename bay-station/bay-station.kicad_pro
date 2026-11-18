@@ -141,7 +141,7 @@
       },
       "rules": {
         "max_error": 0.005,
-        "min_clearance": 0.0,
+        "min_clearance": 0.15,
         "min_connection": 0.0,
         "min_copper_edge_clearance": 0.5,
         "min_groove_width": 0.0,
@@ -153,10 +153,10 @@
         "min_silk_clearance": 0.0,
         "min_text_height": 0.8,
         "min_text_thickness": 0.08,
-        "min_through_hole_diameter": 0.3,
-        "min_track_width": 0.0,
-        "min_via_annular_width": 0.1,
-        "min_via_diameter": 0.5,
+        "min_through_hole_diameter": 0.2,
+        "min_track_width": 0.15,
+        "min_via_annular_width": 0.125,
+        "min_via_diameter": 0.45,
         "solder_mask_to_copper_clearance": 0.0,
         "use_height_for_length_calcs": true
       },
@@ -204,7 +204,14 @@
           "td_width_to_size_filter_ratio": 0.9
         }
       ],
-      "track_widths": [],
+      "track_widths": [
+        0.0,
+        0.2,
+        0.3,
+        0.45,
+        0.5,
+        1.0
+      ],
       "tuning_pattern_settings": {
         "diff_pair_defaults": {
           "corner_radius_percentage": 80,
@@ -231,7 +238,24 @@
           "spacing": 0.6
         }
       },
-      "via_dimensions": [],
+      "via_dimensions": [
+        {
+          "diameter": 0.0,
+          "drill": 0.0
+        },
+        {
+          "diameter": 0.6,
+          "drill": 0.3
+        },
+        {
+          "diameter": 0.45,
+          "drill": 0.2
+        },
+        {
+          "diameter": 0.8,
+          "drill": 0.4
+        }
+      ],
       "zones_allow_external_fillets": false
     },
     "ipc2581": {
@@ -512,6 +536,120 @@
         "via_diameter": 0.6,
         "via_drill": 0.3,
         "wire_width": 6
+      },
+      {
+        "bus_width": 12,
+        "clearance": 0.15,
+        "diff_pair_gap": 0.25,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.2,
+        "line_style": 0,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "RF50",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 0,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 0.45,
+        "tuning_profile": "",
+        "via_diameter": 0.6,
+        "via_drill": 0.3,
+        "wire_width": 6
+      },
+      {
+        "bus_width": 12,
+        "clearance": 0.15,
+        "diff_pair_gap": 0.25,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.2,
+        "line_style": 0,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "CLK",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 1,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 0.45,
+        "tuning_profile": "",
+        "via_diameter": 0.6,
+        "via_drill": 0.3,
+        "wire_width": 6
+      },
+      {
+        "bus_width": 12,
+        "clearance": 0.15,
+        "diff_pair_gap": 0.25,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.2,
+        "line_style": 0,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "FASTDIG",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 2,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 0.2,
+        "tuning_profile": "",
+        "via_diameter": 0.6,
+        "via_drill": 0.3,
+        "wire_width": 6
+      },
+      {
+        "bus_width": 12,
+        "clearance": 0.15,
+        "diff_pair_gap": 0.25,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.2,
+        "line_style": 0,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "POWER_HI",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 3,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 1.0,
+        "tuning_profile": "",
+        "via_diameter": 0.8,
+        "via_drill": 0.4,
+        "wire_width": 6
+      },
+      {
+        "bus_width": 12,
+        "clearance": 0.15,
+        "diff_pair_gap": 0.25,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.2,
+        "line_style": 0,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "POWER_MID",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 4,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 0.5,
+        "tuning_profile": "",
+        "via_diameter": 0.6,
+        "via_drill": 0.3,
+        "wire_width": 6
+      },
+      {
+        "bus_width": 12,
+        "clearance": 0.15,
+        "diff_pair_gap": 0.25,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.2,
+        "line_style": 0,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "POWER_LO",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 5,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 0.3,
+        "tuning_profile": "",
+        "via_diameter": 0.6,
+        "via_drill": 0.3,
+        "wire_width": 6
       }
     ],
     "meta": {
@@ -519,7 +657,268 @@
     },
     "net_colors": null,
     "netclass_assignments": null,
-    "netclass_patterns": []
+    "netclass_patterns": [
+      {
+        "netclass": "RF50",
+        "pattern": "*A?_RF1"
+      },
+      {
+        "netclass": "RF50",
+        "pattern": "*A?_RF2"
+      },
+      {
+        "netclass": "RF50",
+        "pattern": "Net-(C200-Pad1)"
+      },
+      {
+        "netclass": "RF50",
+        "pattern": "Net-(C202-Pad1)"
+      },
+      {
+        "netclass": "RF50",
+        "pattern": "Net-(C204-Pad1)"
+      },
+      {
+        "netclass": "RF50",
+        "pattern": "Net-(C206-Pad1)"
+      },
+      {
+        "netclass": "RF50",
+        "pattern": "Net-(J2?-In)"
+      },
+      {
+        "netclass": "RF50",
+        "pattern": "*LTE_RF_PIN"
+      },
+      {
+        "netclass": "RF50",
+        "pattern": "*LTE_ANT"
+      },
+      {
+        "netclass": "RF50",
+        "pattern": "*GNSS_RF_PIN"
+      },
+      {
+        "netclass": "RF50",
+        "pattern": "*GNSS_RF_A"
+      },
+      {
+        "netclass": "RF50",
+        "pattern": "*GNSS_ANT"
+      },
+      {
+        "netclass": "RF50",
+        "pattern": "*GNSS_LNA_AI"
+      },
+      {
+        "netclass": "RF50",
+        "pattern": "*GNSS_LNA_AO"
+      },
+      {
+        "netclass": "RF50",
+        "pattern": "*GNSS_LNA_IN_DC"
+      },
+      {
+        "netclass": "CLK",
+        "pattern": "UWB_CLK?"
+      },
+      {
+        "netclass": "CLK",
+        "pattern": "*CLK_Y?"
+      },
+      {
+        "netclass": "CLK",
+        "pattern": "*CLK_T?"
+      },
+      {
+        "netclass": "CLK",
+        "pattern": "TCXO_OUT"
+      },
+      {
+        "netclass": "CLK",
+        "pattern": "*TCXO_RF"
+      },
+      {
+        "netclass": "FASTDIG",
+        "pattern": "UWB_SCK"
+      },
+      {
+        "netclass": "FASTDIG",
+        "pattern": "UWB_MOSI"
+      },
+      {
+        "netclass": "FASTDIG",
+        "pattern": "UWB_MISO"
+      },
+      {
+        "netclass": "FASTDIG",
+        "pattern": "UWB_CS?_N"
+      },
+      {
+        "netclass": "FASTDIG",
+        "pattern": "UWB_IRQ?"
+      },
+      {
+        "netclass": "FASTDIG",
+        "pattern": "*A?_CSN"
+      },
+      {
+        "netclass": "FASTDIG",
+        "pattern": "*A?_IRQ"
+      },
+      {
+        "netclass": "FASTDIG",
+        "pattern": "*NRF_UWB_SCK"
+      },
+      {
+        "netclass": "FASTDIG",
+        "pattern": "*NRF_UWB_MOSI"
+      },
+      {
+        "netclass": "FASTDIG",
+        "pattern": "*NRF_UWB_MISO"
+      },
+      {
+        "netclass": "FASTDIG",
+        "pattern": "BRIDGE_TXD"
+      },
+      {
+        "netclass": "FASTDIG",
+        "pattern": "BRIDGE_RXD"
+      },
+      {
+        "netclass": "FASTDIG",
+        "pattern": "BRIDGE_RTS"
+      },
+      {
+        "netclass": "FASTDIG",
+        "pattern": "BRIDGE_CTS"
+      },
+      {
+        "netclass": "FASTDIG",
+        "pattern": "BRIDGE_IRQ"
+      },
+      {
+        "netclass": "FASTDIG",
+        "pattern": "*BT_UART_RX"
+      },
+      {
+        "netclass": "FASTDIG",
+        "pattern": "*BT_UART_TX"
+      },
+      {
+        "netclass": "FASTDIG",
+        "pattern": "*BT_UART_RTS"
+      },
+      {
+        "netclass": "FASTDIG",
+        "pattern": "*BT_UART_CTS"
+      },
+      {
+        "netclass": "FASTDIG",
+        "pattern": "*BT_IRQ_OUT"
+      },
+      {
+        "netclass": "FASTDIG",
+        "pattern": "SWDIO_MCU"
+      },
+      {
+        "netclass": "FASTDIG",
+        "pattern": "SWDCLK_MCU"
+      },
+      {
+        "netclass": "FASTDIG",
+        "pattern": "SWDIO_BLE"
+      },
+      {
+        "netclass": "FASTDIG",
+        "pattern": "SWDCLK_BLE"
+      },
+      {
+        "netclass": "FASTDIG",
+        "pattern": "DBG_UART_TX"
+      },
+      {
+        "netclass": "FASTDIG",
+        "pattern": "DBG_UART_RX"
+      },
+      {
+        "netclass": "POWER_HI",
+        "pattern": "+5V_IN"
+      },
+      {
+        "netclass": "POWER_HI",
+        "pattern": "+VSYS"
+      },
+      {
+        "netclass": "POWER_HI",
+        "pattern": "VBATT_PROT"
+      },
+      {
+        "netclass": "POWER_HI",
+        "pattern": "BATT_RAW"
+      },
+      {
+        "netclass": "POWER_HI",
+        "pattern": "BARREL_VIN"
+      },
+      {
+        "netclass": "POWER_HI",
+        "pattern": "*SW_3V3"
+      },
+      {
+        "netclass": "POWER_HI",
+        "pattern": "*L1_LTE"
+      },
+      {
+        "netclass": "POWER_HI",
+        "pattern": "*L2_LTE"
+      },
+      {
+        "netclass": "POWER_MID",
+        "pattern": "+3V3"
+      },
+      {
+        "netclass": "POWER_MID",
+        "pattern": "+VBAT_LTE"
+      },
+      {
+        "netclass": "POWER_MID",
+        "pattern": "*+3V3_REG"
+      },
+      {
+        "netclass": "POWER_MID",
+        "pattern": "*+VBAT_LTE_REG"
+      },
+      {
+        "netclass": "POWER_MID",
+        "pattern": "*NRF_VDD"
+      },
+      {
+        "netclass": "POWER_LO",
+        "pattern": "*+3V3_A?"
+      },
+      {
+        "netclass": "POWER_LO",
+        "pattern": "*+3V3_TCXO"
+      },
+      {
+        "netclass": "POWER_LO",
+        "pattern": "*+3V3_CLKBUF"
+      },
+      {
+        "netclass": "POWER_LO",
+        "pattern": "*+3V3_SNS"
+      },
+      {
+        "netclass": "POWER_LO",
+        "pattern": "*GNSS_LNA_VCC"
+      },
+      {
+        "netclass": "POWER_LO",
+        "pattern": "*NRF_VDD_GPIO"
+      }
+    ]
   },
   "pcbnew": {
     "last_paths": {
