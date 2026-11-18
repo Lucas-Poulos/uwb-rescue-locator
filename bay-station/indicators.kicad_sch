@@ -6,7 +6,7 @@
 	(paper "A4")
 	(title_block
 		(title "Indicators")
-		(comment 1 "Bay station status LEDs -- placement only")
+		(comment 1 "Bay station -- charger status D4-D6, host/radio LEDs D7/D400/D401")
 	)
 	(lib_symbols
 		(symbol "Device:LED"
@@ -65,6 +65,17 @@
 				)
 			)
 			(property "Description" "Light emitting diode"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Sim.Pins" "1=K 2=A"
 				(at 0 0 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -340,108 +351,21 @@
 			(embedded_fonts no)
 		)
 	)
-	(text "Indicators -- status LEDs (D4-D7)"
+	(text "MCP73871 charger status (power_bms) -- open-drain sinks, LED from the pin's legal rail"
 		(exclude_from_sim no)
-		(at 30.48 25.4 0)
+		(at 40.64 54.61 0)
 		(effects
 			(font
-				(size 2.5 2.5)
+				(size 1.5 1.5)
+				(bold yes)
 			)
+			(justify left top)
 		)
-		(uuid "22222222-0000-4000-8000-000000000001")
-	)
-	(text "Placement only: no wires or global labels yet, same convention as this\nboard's other unwired sheets.\n\nD4/D5/D6 are driven from MCP73871's open-drain status outputs on\npower_bms.kicad_sch, all three currently unconnected:\n  D4 <- STAT1 (pin 8)   charging\n  D5 <- STAT2 (pin 7)   charge complete\n  D6 <- ~PG   (pin 6)   external power good\nMicrochip's own typical application circuit (DS20002090E page 2) drives\nLEDs from these pins through series resistors.\n\nD7 = system status, intended to be driven from a BT840 (nRF52840) GPIO so firmware\ncan indicate ranging / uplink / fault. GPIO not yet allocated.\n\nThis board had no user-visible indication of any kind before these were\nadded -- no way to tell whether it was powered, charging, or ranging, which\nmatters for a device whose whole purpose is locating someone in trouble.\n\n0805 LEDs (this board is not size-constrained; matches the existing\nlibs/components.csv status-LED row). Series resistors 0603 per the project\nstandard. R = 1k is indicative; set it once the drive rail is fixed."
-		(exclude_from_sim no)
-		(at 30.48 33.02 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-		)
-		(uuid "22222222-0000-4000-8000-000000000002")
-	)
-	(symbol
-		(lib_id "Device:LED")
-		(at 39.37 95.25 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "22222222-0000-4000-8000-000000000003")
-		(property "Reference" "D4"
-			(at 39.37 91.44 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "LED"
-			(at 39.37 99.06 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "LED_SMD:LED_0805_2012Metric"
-			(at 39.37 95.25 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 39.37 95.25 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Charging-status LED -- driven from MCP73871 STAT1 (pin 8, power_bms.kicad_sch)"
-			(at 39.37 95.25 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "27977b83-02a1-48dc-83a2-1b59c047aa56")
-		)
-		(pin "2"
-			(uuid "f0b12017-e8b8-4508-88ea-3549333b822f")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/4d8f2b16-9c7a-4e35-8f60-1b3d5a8c2e09"
-					(reference "D4")
-					(unit 1)
-				)
-			)
-		)
+		(uuid "daa2143e-1fd0-462c-972a-76c4a64fb84a")
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 54.61 95.25 0)
+		(at 69.85 64.77 90)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -451,7 +375,7 @@
 		(dnp no)
 		(uuid "22222222-0000-4000-8000-000000000004")
 		(property "Reference" "R29"
-			(at 54.61 91.44 0)
+			(at 69.85 62.23 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -460,8 +384,8 @@
 				)
 			)
 		)
-		(property "Value" "1k"
-			(at 54.61 99.06 0)
+		(property "Value" "1.5k"
+			(at 69.85 67.31 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -471,7 +395,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 54.61 95.25 0)
+			(at 69.85 64.77 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -482,7 +406,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 54.61 95.25 0)
+			(at 69.85 64.77 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -492,8 +416,8 @@
 				)
 			)
 		)
-		(property "Description" "Series resistor for D4 (STAT1)."
-			(at 54.61 95.25 0)
+		(property "Description" "D4 series R. +VSYS (MCP73871 OUT) -> R -> LED -> STAT1 (open-drain, sink). I = (VSYS - VF - VOL)/R = (5.0-1.8-0.2)/1.5k = 2.0mA on adapter; (3.6-1.8-0.2)/1.5k = 1.1mA on battery. Rail is +VSYS, not +3V3, to stay inside the \"-0.3V to VDD+0.3V\" pin abs-max (VDD = VIN or VBAT) at low battery."
+			(at 69.85 64.77 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -504,10 +428,10 @@
 			)
 		)
 		(pin "1"
-			(uuid "b4a50255-895c-4f43-8dff-159ca1167248")
+			(uuid "4392029d-53d6-426b-ae89-eea10a9c0d99")
 		)
 		(pin "2"
-			(uuid "8d3ec20b-cea5-4fc5-b74e-76e74d33e204")
+			(uuid "8e548c36-5631-4473-b601-27faf7b1babb")
 		)
 		(instances
 			(project "bay-station"
@@ -518,19 +442,29 @@
 			)
 		)
 	)
-	(symbol
-		(lib_id "Device:LED")
-		(at 39.37 110.49 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "22222222-0000-4000-8000-000000000005")
-		(property "Reference" "D5"
-			(at 39.37 106.68 0)
+	(wire
+		(pts
+			(xy 66.04 64.77) (xy 63.5 64.77)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "fdd68db8-da49-4503-8f58-a6c5ab0ee616")
+	)
+	(global_label "+VSYS"
+		(shape passive)
+		(at 63.5 64.77 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "8367c61c-5d8b-4c22-9063-922bc3f764c6")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 63.5 64.77 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -539,8 +473,30 @@
 				)
 			)
 		)
-		(property "Value" "LED"
-			(at 39.37 114.3 0)
+	)
+	(symbol
+		(lib_id "Device:LED")
+		(at 80.01 64.77 180)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "22222222-0000-4000-8000-000000000003")
+		(property "Reference" "D4"
+			(at 80.01 60.96 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "APT2012LSECK/J3-PRV"
+			(at 88.9 69.85 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -550,7 +506,7 @@
 			)
 		)
 		(property "Footprint" "LED_SMD:LED_0805_2012Metric"
-			(at 39.37 110.49 0)
+			(at 80.01 64.77 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -560,8 +516,8 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
-			(at 39.37 110.49 0)
+		(property "Datasheet" "https://www.kingbrightusa.com/images/catalog/SPEC/APT2012LSECK-J3-PRV.pdf"
+			(at 80.01 64.77 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -571,8 +527,8 @@
 				)
 			)
 		)
-		(property "Description" "Charge-complete LED -- driven from MCP73871 STAT2 (pin 7, power_bms.kicad_sch)"
-			(at 39.37 110.49 0)
+		(property "Description" "CHARGING (and low-battery): on while MCP73871 STAT1 is low = preconditioning / CC / CV / fault, and LBO on battery (Table 5-1, DS20002090E). Kingbright APT2012LSECK/J3-PRV hyper red AlGaInP, 0805 (2.0x1.25mm). VF 1.5/1.8/2.1 V min/typ/max @ IF=2mA, IF(DC) max 30mA (Spec DSAN8393 Rev V.8A)."
+			(at 80.01 64.77 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -583,23 +539,65 @@
 			)
 		)
 		(pin "1"
-			(uuid "81cf67c0-4f7b-4a22-9ebf-e333dca3b184")
+			(uuid "866f639c-23ab-428f-9a3f-e6325c6879b9")
 		)
 		(pin "2"
-			(uuid "58ab6e00-4eef-49a4-8f7d-8a01a2cee134")
+			(uuid "f735eb1d-8a89-446a-b0db-882baf8307f2")
 		)
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/4d8f2b16-9c7a-4e35-8f60-1b3d5a8c2e09"
-					(reference "D5")
+					(reference "D4")
 					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 73.66 64.77) (xy 76.2 64.77)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0b8b9482-1d64-441e-9a57-57dc98f63a99")
+	)
+	(wire
+		(pts
+			(xy 83.82 64.77) (xy 86.36 64.77)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "71bc3d09-45e9-4d67-bd4b-56b67b13a875")
+	)
+	(global_label "nSTAT1_LBO"
+		(shape passive)
+		(at 86.36 64.77 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "2b4f26db-a501-4b15-b414-20af2faa9374")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 86.36 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
 				)
 			)
 		)
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 54.61 110.49 0)
+		(at 69.85 77.47 90)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -609,7 +607,7 @@
 		(dnp no)
 		(uuid "22222222-0000-4000-8000-000000000006")
 		(property "Reference" "R30"
-			(at 54.61 106.68 0)
+			(at 69.85 74.93 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -618,8 +616,8 @@
 				)
 			)
 		)
-		(property "Value" "1k"
-			(at 54.61 114.3 0)
+		(property "Value" "1.5k"
+			(at 69.85 80.01 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -629,7 +627,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 54.61 110.49 0)
+			(at 69.85 77.47 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -640,7 +638,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 54.61 110.49 0)
+			(at 69.85 77.47 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -650,8 +648,8 @@
 				)
 			)
 		)
-		(property "Description" "Series resistor for D5 (STAT2)."
-			(at 54.61 110.49 0)
+		(property "Description" "D5 series R. STAT2 only sinks with input power present, so VSYS ~= IN: (5.0-1.9-0.2)/1.5k = 1.9mA typ, 1.6mA at VF max."
+			(at 69.85 77.47 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -662,10 +660,10 @@
 			)
 		)
 		(pin "1"
-			(uuid "a021aebc-79d2-422e-9ea7-8e4467ffba8c")
+			(uuid "5baa61f5-f321-46ca-83f1-740fd5d3a4a6")
 		)
 		(pin "2"
-			(uuid "c8647a9f-3fb9-4b17-9b8c-dae8bb8c0072")
+			(uuid "bd4b8d5e-fb78-4e77-9f09-32fe32ab13fd")
 		)
 		(instances
 			(project "bay-station"
@@ -676,19 +674,29 @@
 			)
 		)
 	)
-	(symbol
-		(lib_id "Device:LED")
-		(at 39.37 124.46 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "22222222-0000-4000-8000-000000000007")
-		(property "Reference" "D6"
-			(at 39.37 120.65 0)
+	(wire
+		(pts
+			(xy 66.04 77.47) (xy 63.5 77.47)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2a4b5a3a-2245-4828-99f2-cb200ef992f7")
+	)
+	(global_label "+VSYS"
+		(shape passive)
+		(at 63.5 77.47 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "817dae32-48e8-4e73-bdc8-7035722fd211")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 63.5 77.47 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -697,8 +705,30 @@
 				)
 			)
 		)
-		(property "Value" "LED"
-			(at 39.37 128.27 0)
+	)
+	(symbol
+		(lib_id "Device:LED")
+		(at 80.01 77.47 180)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "22222222-0000-4000-8000-000000000005")
+		(property "Reference" "D5"
+			(at 80.01 73.66 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "APTD2012LCGCK"
+			(at 88.9 82.55 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -708,7 +738,7 @@
 			)
 		)
 		(property "Footprint" "LED_SMD:LED_0805_2012Metric"
-			(at 39.37 124.46 0)
+			(at 80.01 77.47 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -718,8 +748,8 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
-			(at 39.37 124.46 0)
+		(property "Datasheet" "https://www.kingbrightusa.com/images/catalog/SPEC/APTD2012LCGCK.pdf"
+			(at 80.01 77.47 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -729,8 +759,8 @@
 				)
 			)
 		)
-		(property "Description" "External-power-good LED -- driven from MCP73871 ~PG (pin 6, power_bms.kicad_sch)"
-			(at 39.37 124.46 0)
+		(property "Description" "CHARGE COMPLETE: on while STAT2 is low = standby / charge complete (also low with STAT1 in temp/timer fault, so D4+D5 together = fault) (Table 5-1). Kingbright APTD2012LCGCK green AlGaInP, 0805 (2.0x1.25mm). VF 1.5/1.9/2.1 V @ IF=2mA, IF(DC) max 30mA, 40deg viewing angle (Spec DSAO7908 Rev V.7B)."
+			(at 80.01 77.47 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -741,23 +771,65 @@
 			)
 		)
 		(pin "1"
-			(uuid "05fcd10f-254f-493e-a346-1ea74f941e30")
+			(uuid "f65b2b01-d6b2-4f9a-b625-3af4496e7426")
 		)
 		(pin "2"
-			(uuid "80ebc0ed-92d5-4a0a-b262-ae5ab95b4f14")
+			(uuid "c3c37c99-0293-48e6-b7bd-0ffd5d946cb5")
 		)
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/4d8f2b16-9c7a-4e35-8f60-1b3d5a8c2e09"
-					(reference "D6")
+					(reference "D5")
 					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 73.66 77.47) (xy 76.2 77.47)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "29d3feb0-313f-47a9-b895-75b8727c6507")
+	)
+	(wire
+		(pts
+			(xy 83.82 77.47) (xy 86.36 77.47)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "07837f02-46c3-4594-a60d-bd0ce59cea78")
+	)
+	(global_label "nSTAT2"
+		(shape passive)
+		(at 86.36 77.47 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "d9a65c6d-afbb-4d5c-a04f-68b3968b43e7")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 86.36 77.47 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
 				)
 			)
 		)
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 54.61 124.46 0)
+		(at 69.85 90.17 90)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -767,7 +839,7 @@
 		(dnp no)
 		(uuid "22222222-0000-4000-8000-000000000008")
 		(property "Reference" "R31"
-			(at 54.61 120.65 0)
+			(at 69.85 87.63 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -777,7 +849,7 @@
 			)
 		)
 		(property "Value" "1k"
-			(at 54.61 128.27 0)
+			(at 69.85 92.71 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -787,7 +859,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 54.61 124.46 0)
+			(at 69.85 90.17 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -798,7 +870,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 54.61 124.46 0)
+			(at 69.85 90.17 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -808,8 +880,8 @@
 				)
 			)
 		)
-		(property "Description" "Series resistor for D6 (~PG)."
-			(at 54.61 124.46 0)
+		(property "Description" "D6 series R. Pulled from +5V_IN (the MCP73871 IN pin), NOT +VSYS/+3V3: sec 5.2.4 \"The PG output must not be pulled up higher than VIN because there is a diode path back to VIN\" -- an LED from +VSYS would back-feed VIN and glow on battery. (5.0-2.65-0.2)/1k = 2.2mA typ; 1.6mA at VIN 4.75V / VF 3.0V."
+			(at 69.85 90.17 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -820,10 +892,10 @@
 			)
 		)
 		(pin "1"
-			(uuid "8d6c5db6-6db0-45a0-b6a3-0d705f7c26ed")
+			(uuid "37188368-9367-4452-9360-4a9ed52b899f")
 		)
 		(pin "2"
-			(uuid "b57198de-6164-4f02-965e-0f9512c27b63")
+			(uuid "bde8327a-1bda-45d3-a3fe-158f6806fab6")
 		)
 		(instances
 			(project "bay-station"
@@ -834,19 +906,29 @@
 			)
 		)
 	)
-	(symbol
-		(lib_id "Device:LED")
-		(at 39.37 139.7 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "22222222-0000-4000-8000-000000000009")
-		(property "Reference" "D7"
-			(at 39.37 135.89 0)
+	(wire
+		(pts
+			(xy 66.04 90.17) (xy 63.5 90.17)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4f22e5c8-37cd-4d92-b320-75f1d23688dd")
+	)
+	(global_label "+5V_IN"
+		(shape passive)
+		(at 63.5 90.17 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "a39ace41-df0e-4f7d-a0bb-34c7bab25d8e")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 63.5 90.17 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -855,8 +937,30 @@
 				)
 			)
 		)
-		(property "Value" "LED"
-			(at 39.37 143.51 0)
+	)
+	(symbol
+		(lib_id "Device:LED")
+		(at 80.01 90.17 180)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "22222222-0000-4000-8000-000000000007")
+		(property "Reference" "D6"
+			(at 80.01 86.36 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "APT2012LVBC/D"
+			(at 88.9 95.25 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -866,7 +970,7 @@
 			)
 		)
 		(property "Footprint" "LED_SMD:LED_0805_2012Metric"
-			(at 39.37 139.7 0)
+			(at 80.01 90.17 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -876,8 +980,8 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
-			(at 39.37 139.7 0)
+		(property "Datasheet" "https://www.kingbrightusa.com/images/catalog/SPEC/APT2012LVBC-D.pdf"
+			(at 80.01 90.17 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -887,8 +991,8 @@
 				)
 			)
 		)
-		(property "Description" "System status LED -- intended to be driven from a BT840 (nRF52840) GPIO (not yet allocated)"
-			(at 39.37 139.7 0)
+		(property "Description" "EXTERNAL POWER GOOD: on while ~PG is low = IN above UVLO and above VBAT (sec 3.12). Kingbright APT2012LVBC/D blue InGaN, 0805. VF 2.2/2.65/3.0 V @ IF=2mA, IF(DC) max 30mA (Spec DSAN8396 Rev V.8B). Only used where the drive rail is +5V_IN -- VF is too high for a 3.3V GPIO."
+			(at 80.01 90.17 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -899,23 +1003,77 @@
 			)
 		)
 		(pin "1"
-			(uuid "3098f95f-9a0e-4665-bf39-8e1d9752e765")
+			(uuid "af817238-8ae4-49f0-a1ef-106020845dd8")
 		)
 		(pin "2"
-			(uuid "dc99e125-7ba9-4297-a704-4eaccef0e61a")
+			(uuid "e89c984b-48af-4628-932b-45ce06eb0ac6")
 		)
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/4d8f2b16-9c7a-4e35-8f60-1b3d5a8c2e09"
-					(reference "D7")
+					(reference "D6")
 					(unit 1)
 				)
 			)
 		)
 	)
+	(wire
+		(pts
+			(xy 73.66 90.17) (xy 76.2 90.17)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "be13c622-6a58-4ff9-ac68-2318b6dc2151")
+	)
+	(wire
+		(pts
+			(xy 83.82 90.17) (xy 86.36 90.17)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2f4833d3-7dfd-4b6e-ae04-5e459eb35cf5")
+	)
+	(global_label "nPG"
+		(shape passive)
+		(at 86.36 90.17 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "2ef7fec1-5af8-4f3d-8951-4a910154f96c")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 86.36 90.17 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "Host / radio LEDs -- GPIO sources, active HIGH, <=1.5 mA"
+		(exclude_from_sim no)
+		(at 40.64 100.33 0)
+		(effects
+			(font
+				(size 1.5 1.5)
+				(bold yes)
+			)
+			(justify left top)
+		)
+		(uuid "fa963d70-a59b-450e-9c20-9517e0da4789")
+	)
 	(symbol
 		(lib_id "Device:R")
-		(at 54.61 139.7 0)
+		(at 69.85 110.49 90)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -925,7 +1083,7 @@
 		(dnp no)
 		(uuid "22222222-0000-4000-8000-00000000000a")
 		(property "Reference" "R32"
-			(at 54.61 135.89 0)
+			(at 69.85 107.95 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -934,8 +1092,8 @@
 				)
 			)
 		)
-		(property "Value" "1k"
-			(at 54.61 143.51 0)
+		(property "Value" "1.2k"
+			(at 69.85 113.03 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -945,7 +1103,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 54.61 139.7 0)
+			(at 69.85 110.49 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -956,7 +1114,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 54.61 139.7 0)
+			(at 69.85 110.49 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -966,8 +1124,8 @@
 				)
 			)
 		)
-		(property "Description" "Series resistor for D7 system-status LED."
-			(at 54.61 139.7 0)
+		(property "Description" "D7 series R. GPIO high -> R -> LED -> GND. Sized for <=1.5mA so the GPIO standard drive is enough: (3.2-1.9)/1.2k = 1.1mA typ; 0.7mA worst (VOH 2.9V, VF 2.1V); 1.5mA best (3.3V, VF 1.5V). Assumes nRF9151 GPIO at 3.3V (VIO = +3V3) -- VERIFY against the nRF9151 PS; at 1.8V I/O this LED will not light."
+			(at 69.85 110.49 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -978,10 +1136,10 @@
 			)
 		)
 		(pin "1"
-			(uuid "798a1768-6bc1-42a9-b62f-e10728466853")
+			(uuid "4c777551-d68d-463b-97f5-1c6444174528")
 		)
 		(pin "2"
-			(uuid "075a708a-b15d-4c97-8167-e61656ad04d7")
+			(uuid "2b115456-203f-4db4-b2ac-76f31fa28131")
 		)
 		(instances
 			(project "bay-station"
@@ -992,4 +1150,661 @@
 			)
 		)
 	)
+	(wire
+		(pts
+			(xy 66.04 110.49) (xy 63.5 110.49)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "fab55d63-644e-4982-a3dc-c570a4d5c067")
+	)
+	(global_label "LED_SYS"
+		(shape passive)
+		(at 63.5 110.49 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "5f93b632-1356-4f90-9351-dda91fd771a0")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 63.5 110.49 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:LED")
+		(at 80.01 110.49 180)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "22222222-0000-4000-8000-000000000009")
+		(property "Reference" "D7"
+			(at 80.01 106.68 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "APTD2012LCGCK"
+			(at 88.9 115.57 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "LED_SMD:LED_0805_2012Metric"
+			(at 80.01 110.49 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "https://www.kingbrightusa.com/images/catalog/SPEC/APTD2012LCGCK.pdf"
+			(at 80.01 110.49 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "SYSTEM status, nRF9151 GPIO (LED_SYS), active HIGH (GPIO sources). Kingbright APTD2012LCGCK green AlGaInP, 0805 (2.0x1.25mm). VF 1.5/1.9/2.1 V @ IF=2mA, IF(DC) max 30mA, 40deg viewing angle (Spec DSAO7908 Rev V.7B)."
+			(at 80.01 110.49 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "a337b500-17d3-44f7-9933-afd34667a0c0")
+		)
+		(pin "2"
+			(uuid "37c8fcda-c3a0-49ad-bdfc-30d1d5673f1d")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/4d8f2b16-9c7a-4e35-8f60-1b3d5a8c2e09"
+					(reference "D7")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 73.66 110.49) (xy 76.2 110.49)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3cfad28d-c30d-45c3-8c51-fe5ebda5d313")
+	)
+	(wire
+		(pts
+			(xy 83.82 110.49) (xy 86.36 110.49)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8b23c259-7b09-42e1-bf08-ddb483cca343")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 86.36 110.49 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "73f0b43d-85d6-45d0-aeb5-0032808aa426")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 86.36 110.49 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 69.85 123.19 90)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "6fedae2c-686f-4f49-8a31-86c32117684f")
+		(property "Reference" "R400"
+			(at 69.85 120.65 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "1.2k"
+			(at 69.85 125.73 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 69.85 123.19 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 69.85 123.19 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "D400 series R. (3.2-1.85)/1.2k = 1.1mA typ, 0.7-1.5mA over VF/VOH spread. Same nRF9151 VIO caveat as R32."
+			(at 69.85 123.19 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "bc71e607-75a3-4f80-a7dd-70984cd14ab3")
+		)
+		(pin "2"
+			(uuid "54815573-fe41-45d1-a435-01a75141e0a7")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/4d8f2b16-9c7a-4e35-8f60-1b3d5a8c2e09"
+					(reference "R400")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 66.04 123.19) (xy 63.5 123.19)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7ba625a2-b3ef-45d4-b617-4b39764a6236")
+	)
+	(global_label "LED_LTE"
+		(shape passive)
+		(at 63.5 123.19 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "2a161b5e-f9da-42f9-8598-995e6524582b")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 63.5 123.19 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:LED")
+		(at 80.01 123.19 180)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "14457917-d74b-4868-9ca7-6c24066912c8")
+		(property "Reference" "D400"
+			(at 80.01 119.38 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "APT2012LSYCK/J3-PRV"
+			(at 88.9 128.27 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "LED_SMD:LED_0805_2012Metric"
+			(at 80.01 123.19 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "https://www.kingbrightusa.com/images/catalog/SPEC/APT2012LSYCK-J3-PRV.pdf"
+			(at 80.01 123.19 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "LTE status, nRF9151 GPIO (LED_LTE), active HIGH. Kingbright APT2012LSYCK/J3-PRV super-bright yellow AlGaInP, 0805. VF 1.5/1.85/2.1 V @ IF=2mA, IF(DC) max 30mA (Spec DSAN8395 Rev V.5B)."
+			(at 80.01 123.19 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "a32a6458-5acc-45ef-96ba-8a564ba4bd0f")
+		)
+		(pin "2"
+			(uuid "1e07e3e5-eb28-40e3-9dc3-c4f73bf3760d")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/4d8f2b16-9c7a-4e35-8f60-1b3d5a8c2e09"
+					(reference "D400")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 73.66 123.19) (xy 76.2 123.19)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ea85d5ca-1033-4145-9e48-26bef8f2c502")
+	)
+	(wire
+		(pts
+			(xy 83.82 123.19) (xy 86.36 123.19)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ecf5132d-2255-4b1b-82c5-4831111550ee")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 86.36 123.19 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "30eb282c-1080-495e-b987-e38039aedeea")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 86.36 123.19 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 69.85 135.89 90)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "5d528b4e-1e00-435a-98eb-981fde6b7ed0")
+		(property "Reference" "R401"
+			(at 69.85 133.35 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "1.2k"
+			(at 69.85 138.43 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 69.85 135.89 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 69.85 135.89 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "D401 series R. BT840 I/O = +3V3. (3.2-1.8)/1.2k = 1.2mA typ, 0.7-1.5mA over spread -- inside nRF52840 standard drive. Blue would be the conventional BLE colour but its 2.65-3.0V VF leaves no headroom on a 3.3V GPIO."
+			(at 69.85 135.89 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "f5864154-26b9-4c98-ba0b-3bed086db90e")
+		)
+		(pin "2"
+			(uuid "c6d4e607-1019-4353-a7e5-b1631483a13a")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/4d8f2b16-9c7a-4e35-8f60-1b3d5a8c2e09"
+					(reference "R401")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 66.04 135.89) (xy 63.5 135.89)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d4d09b91-4e55-4f9c-9772-4e40640dfb39")
+	)
+	(global_label "LED_LINK"
+		(shape passive)
+		(at 63.5 135.89 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "4b2af881-37af-49e1-9fae-8a2124f85a08")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 63.5 135.89 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:LED")
+		(at 80.01 135.89 180)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "065046e0-4491-4c0e-8f4f-ad832c3df3c9")
+		(property "Reference" "D401"
+			(at 80.01 132.08 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "APT2012LSECK/J3-PRV"
+			(at 88.9 140.97 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "LED_SMD:LED_0805_2012Metric"
+			(at 80.01 135.89 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "https://www.kingbrightusa.com/images/catalog/SPEC/APT2012LSECK-J3-PRV.pdf"
+			(at 80.01 135.89 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "BLE LINK status, BT840 (nRF52840) GPIO (LED_LINK), active HIGH. Kingbright APT2012LSECK/J3-PRV hyper red AlGaInP, 0805 (2.0x1.25mm). VF 1.5/1.8/2.1 V min/typ/max @ IF=2mA, IF(DC) max 30mA (Spec DSAN8393 Rev V.8A)."
+			(at 80.01 135.89 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "f255aa85-50fb-4161-be02-2e97172c11f1")
+		)
+		(pin "2"
+			(uuid "2ead6407-9039-4994-ba00-eeb2e3a80161")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/4d8f2b16-9c7a-4e35-8f60-1b3d5a8c2e09"
+					(reference "D401")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 73.66 135.89) (xy 76.2 135.89)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c9687f6e-de37-4742-9a16-c1c0c5b3e975")
+	)
+	(wire
+		(pts
+			(xy 83.82 135.89) (xy 86.36 135.89)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9b506d5e-cb5c-4f70-86b7-b5081c009a11")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 86.36 135.89 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "8540bb08-eedd-48cc-92a5-898fc799744a")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 86.36 135.89 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "Indicators -- status LEDs"
+		(exclude_from_sim no)
+		(at 20.32 15.24 0)
+		(effects
+			(font
+				(size 2.5 2.5)
+				(bold yes)
+			)
+			(justify left top)
+		)
+		(uuid "9f760eb0-9752-4c9f-85c9-4444ccf33b7b")
+	)
+	(text "D4/D5/D6: MCP73871 STAT1/LBO, STAT2, ~PG are open-drain (pseudo open-drain for PG): they sink\nonly, ISINK max 35mA, VOL 0.4V typ @4mA (DS20002090E sec 3.10-3.12, DC table \"Status Indicators\").\nTruth table (Table 5-1): D4 only = charging; D5 only = charged; D4+D5 = temp/timer fault;\nD4 alone with D6 off = low battery on battery power (LBO -- only if the ordered MCP73871 variant\nhas LBO enabled; the orderable suffix is not chosen yet); D6 = adapter present.\nIf any of these is also read by a host GPIO, the GPIO sees ~VSYS - VF (up to ~3.2V+) when the\noutput is off -- add a series R / divider on the connectivity side, do not tap the LED node raw."
+		(exclude_from_sim no)
+		(at 162.56 50.8 0)
+		(effects
+			(font
+				(size 1.1 1.1)
+			)
+			(justify left top)
+		)
+		(uuid "a386b9a7-b206-4fd8-af4f-8f19ffa39a44")
+	)
+	(text "D7/D400/D401: GPIO -> R -> LED -> GND, so an unpowered MCU cannot be back-fed through an\nLED from +3V3. Low-current AlGaInP parts (specified at IF = 2mA) chosen so ~1mA is visible\nand standard GPIO drive is enough. Resistors computed from the Kingbright datasheet VF at\nthe actual drive rail -- replaces the old indicative 1k (decisions.md Open item).\nNOT VERIFIED: nRF9151 GPIO VOH / drive strength and VIO level (PS not available offline);\nKingbright cathode mark vs KiCad LED_0805 pad 1 = K -- check the drawing at footprint time."
+		(exclude_from_sim no)
+		(at 162.56 116.84 0)
+		(effects
+			(font
+				(size 1.1 1.1)
+			)
+			(justify left top)
+		)
+		(uuid "b2af05d1-f6dd-42d4-8d6d-d77ee9bc7b6f")
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+	(embedded_fonts no)
 )
