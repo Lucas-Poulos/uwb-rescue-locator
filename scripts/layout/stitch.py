@@ -261,6 +261,61 @@ def add_gnd_zones(board, inset=0.6):
     return made
 
 
+def rescue_gnd_pads(st, board, pads, stub_w=0.2, reach=4.0):
+    """GND pads the pours cannot reach (from a zone-filled DRC's unconnected list): a straight
+    0.2 mm stub, any direction, on the pad's own layer to a legal via site.  Policy exception,
+    same family as the router's GND fan-out stubs.  Vias keep out of the DW3210 cut-outs, so a
+    chip pad inside one has to reach past its edge (reach <= 4 mm).  Returns (done, failed)."""
+    gnd = U.get_net(board, "GND")
+    done, failed = [], []
+    for (ref, num) in pads:
+        pad = None
+        for f in board.GetFootprints():
+            if str(f.GetReference()) == ref:
+                for p in f.Pads():
+                    if str(p.GetNumber()) == str(num):
+                        pad = p
+        if pad is None or not pad.IsOnLayer(pcbnew.F_Cu):
+            failed.append((ref, num)); continue
+        c = pad.GetPosition(); cx, cy = U.mm(c.x), U.mm(c.y)
+        best = None            # (legs, via point): legs = [(x0, y0, x1, y1), ...]
+        hw = stub_w / 2
+        for (dx, dy) in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            if best:
+                break
+            t = 0.3
+            while t <= reach and best is None:
+                x, y = cx + dx * t, cy + dy * t
+                if not st.m.obst.seg_ok(st.gnd, F, cx, cy, x, y, hw, slack=-0.02):
+                    break                      # the straight leg is already blocked further out
+                if st.legal(x, y):
+                    best = ([(cx, cy, x, y)], (x, y))
+                    break
+                # second leg sideways (a via often only fits in the middle of a channel)
+                for (ex, ey) in ((-dy, dx), (dy, -dx)):
+                    for k in range(1, 7):
+                        s2 = 0.2 * k
+                        x2, y2 = x + ex * s2, y + ey * s2
+                        if not st.m.obst.seg_ok(st.gnd, F, x, y, x2, y2, hw, slack=-0.02):
+                            break
+                        if st.legal(x2, y2):
+                            best = ([(cx, cy, x, y), (x, y, x2, y2)], (x2, y2))
+                            break
+                    if best:
+                        break
+                t += 0.2
+        if best is None:
+            failed.append((ref, num)); continue
+        legs, (x, y) = best
+        for (ax, ay, bx, by) in legs:
+            U.add_track(board, gnd, U.F_CU, ax, ay, bx, by, stub_w)
+            st.m.obst.add(Prim("seg", (ax, ay, bx, by, stub_w / 2), (F,), st.gnd, 0.15, static=True))
+        U.add_via(board, gnd, x, y, VIA_D, VIA_DRILL)
+        st.vias.append((x, y, VIA_DRILL / 2, R))
+        done.append((ref, num))
+    return done, failed
+
+
 def main():
     global GEN_PITCH
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
@@ -268,6 +323,8 @@ def main():
     ap.add_argument("--out")
     ap.add_argument("--zones", action="store_true", help="also add DW3210 cut-outs and the four GND pours")
     ap.add_argument("--cutouts-only", action="store_true", help="only add the DW3210 cut-out rule areas (run BEFORE routing so the router and the GND fan-out keep out of them) and exit")
+    ap.add_argument("--rescue", help="JSON list of [ref, pad] GND pads to tie to the planes with a stub + via")
+    ap.add_argument("--rescue-only", action="store_true", help="with --rescue: do only the rescue stubs (no lattice, no zones)")
     ap.add_argument("--pitch", type=float, default=GEN_PITCH)
     a = ap.parse_args()
     GEN_PITCH = a.pitch
@@ -279,8 +336,16 @@ def main():
         U.save_board(b, a.out or a.board)
         return
     st = Stitcher(b)
+    if a.rescue and a.rescue_only:
+        done, failed = rescue_gnd_pads(st, b, json.load(open(a.rescue)))
+        print("GND pad rescue: %d tied, %d without a site: %s" % (len(done), len(failed), failed))
+        U.save_board(b, a.out or a.board)
+        return
     stats = st.run()
     print("candidates/placed:", json.dumps(stats), "-> %d GND vias" % len(st.placed))
+    if a.rescue:
+        done, failed = rescue_gnd_pads(st, b, json.load(open(a.rescue)))
+        print("GND pad rescue: %d tied, %d without a site: %s" % (len(done), len(failed), failed))
     if a.zones:
         if not any(str(z.GetZoneName()).startswith("DW3210_CUTOUT") for z in b.Zones()):
             add_dw3210_cutouts(b)
