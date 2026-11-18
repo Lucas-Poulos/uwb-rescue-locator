@@ -12,16 +12,18 @@ version and saving bumps the file format for everyone else. That's a
 one-way, zero-cost upgrade whenever the team wants it -- but do it as its own
 commit with a clear message, never mixed into a feature change.
 
-## Branching / PRs
+## Branching (no PRs)
 
-- Don't commit directly to `main`. Branch per feature/sheet
-  (`wristband/power-bms`, `bay-station/anchor-array`, etc.) and open a PR.
+- As of 2026-11-18 the team works directly on the current trunk branch
+  (`redesign/nrf9151-host` until it replaces `main`): commit and push, no PRs,
+  no review gate. Branch protection on `main` has to be relaxed on GitHub
+  before anything can be pushed there directly.
 - Two people should not edit the *same* `.kicad_sch` file at the same time --
   KiCad schematic/PCB files are large single-file blobs and merge badly.
   That's the whole reason each board is split into hierarchical sheets: pick
   a sheet (or add a new one) that's yours for a given change, so parallel
   work mostly touches different files.
-- Before opening a PR: run ERC/DRC and make sure violation count didn't go up
+- Before each commit: run ERC/DRC and make sure violation count didn't go up
   unexpectedly (`kicad-cli sch erc <board>.kicad_sch`,
   `kicad-cli pcb drc <board>.kicad_pcb`).
 

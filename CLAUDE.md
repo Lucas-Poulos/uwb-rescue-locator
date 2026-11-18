@@ -104,8 +104,10 @@ Consequences an agent must not "simplify" away:
    rather carry an honest "verify before fab" than a confident guess.
 4. **Never invent a part number.** If you can't find the exact SKU in the
    manufacturer's own catalog, that's a finding to report, not a gap to fill.
-5. **Don't commit to `main`.** Branch per sheet/feature and open a PR. See
-   `CONTRIBUTING.md`.
+5. **No PR workflow (decided 2026-11-18).** Commit straight to the working
+   branch (`redesign/nrf9151-host` until it replaces `main`) and push. Don't
+   open PRs and don't wait for review. Still run ERC/DRC before each commit
+   and keep the paper trail below in sync. See `CONTRIBUTING.md`.
 
 ## KiCad mechanics
 
