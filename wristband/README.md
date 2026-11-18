@@ -33,28 +33,34 @@ list and wired into `wristband.kicad_sch` as sheet symbols.
 | Sheet | Status | Contents |
 |---|---|---|
 | `power_bms` | **Wired** (global labels, no drawn wires), ERC clean | Full battery/charging/protection chain |
-| `radio_mcu` | **Wired**, ERC clean | DWM3001C (U4) + decoupling; SWD, RESET_N, SWO, VBAT_SENSE, SOS button |
+| `radio_mcu` | **Wired**, ERC clean | DWM3001C (U4) + decoupling; SWD, RESET_N, SWO, VBAT_SENSE, SOS button, LED_SYS, FW_MARKER |
 | `regulation` | **Wired**, ERC clean | TPS7A0233PDBVR LDO -> 3.3V (U5) |
 | `programming_debug` | **Wired**, ERC clean | ARM Cortex Debug SWD header |
-| `indicators` | Placement only -- **8 ERC errors** (unconnected pins) | Status LEDs D2 (charge) + D3 (system) |
-| `testpoints` | Placement only -- **5 ERC errors** (unconnected pins) | TP1-TP5: both rails, 2x GND, firmware timing marker |
-| `mechanical` | Placement only | 4x M2 mounting holes |
+| `indicators` | **Wired** (global labels + short wires), ERC clean | System LED D4/R13 on P0.14. Charge LED is D2/R10 on `power_bms` |
+| `testpoints` | **Wired** (global labels, no drawn wires), ERC clean | TP1-TP5: +3V3, VBAT, 2x GND, FW_MARKER |
+| `mechanical` | No wiring needed | 4x M2 mounting holes |
 
-**"Placement only" means components are instantiated and laid out, but
-nothing is wired** -- no drawn wires, no global labels, no net identity.
+**Every sheet that has nets is now wired.** `mechanical` carries only
+mounting holes and needs no nets. `indicators` and `testpoints` were the last
+two placement-only sheets (wired 2026-11-18); they used to account for all 13
+of the board's `pin_not_connected` ERC errors.
 
-`indicators` and `testpoints` are the two sheets still in that state. They
-came across from the positioning-architecture redesign on `main`, where they
-were never wired, and they account for all 13 of the wristband's remaining
-ERC errors. Everything else on this board is wired and ERC clean.
+**ERC, re-run 2026-11-18 with kicad-cli 10.0.5 on `wristband.kicad_sch`
+(full hierarchy, 39 BOM lines): 2 violations, 0 errors**, both
+`lib_symbol_mismatch` warnings from the embedded 8.0-format symbol copies
+differing from the 10.x libraries (pre-existing and by design -- see the
+flattened-copy workaround in `../CLAUDE.md`). Before: 16 (13 errors).
+Per-sheet ERC of a single child sheet shows spurious `isolated_pin_label` /
+`power_pin_not_driven` items because the other end of each global label is on
+another sheet; run ERC on the root.
 
-**ERC, re-run 2026-11-06 with kicad-cli 10.0.5: 16 violations (13 of them
-`error` severity, not "ZERO errors" as this line used to claim -- stale
-since before the sheets above got wired).** 13 pin_not_connected (the two
-sheets still placement-only, `indicators` and `testpoints`) plus 3
-lib_symbol_mismatch from the embedded 8.0-format symbol copies differing
-from the 10.x libraries (pre-existing and by design -- see the
-flattened-copy workaround in `../CLAUDE.md`).
+**Reference-designator collision fixed 2026-11-18.** `indicators` had its own
+`D2`/`R10`/`D3`/`R11`, colliding with `power_bms` (D2 + R10 are the charge LED,
+D3 is the VBUS TVS) and `radio_mcu` (R11 is a battery-sense divider resistor);
+the BOM export was merging them into rows like `D3 "ESD5B5.0ST1G,LED"`. The
+duplicate charge-LED pair was deleted from `indicators` and the system LED
+renumbered `D4`/`R13`. The PCB has not been updated from the schematic: it
+holds no footprints for `D4`, `R13` or `TP1`-`TP5` yet.
 
 **DRC, re-run 2026-11-06: 210 violations.** This line also used to say "one
 violation, `invalid_outline`, because no board outline is drawn yet" --
@@ -86,8 +92,8 @@ overlaps is layout work, not a reason to hide the values again.
 
 - **`radio_mcu.kicad_sch`** -- one `wristband:DWM3001C` (`U4`) plus VDD
   decoupling (`C6` 100nF, `C7` 10uF). Now wired: SWD (`SWDCLK`/`SWDIO`/
-  `SWO`), `RESET_N`, `VBAT_SENSE` on P0.02/AIN0, and the SOS button on
-  P0.17. 12 of the module's 48 pins are tied; the rest await the pin
+  `SWO`), `RESET_N`, `VBAT_SENSE` on P0.02/AIN0, the SOS button on
+  P0.17, `LED_SYS` on P0.14 and `FW_MARKER` on P0.22. 14 of the module's 48 pins are tied (adding `LED_SYS` on P0.14 and `FW_MARKER` on P0.22); the rest await the pin
   assignments still open in `../docs/decisions.md`.
 
   Pin data verified against the real Qorvo DWM3001C Data Sheet Rev B (May
@@ -114,31 +120,42 @@ overlaps is layout work, not a reason to hide the values again.
 
 - **`programming_debug.kicad_sch`** -- ARM Cortex Debug SWD connector (`J3`,
   `Connector:Conn_ARM_JTAG_SWD_10`, 2x5 1.27mm). Now targets the nRF52833
-  inside U3, via `SWD_CLK` (pin 2) and `SWD_DIO` (pin 3).
+  inside U4, via `SWD_CLK` (pin 2) and `SWD_DIO` (pin 3), plus `SWO` (U4 pin 28) and `RESET_N` (pin 47).
 
-- **`indicators.kicad_sch`** -- status LEDs. `D2`/`R10` is charge status from
-  MCP73831 `STAT` (U2 pin 1, `power_bms.kicad_sch`). `D3`/`R11` is system
-  status on an nRF52833 GPIO. 0603 parts, indicative 1k series resistors,
-  low-current by design since the tag runs off a small cell.
+- **`indicators.kicad_sch`** -- one system-status LED: `LED_SYS` (U4 pin 7,
+  P0.14) -> `R13` 1k -> `D4` -> `GND`, active high. At 3.3 V and a typical
+  ~2 V forward drop that is about 1.2 mA. **Unverified:** the nRF52833's
+  per-pin drive strength -- the Product Specification was not available
+  and Qorvo DS Rev B Table 5 gives drive current only for the DW3110 pins
+  (0.8 mA). The charge LED is **not** here: `D2`/`R10` on `power_bms` already
+  wire VBUS -> R10 -> D2 -> `CHG_STAT` (MCP73831 STAT, U2 pin 1), the
+  topology of Microchip DS20001984H Figure 6-1. STAT is tri-state (Table
+  5-1: low while charging, high at charge complete, Hi-Z with no
+  battery/shutdown; VOL 1 V max at 4 mA, Section 1.0). At complete, STAT
+  sits at VDD-0.4 V to VDD-1 V (VOH), leaving at most ~1 V across LED + R10,
+  below a green LED's forward drop, so the LED goes dark. Firmware should
+  pulse `D4`, not hold it on.
 
-- **`testpoints.kicad_sch`** *(new)* -- `TP1` +3V3, `TP2` VBAT, `TP3`/`TP4`
-  ground, `TP5` a firmware timing marker on a spare nRF52833 GPIO so tag-side
-  exchange timing is visible on a scope. Deliberately minimal: the DWM3001C's
-  internals are unreachable and SWD already comes out on `J3`. `TP2` matters
-  because there is no power switch -- it is the only way to check the battery
-  chain without disconnecting the cell.
+- **`testpoints.kicad_sch`** -- `TP1` `+3V3`, `TP2` `VBAT`, `TP3`/`TP4` `GND`,
+  `TP5` `FW_MARKER` = U4 pin 8 (P0.22), a firmware timing marker so tag-side
+  exchange timing is visible on a scope. Each pad sits on a global label.
+  Deliberately minimal: the DWM3001C's internals are unreachable and SWD
+  already comes out on `J3`. `TP2` matters because there is no power switch
+  -- it is the only way to check the battery chain without disconnecting the
+  cell. No 0R links: nothing on this sheet shares a net with a path where a
+  probe stub could matter.
 
 - **`mechanical.kicad_sch`** -- 4x M2 mounting holes (`H1`-`H4`).
 
 ### Next up
 
-1. **Get U3's footprint.** Do not hand-author it -- import from a vendor
+1. **Get U4's footprint.** Do not hand-author it -- import from a vendor
    library. Qorvo supplies DWM3001C footprint/symbol files (Altium format)
    via their UWB tech forum, and SnapMagic/SnapEDA lists a Qorvo-provided
    set. Check pad naming matches this symbol's 1-48 numbering. Blocks layout.
-2. Wire the six placement-only sheets: the `VBAT` -> `+3V3` rail handoff,
-   SWD to U3, the LED drives. There is no MCU-to-transceiver SPI to wire any
-   more -- that link is inside the module.
+2. ~~Wire the placement-only sheets~~ -- done 2026-11-18. There is no
+   MCU-to-transceiver SPI to wire; that link is inside the module. Next: sync
+   the PCB from the schematic (D4, R13, TP1-TP5 have no footprints yet).
 
 ### Worth revisiting
 

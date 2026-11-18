@@ -80,8 +80,9 @@ not settle:
   `power_bms`/`regulation`; every one of the BT840's 65 pins and all 40 pins
   on each of U4-U7 (DW3210) sit on `unconnected-(...)` nets. The wristband on
   `dwm3001c-migration` is further along but still thin -- 12 of the
-  DWM3001C's 48 pins are tied (power, GND, SWD, `RESET_N`, `VBAT_SENSE`, and
-  `P0.17` to the SOS button).
+  DWM3001C's 48 pins were tied (power, GND, SWD, `RESET_N`, `VBAT_SENSE`, and
+  `P0.17` to the SOS button); 14 as of 2026-11-18 with `LED_SYS` on P0.14 and
+  `FW_MARKER` on P0.22.
 
   This is the gate on firmware, not the toolchain question below. Firmware
   task #1 on the station is a multi-instance DW3000 driver, and it cannot be
@@ -292,10 +293,11 @@ not settle:
   the tag), so the remaining framework choice is a single one -- nRF5 SDK vs
   Zephyr / nRF Connect SDK -- rather than one per board. Where the position
   solve runs is also open. Skeleton and task list in `../firmware/README.md`.
-- **LED drive rails and GPIO allocation.** The status LEDs are placed
-  (`indicators.kicad_sch` on both boards) with indicative 1k series
+- **LED drive rails and GPIO allocation -- bay station only.** The status
+  LEDs are placed (`indicators.kicad_sch`) with indicative 1k series
   resistors. Confirm the drive rail for each and recompute, and allocate the
-  GPIOs on each board's Nordic part for the two system-status LEDs.
+  GPIO on the BT840 for the system-status LED. The wristband half of this is
+  resolved, see Resolved.
 
 ### Everything else
 
@@ -337,6 +339,23 @@ not settle:
   `+3V3_SYS` or `+VSYS`.
 
 ## Resolved
+
+- **Wristband indicators, test points and GPIO allocation.** Resolved
+  2026-11-18, wiring the last two placement-only wristband sheets. DWM3001C
+  (U4) pin 7 = P0.14 -> `LED_SYS` -> R13 1k -> D4 -> GND (active high, ~1.2 mA
+  at 3.3 V); pin 8 = P0.22 -> `FW_MARKER` -> TP5. Both are listed as plain
+  "General purpose I/O for nRF52833 processor" in Qorvo DWM3001C Data Sheet
+  Rev B Table 2, not NFC/reset/USB/I2C pins. **Not verified:** nRF52833
+  per-pin drive strength (Product Specification not obtained; Qorvo Table 5
+  only gives it for DW3110 pins), so 1.2 mA is believed but not confirmed
+  to be within the default drive. The charge LED was **not** duplicated: the
+  wired D2/R10 on `power_bms` is the charge LED (VBUS -> R10 -> D2 ->
+  `CHG_STAT`, Microchip DS20001984H Fig. 6-1; STAT low while charging, VOL 1 V
+  max at 4 mA, Table 5-1). `indicators` had carried a second D2/R10 plus
+  D3/R11 that collided with `power_bms` D2/R10/D3 and `radio_mcu` R11, so the
+  duplicate pair was deleted and the system LED renumbered D4/R13. TP1-TP5
+  are on `+3V3`, `VBAT`, `GND` x2, `FW_MARKER`. The wristband PCB still has no
+  footprints for D4, R13 or TP1-TP5. Net count on U4 is now 14 of 48 pins.
 
 - **Footprint convention: component Value on real silkscreen (F.SilkS), for
   every part, both boards.** Decided 2026-11-06. Previously inconsistent on

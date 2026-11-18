@@ -1921,20 +1921,12 @@
 		(uuid "10c5e507-2fdc-4044-8a0b-a4d4bb7b8fc8")
 	)
 	(no_connect
-		(at 232.41 116.84)
-		(uuid "2ecb9c28-f870-4ad2-ac64-25846ff7012a")
-	)
-	(no_connect
 		(at 232.41 119.38)
 		(uuid "435b7701-c60a-4499-ad58-183266ad2f09")
 	)
 	(no_connect
 		(at 232.41 106.68)
 		(uuid "5acef2e8-943b-4c07-87d3-2b86b3cfaaad")
-	)
-	(no_connect
-		(at 232.41 132.08)
-		(uuid "5ca932d2-99af-4bcb-81df-295d95841ede")
 	)
 	(no_connect
 		(at 232.41 134.62)
@@ -3960,6 +3952,70 @@
 				(path "/b3417696-fb19-4c3e-bd30-28bb2d157bef/86c28fe6-4393-4319-af10-ef3feae83fa8"
 					(reference "#PWR04")
 					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 232.41 116.84) (xy 241.3 116.84)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3705f7dc-cdf3-458a-b9fb-9a4f44e1eab5")
+	)
+	(global_label "LED_SYS"
+		(shape output)
+		(at 241.3 116.84 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "f8fd9307-4a7f-4a88-9bc8-9c4d531ae08e")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 241.3 116.84 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 232.41 132.08) (xy 241.3 132.08)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7f9b4950-244e-4359-ab7b-362083be850f")
+	)
+	(global_label "FW_MARKER"
+		(shape output)
+		(at 241.3 132.08 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "77d2cd41-b6d3-45a0-b007-bf4b2dcf9508")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 241.3 132.08 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
 				)
 			)
 		)

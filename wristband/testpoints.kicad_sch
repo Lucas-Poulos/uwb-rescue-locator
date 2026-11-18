@@ -6,7 +6,7 @@
 	(paper "A4")
 	(title_block
 		(title "Test Points")
-		(comment 1 "Bring-up probe points -- placement only")
+		(comment 1 "Bring-up probe points -- wired with global labels")
 	)
 	(lib_symbols
 		(symbol "Connector:TestPoint"
@@ -121,7 +121,7 @@
 		)
 		(uuid "99999999-0000-4000-8000-000000000001")
 	)
-	(text "Placement only: no wires or global labels yet.\n\nDeliberately minimal. The tag is one module plus a battery chain, and the\nDWM3001C's internals are not reachable -- its UWB transceiver, MCU and both\nantennas are inside the package, so there is nothing useful to probe there.\nSWD already comes out on J3 (programming_debug.kicad_sch), so debug access\nis covered without a test point.\n\nWhat is worth probing:\n\n  POWER -- TP1 and TP2 are the two rails that matter. TP2 (VBAT) also lets\n  the battery chain be checked independently of the regulator, which is the\n  natural first question when a worn device will not start.\n\n  GROUND -- two, so a scope and a meter can be attached at once without\n  sharing a return.\n\n  TIMING MARKER -- TP5 on a spare nRF52833 GPIO. Firmware can toggle it\n  around a ranging exchange, which turns tag-side timing into something a\n  scope can see. On a system budgeted in nanoseconds that is worth one pad.\n\nThere is no power switch on this board (resolved 2026-09-19), so the tag is\nlive whenever a battery is connected -- TP1/TP2 are the only way to confirm\nrail state without disconnecting the cell."
+	(text "Wired: each pad sits on a global label (no drawn wires), same convention\nas power_bms. TP1 +3V3, TP2 VBAT, TP3/TP4 GND, TP5 FW_MARKER = U4 pin 8\n(P0.22) on radio_mcu.kicad_sch.\n\nDeliberately minimal. The tag is one module plus a battery chain, and the\nDWM3001C's internals are not reachable -- its UWB transceiver, MCU and both\nantennas are inside the package, so there is nothing useful to probe there.\nSWD already comes out on J3 (programming_debug.kicad_sch), so debug access\nis covered without a test point.\n\nWhat is worth probing:\n\n  POWER -- TP1 and TP2 are the two rails that matter. TP2 (VBAT) also lets\n  the battery chain be checked independently of the regulator, which is the\n  natural first question when a worn device will not start.\n\n  GROUND -- two, so a scope and a meter can be attached at once without\n  sharing a return.\n\n  TIMING MARKER -- TP5 on a spare nRF52833 GPIO. Firmware can toggle it\n  around a ranging exchange, which turns tag-side timing into something a\n  scope can see. On a system budgeted in nanoseconds that is worth one pad.\n\nThere is no power switch on this board (resolved 2026-09-19), so the tag is\nlive whenever a battery is connected -- TP1/TP2 are the only way to confirm\nrail state without disconnecting the cell."
 		(at 25.40 27.94 0)
 		(effects
 			(font
@@ -173,7 +173,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Regulated 3.3V rail out of the MCP1700 LDO (regulation.kicad_sch)."
+		(property "Description" "Regulated 3.3V rail out of the TPS7A0233 LDO U5 (regulation.kicad_sch)."
 			(at 39.37 95.25 0)
 			(effects
 				(font
@@ -417,7 +417,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Spare nRF52833 GPIO for firmware to toggle around a ranging exchange, making tag-side timing visible on a scope. GPIO not yet allocated."
+		(property "Description" "nRF52833 P0.22 (DWM3001C pin 8) for firmware to toggle around a ranging exchange, making tag-side timing visible on a scope."
 			(at 139.70 95.25 0)
 			(effects
 				(font
@@ -431,6 +431,116 @@
 				(path "/b3417696-fb19-4c3e-bd30-28bb2d157bef/8a1b2c3d-4e5f-4061-8273-849506a7b8c9"
 					(reference "TP5")
 					(unit 1)
+				)
+			)
+		)
+	)
+	(global_label "+3V3"
+		(shape input)
+		(at 39.37 95.25 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "017791e5-5270-4bcb-bfe0-a92fc3b17804")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 39.37 95.25 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "VBAT"
+		(shape input)
+		(at 64.77 95.25 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "abee37e5-dfb9-4f96-9dba-c51293e7a20d")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 64.77 95.25 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "GND"
+		(shape input)
+		(at 90.17 95.25 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "2860c468-ecbc-4123-be1a-9c2d1a877771")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 90.17 95.25 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "GND"
+		(shape input)
+		(at 115.57 95.25 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "d69fcec3-0179-4a01-82fb-5375b79b0b9e")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 115.57 95.25 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "FW_MARKER"
+		(shape input)
+		(at 139.7 95.25 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "10379642-7c5d-4281-a8d9-4a1fbfde5043")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 139.7 95.25 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
 				)
 			)
 		)

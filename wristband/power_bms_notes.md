@@ -200,7 +200,9 @@ wants to `git checkout` it back.
    7), so using it here (rather than leaving VDD on a dangling label with
    no real driver) is the more complete, more correct design. Documented
    here per the task's request to flag and justify this kind of call.
-3. **MCP73831 STAT pin (U2 pin 1) is left with an explicit `no_connect`
+3. **[SUPERSEDED 2026-09-15: STAT now drives charge LED D2 via R10 from
+   VBUS, net `CHG_STAT` -- see `libs/components.csv`.]** Originally: **MCP73831
+   STAT pin (U2 pin 1) is left with an explicit `no_connect`
    marker**, not wired to a status LED. The task's 7 items don't call for a
    status LED on this sheet, and STAT is a tri-state output that's
    perfectly valid to leave floating (many designs do) -- but per this
