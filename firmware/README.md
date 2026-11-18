@@ -1,87 +1,72 @@
 # Firmware
 
-Nothing is written yet. This tree exists so the work has a home and so the
-scope is visible -- **firmware is on the critical path**, not a phase that
-starts after the boards come back.
+**Firmware is on the critical path**, not a phase that starts after the
+boards come back. The hardware only meets its 10-30 cm target if the
+software half exists -- the array calibration in particular is a
+deliverable, not a bring-up nicety (`../docs/positioning.md`).
 
-The hardware design only meets its 10-30 cm target if the software half
-exists: the array calibration routine in particular is a deliverable, not a
-bring-up nicety (see `../docs/positioning.md`).
+Toolchain: **nRF Connect SDK v3.4.x (LTS)** for every image. The bay
+station's nRF9151 forces it (the nRF5 SDK covers only nRF51/nRF52);
+see `bay-station/README.md`, "Toolchain".
+
+**Status: skeletons only, never built** (no SDK installed where they were
+written). The shared protocol code has a passing host unit test
+(`make -C common/test`). Pins are unassigned by design -- each board's
+`*_pins.h` is the one place they get filled in, and the build stops until
+it is.
 
 ## Layout
 
 ```
 firmware/
-  bay-station/   BT840 (nRF52840) -- drives 4x DW3210, runs the exchange, BLE to laptop
-  wristband/     nRF52833 inside the DWM3001C -- the tag; transmits, and little else
-  common/        shared protocol/message definitions used by both sides
-  tools/         host-side: calibration, survey, analysis, test fixtures
+  bay-station/
+    nrf9151-app/   nRF9151 host: 4x DW3210, exchange, timestamps, calibration,
+                   sensors, LTE-M + GNSS, 'bringup' shell
+    ble-bridge/    BT840 (nRF52840): framed UART <-> BLE NUS relay to the laptop
+    (modem FW)     Nordic binary, version-pinned -- see bay-station/README.md
+  wristband/       nRF52833 inside the DWM3001C -- the tag
+  common/          protocol + record + calibration-table definitions, host-tested
+  boards/          Zephyr HWMv2 board definitions (bay_station_lte, bay_station_ble)
+  dts/bindings/    project devicetree bindings (anchor role, shared UWB lines, bridge)
+  tools/           laptop side: decoder, solver, calibration, analysis
 ```
 
-## What has to get written
+## Milestones, in bring-up order
 
-Roughly in dependency order.
+Each one is usable on its own and unblocks the next. "DK" work can start
+before boards exist.
 
-### bay-station
+| # | Milestone | Needs | Done when |
+|---|---|---|---|
+| fw-m0 | NCS v3.4.x installed; both skeletons build for **DK targets** (`nrf9151dk/nrf9151/ns`, `nrf52840dk/nrf52840`) with a DK overlay | nothing | `west build` clean; host test passes in CI |
+| fw-m1 | Board bring-up shell on real hardware: rails cross-check, I2C scan + IDs, LEDs, button, sensor lines | pins filled in; board stage 5 of `../docs/verification-plan.md` | every `bringup` command in stage 6 runs |
+| fw-m2 | Bridge link: nRF9151 <-> BT840 framing, BT840 NUS relay, laptop decoder in `tools/` | fw-m1 | `bringup bridge ping 1000` = 1000/1000; laptop receives STATUS frames |
+| fw-m3 | **Multi-instance DW3000 driver**: DEV_ID x4, init to IDLE_PLL (clock check), CH5 config per anchor | fw-m1 | `bringup uwb id` and `uwb clock` pass on all four |
+| fw-m4 | Timestamp collection: one frame, four RX timestamps, `uwbrl_meas_v1` assembled; first inter-anchor skew measurement | fw-m3 | skew test in verification plan runs |
+| fw-m5 | Exchange: POLL/RESP/FINAL with the wristband; OTA frame formats in `common/`; DS-TWR range at A0 | fw-m4 + wristband fw | range to a tag at a taped distance |
+| fw-m6 | Calibration: table store on station, fixture procedure + table generator in `tools/` | fw-m5 | table loaded, CRC in every record |
+| fw-m7 | Laptop solve (sphere + 3 hyperboloids, residual as quality) + logging | fw-m6 | position at surveyed points within target |
+| fw-m8 | Georeferencing: GNSS survey-in in LTE idle windows, LIS3MDL heading with LIS2DH tilt compensation, hard/soft-iron cal, knock detect | fw-m1 | station reports lat/lon/heading with a settled/unsettled flag |
+| fw-m9 | LTE-M uplink: attach, PSM, status + quick-look positions | fw-m7, fw-m8, SIM | report received at the endpoint |
+| fw-m10 | Power management, multi-tag scheduling, FOTA (app + modem) | all | battery-life target met (target still to be set) |
 
-1. **DW3000 driver with multi-instance support.** Qorvo's own reference stack
-   targets nRF52840, so start there rather than from the ESP-IDF community
-   port. **Known gap either way:** the widely used community driver
-   ([br101/dw3000-decadriver-source](https://github.com/br101/dw3000-decadriver-source))
-   was trimmed to one DW3000 per board and this design has four.
-   Multi-instance support exists upstream and needs restoring. First task,
-   and it gates everything else.
-2. **Exchange scheduling.** A0 runs two-way ranging with the tag; A1-A3
-   timestamp the same transmission. One tag TX, four measurements.
-3. **Timestamp collection** across four chips over the shared SPI bus.
-4. **Position solve** -- sphere from A0's range intersected with three
-   hyperboloids from the TDoA differences. Overdetermined by one, so use the
-   residual as a live quality metric. Decide on-device vs. server-side.
-5. **Calibration table** -- load and apply per-anchor differential offsets.
-6. **Georeferencing.** Average the MAX-M10S fix while stationary to reach
-   sub-metre (host-side survey-in -- the M10 standard-precision line has no
-   survey-in mode of its own). Read heading from the LIS3MDL, tilt-compensate
-   it with the LIS2DH, and apply hard-iron/soft-iron calibration. Watch the
-   accelerometer for the station being knocked, which invalidates both the
-   fix and the heading. Note the averaging restarts at every new site.
-7. **Uplink** over BLE to the laptop.
-
-### wristband
+## Wristband
 
 The tag is deliberately simple: transmit, participate in the ranging
-exchange with A0, sleep. It is the power-constrained side, so the whole
-scheme is built around it transmitting once.
+exchange with A0, sleep. See `wristband/README.md`. Its first real dependency
+on the station is fw-m5 (shared OTA frame formats).
 
-**Motion-gating.** The DWM3001C carries an unused LIS2DH12 accelerometer.
-Ranging only when the wearer actually moves is the largest battery lever
-available on this board, and it is firmware work rather than hardware -- an
-external IMU was proposed on 2026-09-28 and rejected (`../docs/decisions.md`).
+## Tools
 
-**Check before you build on it:** the module's `I2C0_SDA`/`I2C0_SCL` (pins
-14/15) are unconnected in the schematic, and whether the accelerometer is
-reachable with no external parts depends on whether Qorvo put pull-ups inside
-the module. That is an open item in `../docs/decisions.md`. If the answer is
-no, this needs two resistors before any firmware can talk to it.
+The laptop side owns the authoritative position solve and the array
+calibration. See `tools/README.md`.
 
-### tools
+## Still open
 
-- **Array calibration.** Place the tag at surveyed positions, measure actual
-  TDoA, solve for per-anchor differential offsets (antenna delay + cable
-  delay together), emit the table the firmware loads. Without this the
-  design does not hit its accuracy target -- Table 14 of the DW3000
-  datasheet gives +/-6 cm for a *generically* calibrated node, which at a 1 m
-  baseline is ~85 cm of position error.
-- Analysis/plotting for bring-up measurements.
-
-## Not yet decided
-
-- **One** toolchain choice now, not two: both boards are Nordic (nRF52840 on
-  the station, nRF52833 on the tag), so it is nRF5 SDK vs. Zephyr / nRF
-  Connect SDK for the whole project. Note Qorvo publishes reference firmware
-  for the DWM3001C via the DWM3001CDK, and its DW3000 reference stack targets
-  nRF52840 -- start from both rather than from scratch.
-- Whether the position solve runs on-device or server-side.
 - Update rate and multi-tag scheduling.
+- BLE link security level (Nordic ships its own NUS bridge with BLE off by
+  default for want of authentication) -- `handoff.md`.
+- LTE endpoint, SIM/operator, data budget -- `handoff.md`.
 
-Record these in `../docs/decisions.md` when they get made, same as hardware
-calls.
+Calls made here are proposed as `../docs/decisions.md` entries in
+`handoff.md`; the coordinator merges them.
