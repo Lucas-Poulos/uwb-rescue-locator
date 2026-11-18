@@ -1,0 +1,8 @@
+# Bay station, BT840 side (Fanstel BT840 = nRF52840): BLE bridge to the
+# laptop. Hardware model v2. Build target: bay_station_ble/nrf52840
+board:
+  name: bay_station_ble
+  full_name: UWB rescue locator bay station BLE bridge (BT840 / nRF52840)
+  vendor: others
+  socs:
+    - name: nrf52840

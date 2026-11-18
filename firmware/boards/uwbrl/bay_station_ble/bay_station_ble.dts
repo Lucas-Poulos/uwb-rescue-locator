@@ -1,0 +1,89 @@
+/*
+ * Bay station BLE bridge: Fanstel BT840 (nRF52840). Net names are
+ * docs/net-contract.md s5/s7; pin numbers only in bay_station_ble_pins.h
+ * (PIN_TBD, see bay-station/connectivity_notes.md, until filled in).
+ *
+ * No DBG_UART on this chip in the contract: logs go over SEGGER RTT on the
+ * BT840 SWD header (SWDIO_BLE / SWDCLK_BLE).
+ */
+/dts-v1/;
+#include <nordic/nrf52840_qiaa.dtsi>
+#include <nordic/nrf52840_partition.dtsi>
+#include "bay_station_ble_pins.h"
+
+/ {
+	model = "UWB rescue locator bay station BLE bridge (BT840)";
+	compatible = "others,bay-station-ble";
+
+	chosen {
+		zephyr,sram = &sram0;
+		zephyr,flash = &flash0;
+		zephyr,code-partition = &slot0_partition;
+		uwbrl,bridge-uart = &uart0;  /* BRIDGE_* to the nRF9151 */
+	};
+
+	aliases {
+		led-link = &led_link;
+	};
+
+	leds {
+		compatible = "gpio-leds";
+		led_link: led_link {
+			gpios = <&GPIO_LED_LINK PIN_LED_LINK LED_LINK_FLAGS>; /* LED_LINK */
+			label = "LED_LINK";
+		};
+	};
+
+	bridge_ctrl: bridge-ctrl {
+		compatible = "uwbrl,bridge-ctrl";
+		uart = <&uart0>;
+		/* Output on this side: BT840 asserts it when it holds a frame for
+		 * the nRF9151 (lets the host keep its UARTE RX off otherwise). */
+		irq-gpios = <&GPIO_BRIDGE_IRQ PIN_BRIDGE_IRQ GPIO_ACTIVE_HIGH>; /* BRIDGE_IRQ */
+	};
+};
+
+&pinctrl {
+	uart0_default: uart0_default {
+		group1 {
+			psels = <NRF_PSEL(UART_TX, PORT_BRIDGE_RXD, PIN_BRIDGE_RXD)>,  /* -> BRIDGE_RXD */
+				<NRF_PSEL(UART_RTS, PORT_BRIDGE_CTS, PIN_BRIDGE_CTS)>; /* -> BRIDGE_CTS */
+		};
+		group2 {
+			psels = <NRF_PSEL(UART_RX, PORT_BRIDGE_TXD, PIN_BRIDGE_TXD)>,  /* <- BRIDGE_TXD */
+				<NRF_PSEL(UART_CTS, PORT_BRIDGE_RTS, PIN_BRIDGE_RTS)>; /* <- BRIDGE_RTS */
+			bias-pull-up;
+		};
+	};
+	uart0_sleep: uart0_sleep {
+		group1 {
+			psels = <NRF_PSEL(UART_TX, PORT_BRIDGE_RXD, PIN_BRIDGE_RXD)>,
+				<NRF_PSEL(UART_RTS, PORT_BRIDGE_CTS, PIN_BRIDGE_CTS)>,
+				<NRF_PSEL(UART_RX, PORT_BRIDGE_TXD, PIN_BRIDGE_TXD)>,
+				<NRF_PSEL(UART_CTS, PORT_BRIDGE_RTS, PIN_BRIDGE_RTS)>;
+			low-power-enable;
+		};
+	};
+};
+
+&gpiote {
+	status = "okay";
+};
+
+&gpio0 {
+	status = "okay";
+};
+
+&gpio1 {
+	status = "okay";
+};
+
+&uart0 {
+	compatible = "nordic,nrf-uarte";
+	current-speed = <1000000>;
+	hw-flow-control;
+	pinctrl-0 = <&uart0_default>;
+	pinctrl-1 = <&uart0_sleep>;
+	pinctrl-names = "default", "sleep";
+	status = "okay";
+};

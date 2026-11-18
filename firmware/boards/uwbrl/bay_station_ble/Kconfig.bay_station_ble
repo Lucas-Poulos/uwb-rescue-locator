@@ -1,0 +1,4 @@
+# The BT840 carries an nRF52840 (QIAA package per the Fanstel datasheet --
+# verify the package suffix there before release).
+config BOARD_BAY_STATION_BLE
+	select SOC_NRF52840_QIAA

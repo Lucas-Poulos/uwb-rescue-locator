@@ -1,0 +1,5 @@
+# Repo-local vendor prefix for firmware/dts/bindings/uwbrl,*.yaml.
+# Zephyr reads vendor-prefixes.txt from each DTS_ROOT's dts/bindings/
+# (verify this behaviour on the pinned NCS release; without it the build
+# only warns about an unknown vendor prefix).
+uwbrl	UWB rescue locator project (repo-local bindings)

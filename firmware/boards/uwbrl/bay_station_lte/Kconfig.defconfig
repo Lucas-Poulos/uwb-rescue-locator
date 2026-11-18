@@ -1,0 +1,12 @@
+# Mirrors upstream boards/nordic/nrf9151dk/Kconfig.defconfig (Zephyr main,
+# fetched 2026-11-17). Re-diff against the copy in the pinned NCS tree.
+
+if BOARD_BAY_STATION_LTE_NRF9151 || BOARD_BAY_STATION_LTE_NRF9151_NS
+
+config BOARD_BAY_STATION_LTE
+	select USE_DT_CODE_PARTITION if BOARD_BAY_STATION_LTE_NRF9151_NS
+
+config BUILD_WITH_TFM
+	default y if BOARD_BAY_STATION_LTE_NRF9151_NS
+
+endif

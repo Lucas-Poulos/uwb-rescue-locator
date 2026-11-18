@@ -1,0 +1,14 @@
+# Bay station, nRF9151 side (host: UWB array, LTE-M, GNSS, sensors).
+# Hardware model v2 layout, per Zephyr "Board Porting Guide" and mirrored on
+# upstream boards/nordic/nrf9151dk/board.yml (one SoC, one 'ns' variant).
+# Build targets:
+#   bay_station_lte/nrf9151      secure-only image (bring-up, no TF-M)
+#   bay_station_lte/nrf9151/ns   non-secure app + TF-M (production)
+board:
+  name: bay_station_lte
+  full_name: UWB rescue locator bay station (nRF9151)
+  vendor: others
+  socs:
+    - name: nrf9151
+      variants:
+        - name: ns

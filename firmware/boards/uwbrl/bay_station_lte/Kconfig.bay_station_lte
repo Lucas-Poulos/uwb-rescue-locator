@@ -1,0 +1,3 @@
+# Mirrors upstream boards/nordic/nrf9151dk/Kconfig.nrf9151dk.
+config BOARD_BAY_STATION_LTE
+	select SOC_NRF9151_LACA

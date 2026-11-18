@@ -1,0 +1,14 @@
+description: |
+  A named list of plain GPIO inputs (e.g. sensor interrupt lines) that the
+  bring-up shell reads by name before any sensor driver owns them.
+
+compatible: "uwbrl,gpio-set"
+
+properties:
+  gpios:
+    type: phandle-array
+    required: true
+  gpio-names:
+    type: string-array
+    required: true
+    description: One docs/net-contract.md net name per gpios entry.

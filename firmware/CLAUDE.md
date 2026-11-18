@@ -8,11 +8,15 @@ schematics.
 
 ## Read this before writing any code
 
-**The hardware/firmware interface does not exist yet.** As of this writing
-no GPIO on either MCU is assigned to a function in the schematic --
-`kicad-cli sch export netlist` on `main` reports every BT840 and DW3210 pin
-on an `unconnected-(...)` net, and on the wristband branch only power, GND,
-SWD, `RESET_N`, `VBAT_SENSE` and one button are wired.
+**The hardware/firmware interface exists by name, not yet by pin.** The
+bay station's host is now the nRF9151, with the BT840 as a UART BLE bridge.
+`../docs/net-contract.md` fixes every cross-sheet net *name*; the pin each
+net lands on is decided in one hardware document
+(`bay-station/connectivity_notes.md`) and copied into exactly one firmware
+file per MCU: `boards/uwbrl/bay_station_lte/bay_station_lte_pins.h` and
+`boards/uwbrl/bay_station_ble/bay_station_ble_pins.h`. Both `#error` until
+filled in. On the wristband branch only power, GND, SWD, `RESET_N`,
+`VBAT_SENSE` and one button are wired.
 
 The practical consequence, and the single easiest way to waste a week here:
 
@@ -26,8 +30,9 @@ The practical consequence, and the single easiest way to waste a week here:
   Open, with the constraint that forces it (e.g. "four CS lines plus four
   IRQ lines, and the SPI instance must be one that can run at the DW3000's
   rated clock").
-- Write against a named constant from `common/`, never a bare pin number,
-  so that the day the schematic settles there is exactly one place to change.
+- Write against devicetree node labels and net-contract names, never a
+  bare pin number, so that the day the schematic settles there is exactly
+  one place to change (the `*_pins.h` above).
 
 This is the firmware analogue of the root file's "never invent a part
 number", and it exists for the same reason.
@@ -36,8 +41,9 @@ number", and it exists for the same reason.
 
 Root rule 1 (verify datasheet facts from the actual PDF) applies unchanged to
 register names, bit fields, timing parameters, and API signatures. Qorvo's
-DW3000 register set and the nRF52 peripheral docs are both large enough that
-plausible-sounding recall is frequently wrong.
+DW3000 register set and the nRF52/nRF91 peripheral docs are both large enough
+that plausible-sounding recall is frequently wrong. Do not assume an nRF52840
+peripheral fact holds on the nRF9151 (SPIM speed is the live example).
 
 - Cite document, revision, and section/table when you record a register or
   timing fact, same as the hardware side does.
@@ -69,10 +75,12 @@ path is precision-critical:
 
 ## Toolchain
 
-**Not yet decided** -- nRF5 SDK vs. Zephyr / nRF Connect SDK, one choice for
-both boards (`README.md`, "Not yet decided"). Don't pick unilaterally by
-committing a project skeleton that assumes one; raise it in
-`../docs/decisions.md` and let the team settle it.
+**nRF Connect SDK v3.4.x (LTS), all images.** The nRF9151 settled it: the
+nRF5 SDK covers only nRF51/nRF52 and is in maintenance mode, so the station
+host can only be NCS; the BT840 and the wristband follow for one toolchain
+(`bay-station/README.md`, "Toolchain"). The modem firmware version is pinned
+alongside the NCS version -- change them together, against Nordic's nRF9151
+compatibility matrix.
 
 Whichever wins: **the SDK does not get vendored into this repo.** No `west`
 workspace, no SDK tree, no toolchain tarball. `.gitignore` already excludes

@@ -1,0 +1,17 @@
+/*
+ * Secure-only target: bay_station_lte/nrf9151. Use for early bring-up.
+ * Chosen/partition layout copied from upstream nrf9151dk_nrf9151.dts.
+ */
+/dts-v1/;
+#include <nordic/nrf9151_laca.dtsi>
+#include "bay_station_lte_nrf9151_common.dtsi"
+
+/ {
+	chosen {
+		zephyr,sram = &sram0_s;
+		zephyr,flash = &flash0;
+		zephyr,code-partition = &slot0_partition;
+		zephyr,sram-secure-partition = &sram0_s;
+		zephyr,sram-non-secure-partition = &sram0_ns;
+	};
+};
