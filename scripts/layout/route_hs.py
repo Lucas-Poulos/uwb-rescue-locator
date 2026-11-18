@@ -36,7 +36,8 @@ FENCE_VIA = (0.45, 0.20)
 FENCE_OFFSET = 0.96       # 0.45/2 + 0.5 (RF50 keep-off in .kicad_dru) + 0.45/2 + 0.01
 FENCE_PITCH = 1.5
 CLEAR_DEFAULT = 0.15
-BEND_R = 1.0              # arc radius for bend='arc'
+_DEBUG_NORAISE = bool(os.environ.get("HS_NORAISE"))   # debugging: keep the untuned copper instead of raising
+BEND_R = 1.0             # arc radius for bend='arc'
 
 
 def fence_pitch_ok(pitch=FENCE_PITCH):
@@ -181,7 +182,7 @@ def seg_clearance_ok(board, net, layer, a, b, width, clearance=CLEAR_DEFAULT, ig
         # the .kicad_dru keep-off exempts same-class neighbours (CLK next to CLK)
         ct = clearance if str(t.GetNetClassName()) == own_cls else ct_foreign
         if t.Type() == pcbnew.PCB_VIA_T:
-            r = U.mm(t.GetWidth()) / 2
+            r = U.mm(t.GetWidth(U.F_CU)) / 2
             q = t.GetPosition()
             if U.dist_pt_seg(U.mm(q.x), U.mm(q.y), a[0], a[1], b[0], b[1]) < hw + r + ct - 1e-6:
                 return False
@@ -231,6 +232,239 @@ def candidate_paths(ca, cb, span=8.0, step=0.5):
     return res
 
 
+# ------------------------------------------------------------------ A* fallback
+def _keepout_rects(board, layer):
+    """Axis-aligned bboxes of rule areas that forbid tracks on `layer` (board and footprint level)."""
+    zs = list(board.Zones())
+    for f in board.GetFootprints():
+        zs += list(f.Zones())
+    out = []
+    for z in zs:
+        if z.GetIsRuleArea() and z.GetDoNotAllowTracks() and z.IsOnLayer(layer):
+            bb = z.GetBoundingBox()
+            out.append((U.mm(bb.GetLeft()), U.mm(bb.GetTop()), U.mm(bb.GetRight()), U.mm(bb.GetBottom())))
+    return out
+
+
+class GridCtx:
+    """Non-uniform routing grid (0.25 mm lattice + the special rows/columns given) with
+    a blocked-node mask for one net/width/layer.  search() is an orthogonal least-bends
+    A*.  Obstacles: foreign pads (0.15), foreign tracks/vias (clearance_trk, 0.15 for the
+    same class), track-forbidding rule areas, board edge (0.5)."""
+
+    def __init__(self, board, net, layer, width, special_x, special_y, box, ignore_pads=(),
+                 step=0.25, clearance_trk=0.5, margin_extra=0.03):
+        import bisect
+        self.bisect = bisect
+        self.hw = hw = width / 2
+        self.width = width
+        nid = net.GetNetCode()
+        x0, y0, x1, y1 = box
+
+        def axis(lo, hi, sp):
+            v = {round(s, 4) for s in sp}
+            k = math.ceil(lo / step)
+            while k * step <= hi:
+                v.add(round(k * step, 4)); k += 1
+            return sorted(v)
+        self.X, self.Y = axis(x0, x1, special_x), axis(y0, y1, special_y)
+        self.nx, self.ny = len(self.X), len(self.Y)
+        self.blocked = bytearray(self.nx * self.ny)
+        m = hw + CLEAR_DEFAULT + margin_extra
+        for (px0, py0, px1, py1, pnet, layers, key) in _pads(board):
+            if pnet == nid or layer not in layers or key in ignore_pads:
+                continue
+            self._rrect(self.blocked, px0, py0, px1, py1, m)
+        for (kx0, ky0, kx1, ky1) in _keepout_rects(board, layer):
+            self._rect(self.blocked, kx0 - hw, ky0 - hw, kx1 + hw, ky1 + hw)
+        own_cls = str(net.GetNetClassName())
+        for t in board.GetTracks():
+            if t.GetNetCode() == nid:
+                continue
+            ct = CLEAR_DEFAULT if str(t.GetNetClassName()) == own_cls else clearance_trk
+            if t.Type() == pcbnew.PCB_VIA_T:
+                q = t.GetPosition(); r = U.mm(t.GetWidth(U.F_CU)) / 2
+                cx, cy = U.mm(q.x), U.mm(q.y); mm_ = hw + r + ct + margin_extra
+                self._rect(self.blocked, cx - mm_, cy - mm_, cx + mm_, cy + mm_)
+            elif t.GetLayer() == layer:
+                s_, e_ = t.GetStart(), t.GetEnd()
+                self._seg(self.blocked, U.mm(s_.x), U.mm(s_.y), U.mm(e_.x), U.mm(e_.y),
+                          hw + U.mm(t.GetWidth()) / 2 + ct + margin_extra)
+        bo = U.board_outline(board)
+        if bo:
+            e = 0.5 + hw
+            self._rect(self.blocked, -1e9, -1e9, bo[0] + e, 1e9)
+            self._rect(self.blocked, bo[2] - e, -1e9, 1e9, 1e9)
+            self._rect(self.blocked, -1e9, -1e9, 1e9, bo[1] + e)
+            self._rect(self.blocked, -1e9, bo[3] - e, 1e9, 1e9)
+
+    def idx(self, p):
+        return self.X.index(round(p[0], 4)), self.Y.index(round(p[1], 4))
+
+    def _rect(self, arr, x0, y0, x1, y1):
+        b = self.bisect
+        i0, i1 = b.bisect_right(self.X, x0), b.bisect_left(self.X, x1)
+        j0, j1 = b.bisect_right(self.Y, y0), b.bisect_left(self.Y, y1)
+        for i in range(i0, i1):
+            base = i * self.ny
+            for j in range(j0, j1):
+                arr[base + j] = 1
+
+    def _rrect(self, arr, x0, y0, x1, y1, m):
+        """Rectangle inflated by m with ROUND corners (exact point-to-rect distance)."""
+        b = self.bisect
+        i0, i1 = b.bisect_left(self.X, x0 - m), b.bisect_right(self.X, x1 + m)
+        j0, j1 = b.bisect_left(self.Y, y0 - m), b.bisect_right(self.Y, y1 + m)
+        for i in range(i0, i1):
+            for j in range(j0, j1):
+                if U.dist_pt_rect(self.X[i], self.Y[j], x0, y0, x1, y1) < m:
+                    arr[i * self.ny + j] = 1
+
+    def _seg(self, arr, ax, ay, bx, by, mt):
+        b = self.bisect
+        i0, i1 = b.bisect_left(self.X, min(ax, bx) - mt), b.bisect_right(self.X, max(ax, bx) + mt)
+        j0, j1 = b.bisect_left(self.Y, min(ay, by) - mt), b.bisect_right(self.Y, max(ay, by) + mt)
+        for i in range(i0, i1):
+            for j in range(j0, j1):
+                if U.dist_pt_seg(self.X[i], self.Y[j], ax, ay, bx, by) < mt:
+                    arr[i * self.ny + j] = 1
+
+    def with_polyline(self, pts, margin=0.03):
+        """Copy of the blocked mask with an own-net polyline (already 'laid') as obstacle."""
+        arr = bytearray(self.blocked)
+        for a, b in zip(pts, pts[1:]):
+            self._seg(arr, a[0], a[1], b[0], b[1], self.width + CLEAR_DEFAULT + margin)
+        return arr
+
+    def search(self, sa, sb, first_dir=None, last_dir=None, bend_cost=1.0, blocked=None, free_ends=True):
+        import heapq
+        blk = self.blocked if blocked is None else blocked
+        X, Y, nx_, ny_ = self.X, self.Y, self.nx, self.ny
+        si, sj = self.idx(sa); gi, gj = self.idx(sb)
+        if free_ends:
+            blk = bytearray(blk)
+            blk[si * ny_ + sj] = 0; blk[gi * ny_ + gj] = 0
+        dirs = ((1, 0), (-1, 0), (0, 1), (0, -1))
+        start = (si, sj, -1 if first_dir is None else dirs.index(first_dir))
+        best = {start: 0.0}
+        prev = {}
+        heap = [(abs(X[si] - X[gi]) + abs(Y[sj] - Y[gj]), 0.0, start)]
+        found = None
+        ld = None if last_dir is None else dirs.index(last_dir)
+        while heap:
+            f, g, st = heapq.heappop(heap)
+            if best.get(st, 1e18) < g - 1e-9:
+                continue
+            i, j, d = st
+            if i == gi and j == gj and (ld is None or d == ld):
+                found = st; break
+            for nd, (di, dj) in enumerate(dirs):
+                if d >= 0 and dirs[d][0] == -di and dirs[d][1] == -dj:
+                    continue
+                ni, nj = i + di, j + dj
+                if not (0 <= ni < nx_ and 0 <= nj < ny_) or blk[ni * ny_ + nj]:
+                    continue
+                ng = g + abs(X[ni] - X[i]) + abs(Y[nj] - Y[j]) + (bend_cost if d >= 0 and nd != d else 0.0)
+                ns = (ni, nj, nd)
+                if ng < best.get(ns, 1e18) - 1e-9:
+                    best[ns] = ng; prev[ns] = st
+                    heapq.heappush(heap, (ng + abs(X[ni] - X[gi]) + abs(Y[nj] - Y[gj]), ng, ns))
+        if found is None:
+            return None
+        pts, st = [], found
+        while True:
+            pts.append((X[st[0]], Y[st[1]]))
+            if st not in prev:
+                break
+            st = prev[st]
+        pts.reverse()
+        return simplify_poly(pts)
+
+
+def simplify_poly(pts):
+    out = [pts[0]]
+    for k in range(1, len(pts) - 1):
+        a, b, c = out[-1], pts[k], pts[k + 1]
+        if (abs(b[0] - a[0]) < 1e-9 and abs(c[0] - b[0]) < 1e-9) or (abs(b[1] - a[1]) < 1e-9 and abs(c[1] - b[1]) < 1e-9):
+            continue
+        out.append(b)
+    out.append(pts[-1])
+    return out
+
+
+def astar_waypoints(board, net, layer, sa, sb, width, ignore_pads=(), step=0.25, bend_cost=1.0,
+                    clearance_trk=0.5, first_dir=None, last_dir=None, margin_extra=0.03):
+    """Orthogonal least-bends path sa -> sb around everything foreign (see GridCtx).
+    first_dir / last_dir force the leaving / arriving axis direction (neck pads)."""
+    box = (min(sa[0], sb[0]) - 12.0, min(sa[1], sb[1]) - 12.0, max(sa[0], sb[0]) + 12.0, max(sa[1], sb[1]) + 12.0)
+    g = GridCtx(board, net, layer, width, [sa[0], sb[0]], [sa[1], sb[1]], box, ignore_pads, step,
+                clearance_trk, margin_extra)
+    return g.search(sa, sb, first_dir, last_dir, bend_cost)
+
+
+def detour_waypoints(board, net, layer, sa, sb, width, want_len, ignore_pads=(), step=0.25,
+                     clearance_trk=0.5, first_dir=None, last_dir=None, margin_extra=0.08,
+                     span=14.0, wstep=1.0, slack=(0.0, 2.5)):
+    """Longer orthogonal path sa -> W -> sb through a free lattice point W, chosen so the
+    chamfered polyline length lands in [want_len - slack[1], want_len - slack[0]] (the rest is
+    left to the meander).  Candidates are ranked by closeness to want_len - slack mid.  The
+    second half sees the first as an obstacle, so the path never touches itself.
+    Returns (polyline, length) or None."""
+    cands = []
+    xs = [sa[0], sb[0]]; ys = [sa[1], sb[1]]
+    box = (min(sa[0], sb[0]) - span, min(sa[1], sb[1]) - span, max(sa[0], sb[0]) + span, max(sa[1], sb[1]) + span)
+    # W candidates on a coarse sub-lattice (multiples of wstep), snapped to the 0.25 lattice
+    wx = [round(round(x / wstep) * wstep, 4) for x in [box[0] + k * wstep for k in range(int((box[2] - box[0]) / wstep) + 1)]]
+    wy = [round(round(y / wstep) * wstep, 4) for y in [box[1] + k * wstep for k in range(int((box[3] - box[1]) / wstep) + 1)]]
+    g = GridCtx(board, net, layer, width, xs, ys, box, ignore_pads, step, clearance_trk, margin_extra)
+    tgt = want_len - 0.5 * (slack[0] + slack[1])
+    # cheap pre-filter: Manhattan length through W
+    scored = []
+    for x in wx:
+        for y in wy:
+            est = abs(sa[0] - x) + abs(sa[1] - y) + abs(sb[0] - x) + abs(sb[1] - y)
+            scored.append((abs(est - 0.9 * tgt) , x, y))
+    scored.sort()
+    tried = 0
+    results = []
+    for _, x, y in scored[:400]:
+        W = (x, y)
+        if round(x, 4) not in g.X or round(y, 4) not in g.Y:
+            continue
+        if g.blocked[g.X.index(round(x, 4)) * g.ny + g.Y.index(round(y, 4))]:
+            continue
+        p1 = g.search(sa, W, first_dir, None, 1.0)
+        if not p1:
+            continue
+        # trim the last 1 mm of p1 so the way out of W is not walled in by p1 itself
+        tp, left = list(p1), 1.0
+        while len(tp) >= 2 and left > 0:
+            seg = math.dist(tp[-1], tp[-2])
+            if seg <= left:
+                left -= seg; tp.pop()
+            else:
+                f = (seg - left) / seg
+                tp[-1] = (tp[-2][0] + (tp[-1][0] - tp[-2][0]) * f, tp[-2][1] + (tp[-1][1] - tp[-2][1]) * f)
+                break
+        arr = g.with_polyline(tp) if len(tp) >= 2 else bytearray(g.blocked)
+        dx, dy = p1[-1][0] - p1[-2][0], p1[-1][1] - p1[-2][1]
+        d_in = (int(math.copysign(1, dx)), 0) if abs(dx) > abs(dy) else (0, int(math.copysign(1, dy)))
+        p2 = g.search(W, sb, d_in, last_dir, 1.0, blocked=arr)
+        if not p2:
+            continue
+        poly = simplify_poly(p1 + p2[1:])
+        if not _poly_ok(board, net, layer, poly, width, ignore_pads, clearance_trk, "chamfer"):
+            continue
+        ln = prim_length(bend_points(poly, "chamfer"))
+        tried += 1
+        if want_len - slack[1] <= ln <= want_len - slack[0]:
+            return poly, ln
+        results.append((abs(ln - tgt), poly, ln))
+        if tried > 60:
+            break
+    return None
+
+
 # ------------------------------------------------------------------ pad routing
 def pad_of(board, ref, number):
     for f in board.GetFootprints():
@@ -277,6 +511,15 @@ def _pad_exit(fp, pad, width):
     return nw, ex, far
 
 
+def _poly_ok(board, net, layer, pts, width, ign, trk_clearance, style):
+    """Check the polyline AS LAID (corner chamfers move copper toward the inside of a turn)."""
+    for p in bend_points(pts, style):
+        if p[0] == "L" and not seg_clearance_ok(board, net, layer, p[1], p[2], width, ignore_pads=ign,
+                                                clearance_trk=trk_clearance):
+            return False
+    return True
+
+
 def route_pads(board, net, pad_a, pad_b, layer=U.F_CU, width=RF_W, waypoints=None,
                style="chamfer", neck_pads=(), locked=False, trk_clearance=0.5):
     """Route pad_a -> pad_b (each a (ref, number)) on `layer`.
@@ -305,10 +548,18 @@ def route_pads(board, net, pad_a, pad_b, layer=U.F_CU, width=RF_W, waypoints=Non
             if eb and math.dist(o[-1], o[-2]) > 1e-6 and \
                     (o[-2][0] - o[-1][0]) * eb[1][0] + (o[-2][1] - o[-1][1]) * eb[1][1] <= 0:
                 continue
-            if all(seg_clearance_ok(board, net, layer, o[i], o[i + 1], width, ignore_pads=ign,
-                                    clearance_trk=trk_clearance) for i in range(len(o) - 1)):
+            if _poly_ok(board, net, layer, o, width, ign, trk_clearance, style):
                 pts = o
                 break
+        if pts is None:
+            fd = tuple(ea[1]) if ea else None
+            ld = tuple(-v for v in eb[1]) if eb else None
+            for me in (0.0, 0.03, 0.15, 0.3):
+                cand = astar_waypoints(board, net, layer, sa, sb, width, ignore_pads=ign,
+                                       clearance_trk=trk_clearance, first_dir=fd, last_dir=ld, margin_extra=me)
+                if cand and _poly_ok(board, net, layer, cand, width, ign, trk_clearance, style):
+                    pts = cand
+                    break
         if pts is None:
             raise RuntimeError("no clean orthogonal path between %s and %s" % (pad_a, pad_b))
     if ea:
@@ -394,7 +645,7 @@ def _via_site_ok(board, net, x, y, via, clr):
     for t in board.GetTracks():
         if t.Type() == pcbnew.PCB_VIA_T:
             q = t.GetPosition()
-            rr = U.mm(t.GetWidth()) / 2
+            rr = U.mm(t.GetWidth(U.F_CU)) / 2
             need = r + rr + (0.25 if True else 0)  # hole-to-hole 0.25 edge to edge on drills
             dr = U.mm(t.GetDrill()) / 2
             if math.hypot(x - U.mm(q.x), y - U.mm(q.y)) < max(r + rr + (0 if t.GetNetCode() == nid else clr),
@@ -404,7 +655,7 @@ def _via_site_ok(board, net, x, y, via, clr):
             if t.GetNetCode() == nid:
                 continue
             s, e = t.GetStart(), t.GetEnd()
-            need = r + U.mm(t.GetWidth()) / 2 + clr
+            need = r + U.mm(t.GetWidth()) / 2 + (0.5 if str(t.GetNetClassName()) in ("RF50", "CLK") else clr)
             if t.GetLayer() in (U.F_CU, U.B_CU) and U.dist_pt_seg(x, y, U.mm(s.x), U.mm(s.y), U.mm(e.x), U.mm(e.y)) < need - 1e-6:
                 return False
     return True
@@ -495,11 +746,11 @@ def _try_meander(board, net, layer, trk, extra, pa, pb, style):
     old_len = U.mm(trk.GetLength())
     board.Remove(trk)
     try:
-        for side in (1, -1):
+        for side, amp_max in [(sd, am) for am in (10.0, 6.0, 4.0, 2.5, 1.6) for sd in (1, -1)]:
             want = extra
             for _round in range(4):
                 try:
-                    cand = meander_points(a, b, want, w, side=side)
+                    cand = meander_points(a, b, want, w, side=side, amp_max=amp_max)
                 except ValueError:
                     break
                 if not all(seg_clearance_ok(board, net, layer, cand[i], cand[i + 1], w,
@@ -518,6 +769,37 @@ def _try_meander(board, net, layer, trk, extra, pa, pb, style):
     except Exception:
         board.Add(trk)
         raise
+
+
+def _detour_hop(board, r, hi, extra, layer, width, style):
+    """Replace hop `hi` of path record r by a longer route through a free waypoint that
+    adds about `extra` mm (the meander finishes the job).  Leaves r untouched on failure."""
+    its, netname, pa, pb = r["hop_info"][hi]
+    net = U.get_net(board, netname)
+    fa, ppa = pad_of(board, *pa)
+    fb, ppb = pad_of(board, *pb)
+    ea, eb = _pad_exit(fa, ppa, width), _pad_exit(fb, ppb, width)
+    ca, cb = pad_center(ppa), pad_center(ppb)
+    sa = ea[2] if ea else ca
+    sb = eb[2] if eb else cb
+    neck = (math.dist(ca, sa) if ea else 0.0) + (math.dist(sb, cb) if eb else 0.0)
+    old = sum(U.mm(t.GetLength()) for t in its)
+    for t in its:
+        board.Remove(t)
+    got = detour_waypoints(board, net, layer, sa, sb, width, old + extra - neck,
+                           ignore_pads={tuple(pa), tuple(pb)},
+                           first_dir=tuple(ea[1]) if ea else None,
+                           last_dir=tuple(-v for v in eb[1]) if eb else None)
+    if got:
+        poly, _ = got
+        new, ln = route_pads(board, net, pa, pb, layer=layer, width=width, waypoints=poly[1:-1], style=style)
+        r["items"] = [i for i in r["items"] if i not in its] + new
+        its[:] = new
+        r["length"] += ln - old
+        return True
+    for t in its:
+        board.Add(t)
+    return False
 
 
 def match_group(board, group, layer=U.F_CU, width=RF_W, tol_mm=0.5, style="chamfer"):
@@ -548,9 +830,13 @@ def match_group(board, group, layer=U.F_CU, width=RF_W, tol_mm=0.5, style="chamf
             hop_info.append((its, netname, pa, pb))
         res[name] = {"items": items_all, "length": tot, "hop_info": hop_info}
     target = max(r["length"] for r in res.values())
+    print("pre-tune lengths:", {k: round(v["length"], 2) for k, v in res.items()}, file=sys.stderr)
     for name, spec in group.items():
         r = res[name]
         extra = target - r["length"]
+        if extra > 2.0:
+            _detour_hop(board, r, spec["tune_hop"], extra, layer, width, style)
+            extra = target - r["length"]
         order = [spec["tune_hop"]] + [i for i in range(len(r["hop_info"])) if i != spec["tune_hop"]]
         for hi in order:
             if extra <= 0.05:
@@ -565,10 +851,13 @@ def match_group(board, group, layer=U.F_CU, width=RF_W, tol_mm=0.5, style="chamf
                 cap = meander_capacity(U.mm(trk.GetLength()))
                 if cap < 1.0:
                     continue
-                want = min(extra, cap)
-                got = _try_meander(board, net, layer, trk, want, pa, pb, style)
-                if got is None and want > 4.0:
-                    got = _try_meander(board, net, layer, trk, want * 0.5, pa, pb, style)
+                for frac in (1.0, 0.7, 0.5, 0.35, 0.25, 0.15):
+                    want = min(extra, cap) * frac
+                    if want < 0.3:
+                        break
+                    got = _try_meander(board, net, layer, trk, want, pa, pb, style)
+                    if got is not None:
+                        break
                 if got is None:
                     continue
                 new, added = got
@@ -576,10 +865,10 @@ def match_group(board, group, layer=U.F_CU, width=RF_W, tol_mm=0.5, style="chamf
                 its[:] = [i for i in its if i is not trk] + new
                 r["length"] += added
                 extra -= added
-        if extra > tol_mm:
+        if extra > tol_mm and not _DEBUG_NORAISE:
             raise RuntimeError("path %s still %.2f mm short of the group target after meandering" % (name, extra))
     lens = [r["length"] for r in res.values()]
     res["_spread_mm"] = max(lens) - min(lens)
-    if res["_spread_mm"] > tol_mm:
+    if res["_spread_mm"] > tol_mm and not _DEBUG_NORAISE:
         raise RuntimeError("group spread %.3f mm exceeds tolerance %.3f" % (res["_spread_mm"], tol_mm))
     return res

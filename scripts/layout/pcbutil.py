@@ -110,15 +110,16 @@ def net_class_table(board):
 
 
 def board_outline(board):
-    """Axis-aligned bbox (x0,y0,x1,y1) in mm of Edge.Cuts, or None."""
-    bb = None
+    """Axis-aligned bbox (x0,y0,x1,y1) in mm of Edge.Cuts, or None.  Built from the
+    shape end points (PCB_SHAPE.GetBoundingBox aborts headless: wx traits assert)."""
+    xs, ys = [], []
     for d in board.GetDrawings():
-        if d.GetLayer() == pcbnew.Edge_Cuts:
-            b = d.GetBoundingBox()
-            bb = b if bb is None else (bb.Merge(b) or bb)
-    if bb is None:
+        if d.GetLayer() == pcbnew.Edge_Cuts and d.Type() == pcbnew.PCB_SHAPE_T:
+            for q in (d.GetStart(), d.GetEnd()):
+                xs.append(mm(q.x)); ys.append(mm(q.y))
+    if not xs:
         return None
-    return (mm(bb.GetLeft()), mm(bb.GetTop()), mm(bb.GetRight()), mm(bb.GetBottom()))
+    return (min(xs), min(ys), max(xs), max(ys))
 
 
 def outline_polygon(board):
