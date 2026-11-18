@@ -26,11 +26,11 @@ fallback for vendors not in `vendor-prefixes.txt`; the subdirectory name
 - `bay_station_lte/bay_station_lte_pins.h`
 - `bay_station_ble/bay_station_ble_pins.h`
 
-Each `#define` is a `docs/net-contract.md` net set to `PIN_TBD`, with the
-source document named (`bay-station/connectivity_notes.md`). Both headers
-`#error` until a `*_PINS_ASSIGNED` flag is flipped, so the build cannot
-silently succeed against guessed pins. Nothing else in the tree contains a
-pin number.
+Each `#define` is a `docs/net-contract.md` net. The numbers were filled on
+2026-11-17 from `bay-station/connectivity_notes.md` section 2 and checked
+against a `kicad-cli` netlist of the merged schematic. Both headers still
+`#error` if their `*_PINS_ASSIGNED` flag is cleared. Nothing else in the tree
+contains a pin number, so a schematic pin move is a one-line change here.
 
 ## What has been checked
 

@@ -1,8 +1,8 @@
 /*
  * Bay station, nRF9151 side: board devicetree shared by the secure and ns
  * targets. Every comment names the docs/net-contract.md net. Pin numbers
- * live only in bay_station_lte_pins.h (PIN_TBD, see
- * bay-station/connectivity_notes.md, until filled in).
+ * live only in bay_station_lte_pins.h (from
+ * bay-station/connectivity_notes.md s2).
  *
  * Custom bindings (uwbrl,*) are in firmware/dts/bindings/; apps add
  * firmware/ to DTS_ROOT.

@@ -1,8 +1,7 @@
 /*
  * Pin control for the nRF9151 side. Pin NUMBERS come only from
  * bay_station_lte_pins.h; this file only says which net goes to which
- * peripheral signal. Every PIN_* below is PIN_TBD (see
- * bay-station/connectivity_notes.md) until that header is filled in.
+ * peripheral signal (numbers from bay-station/connectivity_notes.md s2).
  *
  * nRF91 serial peripherals can be routed to any GPIO (PSEL), so instance
  * choice does not constrain the pin map -- but UARTE/SPIM/TWIM share

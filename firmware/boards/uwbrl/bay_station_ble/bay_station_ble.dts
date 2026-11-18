@@ -1,7 +1,7 @@
 /*
  * Bay station BLE bridge: Fanstel BT840 (nRF52840). Net names are
  * docs/net-contract.md s5/s7; pin numbers only in bay_station_ble_pins.h
- * (PIN_TBD, see bay-station/connectivity_notes.md, until filled in).
+ * (from bay-station/connectivity_notes.md s5).
  *
  * No DBG_UART on this chip in the contract: logs go over SEGGER RTT on the
  * BT840 SWD header (SWDIO_BLE / SWDCLK_BLE).
