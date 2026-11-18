@@ -6,7 +6,7 @@
 	(paper "A3")
 	(title_block
 		(title "Regulation")
-		(comment 1 "Bay station -- +VSYS to +3V3_SYS buck regulation (TPS62A02PDDCR) for BT840 host + 4x DW3210 anchor loads. Placement only -- no wires/labels yet. Budget re-run 2026-09-19: ~347mA vs 2A rating.")
+		(comment 1 "Bay station -- +VSYS to +3V3 (TPS62A02, U8) and +VBAT_LTE for nRF9151 VDD (TPS63802, U40). Wired 2026-11-17. Budget in handoff/power.md.")
 	)
 	(lib_symbols
 		(symbol "Device:C"
@@ -807,18 +807,671 @@
 			)
 			(embedded_fonts no)
 		)
-	)
-	(text "Placement only: no wires or global labels on this sheet yet.\nU8 = TPS62A02PDDCR (TI, real datasheet SLUSEG9E), a 2.5-5.5V-in / 2A synchronous\nbuck converter, adjustable output via R8/R9 feedback divider (R8=453k, R9=100k,\nVOUT = 0.6V x (1+R1/R2) = 0.6V x 5.53 = ~3.318V per Eq.2 of the datasheet).\nL1=1uH + C20=4.7uF (VIN) + C21=22uF (VOUT) per the datasheet's own Table 8-3\nrecommended LC combination for VOUT>=1.8V; C22=120pF optional feedforward cap\nacross R8, per the datasheet's own PSM-ripple-reduction note.\nIntended rail names (not yet wired): input = +VSYS (from power_bms.kicad_sch's\nMCP73871 OUT/VBATT_PROT node), output = +3V3_SYS (new regulated rail feeding\nU3 on connectivity.kicad_sch and U4-U7 on uwb_array.kicad_sch). EN (pin 1) and\nPG (pin 5, unused/optional) are also left unconnected here -- EN needs to be tied\nto +VSYS (always-on) in a future wiring pass. See regulation_notes.md for the full\ncurrent-budget math and datasheet citations."
-		(exclude_from_sim no)
-		(at 122.428 43.942 0)
-		(effects
-			(font
-				(size 1.27 1.27)
+	(symbol "Connector:TestPoint"
+			(pin_numbers
+				(hide yes)
 			)
+			(pin_names
+				(offset 0.762)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "TP"
+				(at 0 6.858 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "TestPoint"
+				(at 0 5.08 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 5.08 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 5.08 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "test point"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "test point tp"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "Pin* Test*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "TestPoint_0_1"
+				(circle
+					(center 0 3.302)
+					(radius 0.762)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "TestPoint_1_1"
+				(pin passive line
+					(at 0 0 90)
+					(length 2.54)
+					(name "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
 		)
-		(uuid "0d4364a9-4abf-43cb-9b54-758fd777b155")
+	(symbol "Connector_Generic:Conn_01x02"
+			(pin_names
+				(offset 1.016)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "J"
+				(at 0 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "Conn_01x02"
+				(at 0 -5.08 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "connector"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "Connector*:*_1x??_*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "Conn_01x02_1_1"
+				(rectangle
+					(start -1.27 1.27)
+					(end 1.27 -3.81)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+				(rectangle
+					(start -1.27 0.127)
+					(end 0 -0.127)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(rectangle
+					(start -1.27 -2.413)
+					(end 0 -2.667)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin passive line
+					(at -5.08 0 0)
+					(length 3.81)
+					(name "Pin_1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 -2.54 0)
+					(length 3.81)
+					(name "Pin_2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+	(symbol "power:PWR_FLAG"
+			(power global)
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 0)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "#FLG"
+				(at 0 1.905 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "PWR_FLAG"
+				(at 0 3.81 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Special symbol for telling ERC where power comes from"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "flag power"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "PWR_FLAG_0_0"
+				(pin power_out line
+					(at 0 0 90)
+					(length 0)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(symbol "PWR_FLAG_0_1"
+				(polyline
+					(pts
+						(xy 0 0) (xy 0 1.27) (xy -1.016 1.905) (xy 0 2.54) (xy 1.016 1.905) (xy 0 1.27)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+		(symbol "bay_station:TPS63802"
+			(pin_names
+				(offset 1.016)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "U"
+				(at -7.62 11.43 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Value" "TPS63802"
+				(at 2.54 11.43 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Footprint" "bay_station:TI_DLA0010A_VSON-HR-10_2x3mm_P0.5mm_PLACEHOLDER"
+				(at 0 -13.97 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" "https://www.ti.com/lit/gpn/tps63802"
+				(at 0 -16.51 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "TI TPS63802 2-A buck-boost converter, VIN 1.3-5.5V (start-up > 1.8V), VOUT 1.8-5.2V adjustable, VFB = 500 mV, 10-pin VSON-HR (DLA0010A) 3.0x2.0mm 0.5mm pitch, orderable TPS63802DLAR. Hand-authored from TI SLVSEU9D (Nov 2018, rev. Jan 2021): Table 7-1 Pin Functions 1=EN, 2=MODE, 3=AGND, 4=FB, 5=PG (open drain), 6=VOUT, 7=L2, 8=GND, 9=L1, 10=VIN (checked in pdftotext -raw and -layout). Section 8.1 abs max 6V on VIN/L1/L2/EN/MODE/VOUT/FB/PG. EN and MODE must not float."
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "MPN" "TPS63802DLAR"
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "buck-boost converter DC-DC"
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "TPS63802_0_1"
+				(rectangle
+					(start -7.62 7.62)
+					(end 7.62 -7.62)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+			)
+			(symbol "TPS63802_1_1"
+				(pin input line
+					(at -10.16 0 0)
+					(length 2.54)
+					(name "EN"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -10.16 -2.54 0)
+					(length 2.54)
+					(name "MODE"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_in line
+					(at -2.54 -10.16 90)
+					(length 2.54)
+					(name "AGND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at 10.16 0 180)
+					(length 2.54)
+					(name "FB"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin open_collector line
+					(at 10.16 -2.54 180)
+					(length 2.54)
+					(name "PG"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_out line
+					(at 10.16 5.08 180)
+					(length 2.54)
+					(name "VOUT"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "6"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 2.54 10.16 270)
+					(length 2.54)
+					(name "L2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "7"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_in line
+					(at 2.54 -10.16 90)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "8"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -2.54 10.16 270)
+					(length 2.54)
+					(name "L1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "9"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_in line
+					(at -10.16 5.08 0)
+					(length 2.54)
+					(name "VIN"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "10"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 	)
-	(text "Regulation -- +VSYS to +3V3_SYS buck converter (U8)"
+	(text "Regulation -- +VSYS to +3V3 (U8 buck) and +VBAT_LTE (U40 buck-boost)"
 		(exclude_from_sim no)
 		(at 127 26.67 0)
 		(effects
@@ -885,16 +1538,6 @@
 			(type default)
 		)
 		(uuid "3f402940-8af4-4a4e-af27-e01b7136644e")
-	)
-	(wire
-		(pts
-			(xy 152.4 87.63) (xy 166.37 87.63)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "5dd67b83-11ba-44bc-99bc-8ed6f051b4f5")
 	)
 	(wire
 		(pts
@@ -1194,84 +1837,6 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 166.37 95.25 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "3b475a76-4e83-47b4-9aac-63b3d23dc763")
-		(property "Reference" "#PWR04"
-			(at 166.37 101.6 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 166.37 100.33 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 166.37 95.25 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 166.37 95.25 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 166.37 95.25 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "132b08fb-6592-4329-aab3-e268c6c920a8")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
-					(reference "#PWR04")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
 		(at 152.4 95.25 0)
 		(unit 1)
 		(body_style 1)
@@ -1379,7 +1944,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Inductor_SMD:L_Coilcraft_XxL4020"
 			(at 133.35 87.63 90)
 			(hide yes)
 			(show_name no)
@@ -1401,7 +1966,7 @@
 				)
 			)
 		)
-		(property "Description" "Power inductor, 1uH, >=2A saturation current per TPS62A02 datasheet Table 8-3/Table 8-2 recommended component list -- e.g. Coilcraft XGL3520-102MEC (2A-rated) or Murata DFE252012F-1R0M (1A-rated, only if using the 1A TPS62A01 variant instead). No exact KiCad default footprint match found for XGL3520; pick exact footprint/PN at BOM time."
+		(property "Description" "Coilcraft XFL4020-102MEC, 1.0uH +/-20%, DCR 10.80/11.90 mOhm typ/max, Isat 4.5 A (10% drop) / 5.1 A (20%), Irms 5.4 A (20 C rise) -- Coilcraft Document 745-1 (XFL4020, revised 03/10/26). Replaces the TI-listed XGL3520-102MEC (SLUSEG9E Table 8-2) because KiCad ships a verified footprint for XFL4020 (L_Coilcraft_XxL4020) and none for XGL3520. Same 1.0uH value TI Table 8-3 marks '++' with Cout = 22uF for VOUT >= 1.8V; Isat 4.5 A exceeds the TPS62A02 high-side current limit IHS(OC) 3.4 A max (Table 6.5), so the inductor does not saturate before the IC limits."
 			(at 133.35 87.63 90)
 			(hide yes)
 			(show_name no)
@@ -1480,7 +2045,7 @@
 				)
 			)
 		)
-		(property "Description" "2.5-5.5V in, 2A synchronous buck, adjustable output, SOT-23-6. See lib_symbols description and regulation_notes.md for full verification."
+		(property "Description" "TPS62A02PDDCR 2.5-5.5V-in 2A buck, SOT-23-6 (TI SLUSEG9E). +VSYS -> +3V3. EN (pin 1) driven by the EN_3V3 delay network (R303/C303/R304) so +3V3 comes up >= 6 ms after +VBAT_LTE (nRF9151 VDD_GPIO sequencing, nRF9151 HDG 'VDD_GPIO'). PG (pin 5) open-drain to TP405 with R301 100k pull-up to +3V3_REG; gates nothing. FB divider R8/R9 = 453k/100k -> 3.318 V (Eq. 2, VFB 600 mV typ). See regulation_notes.md."
 			(at 110.49 90.17 0)
 			(hide yes)
 			(show_name no)
@@ -1755,17 +2320,17 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 166.37 91.44 0)
+		(at 138.43 93.98 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(in_pos_files yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "ea5aee1b-71b8-4d14-b302-54747aacd8ca")
 		(property "Reference" "C22"
-			(at 170.688 89.154 0)
+			(at 132.08 102.87 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1775,7 +2340,7 @@
 			)
 		)
 		(property "Value" "120pF"
-			(at 172.466 92.202 0)
+			(at 132.08 105.41 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1785,7 +2350,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 166.37 91.44 0)
+			(at 138.43 93.98 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1796,7 +2361,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 166.37 91.44 0)
+			(at 138.43 93.98 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1806,8 +2371,8 @@
 				)
 			)
 		)
-		(property "Description" "Optional feedforward capacitor across R8 (FB divider top resistor), 120pF per datasheet's own Application Information note ('a feedforward capacitor reduces output ripple in PSM and improves load transient response; a 120pF capacitor is good for the 1.8V output typical application') -- included here since this rail also uses PSM, per the same design intent."
-			(at 166.37 91.44 0)
+		(property "Description" "DNP by default. Optional feedforward capacitor across R8 (VOUT to FB). TI SLUSEG9E Sec 8.2.2.3: 'A feedforward capacitor reduces the output ripple in PSM and improves the load transient response. A 120pF capacitor is good for the 1.8V output typical application.' That value is for 1.8 V (smaller R1); at 3.3 V with R1 = 453k the zero lands at 1/(2*pi*453k*120p) = 2.9 kHz, so 120 pF is a starting point, not a verified value. Table 8-3 note 4: needs Cout >= 22uF (C21 = 22uF OK). FIXED 2026-11-17: previously wired VOUT-to-GND, contradicting this description. Fit and tune only after measuring PSM ripple on TP403/TP401."
+			(at 138.43 93.98 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1910,6 +2475,4700 @@
 				)
 			)
 		)
+	)
+	(wire
+		(pts
+			(xy 95.25 87.63) (xy 90.17 87.63)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e282dcdf-ee13-47ab-9028-d4e4e8b9b3bc")
+	)
+	(global_label "+VSYS"
+		(shape passive)
+		(at 90.17 87.63 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "25e6c1c1-809e-4137-a60e-834e319e2f6a")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 90.17 87.63 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 102.87 90.17) (xy 100.33 90.17)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "599df38f-b08d-4b86-a15e-5de7b1d4532a")
+	)
+	(wire
+		(pts
+			(xy 100.33 90.17) (xy 100.33 102.87)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f55adffe-08ec-459c-83f9-a14b0061320a")
+	)
+	(label "EN_3V3"
+		(at 100.33 102.87 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "1d61f607-6fa0-422d-8791-951e3dc67581")
+	)
+	(wire
+		(pts
+			(xy 118.11 92.71) (xy 120.65 92.71)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "cae862ae-5d17-4ef9-b56e-51fe96822a58")
+	)
+	(wire
+		(pts
+			(xy 120.65 92.71) (xy 120.65 104.14)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e3c5899a-3520-4578-bb83-fe54e92ebede")
+	)
+	(label "PG_3V3"
+		(at 120.65 104.14 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "16ca7688-4831-43f1-b273-2d80095f3bcb")
+	)
+	(label "SW_3V3"
+		(at 123.19 87.63 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "21b47436-6666-406e-b971-822208406663")
+	)
+	(label "FB_3V3"
+		(at 128.27 95.25 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "fb1995d9-92dd-4988-9c31-d3e5ae1d7448")
+	)
+	(wire
+		(pts
+			(xy 152.4 87.63) (xy 160.02 87.63)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4fa8d152-9cd0-4d91-b1ae-a764b418dfac")
+	)
+	(label "+3V3_REG"
+		(at 160.02 87.63 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "11ffd8bb-7f9c-486c-8274-49bada929473")
+	)
+	(wire
+		(pts
+			(xy 138.43 90.17) (xy 143.51 90.17)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0664754d-3ade-4331-90f9-49b6874a1065")
+	)
+	(junction
+		(at 143.51 90.17)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "4ed798ad-d6cd-4dfd-887c-52bdf46f476e")
+	)
+	(wire
+		(pts
+			(xy 138.43 97.79) (xy 138.43 99.06)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "dabd4b51-9dc0-4490-ac11-feadc4a41327")
+	)
+	(junction
+		(at 138.43 99.06)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "01546894-64ef-4dfc-af99-36eecac166cd")
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 195.58 80.01 90)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "63d61ae2-0494-4bee-b14c-2e4e1821efd4")
+		(property "Reference" "R300"
+			(at 195.58 76.2 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "0R"
+			(at 195.58 83.82 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
+			(at 195.58 80.01 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 195.58 80.01 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Current-measurement break point for +3V3. 0R 0805 link (0805 rather than the 0603 house size: rated ~2 A for a jumper vs ~1 A for 0603, and the +3V3 rail carries ~0.35-0.45 A peak). Remove it and insert a Power Profiler Kit II in ampere-meter mode across J30. The regulator's FB divider senses on the regulator side of this link, so removing it never opens the control loop."
+			(at 195.58 80.01 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "10968920-2fbe-493d-9ad7-e717be04310c")
+		)
+		(pin "2"
+			(uuid "e75e76f9-902e-45ff-b646-94b984c4fecd")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
+					(reference "R300")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 191.77 80.01) (xy 189.23 80.01)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f264d85a-8fe6-4838-8026-47c4ee35f5b7")
+	)
+	(label "+3V3_REG"
+		(at 189.23 80.01 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "60fd1098-297c-43ff-8681-9f8d4e22091f")
+	)
+	(wire
+		(pts
+			(xy 199.39 80.01) (xy 201.93 80.01)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1f9d7008-28e6-4e51-a953-923c8a028464")
+	)
+	(global_label "+3V3"
+		(shape passive)
+		(at 201.93 80.01 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "7728f033-1cab-48c8-8736-5909f6e2b0cc")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 201.93 80.01 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x02")
+		(at 203.2 90.17 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp yes)
+		(uuid "04d97bd3-0c68-45c9-ba42-6a204c8eed3d")
+		(property "Reference" "J30"
+			(at 203.2 87.63 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "PPK_3V3"
+			(at 203.2 95.25 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical"
+			(at 203.2 90.17 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 203.2 90.17 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "DNP 2-pin 2.54 mm header footprint across R300 for a Power Profiler Kit II (pin 1 = regulator side = PPK VIN, pin 2 = load side = PPK VOUT) or a bench ammeter. Fit a header only when measuring; with R300 removed and no meter fitted the +3V3 rail is unpowered."
+			(at 203.2 90.17 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "28ce4e49-5808-4a39-b302-5a15ac29aa70")
+		)
+		(pin "2"
+			(uuid "dc933e79-3ce6-4d9b-be15-ef871fbaebb0")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
+					(reference "J30")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 198.12 90.17) (xy 195.58 90.17)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1c53ea5f-4174-42c2-baaa-b42a615f1a45")
+	)
+	(label "+3V3_REG"
+		(at 195.58 90.17 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "47781207-cd64-42f5-bf89-80cd1fbbbe96")
+	)
+	(wire
+		(pts
+			(xy 198.12 92.71) (xy 195.58 92.71)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0463b51a-dff1-4fdd-b522-8b089f950eda")
+	)
+	(global_label "+3V3"
+		(shape passive)
+		(at 195.58 92.71 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "ab5e12fa-9374-478f-8bf9-86342e5ea23b")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 195.58 92.71 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:PWR_FLAG")
+		(at 236.22 80.01 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(in_pos_files no)
+		(dnp no)
+		(uuid "d436bd8d-ad3e-4ef7-8748-ab303163ad03")
+		(property "Reference" "#FLG300"
+			(at 236.22 78.105 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "PWR_FLAG"
+			(at 236.22 76.2 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 236.22 80.01 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 236.22 80.01 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Marks +3V3 as driven: its source (regulator power_out) sits behind the inductor and the 0R break link, which are passive."
+			(at 236.22 80.01 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "8530ab6f-7320-4db7-9088-2fd9ef8ab2aa")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
+					(reference "#FLG300")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 236.22 80.01) (xy 236.22 82.55)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2204482b-248a-483b-8ba9-baa7a1b8fa09")
+	)
+	(global_label "+3V3"
+		(shape passive)
+		(at 236.22 82.55 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "b6e311e1-e37e-4026-aecc-db6314632e36")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 236.22 82.55 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 248.92 85.09 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "156a5d54-c4c9-46cb-9834-e2dbab973f70")
+		(property "Reference" "R301"
+			(at 251.46 83.82 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "100k"
+			(at 251.46 86.36 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 248.92 85.09 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 248.92 85.09 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "U8 PG pull-up. TI SLUSEG9E Sec 7.4.2: PG is open-drain and needs a pull-up to a rail <= the recommended VIN; 100k sinks 33 uA when PG is low (IPG <= 1 mA, Table 6.3). Pulled to +3V3_REG (regulator side) so PG stays observable with R300 removed. PG gates nothing: every +3V3 load (DW3210 x4, BT840, nRF9151 VDD_GPIO, sensors, clock) is on this same rail, so there is no later rail to sequence. It is a bring-up observable on TP405 only."
+			(at 248.92 85.09 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "e731323c-20a0-4a6f-8a18-138c1f61ec98")
+		)
+		(pin "2"
+			(uuid "628a5fcf-8314-489e-976a-05d213029176")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
+					(reference "R301")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 248.92 81.28) (xy 248.92 78.74)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4fad0d14-35c2-4ed0-af0d-d6ccd4a731f0")
+	)
+	(label "+3V3_REG"
+		(at 248.92 78.74 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "fe77b93f-485b-470d-9d72-0c9083322db1")
+	)
+	(wire
+		(pts
+			(xy 248.92 88.9) (xy 248.92 91.44)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "bbf47e4b-7ffd-4bd9-ba10-506e0419d664")
+	)
+	(label "PG_3V3"
+		(at 248.92 91.44 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "b2566830-fdbe-4cb9-a3e6-f6d0f06dbf89")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 264.16 99.06 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "ed868686-7cc4-49e9-8af6-25083e245ed2")
+		(property "Reference" "TP400"
+			(at 264.16 92.71 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "+3V3_REG"
+			(at 264.16 94.49 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 264.16 99.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 264.16 99.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "+3V3 regulator side of break point R300 (also FB divider top)."
+			(at 264.16 99.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "4914095f-b233-4934-878a-0f2ba9b77d50")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
+					(reference "TP400")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 264.16 99.06) (xy 264.16 101.6)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9fd7dc81-e470-4050-ae95-2559b9d31be5")
+	)
+	(label "+3V3_REG"
+		(at 264.16 101.6 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "237692f2-adc3-4d24-9852-97a18a2b62ed")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 274.32 99.06 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "3b7a8df3-dfda-4dfa-80a9-74e9838917cb")
+		(property "Reference" "TP401"
+			(at 274.32 92.71 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "+3V3"
+			(at 274.32 94.49 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 274.32 99.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 274.32 99.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "+3V3 load side of break point R300."
+			(at 274.32 99.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "7108e3f7-7ab6-4f15-b3d9-023b5261f1b2")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
+					(reference "TP401")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 274.32 99.06) (xy 274.32 101.6)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b9b07f86-eb71-419c-962b-787d63ee7dce")
+	)
+	(global_label "+3V3"
+		(shape passive)
+		(at 274.32 101.6 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "24a5567f-09fa-4595-9d35-fd48394300e8")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 274.32 101.6 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 284.48 99.06 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "45ac1aa4-b015-4d8e-bc93-3f4f2ce98e76")
+		(property "Reference" "TP402"
+			(at 284.48 92.71 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "SW_3V3"
+			(at 284.48 94.49 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 284.48 99.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 284.48 99.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "U8 SW node. LAYOUT: place this pad directly on the SW copper between U8 pin 3 and L1 with no stub trace -- a stub on a 2.4 MHz switch node radiates. If it cannot sit on the existing copper, leave it unplaced. Probe with a short ground spring, not a long ground lead."
+			(at 284.48 99.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "a0f0527f-35fe-4764-b341-e62e2010c09f")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
+					(reference "TP402")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 284.48 99.06) (xy 284.48 101.6)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b1deb735-f859-4e94-8a96-630e93bb4d72")
+	)
+	(label "SW_3V3"
+		(at 284.48 101.6 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "ae4f9eaa-8dff-48ea-ade0-182d09473a7a")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 294.64 99.06 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "624b30ee-6a24-4c4a-82a4-3948944ed9c4")
+		(property "Reference" "TP403"
+			(at 294.64 92.71 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "FB_3V3"
+			(at 294.64 94.49 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 294.64 99.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 294.64 99.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "U8 FB node (should read 0.600 V +/-1%; SLUSEG9E Table 6.5 594-606 mV over 0-125 C). High-impedance node: probe with >= 10 MOhm."
+			(at 294.64 99.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "d447bc8d-84a7-4358-8562-f51c95ff8fe9")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
+					(reference "TP403")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 294.64 99.06) (xy 294.64 101.6)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5d41507b-a9d3-4634-a9f2-af6b6e84504e")
+	)
+	(label "FB_3V3"
+		(at 294.64 101.6 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "c6d25e24-18dd-466e-99e9-027b4cc1521b")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 304.8 99.06 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "f4ac91f4-11af-4b01-a200-e56f8a87e149")
+		(property "Reference" "TP404"
+			(at 304.8 92.71 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "EN_3V3"
+			(at 304.8 94.49 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 304.8 99.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 304.8 99.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "U8 EN (delay network R303/C303/R304). Rises ~12-40 ms after PG_LTE releases."
+			(at 304.8 99.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "33df5239-1d31-456a-b932-cc80578ff832")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
+					(reference "TP404")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 304.8 99.06) (xy 304.8 101.6)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0aca315f-ba8f-47ef-a13c-90e450642138")
+	)
+	(label "EN_3V3"
+		(at 304.8 101.6 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "e38851c8-a0e4-4935-b964-ea4647513eb0")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 314.96 99.06 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "cfb06664-9dfd-4166-a6f2-b67e09f57085")
+		(property "Reference" "TP405"
+			(at 314.96 92.71 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "PG_3V3"
+			(at 314.96 94.49 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 314.96 99.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 314.96 99.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "U8 power-good, open drain, high = +3V3 in regulation (>= 96% rising, SLUSEG9E Table 6.5)."
+			(at 314.96 99.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "edb6160e-6a1b-4488-91cb-fdc8fbe189cb")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
+					(reference "TP405")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 314.96 99.06) (xy 314.96 101.6)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1848a093-7466-4c7f-9bb9-527996a6b111")
+	)
+	(label "PG_3V3"
+		(at 314.96 101.6 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "5be9ecd5-a35a-4350-b3c5-71050a175ae2")
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 195.58 140.97 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "39b82b03-89d5-47ad-ab06-26be345d3edf")
+		(property "Reference" "R303"
+			(at 198.12 139.7 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "100k"
+			(at 198.12 142.24 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 195.58 140.97 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 195.58 140.97 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "EN_3V3 delay: pull-up from +VBAT_LTE_REG. With C303 = 1uF, tau = 100 ms. EN crosses U8's 1.2 V rising threshold (SLUSEG9E Table 6.5, max) at t = tau*ln(3.588/(3.588-1.2)) = 40.7 ms after U40 PG releases; even if the true threshold were as low as the 0.4 V falling threshold, t = 11.8 ms. Both exceed Nordic's 'VDD_GPIO should be applied at least 6 ms after ENABLE and VDD' (nRF9151 Hardware Design Guidelines, VDD_GPIO page). Also U40 PG's pull-up (via R304)."
+			(at 195.58 140.97 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "474df3bb-3657-479d-934c-737a7713030e")
+		)
+		(pin "2"
+			(uuid "86888b9a-8df9-48b6-aa1e-549728fffae0")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
+					(reference "R303")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 195.58 137.16) (xy 195.58 134.62)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "456dd729-e8e2-4a4a-bca3-7709075d087b")
+	)
+	(label "+VBAT_LTE_REG"
+		(at 195.58 134.62 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "abc4752e-cf18-4aa7-a823-8bc9f57ded68")
+	)
+	(wire
+		(pts
+			(xy 195.58 144.78) (xy 195.58 147.32)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9fab1a4c-eb6d-4b70-8f9d-06ee4b5c7f6a")
+	)
+	(label "EN_3V3"
+		(at 195.58 147.32 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "32cbc106-ed98-4163-a940-cc2d3bc22309")
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 208.28 140.97 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "40c82441-554d-423f-9742-f4f71dc110f3")
+		(property "Reference" "C303"
+			(at 210.82 139.7 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "1uF"
+			(at 210.82 142.24 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+			(at 208.28 140.97 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 208.28 140.97 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "EN_3V3 delay capacitor (with R303 100k: tau 100 ms). X7R 0603 10 V+; value tolerance only shifts the delay, which has >= 2x margin over the 6 ms requirement."
+			(at 208.28 140.97 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "e46ca9ec-0183-44db-acb8-d4ed38bd2ac3")
+		)
+		(pin "2"
+			(uuid "1d976d08-2146-4095-86ea-7aa4897a1fba")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
+					(reference "C303")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 208.28 137.16) (xy 208.28 134.62)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "461aebfc-d712-4aaa-8771-e44e957629a1")
+	)
+	(label "EN_3V3"
+		(at 208.28 134.62 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "743a490e-71ef-4bee-aa53-566419b90aab")
+	)
+	(wire
+		(pts
+			(xy 208.28 144.78) (xy 208.28 147.32)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2522959b-961d-4831-a871-f3900420c018")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 208.28 147.32 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "58e2ba79-9bc5-484c-ac4d-54ebb2d7fa5a")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 208.28 147.32 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 220.98 140.97 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "d558f1e1-45b3-41f1-878b-c8ce150704a3")
+		(property "Reference" "R304"
+			(at 223.52 139.7 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "4.7k"
+			(at 223.52 142.24 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 220.98 140.97 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 220.98 140.97 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Couples U40 (TPS63802) PG into EN_3V3. While PG is low, EN_3V3 = 3.588 V x 4.7k/104.7k = 0.16 V, below U8's 0.4 V falling threshold (SLUSEG9E Table 6.5). Limits the C303 discharge current through PG to 3.588 V/4.7k = 0.76 mA, inside the TPS63802 PG 1 mA sink rating (SLVSEU9D Sec 9.3.10). On power-down PG drops at 90% VOUT (or when U40 EN goes low, Table 9-1) and pulls +3V3 down before +VBAT_LTE, matching 'VDD_GPIO should be removed before removing ENABLE or VDD'. Remove R304 (and fit R305) to defeat sequencing."
+			(at 220.98 140.97 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "2f9741ce-19e6-48c5-a6b2-ddbbffd11aad")
+		)
+		(pin "2"
+			(uuid "37b58c27-1415-4341-a69e-f893ca78cff7")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
+					(reference "R304")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 220.98 137.16) (xy 220.98 134.62)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "95582ef1-9951-415c-9705-73f143d66ce3")
+	)
+	(label "PG_LTE"
+		(at 220.98 134.62 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "52c44d62-371b-47d5-b224-7abda8685fa3")
+	)
+	(wire
+		(pts
+			(xy 220.98 144.78) (xy 220.98 147.32)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "fff135cc-8913-4d23-9d77-da9b4eb3b33f")
+	)
+	(label "EN_3V3"
+		(at 220.98 147.32 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "c5adff88-b595-48bb-82fe-49586ee67d29")
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 233.68 140.97 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp yes)
+		(uuid "34e05f23-90e7-42cc-8ca8-0e08057a9d7f")
+		(property "Reference" "R305"
+			(at 236.22 139.7 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "0R"
+			(at 236.22 142.24 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 233.68 140.97 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 233.68 140.97 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "DNP rework option: ties U8 EN straight to +VSYS (always-on, the old plan). Fit ONLY together with removing R304, otherwise U40 PG fights +VSYS through 4.7k. Use if U40 is not fitted or sequencing is suspected."
+			(at 233.68 140.97 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "0d686cf4-07a0-40e0-83ee-fb0d92cd7b1f")
+		)
+		(pin "2"
+			(uuid "72fcbd11-382a-4f2e-9e79-8e2f037a7a07")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
+					(reference "R305")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 233.68 137.16) (xy 233.68 134.62)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ab0727e1-17eb-4265-ab50-3566a0e1a8d7")
+	)
+	(global_label "+VSYS"
+		(shape passive)
+		(at 233.68 134.62 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "60c9ba54-a1c3-4877-8a3e-817a58c73ed0")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 233.68 134.62 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 233.68 144.78) (xy 233.68 147.32)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "171ab83a-516a-4752-838e-7381fa77269f")
+	)
+	(label "EN_3V3"
+		(at 233.68 147.32 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "3fca118c-799b-494c-85c2-eb8897debe9f")
+	)
+	(symbol
+		(lib_id "bay_station:TPS63802")
+		(at 101.6 200.66 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "bffad673-b2af-497a-923c-8c906eb614a5")
+		(property "Reference" "U40"
+			(at 93.98 189.23 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "TPS63802DLAR"
+			(at 104.14 189.23 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "bay_station:TI_DLA0010A_VSON-HR-10_2x3mm_P0.5mm_PLACEHOLDER"
+			(at 101.6 200.66 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "https://www.ti.com/lit/gpn/tps63802"
+			(at 101.6 200.66 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "nRF9151 VDD supply (+VBAT_LTE). TI TPS63802DLAR buck-boost (SLVSEU9D). Chosen over feeding VDD straight from +VSYS because on battery +VSYS is the cell minus the Q1 and MCP73871 path drops, which falls below Nordic's 3.2 V LTE recommendation and towards its 3.0 V absolute floor ('Minimum voltage includes all voltage drops, ripple, and spikes', nRF9151 HDG Operating conditions) for the last part of the discharge, exactly while the modem draws up to 505 mA per TX subframe. Regulated 3.59 V output in boost or buck. 2 A output for VIN >= 2.3 V at 3.3 V out (Sec 8.5)."
+			(at 101.6 200.66 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "TPS63802DLAR"
+			(at 101.6 200.66 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "27fbc788-bf6a-48ff-a9fb-d769811d6444")
+		)
+		(pin "2"
+			(uuid "73a2922c-4455-4d7d-b9c2-27206d2e4bb4")
+		)
+		(pin "3"
+			(uuid "3d93fbe4-6a5a-4aba-aa5e-f688d67150b0")
+		)
+		(pin "4"
+			(uuid "4ff83e28-78b2-43df-b38d-fb9ca47e27d9")
+		)
+		(pin "5"
+			(uuid "172cd972-ef82-48cc-a219-cd26716c9916")
+		)
+		(pin "6"
+			(uuid "f3c77b2e-fc36-4d03-b43c-9ed5b2266e6d")
+		)
+		(pin "7"
+			(uuid "d2902b53-cdf0-48f5-b82e-ecdf0415c165")
+		)
+		(pin "8"
+			(uuid "3af0cbac-52bc-485a-8b32-6f851caaf529")
+		)
+		(pin "9"
+			(uuid "d06a7b6a-36d8-4152-bfad-6c0a894acbd2")
+		)
+		(pin "10"
+			(uuid "c7864253-1086-4f02-ac60-fc88667e2203")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
+					(reference "U40")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 91.44 200.66) (xy 88.9 200.66)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "74e792aa-9ce5-4d5c-90dd-1789fefe46b3")
+	)
+	(label "EN_LTE"
+		(at 88.9 200.66 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "6e4b4322-ec59-40fe-96c4-a887f865498f")
+	)
+	(wire
+		(pts
+			(xy 91.44 203.2) (xy 88.9 203.2)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "45c0969d-f0d4-4cef-9049-68f48e24f263")
+	)
+	(label "MODE_LTE"
+		(at 88.9 203.2 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "1cf4f487-e1c7-4f4a-a095-2ca9dc348c29")
+	)
+	(wire
+		(pts
+			(xy 99.06 210.82) (xy 99.06 213.36)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9a6ec4d0-baa9-42de-b9fe-7c68b0c40486")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 99.06 213.36 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "ca7884dd-6862-4bf6-b35d-3aa5a5457c70")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 99.06 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 111.76 200.66) (xy 114.3 200.66)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "6248c1c3-df76-4401-ae87-1e2a64eec157")
+	)
+	(label "FB_LTE"
+		(at 114.3 200.66 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "069dd9c6-6112-4f46-b743-7ccc3e4801d7")
+	)
+	(wire
+		(pts
+			(xy 111.76 203.2) (xy 114.3 203.2)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "baf86668-6d87-428c-8158-e3222a7f0ead")
+	)
+	(label "PG_LTE"
+		(at 114.3 203.2 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "0db3f21b-a989-422b-9e2c-55bc6e62884e")
+	)
+	(wire
+		(pts
+			(xy 111.76 195.58) (xy 114.3 195.58)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "34bd59f2-cb2c-4a92-8208-37078d73d29d")
+	)
+	(label "+VBAT_LTE_REG"
+		(at 114.3 195.58 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "35baf7b4-5e5a-4aac-b3fa-e38304ec9251")
+	)
+	(wire
+		(pts
+			(xy 104.14 190.5) (xy 104.14 187.96)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "318fee69-5fb8-441c-95d1-221ba5a2ca50")
+	)
+	(label "L2_LTE"
+		(at 104.14 187.96 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "b18a60e9-8850-4059-921a-2a915fa981e6")
+	)
+	(wire
+		(pts
+			(xy 104.14 210.82) (xy 104.14 213.36)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ab175c63-b6d5-4e9e-8536-f3a11c92d2c2")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 104.14 213.36 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "6f6d131a-0d98-4859-b283-1708006e2e5b")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 104.14 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 99.06 190.5) (xy 99.06 187.96)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "586b6aac-a475-4a17-a969-7a5ea0a25dc2")
+	)
+	(label "L1_LTE"
+		(at 99.06 187.96 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "5bfece56-aba2-469e-b205-4546279e3f7e")
+	)
+	(wire
+		(pts
+			(xy 91.44 195.58) (xy 88.9 195.58)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "18b61713-b0ef-4bd5-ad44-56ad111ca1da")
+	)
+	(global_label "+VSYS"
+		(shape passive)
+		(at 88.9 195.58 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "69d8503f-d0c9-4afd-8e02-58836d15d7d4")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 88.9 195.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 63.5 226.06 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "3ccf3818-a6f4-4f04-a8d5-37969ade76ac")
+		(property "Reference" "C300"
+			(at 66.04 224.79 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10uF"
+			(at 66.04 227.33 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
+			(at 63.5 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 63.5 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "U40 VIN capacitor. TI SLVSEU9D Sec 10.2.2.4: 'A 10 uF input capacitor is recommended'; effective CI >= 4 uF (Sec 8.3). 0805 10 V X5R/X7R (not the 0603 6.3 V Table 10-4 part) because +VSYS reaches ~5 V on external power and a 6.3 V 0603 loses most of its capacitance at that bias. Place at VIN/GND pins."
+			(at 63.5 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "5b20cef1-b083-4a72-af83-dd40901a6f4e")
+		)
+		(pin "2"
+			(uuid "b811428a-689c-4a15-b893-82156f8d8e3f")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
+					(reference "C300")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 63.5 222.25) (xy 63.5 219.71)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "109c9b16-5d32-4894-a06c-4a63786a75d8")
+	)
+	(global_label "+VSYS"
+		(shape passive)
+		(at 63.5 219.71 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "3572364a-182c-4738-88f7-a0474102157c")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 63.5 219.71 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 63.5 229.87) (xy 63.5 232.41)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "58d57ecc-2fc4-4f53-abc2-be0de04318d9")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 63.5 232.41 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "63954a39-3269-4a67-9608-acc84c6ffe8d")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 63.5 232.41 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:L")
+		(at 101.6 172.72 90)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "73eef2f3-cfbd-4196-8031-ed96d83a4b63")
+		(property "Reference" "L300"
+			(at 101.6 169 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "0.47uH"
+			(at 101.6 176.5 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Inductor_SMD:L_Coilcraft_XxL4020"
+			(at 101.6 172.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 101.6 172.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Coilcraft XFL4020-471MEC, 0.47 uH +/-20%, DCR 4.40/5.10 mOhm typ/max, Isat 4.6 A (10% drop) / 6.6 A (20%), Irms 7.5 A (20 C rise) -- Coilcraft Document 745-1 (revised 03/10/26). TPS63802 needs L = 0.47 uH nominal (0.37-0.57 effective, SLVSEU9D Sec 8.3; Table 10-1). TI's own Table 10-2 part is XFL4015-471ME (5.4 A); XFL4020 chosen because KiCad ships its footprint (L_Coilcraft_XxL4020). Worst-case operating peak here is ~1 A (0.6 A out at 3.0 V in); the 4-5.75 A boost current limit only appears on a fault."
+			(at 101.6 172.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "XFL4020-471MEC"
+			(at 101.6 172.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "a11a8fb8-6d61-41d1-96dc-cc1bc4d7315c")
+		)
+		(pin "2"
+			(uuid "9c9eda00-25cb-4c10-890f-b7980d86f6c3")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
+					(reference "L300")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 97.79 172.72) (xy 95.25 172.72)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5d673a54-4fba-43b3-a522-a78652c8f88b")
+	)
+	(label "L1_LTE"
+		(at 95.25 172.72 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "c2b0c7eb-decc-493f-874e-ec5416e81ae0")
+	)
+	(wire
+		(pts
+			(xy 105.41 172.72) (xy 107.95 172.72)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0dd341ff-40be-4319-92e5-f6e8d5f5843e")
+	)
+	(label "L2_LTE"
+		(at 107.95 172.72 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "ab2bb466-23f7-4001-9308-38e8a276527a")
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 139.7 213.36 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "5ebed40b-e54a-4352-a97a-7ee7717842a9")
+		(property "Reference" "C301"
+			(at 142.24 212.09 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "22uF"
+			(at 142.24 214.63 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
+			(at 139.7 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 139.7 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "U40 output capacitor. SLVSEU9D Sec 10.2.2.3: 'a single 22 uF for all programmed output voltages <= 3.6 V'; effective CO >= 7 uF for VO > 2.3 V (Sec 8.3), no upper limit. 0805 10 V X5R. The nRF9151's own VDD bank (47 uF + 10 uF + 2x4.7 uF + 1 uF ..., nRF9151 HDG schematic Table 1) sits on +VBAT_LTE at the SiP on connectivity.kicad_sch."
+			(at 139.7 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "108b1235-ee80-47ce-a093-3737a3ee02a9")
+		)
+		(pin "2"
+			(uuid "bb7da09c-ef34-4660-8dff-c54d7b8f4fe1")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
+					(reference "C301")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 139.7 209.55) (xy 139.7 207.01)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e15bf8ec-c480-4d01-b30b-a80af327e627")
+	)
+	(label "+VBAT_LTE_REG"
+		(at 139.7 207.01 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "d4b4d3ec-affd-49b2-a439-f9dce781351f")
+	)
+	(wire
+		(pts
+			(xy 139.7 217.17) (xy 139.7 219.71)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1d76d013-3d43-4ef5-ac4a-07c00c9a5483")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 139.7 219.71 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "99f5253b-06cd-46d0-b82f-c230104ef75c")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 139.7 219.71 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 152.4 213.36 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp yes)
+		(uuid "89eb687b-fc32-4a8c-b76b-ece1496f3f7c")
+		(property "Reference" "C302"
+			(at 154.94 212.09 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "22uF"
+			(at 154.94 214.63 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
+			(at 152.4 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 152.4 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "DNP second 22 uF output cap. TI recommends 2x 22 uF above 3.6 V (Sec 10.2.2.3); fit if VOUT is raised (R306) or if TX-burst droop on TP406 is excessive."
+			(at 152.4 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "62f6accf-7dc9-4697-8062-56790d88a596")
+		)
+		(pin "2"
+			(uuid "dfe74286-25af-4e4a-8e82-a2e23da48f9f")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
+					(reference "C302")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 152.4 209.55) (xy 152.4 207.01)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "cb041c7a-10ac-4287-ae7c-2302d3b0fb27")
+	)
+	(label "+VBAT_LTE_REG"
+		(at 152.4 207.01 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "dd0f2fb2-ae21-4919-90a6-e73edf3957ce")
+	)
+	(wire
+		(pts
+			(xy 152.4 217.17) (xy 152.4 219.71)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ceb92f70-77b5-4446-bec1-24040f3c26a7")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 152.4 219.71 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "a73196c2-2d3b-49d2-a8a6-81642104f103")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 152.4 219.71 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 165.1 208.28 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "6c20900e-5b16-4590-9501-05c2113a38bc")
+		(property "Reference" "R306"
+			(at 167.64 207.01 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "562k"
+			(at 167.64 209.55 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 165.1 208.28 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 165.1 208.28 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "U40 FB top. SLVSEU9D Eq. 3 R1 = R2 x (VOUT/VFB - 1), VFB = 500 mV; Table 10-5 lists 562k/91k for 3.6 V. VOUT = 0.5 x (1 + 562/91) = 3.588 V nominal; VFB accuracy +/-1% (PWM, Sec 8.5) -> 3.55-3.62 V before resistor tolerance. Inside nRF9151 VDD 3.0-5.5 V (PS 'Recommended operating conditions', nominal 3.7 V) with 0.39 V margin over the 3.2 V LTE recommendation."
+			(at 165.1 208.28 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "09a5e523-ec2d-4ed4-9314-9fadaa7985ad")
+		)
+		(pin "2"
+			(uuid "31a2880b-e6fb-41d3-87c1-76027cd3fbce")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
+					(reference "R306")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 165.1 204.47) (xy 165.1 201.93)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3d969266-6f73-4931-b402-e53ec8cb174f")
+	)
+	(label "+VBAT_LTE_REG"
+		(at 165.1 201.93 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "89b81d39-f269-4ed1-977b-56eb892196d7")
+	)
+	(wire
+		(pts
+			(xy 165.1 212.09) (xy 165.1 214.63)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f022ac49-4385-4847-a723-b6e14d07b312")
+	)
+	(label "FB_LTE"
+		(at 165.1 214.63 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "3cf48289-20a8-4047-834d-35c1cbb0af12")
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 165.1 223.52 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "eb8ffe2f-1c3a-43f9-9283-2e55839e7516")
+		(property "Reference" "R307"
+			(at 167.64 222.25 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "91k"
+			(at 167.64 224.79 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 165.1 223.52 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 165.1 223.52 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "U40 FB bottom, 91k per SLVSEU9D Table 10-5 (R2 must not exceed 100k, Sec 10.2.2.5)."
+			(at 165.1 223.52 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "d5f13e5d-0420-4119-a3e1-f0c701223032")
+		)
+		(pin "2"
+			(uuid "2a0da013-ed17-4913-9e75-bb26405df602")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
+					(reference "R307")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 165.1 219.71) (xy 165.1 217.17)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "fde4ba6d-a0c1-43e2-a4db-7d2d63ecc5be")
+	)
+	(label "FB_LTE"
+		(at 165.1 217.17 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "0112011b-838d-4ae6-b1b8-546fd696de19")
+	)
+	(wire
+		(pts
+			(xy 165.1 227.33) (xy 165.1 229.87)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "57cce6a8-b494-4c47-b18e-6fad6a2fae19")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 165.1 229.87 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "0bf8e4b6-871a-4b3b-9e6c-6f1aa23188cb")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 165.1 229.87 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 63.5 184.15 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "bd61d5a7-b0b8-45e9-9f24-25e5324b26a1")
+		(property "Reference" "R308"
+			(at 66.04 182.88 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "191k"
+			(at 66.04 185.42 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 63.5 184.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 63.5 184.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "U40 EN divider top: board-level battery under-voltage cut-off (TI 'precise threshold enable'). EN thresholds 1.07/1.10/1.13 V rising, 0.97/1.00/1.03 V falling (SLVSEU9D Sec 8.5). Ratio (191k+100k)/100k = 2.91: off when +VSYS falls below 2.91 V (2.82-3.00 V), on above 3.20 V (3.11-3.29 V). Because U40 PG gates U8 EN, this also turns +3V3 off, so a flat cell browns the whole board out cleanly instead of LTE TX bursts dragging everything into reset loops. 12 uA divider load on +VSYS. Verify threshold against the chosen cell's discharge cut-off."
+			(at 63.5 184.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "31c9c51d-2121-4f98-bdef-dabeece521bb")
+		)
+		(pin "2"
+			(uuid "dd1bae2f-63ce-4c80-9aec-8911c437c45a")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
+					(reference "R308")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 63.5 180.34) (xy 63.5 177.8)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4de1c9a8-0f6e-4e64-ad0a-ac2b5b2bfdb1")
+	)
+	(global_label "+VSYS"
+		(shape passive)
+		(at 63.5 177.8 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "d84558cc-6e36-4281-81b3-4ff317628710")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 63.5 177.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 63.5 187.96) (xy 63.5 190.5)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b934ccfa-6680-45f3-8bd9-e805b2aa1a6e")
+	)
+	(label "EN_LTE"
+		(at 63.5 190.5 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "b0122186-31c0-4f2e-8ace-38d44f717ff1")
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 63.5 199.39 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "db84a1a3-b39a-4279-8f43-3f666c044a1c")
+		(property "Reference" "R309"
+			(at 66.04 198.12 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "100k"
+			(at 66.04 200.66 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 63.5 199.39 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 63.5 199.39 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "U40 EN divider bottom (see R308). Remove and fit R310 to make U40 always-on."
+			(at 63.5 199.39 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "904ac56f-4156-4001-9d14-b9d789167201")
+		)
+		(pin "2"
+			(uuid "5d14a196-65a8-4b9f-9e8a-e2ad9d5e1440")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
+					(reference "R309")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 63.5 195.58) (xy 63.5 193.04)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "11687229-9089-4e3b-a6af-6dd303e00b8b")
+	)
+	(label "EN_LTE"
+		(at 63.5 193.04 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "349451d5-2986-4c57-91ac-88e98ddab13a")
+	)
+	(wire
+		(pts
+			(xy 63.5 203.2) (xy 63.5 205.74)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "64f3584b-c62e-46d2-8628-59c844b90d55")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 63.5 205.74 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "de32e1fb-7571-4af8-955c-a8af5fba9c45")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 63.5 205.74 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 76.2 184.15 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp yes)
+		(uuid "816f9b8a-eb42-4373-b9a5-5857b32fff0b")
+		(property "Reference" "R310"
+			(at 78.74 182.88 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "0R"
+			(at 78.74 185.42 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 76.2 184.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 76.2 184.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "DNP rework: EN straight to +VSYS (always-on), defeating the UVLO divider. Remove R309 when fitting."
+			(at 76.2 184.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "1c54b24b-e201-4232-8f2e-03cc592f9f6d")
+		)
+		(pin "2"
+			(uuid "78b9b176-67b2-4779-9941-da06ceb29a65")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
+					(reference "R310")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 76.2 180.34) (xy 76.2 177.8)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "27031c3a-7820-4415-9882-cbc0c3568a2b")
+	)
+	(global_label "+VSYS"
+		(shape passive)
+		(at 76.2 177.8 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "5efd1fe1-156a-4355-95f0-0731cd42a625")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 76.2 177.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 76.2 187.96) (xy 76.2 190.5)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "83f1f06b-87ac-455a-88fd-3766a4ff18d1")
+	)
+	(label "EN_LTE"
+		(at 76.2 190.5 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "3fcffc37-30eb-4fa9-8a60-1f3524f1af6f")
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 76.2 220.98 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "1aaa5295-25ea-4f4b-93e2-08c2e4b1b9ea")
+		(property "Reference" "R311"
+			(at 78.74 219.71 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "0R"
+			(at 78.74 222.25 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 76.2 220.98 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 76.2 220.98 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "U40 MODE strap, fitted: MODE low = power-save mode (SLVSEU9D Table 7-1: 'Set LOW for power save mode, set HIGH for forced PWM mode. It must not be left floating.'). PSM keeps light-load (LTE PSM/eDRX) quiescent near the 11 uA IQ."
+			(at 76.2 220.98 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "36fc3ec9-7d8c-48cb-a339-45dcf8e7beac")
+		)
+		(pin "2"
+			(uuid "356c1c3e-eef2-4b81-8a60-095dc43b9fde")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
+					(reference "R311")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 76.2 217.17) (xy 76.2 214.63)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "bc1515d4-4892-4557-9243-4c1655e29a63")
+	)
+	(label "MODE_LTE"
+		(at 76.2 214.63 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "f5c4bba5-86a3-4f02-8c94-8ffbfee3f77b")
+	)
+	(wire
+		(pts
+			(xy 76.2 224.79) (xy 76.2 227.33)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "47ae05f1-0aa1-4bf9-b040-1b5b6ffa01c6")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 76.2 227.33 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "9900aad5-136a-4d33-bdda-327b1e6acf9a")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 76.2 227.33 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 88.9 220.98 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp yes)
+		(uuid "a39f84a3-064f-41c8-aa44-1d971a08ed7a")
+		(property "Reference" "R312"
+			(at 91.44 219.71 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "0R"
+			(at 91.44 222.25 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 88.9 220.98 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 88.9 220.98 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "DNP alternative MODE strap: forced PWM (fixed-frequency, lower ripple, higher light-load current). Swap R311 -> R312 if PSM ripple shows up in LTE/GNSS sensitivity tests."
+			(at 88.9 220.98 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "9d47a65c-08d2-476f-9cdd-b813477ce4e9")
+		)
+		(pin "2"
+			(uuid "b9ee266b-1131-46d0-a6d9-9095737136a4")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
+					(reference "R312")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 88.9 217.17) (xy 88.9 214.63)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8c2f01f4-01f9-4d3e-855e-8ee236628948")
+	)
+	(label "MODE_LTE"
+		(at 88.9 214.63 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "61ccf0e2-1475-4e07-bb36-206ea38fe8e2")
+	)
+	(wire
+		(pts
+			(xy 88.9 224.79) (xy 88.9 227.33)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "09d70073-72f4-470d-8ab1-c8cdab1bc5ec")
+	)
+	(global_label "+VSYS"
+		(shape passive)
+		(at 88.9 227.33 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "a746e899-91d2-43f0-90db-7d98a95aabfc")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 88.9 227.33 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 195.58 200.66 90)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "bceec54a-8625-4a98-95e0-12b28f8e95ff")
+		(property "Reference" "R302"
+			(at 195.58 196.85 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "0R"
+			(at 195.58 204.47 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
+			(at 195.58 200.66 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 195.58 200.66 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Current-measurement break point for +VBAT_LTE. 0R 0805 link (0805 rather than the 0603 house size: rated ~2 A for a jumper vs ~1 A for 0603, and nRF9151 TX subframes draw up to 505 mA). Remove it and insert a Power Profiler Kit II in ampere-meter mode across J31. The regulator's FB divider senses on the regulator side of this link, so removing it never opens the control loop."
+			(at 195.58 200.66 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "5c8c15c3-a1ab-4c18-86b4-13b2f3113b7b")
+		)
+		(pin "2"
+			(uuid "a84595ac-1584-41c7-94f9-4c8213523c44")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
+					(reference "R302")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 191.77 200.66) (xy 189.23 200.66)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "74e8bd2d-89b1-4a2f-989a-2eaeadeb65d4")
+	)
+	(label "+VBAT_LTE_REG"
+		(at 189.23 200.66 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "aab54b6a-b372-4b53-904a-76f70a0a64aa")
+	)
+	(wire
+		(pts
+			(xy 199.39 200.66) (xy 201.93 200.66)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4149c6fb-90dc-4a1c-b6b0-c0bcf954150d")
+	)
+	(global_label "+VBAT_LTE"
+		(shape passive)
+		(at 201.93 200.66 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "88d11ae8-d786-48ed-ab1c-9a1f9c926173")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 201.93 200.66 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x02")
+		(at 203.2 210.82 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp yes)
+		(uuid "9404add7-6b78-441a-a49e-26e571036318")
+		(property "Reference" "J31"
+			(at 203.2 208.28 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "PPK_VBAT_LTE"
+			(at 203.2 215.9 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical"
+			(at 203.2 210.82 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 203.2 210.82 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "DNP 2-pin 2.54 mm header footprint across R302 for a Power Profiler Kit II (pin 1 = regulator side = PPK VIN, pin 2 = load side = PPK VOUT) or a bench ammeter. Fit a header only when measuring; with R302 removed and no meter fitted the +VBAT_LTE rail is unpowered."
+			(at 203.2 210.82 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "d3264043-4585-4ffb-898b-c35b9f07f168")
+		)
+		(pin "2"
+			(uuid "c0bb05e4-780c-482e-b9e6-281241533f72")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
+					(reference "J31")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 198.12 210.82) (xy 195.58 210.82)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8f7f5717-ad81-4278-bb6f-a447a4c9f212")
+	)
+	(label "+VBAT_LTE_REG"
+		(at 195.58 210.82 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "2e6567da-f2c6-4ca1-9f18-b7f4f542173d")
+	)
+	(wire
+		(pts
+			(xy 198.12 213.36) (xy 195.58 213.36)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "44f853ea-9906-4236-a1dd-8ea4920f5d5a")
+	)
+	(global_label "+VBAT_LTE"
+		(shape passive)
+		(at 195.58 213.36 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "442f0967-4dcf-4ab6-b34e-440c7a42aef8")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 195.58 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:PWR_FLAG")
+		(at 236.22 200.66 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(in_pos_files no)
+		(dnp no)
+		(uuid "e9a841ff-951d-4112-9e91-7ade326150c4")
+		(property "Reference" "#FLG301"
+			(at 236.22 198.755 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "PWR_FLAG"
+			(at 236.22 196.85 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 236.22 200.66 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 236.22 200.66 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Marks +VBAT_LTE as driven: its source (regulator power_out) sits behind the inductor and the 0R break link, which are passive."
+			(at 236.22 200.66 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "065b0452-53a7-4145-8248-24aef22a5b3b")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
+					(reference "#FLG301")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 236.22 200.66) (xy 236.22 203.2)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e9ff4a23-a355-44be-a428-d4704e9b832f")
+	)
+	(global_label "+VBAT_LTE"
+		(shape passive)
+		(at 236.22 203.2 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "bb6cd457-313c-451e-83bf-e4b239109966")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 236.22 203.2 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 248.92 226.06 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "ebfbec2f-02c4-479e-8b99-37de2338c13c")
+		(property "Reference" "TP406"
+			(at 248.92 219.71 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "+VBAT_LTE_REG"
+			(at 248.92 221.49 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 248.92 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 248.92 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "+VBAT_LTE regulator side of break point R302 (3.59 V nominal). Watch TX-burst droop here."
+			(at 248.92 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "178dfe72-ef66-494f-8b62-8d20c4da469a")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
+					(reference "TP406")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 248.92 226.06) (xy 248.92 228.6)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "931a35f3-04fa-42e9-aaf2-9a3e2aae2a53")
+	)
+	(label "+VBAT_LTE_REG"
+		(at 248.92 228.6 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "6884af1d-45f7-4d00-b0c1-f24732f40e88")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 259.08 226.06 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "143b8d3e-a92d-4104-8958-1bfd437c0543")
+		(property "Reference" "TP407"
+			(at 259.08 219.71 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "+VBAT_LTE"
+			(at 259.08 221.49 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 259.08 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 259.08 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "+VBAT_LTE load side of R302 = nRF9151 VDD."
+			(at 259.08 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "d0f2e24d-5191-44a9-a9ca-92126a93f39e")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
+					(reference "TP407")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 259.08 226.06) (xy 259.08 228.6)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "192d1cbf-0a1b-4feb-9a83-08e4c9858375")
+	)
+	(global_label "+VBAT_LTE"
+		(shape passive)
+		(at 259.08 228.6 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "a409e1ad-15ca-45cd-a0df-3c7de4ecaca2")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 259.08 228.6 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 269.24 226.06 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "a6e9ec45-a681-4f9e-99c0-92bf18e19410")
+		(property "Reference" "TP408"
+			(at 269.24 219.71 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "EN_LTE"
+			(at 269.24 221.49 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 269.24 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 269.24 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "U40 EN (UVLO divider R308/R309): ~1.72 V on 5 V input, ~1.24 V at 3.6 V battery."
+			(at 269.24 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "6916cc29-8d3c-47a1-8325-b6354778b20c")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
+					(reference "TP408")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 269.24 226.06) (xy 269.24 228.6)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ce179d3a-273f-494b-9648-a94487a73103")
+	)
+	(label "EN_LTE"
+		(at 269.24 228.6 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "b76e98ff-76aa-4303-bbda-c9d0e27eb13d")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 279.4 226.06 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "c2c233ec-6f42-450a-a4be-da94f6b15d18")
+		(property "Reference" "TP409"
+			(at 279.4 219.71 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "PG_LTE"
+			(at 279.4 221.49 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 279.4 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 279.4 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "U40 power good, open drain; high-Z once VOUT > 95% (SLVSEU9D Sec 9.3.10)."
+			(at 279.4 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "cbedf961-dc65-47ec-b33a-50b0f9e288b6")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
+					(reference "TP409")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 279.4 226.06) (xy 279.4 228.6)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "12f3e115-9e67-4dec-a5d4-deac5f0313c0")
+	)
+	(label "PG_LTE"
+		(at 279.4 228.6 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "74864009-9f35-43c0-97ff-70efcde03ac3")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 289.56 226.06 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "1baddce4-607a-4045-badf-f93cc970afeb")
+		(property "Reference" "TP410"
+			(at 289.56 219.71 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "FB_LTE"
+			(at 289.56 221.49 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 289.56 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 289.56 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "U40 FB (500 mV nominal). High impedance: probe with >= 10 MOhm."
+			(at 289.56 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "d2730469-7f53-4eff-a58e-f251fc897dd3")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
+					(reference "TP410")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 289.56 226.06) (xy 289.56 228.6)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b940b7a3-ad6b-423e-a07b-59e07a12c192")
+	)
+	(label "FB_LTE"
+		(at 289.56 228.6 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "c4eae14c-ae45-4171-882a-43aeab39b668")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 299.72 226.06 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "356e15dc-6781-43ef-adcd-aa2266176682")
+		(property "Reference" "TP411"
+			(at 299.72 219.71 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "L1_LTE"
+			(at 299.72 221.49 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 299.72 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 299.72 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "U40 L1 switch node. LAYOUT: pad on the existing L1 copper only, no stub; otherwise leave unplaced."
+			(at 299.72 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "fc310b6a-75dd-4bbb-a561-598591d0dc17")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
+					(reference "TP411")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 299.72 226.06) (xy 299.72 228.6)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "315793e1-e3aa-49a0-afc1-fae355dbd661")
+	)
+	(label "L1_LTE"
+		(at 299.72 228.6 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "ee7e89cc-410a-48a6-936a-6596dd185e07")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 309.88 226.06 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "b0f1e2cf-5fae-4f5d-bdc4-5e285a642196")
+		(property "Reference" "TP412"
+			(at 309.88 219.71 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "L2_LTE"
+			(at 309.88 221.49 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 309.88 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 309.88 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "U40 L2 switch node. LAYOUT: pad on the existing L2 copper only, no stub; otherwise leave unplaced."
+			(at 309.88 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "f25eb038-e15d-4a3c-afff-9b8da5fecf87")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
+					(reference "TP412")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 309.88 226.06) (xy 309.88 228.6)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "fa8852db-9202-4e69-a026-0eebb68aadf6")
+	)
+	(label "L2_LTE"
+		(at 309.88 228.6 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "50621a3b-913f-4f2e-9b9d-c0795c19a552")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 320.04 226.06 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "239d3fd9-aab4-4366-935e-2ccb6057097a")
+		(property "Reference" "TP413"
+			(at 320.04 219.71 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "MODE_LTE"
+			(at 320.04 221.49 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 320.04 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 320.04 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "U40 MODE strap (low = PSM)."
+			(at 320.04 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "4bb9f9b0-0ee9-49d4-af4f-87fefe767d96")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
+					(reference "TP413")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 320.04 226.06) (xy 320.04 228.6)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "45deb27e-6415-4097-989d-45e780254646")
+	)
+	(label "MODE_LTE"
+		(at 320.04 228.6 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "77bac904-4eeb-4c19-93cb-f6a822c54466")
+	)
+	(text "Regulation -- verified vs not (2026-11-17, power agent)\n\n+3V3 (U8 TPS62A02, TI SLUSEG9E): FB 453k/100k -> 3.318 V (Eq. 2, VFB 600 mV +/-1%). L1 = XFL4020-102MEC\n(footprint now assigned). C22 feedforward was wired VOUT-GND; moved across R8 and made DNP (value unverified at 3.3 V).\nEN is NOT tied to +VSYS: it is delayed 12-41 ms after U40 PG (R303/C303/R304) so nRF9151 VDD_GPIO (+3V3) rises\n>= 6 ms after VDD/ENABLE and falls first (nRF9151 HDG, VDD_GPIO). Assumes nRF9151 ENABLE is tied to +VBAT_LTE.\nPG -> TP405 only. On battery below ~3.45 V U8 runs at 100% duty and +3V3 tracks +VSYS (fine for all 3V3 loads).\n\n+VBAT_LTE (U40 TPS63802, TI SLVSEU9D): 3.59 V (562k/91k, Table 10-5). EN divider = 2.91 V off / 3.20 V on UVLO.\nU40 footprint is a PLACEHOLDER: the DLA0010A land pattern did not resolve cleanly from text. VERIFY BEFORE FAB.\n\nBreak points: R300 (+3V3) and R302 (+VBAT_LTE), 0R 0805 + DNP 2-pin header J30/J31 for a PPK2.\nFB always senses on the regulator side of the link. Test pads TP400-TP413."
+		(exclude_from_sim no)
+		(at 30.48 38.1 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left top)
+		)
+		(uuid "f7d948ab-b1fd-43f1-8dff-e3c2861d729c")
 	)
 	(sheet_instances
 		(path "/"
