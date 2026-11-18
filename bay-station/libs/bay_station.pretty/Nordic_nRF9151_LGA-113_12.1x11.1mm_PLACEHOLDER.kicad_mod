@@ -1,0 +1,721 @@
+(footprint "Nordic_nRF9151_LGA-113_12.1x11.1mm_PLACEHOLDER"
+	(version 20240108)
+	(generator "uwb_rescue_locator_lib_builder")
+	(layer "F.Cu")
+	(descr "PLACEHOLDER -- DO NOT FABRICATE. Nordic nRF9151 SiP LGA 12.1 x 11.1 x 1.2 mm (D x E, nRF9151 PS v1.0 Mechanical specifications table: D 12.0/12.1/12.2, E 11.0/11.1/11.2, A 1.099/1.156/1.3, e 0.55 mm). Only the body outline is real. The pad positions here are a NUMBERED GRID so the netlist can be imported; they are NOT Nordic geometry. The PS dimension table (b, b2-b5, c, c2-c5, K-K6, L-L5) could be read but the drawing that places those dimensions is an image that could not be retrieved. Replace with the land pattern from the nRF9151 HDG Footprint/solder resist/stencil figures or Nordic reference layout files (nordicsemi.com/nRF9151 downloads). HDG: NSMD pads, pads must not extend outside the package outline, 50 um solder-resist opening extension, 80-100 um stencil.")
+	(tags "Nordic nRF9151 LGA PLACEHOLDER")
+	(property "Reference" "REF**"
+		(at 0 -6.75 0)
+		(layer "F.SilkS")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "Nordic_nRF9151_LGA-113_12.1x11.1mm_PLACEHOLDER"
+		(at 0 6.75 0)
+		(layer "F.Fab")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr smd)
+	(fp_line
+		(start -6.05 -5.55)
+		(end 6.05 -5.55)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+	)
+	(fp_line
+		(start 6.05 -5.55)
+		(end 6.05 5.55)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+	)
+	(fp_line
+		(start 6.05 5.55)
+		(end -6.05 5.55)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+	)
+	(fp_line
+		(start -6.05 5.55)
+		(end -6.05 -5.55)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+	)
+	(fp_line
+		(start -6.15 -5.65)
+		(end 6.15 -5.65)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+	)
+	(fp_line
+		(start 6.15 -5.65)
+		(end 6.15 5.65)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+	)
+	(fp_line
+		(start 6.15 5.65)
+		(end -6.15 5.65)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+	)
+	(fp_line
+		(start -6.15 5.65)
+		(end -6.15 -5.65)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+	)
+	(fp_line
+		(start -6.3 -5.8)
+		(end 6.3 -5.8)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+	)
+	(fp_line
+		(start 6.3 -5.8)
+		(end 6.3 5.8)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+	)
+	(fp_line
+		(start 6.3 5.8)
+		(end -6.3 5.8)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+	)
+	(fp_line
+		(start -6.3 5.8)
+		(end -6.3 -5.8)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+	)
+	(fp_text user "PLACEHOLDER PAD MAP - NOT NORDIC GEOMETRY - DO NOT FAB"
+		(at 0 0)
+		(layer "F.Fab")
+		(effects
+			(font
+				(size 0.5 0.5)
+				(thickness 0.075)
+			)
+		)
+	)
+	(fp_text user "${REFERENCE}"
+		(at 0 -5.2)
+		(layer "F.Fab")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+		)
+	)
+	(pad "1" smd rect
+		(at -4.5 -4.5)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "2" smd rect
+		(at -3.6 -4.5)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "3" smd rect
+		(at -2.7 -4.5)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "4" smd rect
+		(at -1.8 -4.5)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "5" smd rect
+		(at -0.9 -4.5)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "6" smd rect
+		(at 0 -4.5)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "7" smd rect
+		(at 0.9 -4.5)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "8" smd rect
+		(at 1.8 -4.5)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "9" smd rect
+		(at 2.7 -4.5)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "10" smd rect
+		(at 3.6 -4.5)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "11" smd rect
+		(at 4.5 -4.5)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "12" smd rect
+		(at -4.5 -3.6)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "13" smd rect
+		(at -3.6 -3.6)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "14" smd rect
+		(at -2.7 -3.6)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "15" smd rect
+		(at -1.8 -3.6)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "16" smd rect
+		(at -0.9 -3.6)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "17" smd rect
+		(at 0 -3.6)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "18" smd rect
+		(at 0.9 -3.6)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "19" smd rect
+		(at 1.8 -3.6)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "20" smd rect
+		(at 2.7 -3.6)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "21" smd rect
+		(at 3.6 -3.6)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "22" smd rect
+		(at 4.5 -3.6)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "23" smd rect
+		(at -4.5 -2.7)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "24" smd rect
+		(at -3.6 -2.7)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "25" smd rect
+		(at -2.7 -2.7)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "26" smd rect
+		(at -1.8 -2.7)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "27" smd rect
+		(at -0.9 -2.7)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "28" smd rect
+		(at 0 -2.7)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "29" smd rect
+		(at 0.9 -2.7)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "30" smd rect
+		(at 1.8 -2.7)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "31" smd rect
+		(at 2.7 -2.7)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "32" smd rect
+		(at 3.6 -2.7)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "33" smd rect
+		(at 4.5 -2.7)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "34" smd rect
+		(at -4.5 -1.8)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "35" smd rect
+		(at -3.6 -1.8)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "36" smd rect
+		(at -2.7 -1.8)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "37" smd rect
+		(at -1.8 -1.8)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "38" smd rect
+		(at -0.9 -1.8)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "39" smd rect
+		(at 0 -1.8)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "40" smd rect
+		(at 0.9 -1.8)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "41" smd rect
+		(at 1.8 -1.8)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "42" smd rect
+		(at 2.7 -1.8)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "43" smd rect
+		(at 3.6 -1.8)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "44" smd rect
+		(at 4.5 -1.8)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "45" smd rect
+		(at -4.5 -0.9)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "46" smd rect
+		(at -3.6 -0.9)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "47" smd rect
+		(at -2.7 -0.9)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "48" smd rect
+		(at -1.8 -0.9)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "49" smd rect
+		(at -0.9 -0.9)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "50" smd rect
+		(at 0 -0.9)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "51" smd rect
+		(at 0.9 -0.9)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "52" smd rect
+		(at 1.8 -0.9)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "53" smd rect
+		(at 2.7 -0.9)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "54" smd rect
+		(at 3.6 -0.9)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "55" smd rect
+		(at 4.5 -0.9)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "56" smd rect
+		(at -4.5 0)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "57" smd rect
+		(at -3.6 0)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "58" smd rect
+		(at -2.7 0)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "59" smd rect
+		(at -1.8 0)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "60" smd rect
+		(at -0.9 0)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "61" smd rect
+		(at 0 0)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "62" smd rect
+		(at 0.9 0)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "63" smd rect
+		(at 1.8 0)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "64" smd rect
+		(at 2.7 0)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "65" smd rect
+		(at 3.6 0)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "66" smd rect
+		(at 4.5 0)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "67" smd rect
+		(at -4.5 0.9)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "68" smd rect
+		(at -3.6 0.9)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "69" smd rect
+		(at -2.7 0.9)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "70" smd rect
+		(at -1.8 0.9)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "71" smd rect
+		(at -0.9 0.9)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "72" smd rect
+		(at 0 0.9)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "73" smd rect
+		(at 0.9 0.9)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "74" smd rect
+		(at 1.8 0.9)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "75" smd rect
+		(at 2.7 0.9)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "76" smd rect
+		(at 3.6 0.9)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "77" smd rect
+		(at 4.5 0.9)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "78" smd rect
+		(at -4.5 1.8)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "79" smd rect
+		(at -3.6 1.8)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "80" smd rect
+		(at -2.7 1.8)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "81" smd rect
+		(at -1.8 1.8)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "82" smd rect
+		(at -0.9 1.8)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "83" smd rect
+		(at 0 1.8)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "84" smd rect
+		(at 0.9 1.8)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "85" smd rect
+		(at 1.8 1.8)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "86" smd rect
+		(at 2.7 1.8)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "87" smd rect
+		(at 3.6 1.8)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "88" smd rect
+		(at 4.5 1.8)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "89" smd rect
+		(at -4.5 2.7)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "90" smd rect
+		(at -3.6 2.7)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "91" smd rect
+		(at -2.7 2.7)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "92" smd rect
+		(at -1.8 2.7)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "93" smd rect
+		(at -0.9 2.7)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "94" smd rect
+		(at 0 2.7)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "95" smd rect
+		(at 0.9 2.7)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "96" smd rect
+		(at 1.8 2.7)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "97" smd rect
+		(at 2.7 2.7)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "98" smd rect
+		(at 3.6 2.7)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "99" smd rect
+		(at 4.5 2.7)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "100" smd rect
+		(at -4.5 3.6)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "101" smd rect
+		(at -3.6 3.6)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "102" smd rect
+		(at -2.7 3.6)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "103" smd rect
+		(at -1.8 3.6)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "104" smd rect
+		(at -0.9 3.6)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "105" smd rect
+		(at 0 3.6)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "106" smd rect
+		(at 0.9 3.6)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "107" smd rect
+		(at 1.8 3.6)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "108" smd rect
+		(at 2.7 3.6)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "109" smd rect
+		(at 3.6 3.6)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "110" smd rect
+		(at 4.5 3.6)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "111" smd rect
+		(at -4.5 4.5)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "112" smd rect
+		(at -3.6 4.5)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "113" smd rect
+		(at -2.7 4.5)
+		(size 0.4 0.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+)
