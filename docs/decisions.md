@@ -335,7 +335,8 @@ not settle:
 
 - **Wristband GPIO.** On `dwm3001c-migration` only 12 of the DWM3001C's 48
   pins are tied (power, GND, SWD, `RESET_N`, `VBAT_SENSE`, and `P0.17` to the
-  SOS button). The module's internal nRF52833-to-DW3110 wiring is fixed, so
+  SOS button); 14 as of 2026-11-18 with `LED_SYS` on P0.14 and `FW_MARKER` on
+  P0.22. The module's internal nRF52833-to-DW3110 wiring is fixed, so
   the open part is only what the remaining external pins do. (The bay
   station's allocation is resolved -- see Resolved.)
 
@@ -585,6 +586,7 @@ not settle:
   open on purpose; close it from the web UI when convenient.
 - **No-PR workflow** (2026-11-18): commit straight to the trunk branch
   (`redesign/nrf9151-host` until it replaces `main`) -- `CONTRIBUTING.md`.
+
 ### Footprints from vendor sources (2026-11-18)
 
 Rule applied: take pad geometry from a file the vendor itself publishes, then
@@ -618,7 +620,7 @@ from SnapEDA / SnapMagic / Ultra Librarian / Flux was used.
   confirms F0-F3 are real pads (see the 65-pin item). The library's extra
   20.8 mm outline is the BT840F's and was not used; the body is the 14 x 16
   mm of Ver 1.15 p. 10. Footprint `Fanstel_BT840_Module_14x16mm_16Cast_49LGA`.
-- **DWM3001C (U3, wristband) -- real, from Qorvo.** A Qorvo staff member
+- **DWM3001C (U4, wristband) -- real, from Qorvo.** A Qorvo staff member
   posted Qorvo's own Altium library (`DWM3001C.IntLib` + STEP) on
   forum.qorvo.com (thread 12741, file dated 2023-03-09). The 48 pads were
   parsed from its embedded PcbLib and match DWM3001C Data Sheet Rev B
@@ -629,7 +631,7 @@ from SnapEDA / SnapMagic / Ultra Librarian / Flux was used.
   18-31 bottom, 32-48 right, as in Fig. 1. Footprint
   `Qorvo_DWM3001C_Module_19.13x27.1mm_48Pad`. The datasheet's NON-GROUND
   region above the antenna end still has to be honoured in layout. Only the
-  U3 footprint assignment was changed on the wristband sheets.
+  U4 footprint assignment was changed on the wristband sheets.
   `wristband.kicad_pcb` still embeds the old placeholder footprint; run
   *Update PCB from Schematic* with the footprint replaced.
 - **TPS63802DLA (U40) -- real land pattern.** The previous estimate came from
@@ -821,6 +823,22 @@ from SnapEDA / SnapMagic / Ultra Librarian / Flux was used.
   sensor has its own SCL/SDA 0R and a shared `+3V3_SNS` current break.
 
 ### Earlier decisions
+- **Wristband indicators, test points and GPIO allocation.** Resolved
+  2026-11-18, wiring the last two placement-only wristband sheets. DWM3001C
+  (U4) pin 7 = P0.14 -> `LED_SYS` -> R13 1k -> D4 -> GND (active high, ~1.2 mA
+  at 3.3 V); pin 8 = P0.22 -> `FW_MARKER` -> TP5. Both are listed as plain
+  "General purpose I/O for nRF52833 processor" in Qorvo DWM3001C Data Sheet
+  Rev B Table 2, not NFC/reset/USB/I2C pins. **Not verified:** nRF52833
+  per-pin drive strength (Product Specification not obtained; Qorvo Table 5
+  only gives it for DW3110 pins), so 1.2 mA is believed but not confirmed
+  to be within the default drive. The charge LED was **not** duplicated: the
+  wired D2/R10 on `power_bms` is the charge LED (VBUS -> R10 -> D2 ->
+  `CHG_STAT`, Microchip DS20001984H Fig. 6-1; STAT low while charging, VOL 1 V
+  max at 4 mA, Table 5-1). `indicators` had carried a second D2/R10 plus
+  D3/R11 that collided with `power_bms` D2/R10/D3 and `radio_mcu` R11, so the
+  duplicate pair was deleted and the system LED renumbered D4/R13. TP1-TP5
+  are on `+3V3`, `VBAT`, `GND` x2, `FW_MARKER`. The wristband PCB still has no
+  footprints for D4, R13 or TP1-TP5. Net count on U4 is now 14 of 48 pins.
 
 - **Footprint convention: component Value on real silkscreen (F.SilkS), for
   every part, both boards.** Decided 2026-11-06. Previously inconsistent on

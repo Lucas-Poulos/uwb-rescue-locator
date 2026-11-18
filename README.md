@@ -113,13 +113,13 @@ collisions) -- see each `libs/components.csv` for the full part-by-part BOM.
 **Wristband** (`wristband/`):
 | Sheet | Status | Contents |
 |---|---|---|
-| Power BMS | **Wired** (global labels, no drawn wires), ERC clean (0 errors, 1 cosmetic warning) | JST-PH battery -> AO3401A reverse-polarity FET -> TVS -> DW01A+FS8205A protection -> MCP73831 charger (USB-C in) |
-| Radio MCU | Placement only, not wired | DWM3001C (U3) + decoupling. One module: DW3110 UWB + nRF52833 MCU + accelerometer + both antennas |
-| Mechanical | Placement only | 4x M2 mounting holes |
-| Regulation | Placement only, not wired | TPS7A0233PDBVR LDO (3.3V) -- battery hits 4.2V, DWM3001C tops out at 3.6V |
-| Programming/Debug | Placement only, not wired | ARM Cortex Debug SWD header, targeting the nRF52833 inside U3 |
-| Indicators | Placement only | Status LEDs: D2 charge (MCP73831 STAT) + D3 system (nRF52833 GPIO) |
-| Test Points | Placement only, **new** | TP1-TP5: both rails, 2x GND, firmware timing marker |
+| Power BMS | **Wired** (global labels, no drawn wires), ERC clean (0 errors) | JST-PH battery -> AO3401A reverse-polarity FET -> TVS -> DW01A+FS8205A protection -> MCP73831 charger (USB-C in) |
+| Radio MCU | **Wired**, ERC clean | DWM3001C (U4) + decoupling; SWD, RESET_N, SWO, VBAT_SENSE, SOS button, LED_SYS (P0.14), FW_MARKER (P0.22). One module: DW3110 UWB + nRF52833 MCU + accelerometer + both antennas |
+| Mechanical | No wiring needed | 4x M2 mounting holes |
+| Regulation | **Wired**, ERC clean | TPS7A0233PDBVR LDO (U5, 3.3V) -- battery hits 4.2V, DWM3001C tops out at 3.6V |
+| Programming/Debug | **Wired**, ERC clean | ARM Cortex Debug SWD header (J3), targeting the nRF52833 inside U4 |
+| Indicators | **Wired**, ERC clean | System LED D4 + R13 on nRF52833 P0.14; the charge LED (D2/R10, MCP73831 STAT) lives on Power BMS |
+| Test Points | **Wired**, ERC clean | TP1-TP5: +3V3, VBAT, 2x GND, FW_MARKER (P0.22) |
 
 **Bay Station** (`bay-station/`) -- per-sheet detail in each
 `bay-station/*_notes.md`; sheet-by-sheet summary in `bay-station/README.md`:
