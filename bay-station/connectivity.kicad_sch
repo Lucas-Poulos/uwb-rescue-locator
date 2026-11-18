@@ -2328,7 +2328,7 @@
 					)
 				)
 			)
-			(property "Footprint" ""
+			(property "Footprint" "bay_station:Fanstel_BT840_Module_14x16mm_16Cast_49LGA"
 				(at 0 0 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -3969,7 +3969,7 @@
 					)
 				)
 			)
-			(property "Footprint" "bay_station:Nordic_nRF9151_LGA-113_12.1x11.1mm_PLACEHOLDER"
+			(property "Footprint" "bay_station:Nordic_nRF9151_LGA-113_12.1x11.1mm_P0.5mm"
 				(at 0 0 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -15238,7 +15238,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "bay_station:Fanstel_BT840_Module_14x16mm_16Cast_49LGA"
 			(at 533.4 165.1 0)
 			(hide yes)
 			(show_name no)
@@ -18647,7 +18647,7 @@
 				)
 			)
 		)
-		(property "Footprint" "bay_station:Nordic_nRF9151_LGA-113_12.1x11.1mm_PLACEHOLDER"
+		(property "Footprint" "bay_station:Nordic_nRF9151_LGA-113_12.1x11.1mm_P0.5mm"
 			(at 228.6 162.56 0)
 			(hide yes)
 			(show_name no)

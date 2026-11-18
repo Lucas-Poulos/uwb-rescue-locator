@@ -74,7 +74,7 @@ close to the 505 mA LTE figure at low cell voltage.
 
 | Ref | Value | Why (citation) |
 |---|---|---|
-| U40 | TPS63802DLAR | Pins (Table 7-1, checked in `-raw` and `-layout`): 1 EN, 2 MODE, 3 AGND, 4 FB, 5 PG, 6 VOUT, 7 L2, 8 GND, 9 L1, 10 VIN. Abs max 6 V all pins (Sec 8.1). Symbol hand-authored in `libs/bay_station.kicad_sym`. Footprint `bay_station:TI_DLA0010A_VSON-HR-10_2x3mm_P0.5mm_PLACEHOLDER` -- **placeholder**, see Sec 7. |
+| U40 | TPS63802DLAR | Pins (Table 7-1, checked in `-raw` and `-layout`): 1 EN, 2 MODE, 3 AGND, 4 FB, 5 PG, 6 VOUT, 7 L2, 8 GND, 9 L1, 10 VIN. Abs max 6 V all pins (Sec 8.1). Symbol hand-authored in `libs/bay_station.kicad_sym`. Footprint `bay_station:TI_DLA0010A_VSON-HR-10_2x3mm_P0.5mm` (TI example land pattern), see Sec 8. |
 | L300 | 0.47 uH, Coilcraft XFL4020-471MEC | L = 0.47 uH nominal, 0.37-0.57 uH effective (Sec 8.3, Table 10-1). XFL4020-471: DCR 4.40/5.10 mOhm, Isat 4.6 A (10%)/6.6 A (20%), Irms 7.5 A (Coilcraft 745-1). TI's Table 10-2 lists XFL4015-471ME; XFL4020 chosen because KiCad ships `Inductor_SMD:L_Coilcraft_XxL4020`. |
 | C300 | 10 uF 0805 10 V | "A 10 uF input capacitor is recommended" (Sec 10.2.2.4); effective >= 4 uF (Sec 8.3). 0805/10 V because `+VSYS` sits at ~5 V on wall power. |
 | C301 | 22 uF 0805 10 V | Single 22 uF for VO <= 3.6 V (Sec 10.2.2.3); effective >= 7 uF for VO > 2.3 V. |
@@ -227,18 +227,22 @@ existing switch-node copper with no stub; if that is not possible, leave
 the pad off the board -- a stub on a switch node is an antenna. FB pads are
 high impedance: probe with >= 10 MOhm.
 
-## 8. U40 footprint -- PLACEHOLDER
+## 8. U40 footprint -- resolved 2026-11-18
 
-`libs/bay_station.pretty/TI_DLA0010A_VSON-HR-10_2x3mm_P0.5mm_PLACEHOLDER.kicad_mod`.
-Confirmed from SLVSEU9D package outline 4223750/D: 2.1/1.9 x 3.1/2.9 mm body,
-5 pins per long side at 0.5 mm, pin 1 opposite pin 10, no exposed pad.
-Estimated from the "Example board layout" text (dimension leaders lost in
-extraction): pins 1-5 lands 0.6 x 0.25 mm, pins 6-10 lands 0.9 x 0.25 mm,
-column centres 1.3 mm apart. The drawing also carries "4X (0.75)" and
-"4X (0.25)" that were not assigned -- some power pins (VIN/L1/GND/L2/VOUT)
-may have wider lands. **Verify against the rendered datasheet page or TI's
-CAD model before fab.** TI also publishes a HotRod QFN PCB-attachment
-application report (cited in SLVSEU9D Sec 13.2.1).
+`libs/bay_station.pretty/TI_DLA0010A_VSON-HR-10_2x3mm_P0.5mm.kicad_mod`.
+Package outline from SLVSEU9D drawing 4223750/D: 2.1/1.9 x 3.1/2.9 mm body,
+5 pins per long side at 0.5 mm, pin 1 opposite pin 10, no exposed pad. The
+land pattern is TI's "Example Board Layout" and the paste is TI's "Example
+Stencil Design" (same drawing number, 03/2019), read from the *rendered* PDF
+pages -- the earlier version was an estimate because `pdftotext` drops the
+dimension leaders. Pins 1-5: 0.6 x 0.25 mm lands centred 0.9 mm left of the
+package centreline; pins 6, 7, 9, 10: 0.9 x 0.25 mm centred 0.75 mm right;
+**pin 8 (GND): a 1.3 x 0.25 mm land** (from 0.11 mm left of the centreline to
+1.2 mm right), pasted with two 0.55 mm apertures. The "4X (0.75)" and
+"4X (0.25)" that were unassigned before are the right-column centre offset and
+land height. These are TI's example (non-solder-mask-defined, mask 0.07 mm
+larger all around), not a mandate; fabs may adjust. TI also publishes a HotRod
+QFN PCB-attachment application report (cited in SLVSEU9D Sec 13.2.1).
 
 ## 9. Why TPS62A02 for +3V3 (original selection, 2026-09)
 
@@ -356,7 +360,7 @@ no TP range -- confirm with the coordinator.**
 
 ## Open concerns / not fully confident about
 
-- **U40 footprint is a placeholder** (Sec 8).
+- ~~U40 footprint is a placeholder~~ -- resolved 2026-11-18 (Sec 8).
 - **Nordic PDFs not opened.** All nRF9151 facts come from the
   docs.nordicsemi.com HTML pages (PS and HDG); the PDFs are behind a
   Cloudflare challenge. Quote the PDF revision once someone downloads it.

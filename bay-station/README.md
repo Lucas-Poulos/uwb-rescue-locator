@@ -25,11 +25,12 @@ The fixed reference station. Open `bay-station.kicad_pro` in KiCad.
 Target performance: **10-30 cm at ~10 m, on Channel 5 (6489.6 MHz)**.
 
 > **Every sheet is wired against `../docs/net-contract.md`; layout has not
-> started, and the board is not fab-ready.** Blocking fab: the nRF9151
-> footprint is a PLACEHOLDER with invented pad positions, the BT840 footprint
-> is still missing, and the TPS63802, TCXO and SMA-launch footprints are
-> placeholders. All Nordic facts were read from Nordic's HTML pages, not the
-> PDFs. Full list: `../docs/decisions.md`, Open.
+> started, and the board is not fab-ready.** The nRF9151, BT840 and TPS63802
+> footprints now come from vendor files (2026-11-18; `libs/README.md`). Still
+> blocking fab: the TCXO, SMA-launch, MAX17048 and DNP eSIM footprints are
+> placeholders, FB1-FB4's land pattern is unverified, and all Nordic facts
+> were read from Nordic's HTML pages, not the PDFs. Full list:
+> `../docs/decisions.md`, Open.
 >
 > **Array calibration is a deliverable, not a bring-up nicety** -- the design
 > does not meet its accuracy target without it. See `../docs/decisions.md`.
@@ -81,12 +82,11 @@ datasheet values. Controlled impedance means the fab's stackup wins.
 drawn. With the sheets now wired there is a real netlist to import, so the
 blocker has moved from wiring to the footprints below.
 
-Parts that cannot be placed as things stand: **U3** (BT840, no footprint --
-import a vendor one, do not hand-author; check pad naming) and **FB1-FB4**
-(no footprint, case size unresolved). Placeholders that must be replaced
-before fab: **U20** (nRF9151), **U40** (TPS63802), **U30** (Rakon TCXO),
-**J20-J23** (SMA launch, needs EM simulation), **U23** (DNP eSIM). L1 and SW2
-were closed on 2026-11-17. See `../docs/decisions.md`.
+Every part now has a footprint (U3, U20, U40 and FB1-FB4 were assigned
+2026-11-18). Placeholders that must be replaced before fab: **U30** (Rakon
+TCXO), **J20-J23** (SMA launch, needs EM simulation), **U23** (DNP eSIM),
+the MAX17048 fuel gauge. FB1-FB4 use stock 0201 pads pending Murata's land table.
+See `../docs/decisions.md`.
 
 ### Sheet detail
 

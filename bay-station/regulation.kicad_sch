@@ -1004,7 +1004,7 @@
 					(justify left)
 				)
 			)
-			(property "Footprint" "bay_station:TI_DLA0010A_VSON-HR-10_2x3mm_P0.5mm_PLACEHOLDER"
+			(property "Footprint" "bay_station:TI_DLA0010A_VSON-HR-10_2x3mm_P0.5mm"
 				(at 0 -13.97 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -1497,7 +1497,7 @@
 		)
 		(uuid "5926d5cf-017c-4cf8-a16a-c71477f01801")
 	)
-	(text "Regulation -- verified vs not (2026-11-17, power agent)\n\n+3V3 (U8 TPS62A02, TI SLUSEG9E): FB 453k/100k -> 3.318 V (Eq. 2, VFB 600 mV +/-1%). L1 = XFL4020-102MEC\n(footprint now assigned). C22 feedforward was wired VOUT-GND; moved across R8 and made DNP (value unverified at 3.3 V).\nEN is NOT tied to +VSYS: it is delayed 12-41 ms after U40 PG (R303/C303/R304) so nRF9151 VDD_GPIO (+3V3) rises\n>= 6 ms after VDD/ENABLE and falls first (nRF9151 HDG, VDD_GPIO). Assumes nRF9151 ENABLE is tied to +VBAT_LTE.\nPG -> TP405 only. On battery below ~3.45 V U8 runs at 100% duty and +3V3 tracks +VSYS (fine for all 3V3 loads).\n\n+VBAT_LTE (U40 TPS63802, TI SLVSEU9D): 3.59 V (562k/91k, Table 10-5). EN divider = 2.91 V off / 3.20 V on UVLO.\nU40 footprint is a PLACEHOLDER: the DLA0010A land pattern did not resolve cleanly from text. VERIFY BEFORE FAB.\n\nBreak points: R300 (+3V3) and R302 (+VBAT_LTE), 0R 0805 + DNP 2-pin header J30/J31 for a PPK2.\nFB always senses on the regulator side of the link. Test pads TP400-TP413."
+	(text "Regulation -- verified vs not (2026-11-17, power agent)\n\n+3V3 (U8 TPS62A02, TI SLUSEG9E): FB 453k/100k -> 3.318 V (Eq. 2, VFB 600 mV +/-1%). L1 = XFL4020-102MEC\n(footprint now assigned). C22 feedforward was wired VOUT-GND; moved across R8 and made DNP (value unverified at 3.3 V).\nEN is NOT tied to +VSYS: it is delayed 12-41 ms after U40 PG (R303/C303/R304) so nRF9151 VDD_GPIO (+3V3) rises\n>= 6 ms after VDD/ENABLE and falls first (nRF9151 HDG, VDD_GPIO). Assumes nRF9151 ENABLE is tied to +VBAT_LTE.\nPG -> TP405 only. On battery below ~3.45 V U8 runs at 100% duty and +3V3 tracks +VSYS (fine for all 3V3 loads).\n\n+VBAT_LTE (U40 TPS63802, TI SLVSEU9D): 3.59 V (562k/91k, Table 10-5). EN divider = 2.91 V off / 3.20 V on UVLO.\nU40 footprint = TI example land pattern for DLA0010A (SLVSEU9D drawing 4223750/D, read from the rendered page 2026-11-18); pin 8 is a 1.3 mm land.\n\nBreak points: R300 (+3V3) and R302 (+VBAT_LTE), 0R 0805 + DNP 2-pin header J30/J31 for a PPK2.\nFB always senses on the regulator side of the link. Test pads TP400-TP413."
 		(exclude_from_sim no)
 		(at 30.48 38.1 0)
 		(effects
@@ -6174,7 +6174,7 @@
 				)
 			)
 		)
-		(property "Footprint" "bay_station:TI_DLA0010A_VSON-HR-10_2x3mm_P0.5mm_PLACEHOLDER"
+		(property "Footprint" "bay_station:TI_DLA0010A_VSON-HR-10_2x3mm_P0.5mm"
 			(at 101.6 200.66 0)
 			(hide yes)
 			(show_name no)

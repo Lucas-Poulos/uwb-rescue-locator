@@ -132,10 +132,11 @@ overlaps is layout work, not a reason to hide the values again.
 
 ### Next up
 
-1. **Get U3's footprint.** Do not hand-author it -- import from a vendor
-   library. Qorvo supplies DWM3001C footprint/symbol files (Altium format)
-   via their UWB tech forum, and SnapMagic/SnapEDA lists a Qorvo-provided
-   set. Check pad naming matches this symbol's 1-48 numbering. Blocks layout.
+1. **Update the PCB's U3 footprint.** The footprint library now holds
+   `Qorvo_DWM3001C_Module_19.13x27.1mm_48Pad` (2026-11-18, from Qorvo's own
+   Altium library; pad names 1-48 match the symbol), and the schematic points
+   at it, but `wristband.kicad_pcb` still embeds the old placeholder -- run
+   *Update PCB from Schematic* with footprints replaced.
 2. Wire the six placement-only sheets: the `VBAT` -> `+3V3` rail handoff,
    SWD to U3, the LED drives. There is no MCU-to-transceiver SPI to wire any
    more -- that link is inside the module.

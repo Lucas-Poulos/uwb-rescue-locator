@@ -12,7 +12,7 @@ footprint -> datasheet URL -> verification notes).
 
 ```
 wristband.kicad_sym    # 7 hand-authored symbols: DWM3001C, TPS7A0233PDBVR, NINA-B400 (legacy), NINA-B111 (legacy), MCP73831-2-OT, DW01A, FS8205A
-wristband.pretty/      # 3 custom footprints: DWM3001C_PLACEHOLDER, NINA-B400-55_PLACEHOLDER, NINA111-42 (real u-blox Eagle-lib pad data)
+wristband.pretty/      # 2 footprints: Qorvo_DWM3001C_Module_19.13x27.1mm_48Pad (Qorvo's own Altium library), NINA111-42 (real u-blox Eagle-lib pad data)
 sym-lib-table          # project-local library registration (symbols) -- not touched here
 fp-lib-table           # project-local library registration (footprints) -- not touched here
 components.csv         # BOM -> symbol/footprint mapping + verification notes
@@ -40,23 +40,25 @@ May 2022**, Figure 1 "DWM3001C Pin Diagram" cross-checked against Table 2
   `DW_GPIO3`/`DW_GPIO2`, Figure 1 calls them `DW_GP3`/`DW_GP2`. The symbol
   uses the Figure 1 names, for consistency with `DW_GP0/1/5/6`.
 
-**Footprint `DWM3001C_PLACEHOLDER` -- VERIFY BEFORE FAB.** Pin count and edge
-assignment are confirmed (17 pads left edge pins 1-17, 14 bottom edge pins
-18-31, 17 right edge pins 32-48, none on the top edge, which carries the
-module's antenna). Body and land envelope come straight off Figures 4 and 5
-(19.13 x 27.1 x 3.2mm body; 19.10 x 27.10mm land; 16.27mm inner column gap;
-0.75mm side pad height; 17.77mm side column span; 1.00mm bottom-row pitch;
-1.15mm bottom pad length). **Two dimensions did not resolve:**
+**Footprint `Qorvo_DWM3001C_Module_19.13x27.1mm_48Pad` (replaced the
+`DWM3001C_PLACEHOLDER`, 2026-11-18).** Pad geometry comes from Qorvo's own
+Altium library `DWM3001C.IntLib` (plus a STEP model), posted by Qorvo staff on
+forum.qorvo.com, thread "DWM3001C footprint and step file" (12741), file dated
+2023-03-09. The 48 pads were parsed out of the embedded PcbLib: 2.54 x
+0.75 mm, **1.00 mm pitch on all three edges** (pins 1-17 left edge top to
+bottom, 18-31 bottom edge left to right, 32-48 right edge bottom to top, none
+on the top/antenna edge). This agrees with Data Sheet Rev B Figure 5: 16.27 mm
+inner gap, 0.75 mm pad width, 1.00 mm bottom pitch, 3.10 mm from the last
+bottom pad to the right edge, 19.10 mm land width. Pad names are `1`..`48`,
+identical to the symbol's pin numbers.
 
-1. The side-column pitch back-derives to **1.06375mm** from the 17.77mm span
-   across 17 pads. That is not a round number and is unlikely to be Qorvo's
-   intent.
-2. Figure 5's "3.10" annotation implies the bottom pad row is offset toward
-   the right rather than centred, and the individual bottom pad width is never
-   dimensioned at all. The footprint assumes 0.60mm, centred.
-
-Same PLACEHOLDER convention as `DWM3000_PLACEHOLDER` and
-`NINA-B400-55_PLACEHOLDER`.
+The two dimensions the placeholder could not resolve are now settled, and the
+placeholder was wrong about one: the **17.77 mm** on Figure 5 is the extent of
+the GROUND region, not the span of the side pads, so the "1.06375 mm pitch"
+back-derived from it never existed. Layout must still honour Figure 5's
+NON-GROUND region over the antenna end of the module. The old
+`wristband.kicad_pcb` still embeds the placeholder footprint until someone
+runs *Update PCB from Schematic*.
 
 
 ## TPS7A0233PDBVR (added 2026-09-23)
@@ -114,10 +116,7 @@ instead of duplicating it.
 | **Hand-authored footprint, built from a real manufacturer CAD library (not a placeholder)** | `NINA111-42` |
 | **Reused unmodified from KiCad's own default libraries** | `Battery_Cell` + JST-PH footprint, `USB_C_Receptacle_PowerOnly_6P` + GCT USB4125 footprint, `D_TVS` + SOD-523, `LED` + 0805, `R`/`C`/`L` + 0603 |
 
-Nothing in this folder is a PLACEHOLDER -- the one part on this board that
-*is* flagged uncertain (the UWB module footprint) lives in `../../shared/`
-because it's shared with the bay station; see that folder's README for the
-full writeup.
+Nothing in this folder is a PLACEHOLDER any more.
 
 ## How to add this to your KiCad project
 

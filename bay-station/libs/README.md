@@ -14,10 +14,11 @@ footprint -> datasheet URL -> verification notes).
 ```
 bay_station.kicad_sym   # 10 hand-authored symbols: DW3210, BT840, MAX17048G+T10, nRF9151,
                         #   BGA524N6, TPS7A0228PDBVR, eSIM_MFF2, TPS63802, LMK1C1104PW, RPT1490LN
-bay_station.pretty/     # 7 hand-authored footprints -- 6 of them *_PLACEHOLDER (MAX17048 TDFN8,
-                        #   nRF9151 LGA-113 [invented pads, do NOT fab], TPS63802 DLA0010A,
-                        #   Rakon RPT1490LN, Linx SMA edge launch, eSIM MFF2); only
-                        #   Infineon_TSNP-6-2 (BGA524N6) is verified
+bay_station.pretty/     # 9 footprints -- 4 still *_PLACEHOLDER (MAX17048 TDFN8, Rakon RPT1490LN,
+                        #   Linx SMA edge launch, eSIM MFF2). Built from vendor files 2026-11-18:
+                        #   Nordic_nRF9151_LGA-113 (Nordic DK PcbDoc), Fanstel_BT840_Module
+                        #   (Fanstel BT840.lbr), TI_DLA0010A (TI rendered land-pattern page);
+                        #   also Infineon_TSNP-6-2 (BGA524N6), verified
 sym-lib-table           # project-local library registration (symbols) -- not touched here
 fp-lib-table            # project-local library registration (footprints) -- not touched here
 components.csv          # BOM -> symbol/footprint mapping + verification notes
@@ -77,8 +78,26 @@ footprint, if one is published -- before sending this board to fab.
 | **Hand-authored footprint, real body size + pin arrangement, PLACEHOLDER pad geometry** | `MAX17048_TDFN8-EP_PLACEHOLDER` |
 | **Reused unmodified from KiCad's own default libraries, pin-by-pin verified against the real datasheet** | ~~`ESP32-S3-WROOM-1`~~ (superseded by BT840), `MCP73871` (symbol; footprint reused as-is, slightly conservative EP size noted above) |
 | **Reused unmodified from KiCad's own default libraries (generic parts, not IC-pinout-sensitive)** | `Barrel_Jack` + CUI PJ-063AH footprint, `USB_C_Receptacle_PowerOnly_6P` + GCT USB4125 footprint, `D_Schottky` + SMA, `D_TVS` + SOD-523, `Battery_Cell` + JST-PH or 18650 holder, `LED` + 0805, `R`/`C`/`Thermistor_NTC` |
-| **Hand-authored 2026-09-19, all pins from the real datasheet via `pdftotext -raw`** | `DW3210` (40 pins, DW3000 Datasheet v1.3 Table 2 -- NOTE `-layout` mangles that table), `BT840` (61 pins, Fanstel Ver 1.15 Pin Function table) |
-| **Footprints outstanding** | `BT840` -- import from a vendor library (SnapMagic/Ultra Librarian/Fanstel EV Gerbers), do not hand-author. `DW3210` uses KiCad stock `QFN-40-1EP_5x5mm_P0.4mm_EP3.6x3.6mm`, verified geometrically, EP size unconfirmed against Figure 38 |
+| **Hand-authored 2026-09-19, all pins from the real datasheet via `pdftotext -raw`** | `DW3210` (40 pins, DW3000 Datasheet v1.3 Table 2 -- NOTE `-layout` mangles that table), `BT840` (65 pins, Fanstel Ver 1.15 Pin Function table) |
+| **Footprints built from vendor files, 2026-11-18** | `Fanstel_BT840_Module_14x16mm_16Cast_49LGA`, `Nordic_nRF9151_LGA-113_12.1x11.1mm_P0.5mm`, `TI_DLA0010A_VSON-HR-10_2x3mm_P0.5mm` -- see the next section |
+| **Footprints still open** | `DW3210` uses KiCad stock `QFN-40-1EP_5x5mm_P0.4mm_EP3.6x3.6mm`, verified geometrically, EP size unconfirmed against Figure 38. FB1-FB4 use stock `Inductor_SMD:L_0201_0603Metric`; Murata's BLM03PG land table was not obtainable |
+
+## Footprints built from vendor files (2026-11-18)
+
+Rule: pad geometry only from a file the vendor publishes, confirmed against a
+second artifact. SnapEDA / SnapMagic / Ultra Librarian / Flux were not used.
+All three load in `pcbnew.FootprintLoad` and their pad names equal the symbol
+pin numbers exactly (checked programmatically). Full reasoning is in
+`../../docs/decisions.md`, Resolved, "Footprints from vendor sources".
+
+| Footprint | Source | Cross-check |
+|---|---|---|
+| `Nordic_nRF9151_LGA-113_12.1x11.1mm_P0.5mm` | Nordic *nRF9151 DK Hardware files 1_0_0* (nordicsemi.com > nRF9151-DK > Download): `PCA10171.../Altium Designer files/400797.PcbDoc`, component `LGA50P1210X1110X130-113N` (M1), 270 degree placement undone | All 113 pad positions and sizes match flashes in the same ZIP's `400797.GTL` top-copper Gerber. GND/RSVD pad classes agree with the symbol. **Not compared with the PS land-pattern figure** (PDF unobtainable). Mask/paste not in the source. |
+| `Fanstel_BT840_Module_14x16mm_16Cast_49LGA` | Fanstel `BT840.lbr` (Eagle), package `BT840`, 65 SMD pads, from fanstel.com/download-document | Reproduces the datasheet Ver 1.15 pp. 9-10 drawing dimensions (1.10 / 1.50 / 1.20 mm pitches, 3.625 / 2.25 mm F0-F3, 0.6 mm round pads, F6 square). Eagle names `P$A5` renamed to `A5`. |
+| `TI_DLA0010A_VSON-HR-10_2x3mm_P0.5mm` | TI SLVSEU9D drawing 4223750/D "Example Board Layout" and "Example Stencil Design", read from the rendered PDF pages (the text layer drops the dimension leaders -- that is why the earlier version was an estimate) | Pin 8 is a 1.3 x 0.25 mm land with two 0.55 mm paste apertures; pins 1-5 0.6 x 0.25, pins 6/7/9/10 0.9 x 0.25. |
+
+Not a footprint, but a lead: the nRF9151 DK ZIP also contains the DK's
+unpopulated MFF2 eSIM footprint, which could replace `eSIM_MFF2_PLACEHOLDER`.
 
 ## Validation
 
