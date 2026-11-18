@@ -1,0 +1,27 @@
+description: |
+  One DW3210 UWB transceiver on the bay station's shared anchor SPI bus.
+  Project-local binding: the DW3000 driver we start from
+  (br101/zephyr-dw3000-decadriver) uses "decawave,dw3000" for a single chip
+  and owns RST/WAKEUP per node; here those lines are shared across four
+  chips (see uwbrl,uwb-array-ctrl), so the node only carries what is
+  per-anchor: chip select (reg), IRQ, and role.
+
+compatible: "uwbrl,dw3210-anchor"
+
+include: spi-device.yaml
+
+properties:
+  anchor-role:
+    type: string
+    required: true
+    enum:
+      - "center"   # A0: DS-TWR with the tag, TDoA reference
+      - "outer"    # A1-A3: TDoA vs A0 only
+    description: |
+      The anchors are not peers. Exactly one node must be "center"; the
+      application asserts this at build time.
+
+  irq-gpios:
+    type: phandle-array
+    required: true
+    description: UWB_IRQn from this anchor (DW3000 IRQ pin, active high by default).

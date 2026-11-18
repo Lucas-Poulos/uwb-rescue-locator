@@ -1,0 +1,22 @@
+/*
+ * Non-secure target: bay_station_lte/nrf9151/ns (app + TF-M).
+ * Copied from upstream nrf9151dk_nrf9151_ns.dts (Zephyr main, 2026-11-17).
+ * NOTE: upstream main spells the SoC include <arm/nordic/...> here but
+ * <nordic/...> in the secure .dts; use whichever the pinned NCS tree has.
+ *
+ * TF-M's own log UART defaults to UARTE1 (upstream disables uart1 here for
+ * that reason). This board uses UARTE1 for the BLE bridge, so the app must
+ * silence TF-M logging (CONFIG_TFM_LOG_LEVEL_SILENCE=y in the app's
+ * ns overlay) -- see bay-station/README.md "Peripheral instances".
+ */
+/dts-v1/;
+#include <arm/nordic/nrf9151_ns_laca.dtsi>
+#include "bay_station_lte_nrf9151_common.dtsi"
+
+/ {
+	chosen {
+		zephyr,flash = &flash0;
+		zephyr,sram = &sram0_ns_app;
+		zephyr,code-partition = &slot0_ns_partition;
+	};
+};

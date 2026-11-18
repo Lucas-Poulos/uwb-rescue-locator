@@ -1,0 +1,20 @@
+description: |
+  Side-band lines of the nRF9151 <-> BT840 bridge UART (docs/net-contract.md
+  s5). Used on both chips: on the nRF9151 irq-gpios is an input and
+  reset-gpios drives RESET_BLE_N; on the BT840 irq-gpios is an output and
+  there is no reset-gpios.
+
+compatible: "uwbrl,bridge-ctrl"
+
+properties:
+  uart:
+    type: phandle
+    required: true
+    description: The UARTE instance carrying BRIDGE_TXD/RXD/RTS/CTS.
+  irq-gpios:
+    type: phandle-array
+    required: true
+    description: BRIDGE_IRQ (BT840 -> nRF9151 attention).
+  reset-gpios:
+    type: phandle-array
+    description: RESET_BLE_N (nRF9151 side only; open-drain).

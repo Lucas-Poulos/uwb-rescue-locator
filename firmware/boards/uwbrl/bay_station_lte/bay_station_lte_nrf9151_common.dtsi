@@ -1,0 +1,191 @@
+/*
+ * Bay station, nRF9151 side: board devicetree shared by the secure and ns
+ * targets. Every comment names the docs/net-contract.md net. Pin numbers
+ * live only in bay_station_lte_pins.h (PIN_TBD, see
+ * bay-station/connectivity_notes.md, until filled in).
+ *
+ * Custom bindings (uwbrl,*) are in firmware/dts/bindings/; apps add
+ * firmware/ to DTS_ROOT.
+ */
+#include "bay_station_lte_nrf9151-pinctrl.dtsi"
+#include <zephyr/dt-bindings/input/input-event-codes.h>
+
+/ {
+	model = "UWB rescue locator bay station (nRF9151)";
+	compatible = "others,bay-station-lte";
+
+	chosen {
+		zephyr,console = &uart0;     /* DBG_UART_TX / DBG_UART_RX */
+		zephyr,shell-uart = &uart0;
+		uwbrl,bridge-uart = &uart1;  /* BRIDGE_* to BT840 */
+	};
+
+	aliases {
+		led-sys = &led_sys;
+		led-lte = &led_lte;
+		btn-user = &btn_user;
+	};
+
+	leds {
+		compatible = "gpio-leds";
+		led_sys: led_sys {
+			gpios = <&gpio0 PIN_LED_SYS LED_ACTIVE_FLAGS>; /* LED_SYS */
+			label = "LED_SYS";
+		};
+		led_lte: led_lte {
+			gpios = <&gpio0 PIN_LED_LTE LED_ACTIVE_FLAGS>; /* LED_LTE */
+			label = "LED_LTE";
+		};
+	};
+
+	buttons {
+		compatible = "gpio-keys";
+		btn_user: btn_user {
+			gpios = <&gpio0 PIN_BTN_USER (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>; /* BTN_USER */
+			label = "BTN_USER";
+			zephyr,code = <INPUT_KEY_0>;
+		};
+	};
+
+	/* Shared lines into the four anchors + clock enable (net-contract s2/s3). */
+	uwb_ctrl: uwb-ctrl {
+		compatible = "uwbrl,uwb-array-ctrl";
+		reset-gpios = <&gpio0 PIN_UWB_RST_N (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN)>; /* UWB_RST_N */
+		wakeup-gpios = <&gpio0 PIN_UWB_WAKEUP GPIO_ACTIVE_HIGH>;                  /* UWB_WAKEUP */
+		sync-gpios = <&gpio0 PIN_UWB_SYNC GPIO_ACTIVE_HIGH>;                      /* UWB_SYNC */
+#if HAS_TCXO_EN
+		tcxo-en-gpios = <&gpio0 PIN_TCXO_EN GPIO_ACTIVE_HIGH>;                    /* TCXO_EN */
+#endif
+	};
+
+	/* BT840 side-band lines (net-contract s5). */
+	bridge_ctrl: bridge-ctrl {
+		compatible = "uwbrl,bridge-ctrl";
+		uart = <&uart1>;
+		irq-gpios = <&gpio0 PIN_BRIDGE_IRQ GPIO_ACTIVE_HIGH>;                     /* BRIDGE_IRQ (in) */
+		reset-gpios = <&gpio0 PIN_RESET_BLE_N (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN)>; /* RESET_BLE_N */
+	};
+
+	/* Sensor interrupt lines (net-contract s4). Raw GPIOs: the bring-up
+	 * shell reads levels; drivers can take them over later. */
+	sensor_irqs: sensor-irqs {
+		compatible = "uwbrl,gpio-set";
+		gpios = <&gpio0 PIN_MAG_DRDY GPIO_ACTIVE_HIGH>,  /* MAG_DRDY */
+			<&gpio0 PIN_MAG_INT GPIO_ACTIVE_HIGH>,   /* MAG_INT */
+			<&gpio0 PIN_ACC_INT1 GPIO_ACTIVE_HIGH>,  /* ACC_INT1 */
+			<&gpio0 PIN_ACC_INT2 GPIO_ACTIVE_HIGH>,  /* ACC_INT2 */
+			<&gpio0 PIN_FG_ALRT GPIO_ACTIVE_LOW>;    /* FG_ALRT (open-drain, R39 pull-up) */
+		gpio-names = "MAG_DRDY", "MAG_INT", "ACC_INT1", "ACC_INT2", "FG_ALRT";
+	};
+};
+
+&adc {
+	status = "okay";
+};
+
+&gpiote {
+	status = "okay";
+};
+
+&gpio0 {
+	status = "okay";
+};
+
+&uart0 {
+	current-speed = <115200>;
+	pinctrl-0 = <&uart0_default>;
+	pinctrl-1 = <&uart0_sleep>;
+	pinctrl-names = "default", "sleep";
+	status = "okay";
+};
+
+/* BLE bridge. 1 Mbaud with RTS/CTS -- rationale in bay-station/README.md. */
+&uart1 {
+	current-speed = <1000000>;
+	hw-flow-control;
+	pinctrl-0 = <&uart1_default>;
+	pinctrl-1 = <&uart1_sleep>;
+	pinctrl-names = "default", "sleep";
+	status = "okay";
+};
+
+&i2c2 {
+	compatible = "nordic,nrf-twim";
+	pinctrl-0 = <&i2c2_default>;
+	pinctrl-1 = <&i2c2_sleep>;
+	pinctrl-names = "default", "sleep";
+	/* 100 kHz until the 2.2k pull-ups (R37/R38) are checked against bus
+	 * capacitance on the real board; then try I2C_BITRATE_FAST. */
+	clock-frequency = <I2C_BITRATE_STANDARD>;
+	status = "okay";
+
+	lis3mdl: lis3mdl@I2C_UNIT_LIS3MDL {
+		compatible = "st,lis3mdl-magn";
+		reg = <I2C_ADDR_LIS3MDL>;
+	};
+	lis2dh: lis2dh@I2C_UNIT_LIS2DH {
+		compatible = "st,lis2dh";
+		reg = <I2C_ADDR_LIS2DH>;
+	};
+	max17048: max17048@I2C_UNIT_MAX17048 {
+		compatible = "maxim,max17048";
+		reg = <I2C_ADDR_MAX17048>;
+	};
+};
+
+/*
+ * UWB array: four DW3210 on one SPIM3 bus, one CS each (net-contract s2).
+ * cs-gpios index == anchor index == reg. A0 is the center anchor and is
+ * marked as such -- the anchors are not peers (root CLAUDE.md).
+ *
+ * spi-max-frequency: the DW3000 runs SPI to 36 MHz (DW3000 Datasheet v1.1
+ * s4.9.1 and timing t10), but only 7 MHz while in INIT_RC (Table 21,
+ * "Operating States"); the driver must start slow and raise the rate once
+ * the chip reaches IDLE_RC. 8 MHz below is the nRF91 SPIM ceiling as we
+ * understand it -- NOT verified from the nRF9151 PS (SPIM FREQUENCY
+ * register page did not load). It caps update rate, not precision:
+ * timestamps are latched in silicon.
+ */
+&spi3 {
+	compatible = "nordic,nrf-spim";
+	cs-gpios = <&gpio0 PIN_UWB_CS0_N GPIO_ACTIVE_LOW>,  /* UWB_CS0_N -> A0 */
+		   <&gpio0 PIN_UWB_CS1_N GPIO_ACTIVE_LOW>,  /* UWB_CS1_N -> A1 */
+		   <&gpio0 PIN_UWB_CS2_N GPIO_ACTIVE_LOW>,  /* UWB_CS2_N -> A2 */
+		   <&gpio0 PIN_UWB_CS3_N GPIO_ACTIVE_LOW>;  /* UWB_CS3_N -> A3 */
+	pinctrl-0 = <&spi3_default>;
+	pinctrl-1 = <&spi3_sleep>;
+	pinctrl-names = "default", "sleep";
+	status = "okay";
+
+	uwb_a0: dw3210@0 {
+		compatible = "uwbrl,dw3210-anchor";
+		reg = <0>;
+		spi-max-frequency = <8000000>;
+		anchor-role = "center";
+		irq-gpios = <&gpio0 PIN_UWB_IRQ0 GPIO_ACTIVE_HIGH>; /* UWB_IRQ0 */
+	};
+	uwb_a1: dw3210@1 {
+		compatible = "uwbrl,dw3210-anchor";
+		reg = <1>;
+		spi-max-frequency = <8000000>;
+		anchor-role = "outer";
+		irq-gpios = <&gpio0 PIN_UWB_IRQ1 GPIO_ACTIVE_HIGH>; /* UWB_IRQ1 */
+	};
+	uwb_a2: dw3210@2 {
+		compatible = "uwbrl,dw3210-anchor";
+		reg = <2>;
+		spi-max-frequency = <8000000>;
+		anchor-role = "outer";
+		irq-gpios = <&gpio0 PIN_UWB_IRQ2 GPIO_ACTIVE_HIGH>; /* UWB_IRQ2 */
+	};
+	uwb_a3: dw3210@3 {
+		compatible = "uwbrl,dw3210-anchor";
+		reg = <3>;
+		spi-max-frequency = <8000000>;
+		anchor-role = "outer";
+		irq-gpios = <&gpio0 PIN_UWB_IRQ3 GPIO_ACTIVE_HIGH>; /* UWB_IRQ3 */
+	};
+};
+
+/* Include default memory partition configuration file */
+#include <nordic/nrf91xx_partition.dtsi>

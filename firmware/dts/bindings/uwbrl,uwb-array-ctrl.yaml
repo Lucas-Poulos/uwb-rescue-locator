@@ -1,0 +1,21 @@
+description: |
+  Control lines shared by all four bay-station DW3210 anchors, plus the
+  shared reference-clock enable. Net names per docs/net-contract.md s2/s3.
+
+compatible: "uwbrl,uwb-array-ctrl"
+
+properties:
+  reset-gpios:
+    type: phandle-array
+    required: true
+    description: UWB_RST_N. Open-drain; each anchor joins through its own 0R.
+  wakeup-gpios:
+    type: phandle-array
+    required: true
+    description: UWB_WAKEUP, shared.
+  sync-gpios:
+    type: phandle-array
+    description: UWB_SYNC (SYNC/OSTR), shared. Whether it is needed is open.
+  tcxo-en-gpios:
+    type: phandle-array
+    description: TCXO_EN. Absent if the chosen TCXO has no enable pin.
