@@ -1,0 +1,134 @@
+(footprint "OrientationMark_Axes_IIS2MDC"
+	(version 20240108)
+	(generator "uwb_rescue_locator_lib_builder")
+	(layer "F.Cu")
+	(descr "Silkscreen-only axes glyph for U10 IIS2MDC, UNVERIFIED. ST DocID030986 Rev 1 Figure 2 (p.7), TOP VIEW: +Y along the pin 1-4 edge (DOWN in the footprint view), +X along the pin 1-12-11-10 edge (RIGHT). Z is NOT drawn: the figure's X lower-right / Y lower-left / Z up triad is left-handed, so the Z direction could not be established from it. Place with the SAME rotation as U10. No pads, no courtyard, excluded from BOM/pos.")
+	(tags "orientation marker axes silkscreen IIS2MDC")
+	(property "Reference" "REF**"
+		(at 0 -4.2 0)
+		(layer "F.SilkS")
+		(hide yes)
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "OrientationMark_Axes_IIS2MDC"
+		(at 0 4.2 0)
+		(layer "F.Fab")
+		(hide yes)
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr exclude_from_pos_files exclude_from_bom allow_missing_courtyard)
+	(fp_line
+		(start -1.6 -1.6)
+		(end -1.6 1.8)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.SilkS")
+	)
+	(fp_line
+		(start -1.6 1.8)
+		(end -2.205 0.7)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.SilkS")
+	)
+	(fp_line
+		(start -1.6 1.8)
+		(end -0.995 0.7)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.SilkS")
+	)
+	(fp_line
+		(start -1.6 -1.6)
+		(end 1.8 -1.6)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.SilkS")
+	)
+	(fp_line
+		(start 1.8 -1.6)
+		(end 0.7 -0.995)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.SilkS")
+	)
+	(fp_line
+		(start 1.8 -1.6)
+		(end 0.7 -2.205)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.SilkS")
+	)
+	(fp_circle
+		(center -1.6 -1.6)
+		(end -1.35 -1.6)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill solid)
+		(layer "F.SilkS")
+	)
+	(fp_text user "Y"
+		(at -1.6 3)
+		(layer "F.SilkS")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(fp_text user "X"
+		(at 3.1 -1.6)
+		(layer "F.SilkS")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(fp_text user "U10"
+		(at 0.5 0.5)
+		(layer "F.SilkS")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(fp_text user "IIS2MDC axes UNVERIFIED: DocID030986 Rev1 Fig2 top view (Y down, X right); Z not drawn"
+		(at 0 6.5)
+		(layer "F.Fab")
+		(effects
+			(font
+				(size 0.5 0.5)
+				(thickness 0.08)
+			)
+		)
+	)
+)

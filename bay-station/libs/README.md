@@ -14,7 +14,7 @@ footprint -> datasheet URL -> verification notes).
 ```
 bay_station.kicad_sym   # 10 hand-authored symbols: DW3210, BT840, MAX17048G+T10, nRF9151,
                         #   BGA524N6, TPS7A0228PDBVR, eSIM_MFF2, TPS63802, LMK1C1104PW, RPT1490LN
-bay_station.pretty/     # 9 footprints -- 4 still *_PLACEHOLDER (MAX17048 TDFN8, Rakon RPT1490LN,
+bay_station.pretty/     # 12 footprints (3 pinless OrientationMark_* silkscreen glyphs added by scripts/layout/build_orientation_marks.py; see docs/silkscreen-notes.md) -- 9 real/placeholder footprints -- 4 still *_PLACEHOLDER (MAX17048 TDFN8, Rakon RPT1490LN,
                         #   Linx SMA edge launch, eSIM MFF2). Built from vendor files 2026-11-18:
                         #   Nordic_nRF9151_LGA-113 (Nordic DK PcbDoc), Fanstel_BT840_Module
                         #   (Fanstel BT840.lbr), TI_DLA0010A (TI rendered land-pattern page);

@@ -1,0 +1,154 @@
+(footprint "OrientationMark_Axes_IIS2DLPC"
+	(version 20240108)
+	(generator "uwb_rescue_locator_lib_builder")
+	(layer "F.Cu")
+	(descr "Silkscreen-only axes glyph for U11 IIS2DLPC. ST DocID031788 Rev 4 Figure 2 (p.9), TOP VIEW: pin-1 corner top-left in the footprint view, +X along the pin 1-4 edge (DOWN), +Y along the pin 1-12-11-10 edge (RIGHT), +Z out of the board (dot-in-circle). Place with the SAME rotation as U11 (silkscreen.py does). No pads, no courtyard, excluded from BOM/pos.")
+	(tags "orientation marker axes silkscreen IIS2DLPC")
+	(property "Reference" "REF**"
+		(at 0 -4.2 0)
+		(layer "F.SilkS")
+		(hide yes)
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "OrientationMark_Axes_IIS2DLPC"
+		(at 0 4.2 0)
+		(layer "F.Fab")
+		(hide yes)
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr exclude_from_pos_files exclude_from_bom allow_missing_courtyard)
+	(fp_line
+		(start -1.6 -1.6)
+		(end -1.6 1.8)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.SilkS")
+	)
+	(fp_line
+		(start -1.6 1.8)
+		(end -2.205 0.7)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.SilkS")
+	)
+	(fp_line
+		(start -1.6 1.8)
+		(end -0.995 0.7)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.SilkS")
+	)
+	(fp_line
+		(start -1.6 -1.6)
+		(end 1.8 -1.6)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.SilkS")
+	)
+	(fp_line
+		(start 1.8 -1.6)
+		(end 0.7 -0.995)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.SilkS")
+	)
+	(fp_line
+		(start 1.8 -1.6)
+		(end 0.7 -2.205)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.SilkS")
+	)
+	(fp_circle
+		(center -1.6 -1.6)
+		(end -0.9 -1.6)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(fill none)
+		(layer "F.SilkS")
+	)
+	(fp_circle
+		(center -1.6 -1.6)
+		(end -1.35 -1.6)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill solid)
+		(layer "F.SilkS")
+	)
+	(fp_text user "X"
+		(at -1.6 3)
+		(layer "F.SilkS")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(fp_text user "Y"
+		(at 3.1 -1.6)
+		(layer "F.SilkS")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(fp_text user "Z"
+		(at -3.1 -2.6)
+		(layer "F.SilkS")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(fp_text user "U11"
+		(at 0.5 0.5)
+		(layer "F.SilkS")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(fp_text user "IIS2DLPC axes: DocID031788 Rev4 Fig2 (X down, Y right, Z out); place at U11 rotation"
+		(at 0 6.5)
+		(layer "F.Fab")
+		(effects
+			(font
+				(size 0.5 0.5)
+				(thickness 0.08)
+			)
+		)
+	)
+)
