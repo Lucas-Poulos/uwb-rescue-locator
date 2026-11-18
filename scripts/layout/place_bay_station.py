@@ -10,7 +10,9 @@ Idempotent: the result depends only on the netlist/footprints already in the
 board, never on where the footprints currently sit.  Hand-placed parts (ICs,
 connectors, mechanical, the RF chains) come from FIXED below; every passive and
 test pad is then placed by a deterministic greedy search that pulls it toward
-the pin it serves.  Rationale and citations: docs/layout-notes.md.
+the pin it serves, and a polish pass then re-seats every such part (all four
+rotations) to minimise the MST length of its nets.  Metrics: scripts/layout/layout_metrics.py.
+Rationale and citations: docs/layout-notes.md.
 
 The BEFORE line it prints is the metric of the positions found in the file, so it only equals the
 import baseline (HPWL 11217.6 / MST 9749.7 mm excl. GND, commit d7b3e2b) on the first run.
@@ -24,6 +26,7 @@ import heapq
 import json
 import math
 import os
+import re
 import sys
 
 import pcbnew
@@ -37,9 +40,10 @@ PRO = os.path.join(ROOT, "bay-station", "bay-station.kicad_pro")
 # Board geometry (board-local mm, x east, y south, origin = top-left corner)
 # ---------------------------------------------------------------------------
 W, H = 128.0, 68.0          # outline
+
 CORNER_R = 3.0              # rounded corners
 OX, OY = 60.0, 50.0         # where the board origin sits on the KiCad sheet
-GAP = 0.30                  # courtyard inflation per part -> >= 0.6 mm between parts
+GAP = 0.20                  # courtyard inflation per part -> >= 0.6 mm between parts
 EDGE_MARGIN = 1.0           # courtyard to board edge for ordinary parts
 GRID = 0.25
 
@@ -64,7 +68,7 @@ FIXED = {
     "FID1": (3.5, 3.5, 0), "FID2": (W - 3.5, 25.5, 0), "FID3": (3.5, H - 3.5, 0),
     # --- clock tree -------------------------------------------------------
     "U30": (13.0, 36.0, 270),
-    "U31": (XC, 37.0, 90),
+    "U31": (24.5, 35.0, 90),    # pose from a search that equalises the four buffer pin -> XTI straight distances (23.0-23.8 mm)
     # --- magnetometer / accelerometer (centre of the UWB block, far from power)
     "U10": (38.0, 33.0, 0),
     "U11": (38.0, 38.5, 0),
@@ -72,7 +76,7 @@ FIXED = {
     "U3": (57.0, 8.4, 0),            # BT840, antenna end on the north edge
     "J32": (71.0, 12.0, 90), "J35": (71.0, 5.5, 0),   # BT840 SWD / Tag-Connect east of the module
     "U20": (66.0, 28.0, 0),          # nRF9151: UWB pins face west, BT840 UART pins north, SIM/SWD south
-    "J11": (79.5, 4.5, 0), "J10": (88.0, 10.5, 0),    # GNSS / LTE u.FL on the north edge
+    "J11": (82.5, 14.0, 0), "J10": (79.5, 25.5, 0),    # GNSS / LTE u.FL: vertical-mating, so beside the nRF RF pins, not on an edge
     "J3": (60.5, 40.0, 0), "J34": (67.0, 49.5, 0), "J33": (62.0, 56.0, 90),
     "J12": (80.0, 48.0, 0),
     # --- power ------------------------------------------------------------
@@ -85,7 +89,7 @@ FIXED = {
     # --- user interface: LEDs / buttons along the north edge east of the RF connectors -------
     "D4": (104.0, 64.5, 0), "D5": (109.5, 64.5, 0), "D6": (115.0, 64.5, 0),
     "D7": (96.0, 3.5, 0), "D400": (101.0, 3.5, 0), "D401": (106.0, 3.5, 0),
-    "SW12": (97.0, 9.5, 0), "SW11": (80.5, 15.5, 0),
+    "SW12": (97.0, 9.5, 0), "SW11": (92.0, 17.0, 0),
 }
 # anchors are added to FIXED programmatically (chips, SMAs)
 
@@ -250,6 +254,8 @@ class Placer:
         self.bucket = {}
         self.nogo = []           # extra keep-out rects
         self.edge_ok = set()     # refs allowed to sit outside the inset area
+        self.rec = {}            # ref -> arguments of the greedy call that placed it (re-used by polish)
+        self.idx_of = {}
 
     # --- collision ------------------------------------------------------
     def _cells(self, r):
@@ -261,6 +267,7 @@ class Placer:
     def add_rect(self, r, ref):
         idx = len(self.rects)
         self.rects.append((r, ref))
+        self.idx_of[ref] = idx
         for c in self._cells(r):
             self.bucket.setdefault(c, []).append(idx)
 
@@ -289,6 +296,10 @@ class Placer:
         p = self.parts[ref]
         p.x, p.y, p.rot, p.placed = x, y, rot, True
         self.add_rect(p.rect(infl=infl), ref)
+
+    def remove(self, ref):
+        """lift a part out of the collision map (its record is overwritten by the next put)"""
+        self.rects[self.idx_of[ref]] = ((1e9, 1e9, 1e9 + 1, 1e9 + 1), "__dead__")
 
     def targets_for(self, ref, hint=None):
         """per pad: list of target points (placed pads on the same net)."""
@@ -326,11 +337,14 @@ class Placer:
         return res
 
     def greedy(self, ref, hint=None, home=None, rots=(0, 90), radius=9.0, weight=None, infl=GAP,
-               prefer=None, bounds=None, step=GRID):
+               prefer=None, bounds=None, step=GRID, center=None):
         p = self.parts[ref]
+        self.rec[ref] = dict(hint=hint, weight=weight, rots=rots, infl=infl, bounds=bounds, step=step, home=home)
         tg = self.targets_for(ref, hint)
         allpts = [pt for _, _, _, _, pts in tg for pt in pts]
-        if allpts:
+        if center:
+            cx, cy = center
+        elif allpts:
             cx = sum(a for a, b in allpts) / len(allpts)
             cy = sum(b for a, b in allpts) / len(allpts)
         elif home:
@@ -378,6 +392,178 @@ class Placer:
             R *= 1.7
             if R > (45 if bounds else 120):
                 raise RuntimeError("cannot place " + ref)
+
+
+# ---------------------------------------------------------------------------
+# polish: re-seat every greedily placed part once the whole board exists
+# ---------------------------------------------------------------------------
+def _mst(pts):
+    n = len(pts)
+    if n < 2:
+        return 0.0
+    d = [math.hypot(pts[0][0] - q[0], pts[0][1] - q[1]) for q in pts]
+    used = [False] * n
+    used[0] = True
+    tot = 0.0
+    for _ in range(n - 1):
+        u = -1
+        bd = 1e18
+        for i in range(n):
+            if not used[i] and d[i] < bd:
+                bd, u = d[i], i
+        used[u] = True
+        tot += bd
+        ux, uy = pts[u]
+        for i in range(n):
+            if not used[i]:
+                dd = math.hypot(ux - pts[i][0], uy - pts[i][1])
+                if dd < d[i]:
+                    d[i] = dd
+    return tot
+
+
+POLISH_PASSES = 6
+RF_NET = re.compile(r"LTE_RF_PIN|LTE_ANT|GNSS_RF|GNSS_ANT$|GNSS_LNA_A|GNSS_LNA_IN")
+LARGE_NET = 9        # nets with more pads than this are costed by nearest-pad distance, not MST
+# clock tree parts (precision-critical, positioned by the constructive pass) are not polished
+POLISH_SKIP = {"R230", "R231", "R232", "R233", "R234", "C24", "C25", "C26", "C27", "C210", "C211", "C212", "C213", "C214"}
+
+
+def polish(pl, parts, refs, passes=3, log=True):
+    """Move each part (all four rotations) to the legal pose that minimises the MST length of the nets it
+    sits on, plus a pull toward the hinted pins / the nearest connection.  Parts are visited in a fixed
+    order and a move is taken only when it shortens the cost, so the result is deterministic."""
+    P = parts
+    members = {}
+    for ref, p in P.items():
+        for num, dx, dy, net in p.pads:
+            if net and net != "GND" and not net.startswith("unconnected-"):
+                members.setdefault(net, set()).add(ref)
+
+    def context(ref):
+        p = P[ref]
+        rec = pl.rec[ref]
+        wts = rec["weight"] or {}
+        nets = {}
+        for num, dx, dy, net in p.pads:
+            if net and net != "GND" and not net.startswith("unconnected-"):
+                nets.setdefault(net, []).append((num, dx, dy))
+        ctx = []
+        for net, own in nets.items():
+            others = []
+            for r2 in members[net]:
+                if r2 == ref or not P[r2].placed:
+                    continue
+                for n2, x, y, nt in P[r2].world_pads():
+                    if nt == net:
+                        others.append((x, y))
+            if not others:
+                continue
+            wm = max(wts.get(num, 1.0) for num, _, _ in own)
+            if RF_NET.search(net):
+                wm *= 4.0        # RF lines to the u.FL connectors: short and straight beats everything else
+            ctx.append((others, own, len(others) + len(own) > LARGE_NET, wm))
+        hints = []
+        hint = rec["hint"]
+        if hint:
+            for num, dx, dy, net in p.pads:
+                if num in hint:
+                    pts = []
+                    for h in hint[num]:
+                        if h[0] == "pt":
+                            pts.append((h[1], h[2]))
+                        elif P[h[0]].placed:
+                            pts += [(x, y) for n2, x, y, nt in P[h[0]].world_pads() if n2 == h[1]]
+                    if pts:
+                        hints.append((dx, dy, pts, wts.get(num, 1.0)))
+        return ctx, hints
+
+    def cost(ctx, hints, x, y, rot):
+        c = 0.0
+        for others, own, large, wm in ctx:
+            pp = []
+            for num, dx, dy in own:
+                rx, ry = rot_pt(dx, dy, rot)
+                pp.append((x + rx, y + ry))
+            if large:
+                s = 0.0
+                for a, b in pp:
+                    s += min(math.hypot(a - o[0], b - o[1]) for o in others)
+                c += wm * s
+            else:
+                near = 0.0
+                for a, b in pp:
+                    near += min(math.hypot(a - o[0], b - o[1]) for o in others)
+                c += wm * (_mst(others + pp) + 0.1 * near)
+        for dx, dy, pts, w in hints:
+            rx, ry = rot_pt(dx, dy, rot)
+            a, b = x + rx, y + ry
+            c += w * min(math.hypot(a - o[0], b - o[1]) for o in pts)
+        return c
+
+    ROT_PREF = {0: 0.0, 180: 0.0005, 90: 0.001, 270: 0.0015}
+    moved_total = 0
+    for it in range(passes):
+        moved = 0
+        gain = 0.0
+        for ref in refs:
+            if ref not in pl.rec or ref in POLISH_SKIP:
+                continue
+            p = P[ref]
+            rec = pl.rec[ref]
+            ctx, hints = context(ref)
+            if not ctx and not hints:
+                continue
+            step = rec["step"]
+            is_tp = ref.startswith("TP")
+            rots = (0, 90, 180, 270) if (p.is_passive or not is_tp and len(p.pads) <= 6) else rec["rots"]
+            if is_tp:
+                rots = (0,)
+            cur = cost(ctx, hints, p.x, p.y, p.rot) + ROT_PREF.get(p.rot % 360, 0)
+            allp = [q for o, _, _, _ in ctx for q in o]
+            cen = (sum(a for a, b in allp) / len(allp), sum(b for a, b in allp) / len(allp)) if allp else (p.x, p.y)
+            centres = [(p.x, p.y, 3.0 if not is_tp else 10.0)]
+            if math.hypot(cen[0] - p.x, cen[1] - p.y) > 2.0:
+                centres.append((cen[0], cen[1], 4.0 if not is_tp else 10.0))
+            cands = {}
+            for cx, cy, R in centres:
+                n = int(R / step)
+                gx, gy = snap(cx, step), snap(cy, step)
+                for ix in range(-n, n + 1):
+                    x = gx + ix * step
+                    for iy in range(-n, n + 1):
+                        y = gy + iy * step
+                        for rot in rots:
+                            if (x, y, rot) not in cands:
+                                cands[(x, y, rot)] = cost(ctx, hints, x, y, rot) + ROT_PREF.get(rot, 0)
+            if not cands:
+                continue
+            pl.remove(ref)
+            order = sorted(cands.items(), key=lambda kv: kv[1])
+            bounds = rec["bounds"]
+            placed = False
+            for (x, y, rot), c in order:
+                if c >= cur - 0.02:
+                    break
+                r = p.rect(x, y, rot, infl=rec["infl"])
+                if not pl.inside(r) and ref not in pl.edge_ok:
+                    continue
+                if bounds and not (r[0] >= bounds[0] and r[1] >= bounds[1] and r[2] <= bounds[2] and r[3] <= bounds[3]):
+                    continue
+                if pl.collides(r):
+                    continue
+                pl.put(ref, x, y, rot, infl=rec["infl"])
+                moved += 1
+                gain += cur - c
+                placed = True
+                break
+            if not placed:
+                pl.put(ref, p.x, p.y, p.rot, infl=rec["infl"])
+        moved_total += moved
+        if log:
+            print("polish pass %d: %d parts moved, cost -%.1f" % (it + 1, moved, gain))
+        if moved == 0:
+            break
 
 
 # ---------------------------------------------------------------------------
@@ -509,6 +695,10 @@ def anchor_bounds(n, grow=0.0):
     return (cx - 12 - grow, max(1.0, cy - 8.5 - grow), cx + 13 + grow, cy + 10 + grow)
 
 
+def pad_xy(part, num):
+    return [(x, y) for n, x, y, net in part.world_pads() if n == num][0]
+
+
 def place_all(pl, parts):
     P = parts
 
@@ -524,12 +714,25 @@ def place_all(pl, parts):
     def G(ref, hint=None, home=None, w=None, **kw):
         if P[ref].placed:
             return
+        home = home or home_of(P[ref])
         try:
-            pl.greedy(ref, hint=hint, home=home or home_of(P[ref]), weight=wts(ref, w), **kw)
+            pl.greedy(ref, hint=hint, home=home, weight=wts(ref, w), **kw)
         except RuntimeError:
             kw.pop("bounds", None)
             print("WARNING: %s did not fit its bounds" % ref)
-            pl.greedy(ref, hint=hint, home=home or home_of(P[ref]), weight=wts(ref, w), **kw)
+            pl.greedy(ref, hint=hint, home=home, weight=wts(ref, w), **kw)
+
+    # ---- 0. clock tree R/C pairs first: 22R at the buffer pin, 2200 pF at the XTI pin, so each path is the
+    #         straight buffer -> chip run plus two pads (equal-length goal, positioning.md) ---------------
+    for n in range(4):
+        c = "U%d" % (4 + n)
+        ypin = [(x, y) for num, x, y, net in P["U31"].world_pads() if net.endswith("CLK_Y%d" % n)][0]
+        xpin = pad_xy(P[c], "21")
+        G("R%d" % (231 + n), hint={"1": [("pt", ypin[0], ypin[1])], "2": [("pt", xpin[0], xpin[1])]}, w={"1": 8, "2": 1},
+          home=ypin, radius=4.0,
+          rots=(0, 90, 180, 270), center=ypin)
+        G("C%d" % (24 + n), hint={"2": [(c, "21")]}, w={"2": 8, "1": 1}, home=SLOT[n][:2], radius=5.0,
+          rots=(0, 90, 180, 270), bounds=anchor_bounds(n), center=xpin)
 
     # ---- 1. UWB anchors: supply caps on their pins, straps, clock caps --------------------
     for n in range(4):
@@ -568,18 +771,18 @@ def place_all(pl, parts):
     G("C209", hint={"1": [("U4", "21")]}, home=(SLOT[0][0], SLOT[0][1]))
 
     # ---- 2. clock tree --------------------------------------------------------------------
-    ck = (XC, 37)
+    ck = (24.5, 35)
     G("R230", home=ck)
     for ref, h in (("C213", ("U31", "6")), ("C214", ("U31", "6")), ("C210", ("U30", "6")), ("C211", ("U30", "6"))):
         G(ref, hint={"1": [h]}, w={"1": 3}, home=ck)
     for n in range(4):
-        G("R%d" % (231 + n), home=ck, w={"1": 3, "2": 0.6})
+        G("R%d" % (231 + n), home=ck, w={"1": 8, "2": 0.3}, radius=5.0, rots=(0, 90, 180, 270))   # already placed in step 0
     for ref in ("R226", "R229", "R225", "R227", "R228", "C215"):
         G(ref, home=ck)
     G("C212", hint={"1": [("R225", "2")]}, home=ck)
     G("R402", home=ck)
     for n in range(4):
-        G("R%d" % (403 + n), home=SLOT[n][:2])
+        G("R%d" % (403 + n), hint={"2": [("U%d" % (4 + n), "21")]}, w={"2": 3}, home=SLOT[n][:2], radius=7.0)
 
     # ---- 3. orientation sensors -----------------------------------------------------------
     for ref, h in (("C400", None), ("C401", ("U10", "3")), ("C402", ("U10", "9")), ("C35", ("U10", "10")),
@@ -603,12 +806,13 @@ def place_all(pl, parts):
     C = lambda a, b: ["C%d" % i for i in range(a, b + 1)]
 
     # host: nRF9151 supply / reset / strap / bridge / SPI series parts
-    group("host_crit", ["FB10", "C102", "C103", "C100", "C101", "C109", "C104", "C110", "C107", "C108", "C111", "R101"],
+    group("host_crit", ["FB10", "C102", "C103", "C100", "C101", "C109", "C104", "C110", "C107", "C108", "C111", "R101",
+                       "R103", "R104", "U21", "R102", "C105", "C106", "R155"],
           (50, 14, 86, 47), (66, 29), radius=8.0)
     # GNSS front end and LTE feed near the north edge
     group("gnss", ["U24", "U25", "C127", "L101", "C123", "C128", "C129", "R123", "R124", "R125", "L100", "R122", "C122",
-                   "C124", "C125", "C126", "D100"], (72, 1, 104, 24), (86, 10), radius=8.0)
-    group("lte", ["R130", "R131", "C130", "C131", "D101", "J13"], (78, 4, 106, 26), (92, 16), radius=8.0)
+                   "C124", "C125", "C126", "D100"], (70, 1, 100, 26), (78, 17), radius=8.0)
+    group("lte", ["R130", "R131", "C130", "C131", "D101", "J13"], (70, 14, 100, 32), (80, 23), radius=8.0)
     # SIM and its ESD / series parts
     group("sim", ["U22", "R106", "R107", "R108", "R109", "U23", "R110", "R111", "R112", "R113", "C112"],
           (64, 34, 98, 66), (76, 42), radius=8.0)
@@ -617,19 +821,20 @@ def place_all(pl, parts):
                   "J31", "R304"], (76, 18, 106, 48), (86, 33), radius=8.0)
     # host test pads claim their space after the RF / supply parts (those paths are the critical ones),
     # and before the series links, pull-ups and DNP options, which can sit a little further out
-    place_tp_list(pl, parts, ["TP%d" % i for i in list(range(40, 54)) + [100, 102, 115, 140, 141, 146] +
-                              list(range(150, 156)) + list(range(160, 168)) + [173, 174, 175]])
+    group("u8", ["C20", "L1", "C21", "C22", "R8", "R9", "R300", "R301", "J30", "R303", "R305", "C303",
+                 "C5", "C6", "C7"], (90, 44, 120, 74), (104, 54), radius=8.0)
+    # charger / battery / inputs
+    group("charger", ["D1", "D2", "D3", "U2", "Q1", "TH1", "C1", "C2", "C3", "C4", "R1", "R2", "R3", "R4", "R5",
+                      "R6", "R7", "R29", "R30", "R31"], (100, 16, W, H), (114, 44), radius=8.0)
+    # every test pad claims its slot next to its pin/net now: after all pin-critical parts (decoupling, hot
+    # loops, clock, RF) and before the series links, pull-ups, DNP options and UI parts, which can sit further out
+    place_test_pads(pl, parts)
     group("host", [
                    "R150", "R151", "R152", "R153", "R154", "R140", "R141", "R142", "R143", "R144", "R145",
                    "R37", "R38", "R39", "R224", "R313", "R315", "C304", "R103", "R104", "U21", "R102", "C105",
                    "C106", "R155", "R314"],
           (50, 14, 86, 47), (66, 29), radius=8.0,
           hints={"R224": {"1": [("U20", "2")]}})
-    group("u8", ["C20", "L1", "C21", "C22", "R8", "R9", "R300", "R301", "J30", "R303", "R305", "C303",
-                 "C5", "C6", "C7"], (90, 44, 120, 74), (104, 54), radius=8.0)
-    # charger / battery / inputs
-    group("charger", ["D1", "D2", "D3", "U2", "Q1", "TH1", "C1", "C2", "C3", "C4", "R1", "R2", "R3", "R4", "R5",
-                      "R6", "R7", "R29", "R30", "R31"], (100, 16, W, H), (114, 44), radius=8.0)
     group("ui", ["R32", "R400", "R401"], (92, 1, 114, 15), (101, 8), radius=8.0)
     group("dbg", ["SW2"], (52, 34, 74, 62), (62, 44), radius=10.0)
     # array entry bank on +3V3 at the east edge of the UWB block, centre band
@@ -648,8 +853,11 @@ def place_all(pl, parts):
     # ---- 6. test pads ----------------------------------------------------------------------
     place_test_pads(pl, parts)
 
+    # ---- 7. polish -----------------------------------------------------------------------------
+    polish(pl, parts, sorted(pl.rec), passes=POLISH_PASSES)
 
-TP_EXPLICIT = {
+
+TP_EXPLICIT = {  # (host pads that name a pin follow the pin, so no coordinates here)
     "TP1": ("R300", "2"), "TP101": ("U4", "29"), "TP102": ("U3", "9"), "TP2": ("U1", "1"), "TP103": ("U8", "4"),
     "TP100": ("U20", "14"), "TP104": ("J2", "A9"), "TP414": ("U1", "3"),
     "TP3": ("U31", "4"), "TP110": ("pt", XC, 31.0), "TP4": ("pt", 50.0, 56.0),
@@ -743,7 +951,10 @@ def refine_test_pads(pl, parts, hints_used):
                 P[a].x, P[b].x = P[b].x, P[a].x
                 P[a].y, P[b].y = P[b].y, P[a].y
                 improved = True
-    # rebuild collision records is unnecessary: nothing is placed after the test pads
+    # the swaps moved pads between slots: re-register every test pad at its final position
+    for r in tps:
+        pl.remove(r)
+        pl.put(r, P[r].x, P[r].y, P[r].rot, infl=pl.rec[r]["infl"])
 
 
 def refresh_note(path):
