@@ -87,10 +87,49 @@ datasheet; used directly across the rail it protects.
 
 ## Fanstel BT840 / Nordic nRF52840 (bay-station connectivity, U3)
 
-Replaced the ESP32-S3-WROOM-1 on 2026-09-19. The BT840 is a certified module
-with on-board DC-DC and its own antenna, so there is no external application
-circuit to work from -- C5/C6/C7 on `connectivity.kicad_sch` are conservative
-3V3 supply decoupling, not datasheet-specified values.
+Host from 2026-09-19, demoted to the UART BLE bridge on 2026-11-17
+(`decisions.md`). The BT840 is a certified module with on-board DC-DC and its
+own antenna, so there is no external application circuit to work from --
+C5/C6/C7 on `connectivity.kicad_sch` are conservative 3V3 supply decoupling,
+not datasheet-specified values, and were kept through the redesign.
+R140-R144 are 0R links on the five bridge lines (rework only).
+
+## Nordic nRF9151 SiP (bay-station connectivity, U20)
+
+Values are exactly the nRF9151 HDG *Schematic design* BOM (read as Nordic's
+HTML rendition -- the PDF could not be fetched; `decisions.md` Open). HDG
+designators in brackets. Nordic's examples are 0201/0402 Murata GRM; this
+board uses 0603/0805 per the repo standard, which the HDG allows if DC
+resistance and frequency behaviour stay close and VDD stays >= 3.0 V under
+load. Detail: `bay-station/connectivity_notes.md` section 3.
+
+| Passive | Value | Role | Status |
+|---|---|---|---|
+| FB10 | BLM18SD220SN1 (22 ohm @ 100 MHz, 6 A, 8 mOhm) | `+VBAT_LTE` -> `NRF_VDD` bead, "highly recommended", DCR < 0.1 ohm (HDG *VDD*) [FB1] | Placed |
+| C100, C101 | 1uF | VDD bank, source side of FB10 [C1, C2 -- optional] | Placed |
+| C102 | 47uF 0805 | VDD pin 14 bulk [C3] | Placed |
+| C103 | 10uF | VDD pin 14 [C4] | Placed |
+| R101 | 10k | ENABLE series resistor from `NRF_VDD` (HDG *ENABLE*) [R1] | Placed. The `+3V3`-after-VDD sequencing on regulation assumes ENABLE is tied this way |
+| C104 | 100nF | ENABLE decoupling (HDG *ENABLE*: recommended) | Placed |
+| C107 | 4.7uF | VDD_GPIO pin 65 -- the HDG minimum [C6] | Placed |
+| C108 | 100nF | VDD_GPIO pin 65 [C5] | Placed |
+| C109 | 4.7uF X5R | DEC0 pin 24, ground to the nRF9151 GND plane [C7] | Placed |
+| C110 | 100nF | nRESET pin 9, close to the pin (HDG *nRESET*) [C8] | Placed |
+| R313 | 1k | nRESET series, on `programming_debug` [R2]. **No pull-up anywhere** -- "External pull-up is not allowed" (13k internal to 2.2 V) | Placed |
+| C111 | 100nF | SIM_1V8 (HDG *UICC*: 100-220 nF may be added) | Placed |
+| R103 / R104 | 0R / 0R | `+3V3` -> VDD_GPIO; R104 is the VDD_GPIO current-measure link | Placed. DNP fallback U21 TPS22917 + R102/C105/C106/R155 if the regulation-sheet delay ever proves short |
+
+**GNSS LNA (U24 BGA524N6, U25 TPS7A0228 2.8 V), from Infineon DS Rev 3.5
+Table 6 and TI SBVS277C:** L101 8.2 nH 0402 input match [L1] and C123 1 nF
+0402 DC block [C1] -- **C123 is mandatory**, the LNA input is 0.9 V abs max;
+C129 1 uF VCC bypass at pin 2 [C2, > 10 nF]; C127/C128 1 uF LDO CIN/COUT
+(0.5 uF effective COUT minimum). RF pi pads C124/R125/C125 (GPS pin) and
+C130/R130/C131 (LTE, at J10) are 0R/DNP 0402 until tuned -- the HDG *ANT*
+expects a >= 3-component match, values per design. Bias-tee R122/L100/C122
+values are estimates, not from a Nordic BOM.
+
+**I2C pull-ups R37/R38 moved to 3.3k** for the nRF9151's 1 mA standard-drive
+sink (`decisions.md`, pull-ups).
 
 ## Qorvo DW3210 (bay-station uwb_array, U4-U7, x4)
 
@@ -225,17 +264,82 @@ is stale for the same reason and should be rewritten.
 
 ## TI TPS62A02PDDCR (bay-station buck, U8)
 
-Real datasheet Table 8-2/8-3 component recommendations + Eq. 2 for the
-feedback divider.
+Real datasheet SLUSEG9E Table 8-2/8-3 component recommendations + Eq. 2 for
+the feedback divider. Detail: `bay-station/regulation_notes.md` section 6.
 
 | Passive | Value | Role | Status |
 |---|---|---|---|
-| L1 | 1uH | Power inductor (Table 8-3) | Placed (`regulation.kicad_sch`) -- **no KiCad-default footprint exists** for the chosen Coilcraft XGL3520-102MEC; source a real footprint at BOM time (open item, `docs/decisions.md`) |
+| L1 | 1uH, Coilcraft XFL4020-102MEC | Power inductor (Table 8-3 "++" 1uH/22uF pair). Isat 4.5 A, above the 3.4 A max high-side limit | Placed, footprint `L_Coilcraft_XxL4020` (replaced the footprint-less XGL3520-102MEC, 2026-11-17) |
 | C20 (Cin) | 4.7uF, 0805 | Input decoupling (Table 8-2, sized up from 0603 for DC-bias derating) | Placed |
 | C21 (Cout) | 22uF, 0805 | Output decoupling (Table 8-3's recommended pair for VOUT>=1.8V) | Placed |
-| C22 | 120pF | Optional feedforward cap across R8, reduces PSM ripple (datasheet's own note) | Placed |
+| C22 | 120pF, **DNP** | Optional feedforward across R8 for PSM ripple. TI's 120 pF is for the 1.8 V example and is unverified at 3.3 V; fit only after measuring ripple | **Was wired `+3V3`-to-GND, not across R8 -- fixed 2026-11-17** |
 | R8 | 453k | FB divider top -- sets VOUT=3.318V (Eq. 2 math, nearest E96 value) | Placed |
 | R9 | 100k | FB divider bottom -- at the datasheet's own stated ceiling for acceptable noise sensitivity | Placed |
+| R301 | 100k | PG pull-up to `+3V3_REG` (PG gates nothing) | Placed |
+| R303 / C303 / R304 | 100k / 1uF / 4.7k | EN delay from U40 PG, so `+3V3` (nRF9151 VDD_GPIO) rises 12-41 ms after `+VBAT_LTE` -- HDG needs >= 6 ms (`regulation_notes.md` section 4) | Placed; DNP R305 restores EN-to-`+VSYS` |
+
+## TI TPS63802DLAR (bay-station buck-boost, U40, `+VBAT_LTE` for nRF9151 VDD)
+
+Real datasheet SLVSEU9D. Detail: `bay-station/regulation_notes.md` section 2.
+
+| Passive | Value | Role | Status |
+|---|---|---|---|
+| L300 | 0.47uH, Coilcraft XFL4020-471MEC | Sec 8.3: 0.47 uH nominal, 0.37-0.57 uH effective. Isat 4.6 A. TI Table 10-2 lists XFL4015-471ME; XFL4020 used for its KiCad footprint | Placed |
+| C300 | 10uF 0805 10V | Input -- "A 10 uF input capacitor is recommended" (Sec 10.2.2.4) | Placed |
+| C301 | 22uF 0805 10V | Output -- single 22 uF for VO <= 3.6 V (Sec 10.2.2.3) | Placed |
+| C302 | 22uF, **DNP** | Second output cap, TI's recommendation above 3.6 V or for droop | DNP |
+| R306 / R307 | 562k / 91k | FB, VFB 500 mV -> 3.588 V (Table 10-5 pair for 3.6 V) | Placed |
+| R308 / R309 | 191k / 100k | EN as a precise UVLO: off < 2.91 V, on > 3.20 V `+VSYS` (Sec 8.5 thresholds) | Placed |
+| R311 / R312 | 0R / 0R **DNP** | MODE strap: GND = power-save (default), `+VSYS` = forced PWM. "It must not be left floating" (Table 7-1) | Placed / DNP |
+| R310 | 0R **DNP** | EN to `+VSYS` (always on) rework option | DNP |
+
+The nRF9151's own VDD bank sits downstream of the R302 break, at the SiP
+(section above); TPS63802 has no upper limit on output capacitance.
+
+## Rakon RPT1490LN TCXO + TI LMK1C1104 buffer (bay-station clock_dist, U30/U31) -- PROPOSED
+
+Detail: `bay-station/clock_dist_notes.md`. Rakon gives no decoupling
+guidance; the buffer follows TI SNAS791D Fig 11-1.
+
+| Passive | Value | Role | Status |
+|---|---|---|---|
+| R225 / R226 | 0R 0603 | `+3V3` -> `+3V3_TCXO` / `+3V3_CLKBUF`; current-measure links whose pads take a low-DCR bead (TI s11 recommends, not requires; no bead PN chosen) | Placed |
+| C210 / C211 | 10uF / 100nF | TCXO supply | Placed (judgement, no Rakon figure) |
+| C212 / C213 / C214 | 10uF / 1uF / 100nF | Buffer VDD: board side, then at the pin (SNAS791D Fig 11-1) | Placed |
+| R227 / R228 / C215 | 10k / 8.2k / 100nF | TCXO Vc divider -> 1.49 V (Rakon tuning reference 1.5 V; Vc input >= 1 MOhm) | Placed |
+| R229 | 10k | Buffer 1G pull-up -- outputs always on | Placed |
+| R230, R231-R234 | 22R | Series source terminations TCXO->CLKIN and Yn->AC cap. Starting value (ROUT ~50 ohm); tune at XTI. **R231-R234 must stay equal** | Placed |
+| C24-C27 | 2200pF | AC coupling into each XTI -- "2200 pF is recommended" (DW3000 Table 10) | Placed, at each XTI |
+| C28-C31 | 1pF 0402 | XTO to GND, external-clock case (DW3000 v1.3 XTO row) | **Moved to `uwb_array`** 2026-11-17, at pin 22 |
+
+## ST LIS3MDL + LIS2DH (bay-station orientation, U10/U11)
+
+From the ST datasheets (LIS3MDL DocID024204 Rev 4; LIS2DH Doc ID 022516 Rev 1
+-- both read from mirrors, ST's site refused the download). Both sensors run
+from `+3V3_SNS` behind the R411 current break.
+
+| Passive | Value | Role | Status |
+|---|---|---|---|
+| C400 | 100nF | LIS3MDL C1 (pin 4) -- mandatory (Table 2 / sec 4.1) | Placed |
+| C35 + C401 | 100nF + 1uF | LIS3MDL Vdd (sec 4.1 / Figure 5) | Placed |
+| C402 | 100nF | LIS3MDL Vdd_IO -- extra, not in Figure 5 | Placed, DNP-able |
+| C36 + C403 | 100nF + 10uF | LIS2DH Vdd at pin 8 (sec 3: "100 nF ceramic, 10 uF aluminum"); 10 uF X5R ceramic used -- check DC-bias derating | Placed |
+| C404 | 100nF | LIS2DH Vdd_IO -- extra | Placed, DNP-able |
+| R412 / R413 | 0R / 0R DNP | LIS3MDL SA1 strap: GND = 0x1C (DNP high = 0x1E), sec 5.1.1 | Placed |
+| R414 / R415 | 0R / 0R DNP | LIS2DH SA0 strap: high = 0x19 (DNP GND = 0x18), sec 5.1.1 / Table 14 | Placed |
+| R407-R410 | 0R | Per-sensor SCL/SDA isolation links | Placed |
+
+## Status LEDs (bay-station indicators, D4-D7, D400, D401)
+
+Series resistors computed from each Kingbright datasheet's VF at IF = 2 mA and
+the real drive rail (replaces the indicative 1k); reasoning in `decisions.md`,
+"Status LED drive rails". All 0603 1 %.
+
+| Passive | Value | Drive | Current |
+|---|---|---|---|
+| R29 / R30 | 1.5k | `+VSYS` -> D4 / D5 -> MCP73871 STAT1 / STAT2 (open-drain sink) | ~2 mA on adapter, ~1.1 mA on battery |
+| R31 | 1k | `+5V_IN` -> D6 -> ~PG. PG must not be pulled above VIN (DS20002090E sec 5.2.4) | ~2.2 mA |
+| R32 / R400 / R401 | 1.2k | GPIO (nRF9151 P0.30 / P0.31, BT840 P0.02) -> R -> LED -> GND, active high | ~1.1 mA (0.7-1.5 mA); standard drive IOH >= 1 mA (nRF9151 PS *GPIO*) |
 
 ## Summary: what changed this pass
 
