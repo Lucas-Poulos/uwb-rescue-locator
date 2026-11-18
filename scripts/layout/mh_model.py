@@ -125,7 +125,7 @@ class Obst:
                     seen.add(i)
                     yield self.items[i]
 
-    def seg_ok(self, net, layer, ax, ay, bx, by, hw, slack=0.004, ignore=()):
+    def seg_ok(self, net, layer, ax, ay, bx, by, hw, slack=0.001, ignore=()):
         """Exact: does a track AB of half-width hw on `layer` clear all copper of other nets?"""
         pad = hw + CLR_KEEPOFF + 0.3
         bb = (min(ax, bx) - pad, min(ay, by) - pad, max(ax, bx) + pad, max(ay, by) + pad)
@@ -255,7 +255,7 @@ class Grid:
 
 # ======================================================================= board model
 class Model:
-    def __init__(self, board, pitch, skip_classes=("RF50",)):
+    def __init__(self, board, pitch, skip_classes=("RF50",), via_override=None):
         self.b = board
         self.pitch = pitch
         self.nets = {}               # net index -> dict(name, code, cls, track, via_dia, via_drill)
@@ -269,7 +269,9 @@ class Model:
                 continue
             idx += 1
             cname = str(net.GetNetClassName())
-            nc = classes.get(cname) or classes["Default"]
+            nc = dict(classes.get(cname) or classes["Default"])
+            if via_override and cname not in ("POWER_HI", "RF50"):
+                nc["via_dia"], nc["via_drill"] = via_override      # routing-time choice; board min via is 0.45/0.2
             self.nets[idx] = dict(name=nm, code=net.GetNetCode(), cls=cname,
                                   track=nc["track"], via_dia=nc["via_dia"],
                                   via_drill=nc["via_drill"], pads=[])
@@ -369,7 +371,9 @@ class Model:
             if z.GetDoNotAllowTracks() and lay:
                 self._add_static(Prim("rect", rect, lay, 0, 0.0))
             if z.GetDoNotAllowVias():
-                for i in g._cells(Prim("rect", rect, (), 0, 0), 1e-6):
+                # via COPPER (radius up to 0.4 for POWER_HI) must stay out of the zone, not just its centre
+                vr = (rect[0] - 0.4, rect[1] - 0.4, rect[2] + 0.4, rect[3] + 0.4)
+                for i in g._cells(Prim("rect", vr, (), 0, 0), 1e-6):
                     g.nopad[i] = 1
 
     def _block_outside(self):
@@ -382,10 +386,15 @@ class Model:
             return
         # scanline: cells whose centre is outside the polygon are blocked in the S arrays of every tier
         self.outside_cells = []
+        rc = 4.0     # corner squares (outline corner radius is 3 mm)
+        x0c, x1c, y0c, y1c = min(xs) + rc, max(xs) - rc, min(ys) + rc, max(ys) - rc
         for iy in range(g.H):
             y = g.y0 + iy * g.p
             for ix in range(g.W):
                 x = g.x0 + ix * g.p
+                # cheap pre-test: inside the cross formed by the bbox minus its corner squares
+                if (x0c <= x <= x1c) or (y0c <= y <= y1c):
+                    continue
                 if not U.point_in_poly(x, y, poly):
                     self.outside_cells.append(iy * g.W + ix)
         outside = self.outside_cells

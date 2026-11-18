@@ -51,7 +51,13 @@ CLASS_RANK = {"POWER_HI": 0, "POWER_MID": 1, "FASTDIG": 2, "POWER_LO": 3, "CLK":
 
 
 class Router:
-    def __init__(self, model, seconds=900.0, skip_classes=("RF50", "CLK"), do_gnd=True, verbose=True, only=None):
+    def __init__(self, model, seconds=900.0, skip_classes=("RF50", "CLK"), do_gnd=True, verbose=True, only=None,
+                 prio=None, max_rips=MAX_RIPS):
+        self.min_via = min(v["via_dia"] for v in model.nets.values())
+        self.post_floor = True
+        self.search_floor = False
+        self.prio = prio or {}       # net name -> times it failed in earlier rounds (routed first)
+        self.max_rips = max_rips
         self.only = set(only) if only else None
         self.m = model
         self.g = model.grid
@@ -89,9 +95,10 @@ class Router:
 
     VIA_SPACING = 0.70      # centre to centre of two vias: drill-to-drill 0.25 with 0.3 drills + margin
 
-    def via_block(self, x, y, delta):
+    def via_block(self, x, y, delta, dia=None):
         g = self.g
-        rr = self.VIA_SPACING
+        # copper-to-copper 0.15 against another via of the smallest size in use (drill-to-drill 0.25 is looser)
+        rr = self.VIA_SPACING if dia is None else max(dia / 2 + self.min_via / 2 + 0.16, 0.5)
         ix0, iy0 = g.cell(x - rr, y - rr)
         ix1, iy1 = g.cell(x + rr, y + rr)
         for iy in range(max(0, iy0), min(g.H - 1, iy1) + 1):
@@ -465,7 +472,7 @@ class Router:
             recs.append(("seg", l, x0, y0, x1, y1, width, stub, self.iid, oid))
 
         def add_via(x, y):
-            self.via_block(x, y, +1)
+            self.via_block(x, y, +1, info["via_dia"])
             self.iid += 1
             pr = Prim("circ", (x, y, info["via_dia"] / 2), (F, B), net, CLR, static=False, owner_item=self.iid)
             g.add_dyn(self.iid, pr)
@@ -502,14 +509,20 @@ class Router:
                 iid, oid = r[8], r[9]
             else:
                 iid, oid = r[5], r[6]
-                self.via_block(r[1], r[2], -1)
+                self.via_block(r[1], r[2], -1, r[3])
             self.g.remove_dyn(iid)
             self.obst.remove(oid)
 
     # ------------------------------------------------------------------ net routing
+    # a power net is never necked below this: an under-width supply track is a hazard that DRC does
+    # not see, so the connection stays unrouted (and listed) instead
+    WIDTH_FLOOR = {"POWER_HI": 0.5, "POWER_MID": 0.3}
+
     def width_ladder(self, net):
-        t = self.m.nets[net]["track"]
-        return [t] + [x for x in (0.5, 0.3, 0.2) if x < t - 1e-9]
+        info = self.m.nets[net]
+        t = info["track"]
+        floor = self.WIDTH_FLOOR.get(info["cls"], 0.0) if self.search_floor else 0.0
+        return [t] + [x for x in (0.5, 0.3, 0.2) if x < t - 1e-9 and x >= floor - 1e-9]
 
     def connect(self, net, comp, tree_nodes):
         """Join `comp` to the tree, trying the class width first and necking the
@@ -534,7 +547,7 @@ class Router:
                         bad = True
                     if bad:
                         continue
-                    if conf and any(self.rips.get(c, 0) >= MAX_RIPS for c in conf):
+                    if conf and any(self.rips.get(c, 0) >= self.max_rips for c in conf):
                         res = None
                         break
                     if not self.verify_runs(net, path, width, conf):
@@ -618,7 +631,7 @@ class Router:
             ps = self.m.nets[i]["pads"]
             xs = [p["c"][0] for p in ps]; ys = [p["c"][1] for p in ps]
             return (max(xs) - min(xs)) + (max(ys) - min(ys))
-        out.sort(key=lambda i: (CLASS_RANK.get(self.m.nets[i]["cls"], 9), hpwl(i)))
+        out.sort(key=lambda i: (-self.prio.get(self.m.nets[i]["name"], 0), CLASS_RANK.get(self.m.nets[i]["cls"], 9), hpwl(i)))
         return out
 
     def run(self):
@@ -654,6 +667,76 @@ class Router:
         self.deadline = self.final_deadline
         if self.do_gnd:
             self.gnd_fanout()
+        self.enforce_width_floor()
+        self.log("legalize: ripped %s" % self.legalize())
+
+    def enforce_width_floor(self):
+        """After the search (which may neck a net to fit): a power net that ended up below its
+        class floor is removed again and reported, not left as an under-width supply track."""
+        self.below_floor = []
+        if not self.post_floor:
+            return
+        for net, w in list(self.necked.items()):
+            info = self.m.nets[net]
+            floor = self.WIDTH_FLOOR.get(info["cls"], 0.0)
+            if w < floor - 1e-9 and self.rec.get(net):
+                self.rip(net)
+                self.failed[net] = max(self.failed.get(net, 0), 1) + 1
+                self.below_floor.append((info["name"], w, floor))
+        self.log("under-width power nets removed: %s" % self.below_floor)
+
+    # ------------------------------------------------------------------ final legality
+    def conflicts_now(self):
+        """Exact re-check of every committed segment and via against ALL other copper
+        (the grid search samples nodes; this tests the real geometry).  Returns
+        {net: set(other nets or 'static')} for every offending pair."""
+        out = {}
+        for net, recs in self.rec.items():
+            info = self.m.nets[net]
+            for r in recs:
+                if r[0] == "seg":
+                    _, l, x0, y0, x1, y1, w, stub, iid, oid = r
+                    items = [(l, x0, y0, x1, y1, w / 2)]
+                else:
+                    items = [(ll, r[1], r[2], r[1], r[2], r[3] / 2) for ll in (F, B)]
+                for (l, ax, ay, bx, by, hw) in items:
+                    pad = hw + CLR_KEEPOFF + 0.3
+                    bb = (min(ax, bx) - pad, min(ay, by) - pad, max(ax, bx) + pad, max(ay, by) + pad)
+                    for p in self.obst.near(bb):
+                        if p.net == net or l not in p.layers:
+                            continue
+                        if p.dist_seg(ax, ay, bx, by) < hw + p.clr - 0.0005:
+                            out.setdefault(net, set()).add(p.net if (p.owner_item is not None and not p.static) else "static")
+        # drill to drill (0.25 mm) between routed vias of ANY nets, including the same net
+        vias = [(r[1], r[2], r[4], net, r[5]) for net, recs in self.rec.items() for r in recs if r[0] == "via"]
+        for i, (x, y, dr, net, iid) in enumerate(vias):
+            for (x2, y2, dr2, net2, iid2) in vias[i + 1:]:
+                if abs(x - x2) < 1.5 and abs(y - y2) < 1.5 and math.hypot(x - x2, y - y2) - dr / 2 - dr2 / 2 < 0.2505:
+                    late = net if iid > iid2 else net2
+                    out.setdefault(late, set()).add(net2 if late == net else net)
+        return out
+
+    def legalize(self):
+        """Rip the later-committed net of every conflicting pair until none is left; the
+        ripped nets become unrouted connections.  Returns the list of ripped net names."""
+        ripped = []
+        for _ in range(50):
+            bad = self.conflicts_now()
+            if not bad:
+                break
+            victims = set()
+            for net, others in bad.items():
+                dyn = [o for o in others if o != "static"]
+                if "static" in others or not dyn:
+                    victims.add(net)                      # conflicts with fixed copper: this net must go
+                else:
+                    victims.add(max([net] + dyn, key=lambda n: max((r[8] if r[0] == "seg" else r[5]) for r in self.rec.get(n, [(0,) * 9])) if self.rec.get(n) else 0))
+            for v in victims:
+                self.rip(v)
+                self.failed[v] = self.failed.get(v, 0) + 1
+                ripped.append(self.m.nets[v]["name"])
+        self.ripped_legal = ripped
+        return ripped
 
     def gnd_fanout(self):
         gnd = [i for i, n in self.m.nets.items() if n["name"] == "GND"]
@@ -700,7 +783,7 @@ class Router:
             self.g.add_dyn(self.iid, pr)
             oid = self.obst.add(pr)
             self.rec[net].append(("via", x, y, info["via_dia"], info["via_drill"], self.iid, oid))
-            self.via_block(x, y, +1)
+            self.via_block(x, y, +1, info["via_dia"])
             placed += 1
         self.log("GND fan-out: %d vias placed, %d pads without a site" % (placed, failed))
 
@@ -742,7 +825,7 @@ class Router:
             nets_failed=sorted(self.m.nets[n]["name"] for n in self.failed),
             nets_necked_down={self.m.nets[n]["name"]: w for n, w in sorted(self.necked.items())},
             tracks=tracks, vias=vias, stub_segments=stubs, stub_length_mm=round(stub_len, 1),
-            gnd_pads_without_via=getattr(self, "gnd_fail", []),
+            gnd_pads_without_via=getattr(self, "gnd_fail", []), ripped_by_final_legality_check=getattr(self, "ripped_legal", []), power_nets_removed_below_width_floor=getattr(self, "below_floor", []),
             rip_ups=sum(self.rips.values()), astar_searches=self.stats["searches"],
             astar_expanded=self.stats["expanded"], astar_limit_hits=self.stats.get("limit_hits", 0), verify_rejects=self.stats.get("verify_rejects", 0),
             skipped_classes=sorted(self.skip), skipped_class_open_connections=getattr(self, "skipped_open", {}))
@@ -757,14 +840,37 @@ def main():
     ap.add_argument("--skip-class", action="append", default=None, help="netclass to leave alone (default RF50 and CLK: hand-first classes)")
     ap.add_argument("--no-gnd", action="store_true", help="skip the GND fan-out vias")
     ap.add_argument("--report", help="write the JSON report here")
+    ap.add_argument("--rounds", type=int, default=1, help="priority restarts: nets that failed are routed first in the next round; the best round is kept")
+    ap.add_argument("--total-seconds", type=float, default=1e9)
+    ap.add_argument("--via", help="DIA/DRILL in mm for every routed via except POWER_HI/RF50 (default: the netclass sizes), e.g. 0.45/0.2 (board minimum)")
+    ap.add_argument("--stub-max", type=float, default=STUB_MAX, help="policy exception: longest pad escape stub, mm (policy default 2.0)")
+    ap.add_argument("--no-width-floor", action="store_true", help="allow power nets to be necked down to 0.2 mm (default: POWER_HI >= 0.5, POWER_MID >= 0.3, else left unrouted)")
+    ap.add_argument("--max-rips", type=int, default=MAX_RIPS)
     ap.add_argument("--only", action="append", help="route only this net (repeatable); for debugging")
     a = ap.parse_args()
+    globals()["STUB_MAX"] = a.stub_max
+    if a.no_width_floor:
+        Router.WIDTH_FLOOR = {}
+        Router.post_floor_default = False
     board = U.load_board(a.board)
     t0 = time.time()
-    model = Model(board, a.pitch, skip_classes=tuple(a.skip_class or ["RF50", "CLK"]))
-    print("model built in %.1fs" % (time.time() - t0), flush=True)
-    r = Router(model, seconds=a.seconds, skip_classes=tuple(a.skip_class or ["RF50", "CLK"]), do_gnd=not a.no_gnd, only=a.only)
-    r.run()
+    skip = tuple(a.skip_class or ["RF50", "CLK"])
+    prio, best, best_left = {}, None, None
+    for rnd in range(max(1, a.rounds)):
+        model = Model(board, a.pitch, skip_classes=skip, via_override=tuple(float(v) for v in a.via.split('/')) if a.via else None)
+        print("round %d: model built, %.0fs elapsed" % (rnd + 1, time.time() - t0), flush=True)
+        r = Router(model, seconds=a.seconds, skip_classes=skip, do_gnd=not a.no_gnd, only=a.only,
+                   prio=prio, max_rips=a.max_rips)
+        r.run()
+        left = sum(r.failed.values())
+        print("round %d: %d connections unrouted" % (rnd + 1, left), flush=True)
+        if best is None or left < best_left:
+            best, best_left = r, left
+        for nm in (model.nets[n]["name"] for n in r.failed):
+            prio[nm] = prio.get(nm, 0) + 1
+        if left == 0 or time.time() - t0 > a.total_seconds:
+            break
+    r = best
     ntrk, nvia = r.write(board)
     U.save_board(board, a.out or a.board)
     rep = r.report()
