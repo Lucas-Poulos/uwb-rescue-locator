@@ -327,7 +327,8 @@ Measure before optimising; no current figures are claimed here.
 
 - **Anchors in RX are expected to dominate** (four receivers). Levers, in
   order of cost: DEEPSLEEP all four when no tag has been heard for N
-  seconds, waking on a slow beacon schedule; gate `TCXO_EN` with them;
+  seconds, waking on a slow beacon schedule (the TCXO has no enable, so it
+  stays on -- about 10 mA typ);
   duty-cycle RX if the exchange becomes slotted.
 - **Modem**: PSM between uplinks; LTE off entirely when no SIM / no
   coverage (do not let it scan forever); GNSS only during survey-in and
@@ -351,7 +352,6 @@ per block, in the order `docs/verification-plan.md` uses them:
 | `bringup uwb id [n]` | Raw DEV_ID read per anchor | 0xDECA0302 (`DWT_DW3000_DEV_ID`, Qorvo driver 08.02.02; non-PDoA). Header octet 0x00 = short-addressed read of base 0 (DW3000 DS v1.1 s4.9.4, Figure 16). Works on the RC oscillator -- **does not prove the clock** |
 | `bringup uwb clock` | PLL lock per anchor = reference clock present | TODO (needs driver). Until then, scope the clock test pads |
 | `bringup uwb irq` / `uwb reset` | IRQ line levels, shared reset pulse | IRQ low at idle (pulldowns R25-R28) |
-| `bringup tcxo on|off` | `TCXO_EN` | Clock appears/disappears at TCXO_OUT pad |
 | `bringup bridge ping [n]` | UART framing both ways through the BT840 | n/n PONGs, 0 CRC/COBS errors |
 | `bringup bridge reset` | `RESET_BLE_N` | BT840 re-sends HELLO |
 | `bringup modem` | `AT+CGMR`, `%XSYSTEMMODE?`, `+CFUN?`, `%XMONITOR`, `+CEREG?` | Modem FW = pinned version |

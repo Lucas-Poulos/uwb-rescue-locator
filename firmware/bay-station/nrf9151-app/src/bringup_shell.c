@@ -206,14 +206,6 @@ static int cmd_uwb_clock(const struct shell *sh, size_t argc, char **argv)
 	return 0;
 }
 
-static int cmd_tcxo(const struct shell *sh, size_t argc, char **argv)
-{
-	bool on = argc < 2 || strcmp(argv[1], "off") != 0;
-
-	shell_print(sh, "TCXO_EN %s: %d", on ? "on" : "off", uwb_tcxo_enable(on));
-	return 0;
-}
-
 /* --------------------------------------------------------------- bridge */
 
 static int cmd_bridge_ping(const struct shell *sh, size_t argc, char **argv)
@@ -361,7 +353,6 @@ SHELL_STATIC_SUBCMD_SET_CREATE(sub_bringup,
 	SHELL_CMD(rails, NULL, "Indirect rail readings (fuel gauge, modem VBAT)", cmd_rails),
 	SHELL_CMD(i2c, &sub_i2c, "Sensor bus", NULL),
 	SHELL_CMD(uwb, &sub_uwb, "DW3210 anchors", NULL),
-	SHELL_CMD_ARG(tcxo, NULL, "<on|off> drive TCXO_EN", cmd_tcxo, 1, 1),
 	SHELL_CMD(bridge, &sub_bridge, "BT840 bridge link", NULL),
 	SHELL_CMD(modem, NULL, "AT+CGMR, %XSYSTEMMODE?, +CFUN?, %XMONITOR, +CEREG?", cmd_modem_check),
 	SHELL_CMD_ARG(gnss, NULL, "[timeout_s] GNSS-only fix + C/N0", cmd_gnss, 1, 1),
