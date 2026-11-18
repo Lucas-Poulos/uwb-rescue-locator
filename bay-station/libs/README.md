@@ -78,7 +78,7 @@ footprint, if one is published -- before sending this board to fab.
 | **Reused unmodified from KiCad's own default libraries, pin-by-pin verified against the real datasheet** | ~~`ESP32-S3-WROOM-1`~~ (superseded by BT840), `MCP73871` (symbol; footprint reused as-is, slightly conservative EP size noted above) |
 | **Reused unmodified from KiCad's own default libraries (generic parts, not IC-pinout-sensitive)** | `Barrel_Jack` + CUI PJ-063AH footprint, `USB_C_Receptacle_PowerOnly_6P` + GCT USB4125 footprint, `D_Schottky` + SMA, `D_TVS` + SOD-523, `Battery_Cell` + JST-PH or 18650 holder, `LED` + 0805, `R`/`C`/`Thermistor_NTC` |
 | **Hand-authored 2026-09-19, all pins from the real datasheet via `pdftotext -raw`** | `DW3210` (40 pins, DW3000 Datasheet v1.3 Table 2 -- NOTE `-layout` mangles that table), `BT840` (61 pins, Fanstel Ver 1.15 Pin Function table) |
-| **Footprints outstanding** | `BT840` -- import from a vendor library (SnapMagic/Ultra Librarian/Fanstel EV Gerbers), do not hand-author. `DW3210` uses KiCad stock `QFN-40-1EP_5x5mm_P0.4mm_EP3.6x3.6mm`, verified geometrically, EP size unconfirmed against Figure 38 |
+| **Footprints outstanding** | `BT840` -- import from a vendor library (SnapMagic/Ultra Librarian/Fanstel EV Gerbers), do not hand-author. `DW3210` uses KiCad stock `QFN-40-1EP_5x5mm_P0.4mm_EP3.6x3.6mm`, verified geometrically, FOOTPRINT WRONG: Figure 38 shows NO exposed pad (decisions.md, 2026-11-18); replace with a 40-pad no-EP footprint |
 
 ## Validation
 

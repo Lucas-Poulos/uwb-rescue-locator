@@ -78,7 +78,7 @@ Before pushing anything, also read `CONTRIBUTING.md` -- branch off `main`,
 don't edit a sheet someone else is actively working on, and PRs need review
 (branch protection is on).
 
-## Status (last updated 2026-11-17)
+## Status (last updated 2026-11-18)
 
 **Schematic capture is well along on the bay station and early on the
 wristband.** On branch `redesign/nrf9151-host` every bay-station sheet has
@@ -223,32 +223,43 @@ decisions (anchor placement, uplink backend, etc.), is in
   long-standing uncommitted working-tree state -- don't touch it, don't
   assume its README reflects its actual working tree.
 
-### In-flight work on GitHub (as of 2026-11-06)
+### Branches and workflow (as of 2026-11-18)
 
-Merged into `main` today: this Design Specifications section, the bay
-station's power/regulation/programming-debug wiring pass, the decision not
-to add an external wristband IMU (`docs/decisions.md` -- the DWM3001C's
-built-in LIS2DH12 covers it), PR #9 (the bay station's missing I2C pull-ups,
-R37-R39), and PR #8 (the full per-anchor DW3210 decoupling set, C40-C74 +
-FB1-FB4 + R33-R36, from Qorvo's own reference design).
+**There is no PR workflow.** Commit straight to the trunk branch and push;
+no review gate (`CONTRIBUTING.md`, root `CLAUDE.md` rule 5). The trunk is
+**`redesign/nrf9151-host`** -- the nRF9151-host bay station, the DW3210 array
+and everything in this README -- until it replaces `main`. `main` still holds
+the pre-redesign state (BT840 host, MAX-M10S) and is not where work happens;
+branch protection on it has to be relaxed before anything can be pushed there.
 
-#8 and #9 both textually conflicted with the power-wiring pass on
-`bay-station/connectivity.kicad_sch` and `uwb_array.kicad_sch` respectively,
-because those files got reserialized to KiCad 10 format in between. Each was
-hand-ported onto the reserialized files rather than text-merged -- see
-`b7ab51f` and `4ef1099` for exactly what that involved and how it was
-verified (balanced parens, no duplicate references, ERC recognizing every
-new component with precisely the expected violation delta). This is the one
-case where resolving a KiCad schematic conflict by hand was done carefully
-and checked, not the norm -- `CONTRIBUTING.md`'s warning about silent
-corruption from hand-resolving `.kicad_sch` conflicts still stands for
-anything less thoroughly verified.
+What is where, so nobody resurrects the wrong thing:
 
-One PR needs a **team decision, not a merge**: **#7**
-`feat/bay-station-wifi` adds an ESP32-C5 Wi-Fi co-processor and explicitly
-reopens part of the 2026-09-19 "no WiFi" call (see `docs/decisions.md`,
-"Bay-station Wi-Fi uplink"). Its own GPIO allocation table is marked
-"PROPOSED, needs team sign-off" -- read that section before merging it.
+- **Already merged into `main`** (before the redesign, all contained in the
+  trunk): the Design Specifications section, the bay station power/regulation/
+  programming-debug wiring pass, the no-external-wristband-IMU decision, PR #9
+  (I2C pull-ups R37-R39) and PR #8 (per-anchor DW3210 decoupling, C40-C74 +
+  FB1-FB4 + R33-R36, from Qorvo's reference design).
+- **Superseded, do not merge: PR #7 / `feat/bay-station-wifi`** (ESP32-C5
+  Wi-Fi co-processor). The nRF9151 redesign replaced the host it was written
+  against; the station's second uplink is LTE-M, and there are no GPIOs left
+  for a Wi-Fi co-processor (`docs/decisions.md`, Resolved, "Process"). The
+  GitHub PR is still open and can be closed from the web UI.
+- **Historical branches, not ancestors of the trunk:** `dwm3001c-migration`
+  (the wristband work; it landed on `main` through the rebased branch in
+  PR #5, so the original is redundant), `backup/dwm3001c-pre-rebase` (a
+  safety copy of the same), and `nina-b400-migration` (an earlier u-blox
+  NINA-B400 / DWM3000-module schematic pass, last touched 2026-09-20; its
+  contents were not reviewed for this rewrite). Reference only -- run
+  `git branch -a --no-merged redesign/nrf9151-host` before assuming a branch
+  holds work that matters.
+
+Merging history worth knowing: PR #8 and PR #9 conflicted textually with the
+power-wiring pass because `connectivity.kicad_sch` and `uwb_array.kicad_sch`
+had been reserialized to KiCad 10 format in between, and were hand-ported onto
+the reserialized files (`b7ab51f`, `4ef1099`; balanced parens, no duplicate
+references, ERC showing exactly the expected violation delta). That was done
+carefully and checked, not the norm -- `CONTRIBUTING.md`'s warning about
+silent corruption from hand-resolving `.kicad_sch` conflicts still stands.
 
 ### Not done yet (in rough next-up order)
 
@@ -258,9 +269,14 @@ reopens part of the 2026-09-19 "no WiFi" call (see `docs/decisions.md`,
 2. **Import the BT840 and DWM3001C footprints** from vendor libraries
    (check pad naming), and resolve the U40, FB1-FB4, TCXO and SMA
    footprint items.
-3. **Close the redesign's open risks** in `docs/decisions.md`: TCXO
-   availability, GNSS LNA pre-filter, DW3210 exposed-pad net, LIS2DH
-   lifecycle, the 8 MHz SPI budget, zero spare GPIOs.
+3. **Close the redesign's open risks** in `docs/decisions.md`. Analysed
+   2026-11-18 and reduced to concrete actions: the DW3210 has **no exposed
+   pad** (so the QFN footprint must be replaced), the LIS3MDL is terminated
+   and the LIS2DH probably obsolete (re-pick both sensors), the 8 MHz SPI cap
+   is a reply-delay measurement not a throughput problem, XTI amplitude is
+   at the DW3000 limit and needs a bench check, and there is a ranked list of
+   ways to free GPIOs. Still open: TCXO availability (quote), GNSS LNA
+   pre-filter.
 4. **Array calibration procedure and fixture** -- the project's critical
    path; drafted in `docs/verification-plan.md`.
 5. **Firmware**: the NCS skeletons exist but have never been built; the

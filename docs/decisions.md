@@ -5,24 +5,53 @@ relitigate them. Keep this updated as the team decides things.
 
 ## Open
 
-- **U8 `lib_symbol_issues` warning -- investigated, deliberately NOT "fixed".**
+- **U8 `lib_symbol_issues` warning -- tested 2026-11-18; recommendation is to
+  rename the lib_id, NOT yet applied.**
   ERC reports `Symbol 'TPS62A02PDDCR' not found in symbol library
-  'Regulator_Switching'`. The library's actual symbol is `TPS62A02PDDC`,
-  without the trailing R (that is TI's tape-and-reel suffix on the orderable
-  part number, not part of the symbol name).
+  'Regulator_Switching'`. The library's symbol is `TPS62A02PDDC` (the trailing
+  R is TI's tape-and-reel suffix on the orderable part number, not part of the
+  KiCad symbol name), and KiCad 10.0.5's copy is `(extends "TPS62A01PDDC")`.
 
-  **Do not simply rename it.** KiCad's `TPS62A02PDDC` is defined as
-  `(extends "TPS62A01PDDC")`, and this repo has been bitten by `extends`
-  before: `kicad-cli` fails to load an entire file, silently, reporting zero
-  components and zero violations. Pointing U8 at a lib_id that does not
-  resolve means the flattened 6-pin copy embedded in `regulation.kicad_sch`
-  is always used -- which may well be why it was done this way, matching the
-  flattened-copy workaround already used for AO3401A and MCP1700.
+  **The earlier worry (an `extends` lib symbol silently zeroes the file) does
+  not apply here, and was tested.** The `extends` problem is about an
+  `extends` symbol embedded in the schematic's own `lib_symbols` cache.
+  `regulation.kicad_sch` embeds a flattened 6-pin copy, and renaming only
+  changes the name that copy is filed under. Experiment, run from a scratch
+  directory on a copy of `bay-station/` (the repo untouched): renamed the
+  cache entry, its two unit sub-symbols and the U8 instance `lib_id` to
+  `TPS62A02PDDC`, then ran `kicad-cli sch erc` / `sch export bom` (KiCad
+  10.0.5).
 
-  So the warning is arguably the correct trade rather than a defect. Decide
-  deliberately: either keep it and annotate the sheet, or rename to
-  `TPS62A02PDDC` and re-verify that ERC still reports a non-zero component
-  count. Do not change it without that check.
+  | Run | Violations | BOM lines |
+  |---|---|---|
+  | `regulation.kicad_sch`, as committed | `lib_symbol_issues` 2 (the U8 one + `bay_station` lib not in the standalone config), `power_pin_not_driven` 2, `footprint_link_issues` 1 | 43, U8 present |
+  | same, renamed | `lib_symbol_issues` 1, **`lib_symbol_mismatch` 1 (U8)**, others unchanged | 43, U8 present |
+  | `bay-station.kicad_sch` (whole project), as committed | `lib_symbol_mismatch` 6, `lib_symbol_issues` 1 (U8) | 425 |
+  | same, renamed | `lib_symbol_mismatch` 7, `lib_symbol_issues` 0 | 425 |
+
+  Component count stays non-zero in both runs, so the rename does not trip
+  the silent-empty-file failure. It does **not** remove the warning, it
+  converts it: "not found" becomes "doesn't match copy in library", which is
+  the same state AO3401A, Battery_Cell and four other parts are already in
+  (the project's accepted pattern for flattened copies).
+
+  **Recommendation: rename.** A lib_id that resolves is the honest state (the
+  symbol *is* KiCad's `TPS62A02PDDC`; only the cache is flattened), and it
+  stops the warning from hiding a real missing-library problem. Keep `Value`
+  = `TPS62A02PDDCR` (orderable MPN). Exact change, in
+  `bay-station/regulation.kicad_sch` only (4 places plus prose):
+  1. `(symbol "Regulator_Switching:TPS62A02PDDCR"` (cache, ~line 766) ->
+     `(symbol "Regulator_Switching:TPS62A02PDDC"`
+  2. `(symbol "TPS62A02PDDCR_0_1"` and `(symbol "TPS62A02PDDCR_1_1"` (~851,
+     ~864) -> `TPS62A02PDDC_0_1` / `TPS62A02PDDC_1_1`
+  3. `(lib_id "Regulator_Switching:TPS62A02PDDCR")` (U8 instance, ~5195) ->
+     `...:TPS62A02PDDC`
+  4. In the cache `Description` (~818) change "KiCad's real
+     Regulator_Switching:TPS62A02PDDCR" to `...:TPS62A02PDDC`.
+  Do **not** touch the `Value` properties. Re-run ERC from a scratch dir and
+  expect exactly +1 `lib_symbol_mismatch`, -1 `lib_symbol_issues`, BOM still
+  425. If instead ERC reports 0 components, revert (a stale GUI save or an
+  `extends` symbol crept into the cache).
 
   (The missing BOM rows and SW2 footprint that used to sit in this item were
   closed on 2026-11-17 -- see Resolved.)
@@ -59,22 +88,84 @@ Raised by the five sheet/firmware handoffs (`bay-station/handoff/*.md`,
   the taper / ground cut-back at 6.5 GHz has to be designed, not guessed. The
   connector is rated for 1.07 mm boards and this one is 1.048 mm.
   `uwb_array_notes.md`, RF front end.
-- **DW3210 exposed pad net.** The QFN footprint has an EP, the symbol has 40
-  pins, and DS v1.1 Table 2 does not name the EP. Expected GND, unverified --
-  resolve from Figure 38 / a Qorvo layout before layout. (Separate from the
-  still-open EP *size* caveat on the DW3210 footprint entry under Resolved.)
+- **DW3210 has NO exposed pad -- the footprint is wrong (found 2026-11-18).**
+  The EP net question is closed by there being nothing to connect. Qorvo
+  DW3000 Datasheet v1.1 (two byte-identical copies in `~/Downloads`),
+  **Figure 38 "Package Dimensions QFN" (s9.2.1, p49)**, rendered at 300 dpi:
+  the bottom view shows 40 peripheral terminals (0.20 +/- 0.05 wide, 0.40 BSC,
+  "3.60 Ref." = the 10-pad row span, 0.40 +/- 0.10 side / 0.50 +/- 0.10
+  terminal length) and an empty centre -- no exposed pad. Table 2 agrees: the
+  QFN column lists 40 pins and the grounds are VSS pins 39 and 40 plus VSS1
+  (30), VSS2 (24), VSS3 (25), with no EP row (read with `-raw`; sanity-checked:
+  VDD1 = 29, VSS2 = 24, 40 pins). Note 2 on the drawing ("coplanarity applies
+  to the exposed pad as well as the terminals") reads as boilerplate shared
+  with the rest of the family drawing; nothing on the page dimensions a pad.
+  **s7.3 / Figure 35 (p45, "Recommended QFN stack-up")** goes further: the top
+  layer under the body is cleared, the text says to remove ground copper from
+  under the chip on the Top layer and Inner Layer 1 ("areas shown in the
+  picture"), and the first solid ground is Inner Layer 2 (at least 0.45 mm
+  from the top). The figure shows Inner Layer 1 cleared under the RF half of
+  the body and solid ground with stitching vias under the other half. So **a
+  3.6 x 3.6 mm copper pad under the chip, as the current footprint has,
+  contradicts Qorvo's own layout.**
+  Action (footprint owner, not done here): replace
+  `QFN-40-1EP_5x5mm_P0.4mm_EP3.6x3.6mm` with a 40-pad, no-EP, 5x5 mm,
+  0.4 mm pitch footprint (KiCad 10.0.5 ships no such QFN: every QFN-40 5x5
+  0.4 mm there has an EP). Hand-author it from Figure 38, name it
+  `_PLACEHOLDER` until terminal length and pad extension are confirmed
+  against a Qorvo CAD model, and copy the keep-out from Figure 35. The symbol
+  (40 pins, no EP pin) is already right. Residual uncertainty: Figure 38 is
+  a package drawing, not a land pattern, and the Figure 35 photo was read by
+  eye at 250 dpi, not measured.
 - **FB1-FB4 (BLM03PG330SN1D) have no footprint.** By Murata's naming BLM03
   is the 0201 imperial size; `components.csv` used to say 0402. Read the
   Murata datasheet (not obtained 2026-11-17) and assign.
-- **TCXO is quote-only.** The proposed Rakon RPT1490LN (Resolved below) has
-  no catalogue ordering code for 38.4 MHz -- one distributor lists E8246LF,
-  zero stock, RFQ -- and is 14.5 x 9.5 x 6 mm. Its phase-noise margin is from
-  typical plot markers, not guaranteed limits. Get a Rakon quote, and do one
-  more search for a smaller CMOS 38.4 MHz TCXO with a guaranteed 1 kHz figure
-  (`clock_dist_notes.md`).
-- **XTI drive amplitude.** A 3.3 V LMK1C1104 through 2200 pF gives >= 2.6 Vpp,
-  near the top of DW3000 Table 10's 0.8 V..VDD2 window. Bench-test at a 2.5 V
-  buffer supply (via TP529) before deciding whether a 2.5 V LDO is needed.
+- **TCXO is quote-only, and a smaller CMOS part with a guaranteed 1 kHz
+  figure was not found (searched 2026-11-18).** The proposed Rakon RPT1490LN
+  (Resolved below) has no catalogue ordering code for 38.4 MHz -- one
+  distributor lists E8246LF, zero stock, RFQ -- and is 14.5 x 9.5 x 6 mm; its
+  -151 dBc/Hz at 1 kHz is a typical plot marker, not a limit. DW3000 Table 10
+  asks for -132 dBc/Hz at 1 kHz. Small parts seen in manufacturer documents,
+  all **clipped-sine, not CMOS**, so none drops into the LMK1C1104 (VIH
+  0.7 x VDD) without the LMK00105-style universal-input buffer already noted
+  in `clock_dist_notes.md`:
+  - Epson TG2016SLN, 38.4 MHz in the family table (X1G0057310602xx,
+    TG2016SLN_EN ver 2.0): 0.8-1.5 Vpp clipped sine, 3.3 V class. Its spec
+    table gives phase noise only at 26 MHz (-137 typ); the 38.4 MHz plot
+    reads **-133 dBc/Hz at 1 kHz, typical (n = 10)** -- not a guarantee.
+    Some 38.4 MHz option codes are marked "In preparation".
+  - RFM (Akoustis) XTC4001H, 2.0 x 1.6 mm, clipped sine: -133 dBc/Hz at
+    1 kHz **typ**; datasheet marked Preliminary (01/16/2024); the supply and
+    frequency fields did not extract.
+  - RFM XTC4000 (rev 12/13/2023), 38.4 MHz, 2.0 x 1.6 mm VCTCXO, clipped
+    sine, 2.8 V +/- 5 % only: **-130 dBc/Hz max** at 1 kHz -- a guaranteed
+    limit, but 2 dB short of Table 10.
+  - Epson TG2520SMN / TG2016SMN (clipped sine, 2.5 x 2.0 / 2.0 x 1.6 mm,
+    38.4 MHz, 1.8 V and 2.8-3.63 V options; distributor-listed codes
+    X1G005421030627 and X1G005441030625): PDF fetch timed out, phase noise
+    unverified.
+  The one lead for a CMOS part is Epson TG2520CEN / TG3225CEN (search
+  snippets: CMOS output, 38.4 MHz in the frequency list); its phase-noise
+  table could not be read, so it is **unverified -- read the Epson PDF before
+  counting on it**. Abracon ASTX-H11 (HCMOS), TXC 7Z and Raltron RTX-2520
+  are already ruled out at -130 dBc/Hz (`clock_dist_notes.md`). Next steps:
+  a Rakon quote, and the TG2520CEN / TG3225CEN datasheet.
+- **XTI drive amplitude -- on paper at the limit, not over it; bench-test
+  still needed.** Qorvo DW3000 DS v1.1 Table 10 (`-raw`, p14): external
+  reference amplitude 0.8 V min, **VDD2 max**, Vpp, AC coupled, 2200 pF
+  recommended, SSB phase noise -132 dBc/Hz at 1 kHz; the table's condition is
+  "all supplies at 3.0 V". TI LMK1C1104 (SNAS791D rev D, 3.3 V table): VOH
+  >= 2.8 V and VOL <= 0.2 V at 1 mA, ROUT 50 ohm. The XTI load is capacitive
+  behind a series 2200 pF, so there is no DC load and the output swings
+  essentially rail to rail: ~3.3 Vpp at a 3.3 V buffer supply, against a
+  limit of VDD2. The buffer and the DW3210s share `+3V3` (3.22-3.38 V), so
+  the swing tracks VDD2 and sits at the limit rather than above it -- no
+  margin, and overshoot from a fast edge through the 22R is extra. The
+  earlier ">= 2.6 Vpp" was a lower bound from the 1 mA VOH, not the likely
+  value. Not a certain violation, but not something to fab blind: scope XTI
+  (TP6-TP9) for overshoot beyond VDD2 at `+3V3` = 3.38 V; if it overshoots,
+  lift R226 and feed the buffer at 2.5 V via TP529 (LMK1C1104 VDD min
+  2.375 V, CLKIN stays 3.3 V tolerant) before designing a 2.5 V LDO.
 - **Shared RSTn contention.** Four O-H RSTn pins are tied (each via 0R) to
   `UWB_RST_N`; check on first boards that a chip still in POR does not fight
   the others. Fallback is one reset GPIO per anchor, and there are none spare.
@@ -87,16 +178,111 @@ Raised by the five sheet/firmware handoffs (`bay-station/handoff/*.md`,
   GPIO-type signals competed for 32 pins; the charger status nets were
   dropped to LEDs only (Resolved below). Anything new -- a second button, a
   per-anchor reset, the `VSYS_SENSE` divider firmware asked for, a TCXO
-  enable -- needs a GPIO expander, a pin freed elsewhere, or a move to the
-  BT840. ETM trace pins are in use as GPIO, so trace is SWO/RTT only.
-- **Budget the 8 MHz SPI cap.** The nRF9151 SPIM tops out at 8 MHz (Resolved
-  below), against the 32 MHz the nRF52840 design assumed. It costs readout
-  time, not precision -- but A0's DS-TWR reply delay and the achievable update
-  rate have not been re-derived at 8 MHz.
-- **LIS2DH lifecycle.** A Farnell listing marks the ST LIS2DH as no longer
-  manufactured; ST's product page could not be fetched. LIS2DH12 is NOT a
-  drop-in (LGA-12 vs LGA-14, different pinout). Check ST status before
-  ordering; if obsolete, re-pick (LIS2DH12 or LIS2DW12) and re-author U11.
+  enable -- needs a pin freed elsewhere, an expander, or a move to the BT840.
+  ETM trace pins are in use as GPIO, so trace is SWO/RTT only. Candidate ways
+  to free pins, from `connectivity_notes.md` section 2, cheapest first (none
+  applied; each is a firmware/hardware trade to decide):
+  1. `MAG_DRDY` + `MAG_INT` (P0.24/P0.25, 2 pins): poll the magnetometer over
+     I2C at the heading rate. Moot-to-free if the magnetometer is re-picked
+     (lifecycle item below).
+  2. `ACC_INT2` (P0.26, 1 pin): INT1 alone covers knock/move.
+  3. `FG_ALRT` (P0.27, 1 pin): poll the MAX17048 over I2C; the alert is a
+     convenience, not a safety path (the MCP73871 terminates charge itself).
+  4. `UWB_WAKEUP` (P0.20, 1 pin): DW3000 DS v1.1 Table 2 says SPICSn "can
+     also act as a wake-up signal ... out of either SLEEP or DEEPSLEEP", so
+     the shared WAKEUP line is redundant if sleep is used at all.
+  5. `UWB_SYNC` (P0.21, 1 pin): its use is still open; if the SYNC/OSTR
+     scheme is not adopted, free it (R216-R219 stay unfitted).
+  6. `LED_LTE` (P0.31) or `LED_SYS` (P0.30): move one LED to the BT840 (it
+     already drives `LED_LINK`) as a bridge command, or drive the LTE LED
+     from the modem's COEX2 RF-activity pin, which is not a GPIO and is
+     currently a test pad only. COEX output levels were not read -- check
+     the HDG *COEX* text before relying on it.
+  7. `BTN_USER` (P0.29): move to the BT840 and send it over the bridge.
+  8. `BRIDGE_RTS` / `BRIDGE_CTS` (P0.02/P0.03, 2 pins): the framed relay is
+     COBS + CRC-16 at 1 Mbaud; dropping hardware flow control saves two pins
+     at the cost of overrun risk -- a protocol decision, not a free one.
+  9. `DBG_UART_TX/RX` (P0.22/P0.23, 2 pins, and a serial instance): run the
+     `bringup` shell over the BLE bridge instead; costs the early-boot
+     console.
+  10. `UWB_IRQ1..3` (3 pins): only A0's IRQ is time-critical; A1-A3 could be
+      polled after A0 fires. Not a first choice: it loses the "A0 missed
+      the frame but the outer anchors got it" case and the independent
+      per-anchor latch the sheet was built around.
+  11. An I2C GPIO expander on the existing bus for the slow outputs (LEDs,
+      `UWB_WAKEUP`, `UWB_SYNC`): a normal fix; choosing a part is a BOM task
+      and none was chosen or verified here.
+  Items 1-5 alone free 5-6 pins with no new silicon.
+- **8 MHz SPI cap -- budgeted 2026-11-18: not a throughput problem; it
+  matters only for A0's reply delay, and that part is an estimate until the
+  DW3000 User Manual and a bench measurement are in.** At 8 MHz one byte is
+  1 us. Qorvo DW3000 DS v1.1 s4.9.4 gives the transaction formats: fast
+  commands are one byte (e.g. "TX now"), fast addressed and full addressed
+  headers are 1 or 2 bytes (full reaches 128-byte offsets) followed by as
+  many data bytes as the transaction lasts, and a masked write does the
+  read-modify-write inside the chip. Table 19 timing (t7/t8 start and end
+  margins 23/24 ns, t9 idle 40 ns) is negligible at 8 MHz; the DW3000 itself
+  runs to 36 MHz (20 MHz in CRC mode), so the host is the limit.
+  - **Readout throughput.** A 40-bit timestamp read is 2 + 5 = 7 bytes =
+    56 us on the wire. Even if each anchor needs ~100 bytes (status,
+    timestamp, diagnostics), four anchors in series are ~3.2 ms of bus time
+    per exchange -- under 4 % occupancy at 10 exchanges/s, perhaps double
+    with driver and chip-select overhead. The shared bus serialises the
+    anchors but does not limit the update rate in any plausible range.
+  - **A0 reply delay (the real budget).** Critical path after A0's RX-done
+    IRQ: read the poll RX timestamp (7 B, 56 us), write DX_TIME (2 + 4 = 6 B,
+    48 us), one fast command (1 B, 8 us), plus the chip-select edges and the
+    nRF9151 GPIOTE-ISR-to-thread and SPIM set-up latency. With the TX frame
+    preloaded before the poll arrives, the wire time is ~110 us at 8 MHz
+    against ~30 us at 36 MHz, so the cap costs roughly 80 us of the reply
+    delay. The software latency was not measured and may exceed the wire
+    time. **Not verified:** register offsets, frame lengths, Qorvo's example
+    reply-delay constants (User Manual not in hand), and the 8 MHz limit
+    itself (nrfx MDK header; Nordic PS PDF not obtained). Do not set the
+    delay from this estimate: measure `UWB_IRQ0` (TP13) to TX start on the
+    bench and size it from that.
+  - If it binds: preload everything except DX_TIME, keep the SPI trace short
+    (R150 gives a 33-100R series option), and keep outer-anchor reads off
+    the bus during A0's reply window. A separate bus for A0 would need pins
+    the GPIO item says do not exist.
+- **LIS2DH is probably obsolete and the magnetometer LIS3MDL is terminated
+  (checked 2026-11-18; ST product pages could not be fetched from this
+  environment, so neither is confirmed from ST itself).**
+  - **LIS3MDL (U10) is the worse one.** ST product termination notice PCN
+    15054 (Mouser copy `STMicroelectronics_15054_1.pdf`; its text could not be
+    fetched, so the dates below come from a search-engine summary of it):
+    reason "front-end technology obsolescence", **last order entry
+    2025-05-13, last delivery 2025-11-13** -- both past (today 2026-11-18).
+    ST's moderator on the ST community thread (Dec 2024, Feb 2025): buy
+    remaining stock from distributors; "STMicroelectronics is unfortunately
+    unable to offer a fully-fledged or better successor"; LIS2MDL and IIS2MDC
+    are "alternative proposals", not official replacements, with coarser
+    resolution; one user cites the AKM AK09940A (third party). The same
+    search summary says ST's product page shows NRND. **Treat U10 as
+    unobtainable from ST.** KiCad 10.0.5 ships `Sensor_Magnetic:LIS2MDL`
+    (LGA-12 2x2 mm; the stock symbol has no SA1 pin, so the address strap and
+    possibly the `MAG_INT` net change). Its pin map and whether its
+    resolution is adequate for tilt-compensated heading are still to be
+    verified from the LIS2MDL PDF before U10 is re-authored.
+  - **LIS2DH (U11).** DigiKey, Findchips and RS list the LIS2DH / LIS2DHTR as
+    obsolete or discontinued, and DigiKey's substitute field names ST's own
+    LIS2DH12TR (search summary; a direct fetch returned 403). Three searches
+    found **no ST termination notice** for the LIS2DH and one IBS listing
+    still says "Production", so ST's own status stays unconfirmed. On the
+    replacement: ST's PTN AMS/15/9055 (2015) names LIS2DH12TR as the
+    replacement for older accelerometers, and an ST employee advised
+    LIS2DW12 / LIS2DTW12 for 5-10 year designs. **LIS2DH12 is not a drop-in**
+    (LGA-12 vs the LIS2DH's LGA-14, different pinout -- the existing note,
+    not re-checked: no LIS2DH12 datasheet was obtainable here). KiCad ships
+    no LIS2DH12 or LIS2DW12 symbol, so U11's replacement needs a
+    hand-authored symbol plus an LGA-12 footprint.
+  Decision needed (not made here): re-pick both sensors before PCB layout,
+  since both sit on `orientation.kicad_sch` and both LGA footprints are still
+  to be drawn. Candidates to verify from ST PDFs: accelerometer LIS2DH12
+  (closest register family) or LIS2DW12; magnetometer LIS2MDL or IIS2MDC.
+  Re-verify the `bringup i2c scan` / `i2c id` expectations too: addresses
+  0x1C / 0x19 and WHO_AM_I 0x3D / 0x33 are LIS3MDL/LIS2DH values and will
+  change.
 - **Third-party copies stand in for several datasheets.** BGA524N6 (Rev 3.5
   from a mirror; its E6327/XTSA1 OPN seen only at distributors), LIS3MDL and
   LIS2DH (ST mirrors), Hirose U.FL (not read at all), MFF2 eSIM pad map
@@ -228,8 +414,7 @@ not settle:
   1.62-3.6 V, and VDD1 supplies the I/O), nRF9151 (`VDD_GPIO` 1.7-3.6 V, fed
   from `+3V3`; nRF9151 PS *Operating conditions*, HTML), Fanstel BT840 /
   nRF52840 (1.7-3.6 V), LIS3MDL and LIS2DH (separate VDD_IO, on `+3V3_SNS`),
-  LMK1C1104 (CLKIN 3.3 V-tolerant at every VDD), ESP32-C5-WROOM-1 (3.0-3.6 V,
-  PR #7 only). The nRF9151's only sub-3.3 V I/O -- the 1.8 V SIM, MAGPIO and
+  LMK1C1104 (CLKIN 3.3 V-tolerant at every VDD). The nRF9151's only sub-3.3 V I/O -- the 1.8 V SIM, MAGPIO and
   MIPI RFFE pins -- are sheet-local and talk to 1.8 V parts or nothing.
 
   The one part that looked like a problem is the **MAX17048 fuel gauge**,
@@ -392,6 +577,24 @@ not settle:
   Moot for the bay station, which uses discrete ICs with remote antennas.
 
 ## Resolved
+
+### Process (2026-11-18)
+
+- **PR #7 / `feat/bay-station-wifi` (ESP32-C5 Wi-Fi co-processor) is
+  SUPERSEDED; do not merge it.** Marked 2026-11-18. The PR (open on GitHub,
+  branch last touched 2026-09-28, based on the pre-redesign `main`) adds a
+  dual-band Wi-Fi uplink as an SPI co-processor beside the ESP32-S3-era /
+  BT840 host. That host no longer exists: the nRF9151 redesign (2026-11-17,
+  below) made LTE-M the second uplink on top of BLE-to-a-laptop, and its
+  GPIO allocation uses every pin, so the PR's own "PROPOSED" GPIO table
+  cannot be applied. The branch is not an ancestor of
+  `redesign/nrf9151-host` and predates the rewrite of every bay-station
+  sheet, so there is nothing to merge.
+  If Wi-Fi is ever wanted again it is a fresh design against the current net
+  contract (`docs/net-contract.md`), not a rebase. The GitHub PR was left
+  open on purpose; close it from the web UI when convenient.
+- **No-PR workflow** (2026-11-18): commit straight to the trunk branch
+  (`redesign/nrf9151-host` until it replaces `main`) -- `CONTRIBUTING.md`.
 
 ### nRF9151 host redesign (2026-11-17)
 
@@ -736,19 +939,14 @@ not settle:
   take all four anchor clock points, keep TP6/TP7 and drop TP8/TP9 -- two is
   enough to compare skew.
 
-- **DW3210 footprint: KiCad stock `QFN-40-1EP_5x5mm_P0.4mm_EP3.6x3.6mm`.**
-  Verified to exist in KiCad 8.0.6 and checked geometrically -- 40 signal
-  pads, pad 1 at y = -1.8mm with 0.4mm pitch spanning 3.6mm, correct for 10
-  pins per side on a 5x5mm body. It is also the only QFN-40 5x5mm 0.4mm-pitch
-  variant KiCad ships; the EP3.5 and EP3.7 variants do not exist.
-
-  **One caveat carried deliberately:** the exposed-pad size is unverified.
-  The DW3000 package drawing is Figure 38, an image, so D2/E2 do not extract
-  as text. KiCad's 3.6 x 3.6mm EP comes from a generic Microchip packaging
-  spec, and other vendors' 40-lead 5x5 QFNs use 3.7 x 3.7mm. A slightly
-  smaller pad than the part's own EP is the conservative direction -- less
-  copper, no bridging risk, some thermal loss -- which is the same call
-  already made and documented for the MCP73871. Check Figure 38 before fab.
+- **DW3210 footprint: KiCad stock `QFN-40-1EP_5x5mm_P0.4mm_EP3.6x3.6mm` --
+  WRONG, the part has no exposed pad (2026-11-18; see Open, "DW3210 has NO
+  exposed pad").** Chosen 2026-09 because it is the only QFN-40 5x5 mm,
+  0.4 mm-pitch family KiCad ships with 40 signal pads and the right 3.6 mm
+  row span (pad 1 at y = -1.8 mm); the 3.6 x 3.6 mm EP was an unverified
+  guess from a generic Microchip spec, which Qorvo DW3000 DS v1.1 Figure 38
+  and s7.3 / Figure 35 contradict. The 40 signal pads of that footprint stay
+  correct as a starting point; the centre pad has to go.
 
 - **Superseded parts are removed from schematics, not left in place.**
   Convention set 2026-09-19 after the bay station ended up with three sheets

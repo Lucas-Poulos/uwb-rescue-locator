@@ -58,8 +58,11 @@ and a 0.8 Vpp clipped-sine output. Raltron RTX-2520AF31-S-38.400 is the same
 also incompatible with the LMK1C1104 input (VIH 0.7 x VDD / VIL 0.3 x VDD).
 Abracon ASTX-H11 (HCMOS) gives -130 @ 1 kHz as well. A CMOS-output 38.4 MHz
 TCXO that meets Table 10 was surprisingly hard to find; the RPT1490LN is the
-only one I verified from a datasheet. Worth one more search for a smaller
-CMOS TCXO with a guaranteed 1 kHz figure before ordering.
+only one I verified from a datasheet. A further search (2026-11-18) found no
+smaller CMOS part with a guaranteed 1 kHz figure; the small ones are all
+clipped-sine (Epson TG2016SLN -133 typ, RFM XTC4001H -133 typ, RFM XTC4000
+-130 max). Only Epson TG2520CEN / TG3225CEN remain as an unread CMOS lead --
+list and caveats in `docs/decisions.md`, "TCXO is quote-only".
 
 If a small clipped-sine TCXO is preferred anyway (Qorvo-tested, cheap): pair
 it with a universal-input buffer such as TI **LMK00105** (SNAS579G: CLKin
@@ -83,8 +86,12 @@ TI datasheet SNAS791D (Dec 2019, rev. Feb 2022):
   both). The 1.8 V curve (Fig 10-5) shows a close-in hump -- **run it at 3.3 V**.
 - 1G pulled up (R229 10k): outputs always on.
 
-**Amplitude at XTI:** 3.3 V LVCMOS through 2200 pF gives ≥ 2.6 Vpp, up to
-~3.3 Vpp -- inside "0.8 V to VDD2", but close to the top when VDD2 = 3.3 V.
+**Amplitude at XTI:** the XTI load is capacitive behind a series 2200 pF, so
+the buffer swings essentially rail to rail: ~3.3 Vpp (≥ 2.6 Vpp is only the
+floor from VOH ≥ 2.8 V at 1 mA). DW3000 Table 10 allows 0.8 V up to VDD2 Vpp,
+and the buffer shares `+3V3` with VDD2, so the swing sits *at* the limit with
+no margin; overshoot through the 22R would exceed it (analysis 2026-11-18,
+`docs/decisions.md` "XTI drive amplitude"). Scope XTI at `+3V3` = 3.38 V.
 If XTI shows over-drive symptoms, the cheap experiment is to lift R226 and
 supply the buffer at 2.5 V through TP529 (still above its 2.375 V minimum,
 CLKIN stays 3.3 V tolerant). If that fixes it, the permanent fix is a 2.5 V
