@@ -3,10 +3,10 @@
 	(generator "eeschema")
 	(generator_version "10.0")
 	(uuid "2a3b4c5d-6e7f-4809-9172-3b4c5d6e7f80")
-	(paper "A4")
+	(paper "A3")
 	(title_block
 		(title "Test Points")
-		(comment 1 "Bring-up probe points -- placement only")
+		(comment 1 "Pads for every net-contract net (sections 1-7); index in handoff/io.md")
 	)
 	(lib_symbols
 		(symbol "Connector:TestPoint"
@@ -132,40 +132,162 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "Device:R"
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 0)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "R"
+				(at 2.032 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "R"
+				(at 0 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at -1.778 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "R res resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "R_*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "R_0_1"
+				(rectangle
+					(start -1.016 -2.54)
+					(end 1.016 2.54)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "R_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 	)
-	(text "Test Points -- bring-up probing"
+	(text "1. RAILS (D1.5 pads)"
 		(exclude_from_sim no)
-		(at 114.046 20.32 0)
+		(at 20.32 29.21 0)
 		(effects
 			(font
-				(size 2.5 2.5)
+				(size 1.6 1.6)
+				(bold yes)
 			)
+			(justify left top)
 		)
-		(uuid "88888888-0000-4000-8000-000000000001")
-	)
-	(text "Placement only: no wires or global labels yet.\n\nThis board's whole difficulty is sub-nanosecond timing and per-anchor delay\ncalibration, and bring-up will involve real measurement against real\nhardware. Without probe points that measurement is guesswork. These cost\nnothing now and cannot be added after layout.\n\nChosen for the specific risks this design actually has:\n\n  CLOCK -- the defining signal. If the shared reference is absent, wrong\n  frequency, or missing at one anchor, TDoA silently produces nonsense\n  rather than failing loudly. TP5 checks the TCXO itself; TP6-TP9 confirm\n  the buffer actually reaches each of the four DW3210 XTI pins.\n\n  SPI -- the driver work (restoring multi-instance support) is on the\n  critical path and will need a logic analyser. TP10-TP12 give it somewhere\n  to clip on. TP13 (A0 IRQ) and TP14 (shared anchor reset) make the\n  exchange timing visible.\n\n  POWER -- TP1/TP2 confirm the rails before anything else is debugged.\n\n  GROUND -- TWO of them, deliberately. TP3 sits next to the clock points so\n  a scope probe can use a short ground spring rather than a long flying\n  lead; at 38.4MHz a clip lead's inductance distorts what you are trying to\n  measure. TP4 is a general-purpose ground elsewhere on the board."
-		(exclude_from_sim no)
-		(at 118.364 51.308 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-		)
-		(uuid "88888888-0000-4000-8000-000000000002")
-	)
-	(text "LAYOUT NOTE, important: a test point on the clock network is a STUB, and\nstubs degrade exactly the signal integrity this design depends on. Keep\nTP5-TP9 as small pads with the shortest possible stub -- ideally a bare\nprobe pad rather than a through-hole post -- and place them ON the existing\nrouting rather than spurring off it where possible. If a clean layout\ncannot accommodate all four anchor clock points, drop TP8/TP9 and keep\nTP6/TP7: two is enough to compare skew between channels."
-		(exclude_from_sim no)
-		(at 112.268 87.63 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-		)
-		(uuid "88888888-0000-4000-8000-000000000003")
+		(uuid "f9a9eb77-e11f-46e8-a1ef-9bae941e405d")
 	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 35.56 115.57 0)
+		(at 25.4 38.1 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -175,17 +297,19 @@
 		(dnp no)
 		(uuid "88888888-0000-4000-8000-000000000004")
 		(property "Reference" "TP1"
-			(at 35.56 111.76 0)
+			(at 24.13 33.02 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
-		(property "Value" "+3V3_SYS"
-			(at 35.56 119.38 0)
+		(property "Value" "+3V3"
+			(at 25.4 40.64 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -195,7 +319,7 @@
 			)
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 35.56 115.57 0)
+			(at 25.4 38.1 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -206,7 +330,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 35.56 115.57 0)
+			(at 25.4 38.1 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -216,8 +340,8 @@
 				)
 			)
 		)
-		(property "Description" "Regulated 3.3V rail from the TPS62A02 (regulation.kicad_sch). Check first when anything misbehaves."
-			(at 35.56 115.57 0)
+		(property "Description" "Main 3.3V rail from TPS62A02 (regulation). Check first when anything misbehaves. PLACE: next to the buck output caps BRING-UP: 3.30 V +/-3% with load; ripple < 30 mVpp"
+			(at 25.4 38.1 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -228,7 +352,7 @@
 			)
 		)
 		(pin "1"
-			(uuid "c1edb144-0922-4ad5-bb7e-25b168778960")
+			(uuid "50ddfb9b-d66b-48d8-847c-6948bbc44fe5")
 		)
 		(instances
 			(project "bay-station"
@@ -239,19 +363,29 @@
 			)
 		)
 	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 54.61 115.57 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "88888888-0000-4000-8000-000000000005")
-		(property "Reference" "TP2"
-			(at 54.61 111.76 0)
+	(wire
+		(pts
+			(xy 25.4 38.1) (xy 30.48 38.1)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "54af11e4-a90c-4858-a150-c135b813bdf0")
+	)
+	(global_label "+3V3"
+		(shape passive)
+		(at 30.48 38.1 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "9233abe8-01ce-483a-8ec0-a6b5dc63eb4c")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 30.48 38.1 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -260,8 +394,43 @@
 				)
 			)
 		)
-		(property "Value" "+VSYS"
-			(at 54.61 119.38 0)
+	)
+	(text "Main 3.3V rail from TPS62A02 (regulation)"
+		(exclude_from_sim no)
+		(at 53.34 37.465 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "647d26b1-9ab0-41ce-b737-cd8ed512d5e4")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 25.4 46.99 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "2c1a0fd1-c560-42f6-b4ee-2e5e86eec38d")
+		(property "Reference" "TP101"
+			(at 24.13 41.91 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "+3V3"
+			(at 25.4 49.53 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -271,7 +440,7 @@
 			)
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 54.61 115.57 0)
+			(at 25.4 46.99 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -282,7 +451,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 54.61 115.57 0)
+			(at 25.4 46.99 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -292,8 +461,8 @@
 				)
 			)
 		)
-		(property "Description" "Unregulated system rail out of the MCP73871 power path (power_bms.kicad_sch)."
-			(at 54.61 115.57 0)
+		(property "Description" "+3V3 at the far end of the UWB array: IR drop across four DW3210. PLACE: beside the furthest DW3210 (A3) decoupling BRING-UP: within 50 mV of TP1 during TX bursts"
+			(at 25.4 46.99 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -304,7 +473,249 @@
 			)
 		)
 		(pin "1"
-			(uuid "b8fa8b1f-b67f-4362-b965-33763963e289")
+			(uuid "55699664-11d6-4dda-af7a-f8fa86ebdba8")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP101")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 25.4 46.99) (xy 30.48 46.99)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2f5f73c0-48b0-44a2-b598-c5b8446617d2")
+	)
+	(global_label "+3V3"
+		(shape passive)
+		(at 30.48 46.99 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "5acb7628-4fb2-4f89-959f-e122ee8fe7a3")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 30.48 46.99 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "+3V3 at the far end of the UWB array: IR drop..."
+		(exclude_from_sim no)
+		(at 53.34 46.355 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "4dfee32e-d8b9-4dc2-a1bc-b9bbcbc21c4b")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 25.4 55.88 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "d39c2d08-d19f-4104-a8c0-8e83bd1c843c")
+		(property "Reference" "TP102"
+			(at 24.13 50.8 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "+3V3"
+			(at 25.4 58.42 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
+			(at 25.4 55.88 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 25.4 55.88 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "+3V3 at the nRF9151 / BT840 end. PLACE: between U-nRF9151 and BT840 BRING-UP: within 50 mV of TP1"
+			(at 25.4 55.88 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "d2ab0d3b-037d-4521-a987-86adc6efff88")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP102")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 25.4 55.88) (xy 30.48 55.88)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "10e69217-26df-4ac4-a652-3cd0034c4059")
+	)
+	(global_label "+3V3"
+		(shape passive)
+		(at 30.48 55.88 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "6e9fc286-9eae-440b-897d-a447ed39f02c")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 30.48 55.88 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "+3V3 at the nRF9151 / BT840 end."
+		(exclude_from_sim no)
+		(at 53.34 55.245 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "2e1fda30-7613-4e11-8f7e-a58889664056")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 25.4 64.77 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "88888888-0000-4000-8000-000000000005")
+		(property "Reference" "TP2"
+			(at 24.13 59.69 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "+VSYS"
+			(at 25.4 67.31 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
+			(at 25.4 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 25.4 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Unregulated system rail out of the MCP73871 power path (power_bms). PLACE: at MCP73871 OUT caps BRING-UP: ~4.5-5.0 V on adapter; = VBAT (3.0-4.2 V) on battery"
+			(at 25.4 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "8f5d46f0-0abd-4937-b351-a7637ab4a365")
 		)
 		(instances
 			(project "bay-station"
@@ -315,19 +726,29 @@
 			)
 		)
 	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 74.93 115.57 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "88888888-0000-4000-8000-000000000006")
-		(property "Reference" "TP3"
-			(at 74.422 125.476 0)
+	(wire
+		(pts
+			(xy 25.4 64.77) (xy 30.48 64.77)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4a5c830d-f2b0-440e-8395-f38122bab247")
+	)
+	(global_label "+VSYS"
+		(shape passive)
+		(at 30.48 64.77 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "2842e446-2ada-433d-b0de-9ab12ec22af1")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 30.48 64.77 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -336,8 +757,43 @@
 				)
 			)
 		)
-		(property "Value" "GND"
-			(at 69.342 110.744 0)
+	)
+	(text "Unregulated system rail out of the MCP73871 p..."
+		(exclude_from_sim no)
+		(at 53.34 64.135 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "8ad759d3-11e0-44b1-9622-c2d70238e076")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 25.4 73.66 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "3678afc4-963b-4b8c-8729-b9a94c952e6a")
+		(property "Reference" "TP103"
+			(at 24.13 68.58 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "+VSYS"
+			(at 25.4 76.2 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -347,7 +803,7 @@
 			)
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 74.93 115.57 0)
+			(at 25.4 73.66 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -358,7 +814,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 74.93 115.57 0)
+			(at 25.4 73.66 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -368,8 +824,8 @@
 				)
 			)
 		)
-		(property "Description" "Scope ground, to be placed adjacent to TP5-TP9. Use a short ground spring here, not a flying clip lead -- at 38.4MHz the lead inductance distorts the measurement."
-			(at 74.93 115.57 0)
+		(property "Description" "+VSYS at the regulator inputs: drop along the system feed. PLACE: at the TPS62A02 / +VBAT_LTE source input BRING-UP: within 100 mV of TP2"
+			(at 25.4 73.66 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -380,7 +836,382 @@
 			)
 		)
 		(pin "1"
-			(uuid "108e3d65-845b-42f2-a372-5e0e36402242")
+			(uuid "87b4d7cc-c3d7-4441-9840-6aad7f126b54")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP103")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 25.4 73.66) (xy 30.48 73.66)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7abd1247-ce37-4b33-a54e-2a240dc3e2b4")
+	)
+	(global_label "+VSYS"
+		(shape passive)
+		(at 30.48 73.66 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "a07500b5-42c6-4aa7-ad2d-42eb96ead4bb")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 30.48 73.66 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "+VSYS at the regulator inputs: drop along the..."
+		(exclude_from_sim no)
+		(at 53.34 73.025 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "53540890-ea65-410d-86bf-c201581268d3")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 25.4 82.55 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "7810ebf0-ed44-4964-9b3d-1136e1b4ce5a")
+		(property "Reference" "TP100"
+			(at 24.13 77.47 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "+VBAT_LTE"
+			(at 25.4 85.09 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
+			(at 25.4 82.55 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 25.4 82.55 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "nRF9151 VBAT supply (LTE PA peaks). Pair with the regulation sheet current break. PLACE: at the nRF9151 VBAT pins/bulk cap BRING-UP: per regulation sheet (nRF9151 VBAT range, verify PS); droop during LTE TX burst on a scope"
+			(at 25.4 82.55 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "f8b51f5c-450b-4118-bb51-2ef9850b4148")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP100")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 25.4 82.55) (xy 30.48 82.55)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e2564f5a-74d0-48a9-8ee6-5984a43172bf")
+	)
+	(global_label "+VBAT_LTE"
+		(shape passive)
+		(at 30.48 82.55 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "d4c48624-bdfe-45c5-9db7-cacfcabeff94")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 30.48 82.55 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "nRF9151 VBAT supply (LTE PA peaks)"
+		(exclude_from_sim no)
+		(at 53.34 81.915 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "fbc5989a-3ab2-4e1a-a3e9-f383b4df9140")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 25.4 91.44 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "cc680933-05eb-4bf3-bb92-18cd5140faba")
+		(property "Reference" "TP104"
+			(at 24.13 86.36 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "+5V_IN"
+			(at 25.4 93.98 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
+			(at 25.4 91.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 25.4 91.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Adapter / USB input = MCP73871 IN (also D6 PG LED rail). PLACE: after D2 TVS, at MCP73871 IN cap BRING-UP: 4.75-5.25 V with adapter, 0 V on battery"
+			(at 25.4 91.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "d3f1e006-ded1-4ba1-880e-263a9cf1d21b")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP104")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 25.4 91.44) (xy 30.48 91.44)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e9340b75-b7c1-441c-9a51-d9d106e1e400")
+	)
+	(global_label "+5V_IN"
+		(shape passive)
+		(at 30.48 91.44 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "03126004-8924-4386-a2fa-02138a7ee847")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 30.48 91.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "Adapter / USB input = MCP73871 IN (also D6 PG..."
+		(exclude_from_sim no)
+		(at 53.34 90.805 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "0c4b73b8-35c2-422e-8798-4738b0ff61fe")
+	)
+	(text "2. GROUND (D1.5 pads, one per area + probe pairs)"
+		(exclude_from_sim no)
+		(at 20.32 99.06 0)
+		(effects
+			(font
+				(size 1.6 1.6)
+				(bold yes)
+			)
+			(justify left top)
+		)
+		(uuid "86fe00ac-f1f4-4eea-a6d2-2a889f6c30f4")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 25.4 107.95 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "88888888-0000-4000-8000-000000000006")
+		(property "Reference" "TP3"
+			(at 24.13 102.87 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "GND"
+			(at 25.4 110.49 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
+			(at 25.4 107.95 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 25.4 107.95 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Clock scope ground #1: short ground-spring next to TCXO/clock pads. PLACE: within 5 mm of TP5 (TCXO_OUT) BRING-UP: 0 V"
+			(at 25.4 107.95 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "4fc67000-b697-4e62-86c5-058917c5f870")
 		)
 		(instances
 			(project "bay-station"
@@ -391,19 +1222,29 @@
 			)
 		)
 	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 95.25 115.57 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "88888888-0000-4000-8000-000000000007")
-		(property "Reference" "TP4"
-			(at 95.25 111.76 0)
+	(wire
+		(pts
+			(xy 25.4 107.95) (xy 30.48 107.95)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "70682103-bc3e-4e6a-a686-0a7909777c26")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 30.48 107.95 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "a6b3967d-e216-4d6f-8c37-18c1a8fa3e95")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 30.48 107.95 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -412,8 +1253,43 @@
 				)
 			)
 		)
+	)
+	(text "Clock scope ground #1: short ground-spring ne..."
+		(exclude_from_sim no)
+		(at 53.34 107.315 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "b4a7b506-8d21-4e06-8877-9cfcd2f4380b")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 25.4 116.84 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "917a131a-edcc-4df6-930e-dad26074dc0b")
+		(property "Reference" "TP110"
+			(at 24.13 111.76 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
 		(property "Value" "GND"
-			(at 95.25 119.38 0)
+			(at 25.4 119.38 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -423,7 +1299,7 @@
 			)
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 95.25 115.57 0)
+			(at 25.4 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -434,7 +1310,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 95.25 115.57 0)
+			(at 25.4 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -444,8 +1320,8 @@
 				)
 			)
 		)
-		(property "Description" "General-purpose ground, placed away from the clock area."
-			(at 95.25 115.57 0)
+		(property "Description" "Clock scope ground #2: second spring point at the anchor clock pads. PLACE: within 5 mm of TP6/TP7 (UWB_CLK0/1) BRING-UP: 0 V"
+			(at 25.4 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -456,7 +1332,370 @@
 			)
 		)
 		(pin "1"
-			(uuid "0a774f38-dbe9-40ec-bf80-61c6b1da8d4d")
+			(uuid "6312b41b-e1ef-4e5d-b5ce-4e66ea63cfbc")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP110")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 25.4 116.84) (xy 30.48 116.84)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e93ee522-179a-47a3-b4b7-83274bfcbfca")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 30.48 116.84 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "8c977f0a-50c5-487f-8646-63a093626b3d")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 30.48 116.84 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "Clock scope ground #2: second spring point at..."
+		(exclude_from_sim no)
+		(at 53.34 116.205 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "6263c8aa-9a68-4afe-905b-22531a1a5744")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 25.4 125.73 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "bcc5ccae-6dac-408c-abc3-6698e9f7b0bc")
+		(property "Reference" "TP111"
+			(at 24.13 120.65 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "GND"
+			(at 25.4 128.27 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
+			(at 25.4 125.73 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 25.4 125.73 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "SPI scope ground #1: spring ground beside UWB_SCK. PLACE: within 5 mm of TP10 BRING-UP: 0 V"
+			(at 25.4 125.73 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "95e3a903-0294-493f-a355-948731647169")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP111")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 25.4 125.73) (xy 30.48 125.73)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5d580303-bb31-4a2d-b389-bfb4b250b3de")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 30.48 125.73 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "c893ac4e-35ff-4a10-84da-959fc9fdcb7e")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 30.48 125.73 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "SPI scope ground #1: spring ground beside UWB..."
+		(exclude_from_sim no)
+		(at 53.34 125.095 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "a28675e1-ec94-477a-a3bb-79ddd0de39a4")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 25.4 134.62 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "e06f6268-a693-4bb9-82a7-060c9ff5452c")
+		(property "Reference" "TP112"
+			(at 24.13 129.54 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "GND"
+			(at 25.4 137.16 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
+			(at 25.4 134.62 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 25.4 134.62 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "SPI scope ground #2: spring ground beside UWB_MISO / CS pads. PLACE: within 5 mm of TP12/TP15 BRING-UP: 0 V"
+			(at 25.4 134.62 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "3f49f139-6588-4ab2-8286-ee6993f463ae")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP112")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 25.4 134.62) (xy 30.48 134.62)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "39c9b362-71d9-4cc6-b521-ff5f2d19c428")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 30.48 134.62 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "610c531a-331c-427e-ba9c-43064c59fc7a")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 30.48 134.62 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "SPI scope ground #2: spring ground beside UWB..."
+		(exclude_from_sim no)
+		(at 53.34 133.985 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "3da5f38e-ae86-4d3e-98e3-765613cb37d1")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 25.4 143.51 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "88888888-0000-4000-8000-000000000007")
+		(property "Reference" "TP4"
+			(at 24.13 138.43 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "GND"
+			(at 25.4 146.05 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
+			(at 25.4 143.51 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 25.4 143.51 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "General-purpose ground, away from the clock area. PLACE: board edge, clip-lead friendly BRING-UP: 0 V"
+			(at 25.4 143.51 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "27fb3a89-4686-4160-86dd-9cdc2104704f")
 		)
 		(instances
 			(project "bay-station"
@@ -467,19 +1706,29 @@
 			)
 		)
 	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 35.56 115.57 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "88888888-0000-4000-8000-000000000008")
-		(property "Reference" "TP5"
-			(at 35.56 111.76 0)
+	(wire
+		(pts
+			(xy 25.4 143.51) (xy 30.48 143.51)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b05cce8e-8c6a-45bc-89ce-1531bb58efee")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 30.48 143.51 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "9c0f3085-de36-4eab-98e4-5930589a8672")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 30.48 143.51 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -488,8 +1737,43 @@
 				)
 			)
 		)
-		(property "Value" "REF_38M4"
-			(at 35.56 119.38 0)
+	)
+	(text "General-purpose ground, away from the clock a..."
+		(exclude_from_sim no)
+		(at 53.34 142.875 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "37e21832-5111-4697-9c1d-145d2523ad3d")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 25.4 152.4 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "773ef888-4752-4d3a-877b-bbc67debceec")
+		(property "Reference" "TP113"
+			(at 24.13 147.32 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "GND"
+			(at 25.4 154.94 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -499,7 +1783,7 @@
 			)
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 35.56 115.57 0)
+			(at 25.4 152.4 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -510,7 +1794,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 35.56 115.57 0)
+			(at 25.4 152.4 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -520,8 +1804,8 @@
 				)
 			)
 		)
-		(property "Description" "TCXO output, before the fan-out buffer. Confirms the shared reference exists and is on frequency at all."
-			(at 35.56 115.57 0)
+		(property "Description" "Ground: power_bms area. PLACE: near MCP73871 / battery connector BRING-UP: 0 V"
+			(at 25.4 152.4 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -532,30 +1816,40 @@
 			)
 		)
 		(pin "1"
-			(uuid "b8d53ca7-0e00-4d4f-a170-c0c7823e72e4")
+			(uuid "9881e2b9-7ddf-4022-bc1f-d31b4c33e456")
 		)
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
-					(reference "TP5")
+					(reference "TP113")
 					(unit 1)
 				)
 			)
 		)
 	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 54.61 115.57 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "88888888-0000-4000-8000-000000000009")
-		(property "Reference" "TP6"
-			(at 54.61 111.76 0)
+	(wire
+		(pts
+			(xy 25.4 152.4) (xy 30.48 152.4)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4a4c3ef9-adc7-4cb7-a13f-52c7dc8ea4c8")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 30.48 152.4 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "6507d824-cdd6-4b46-84a8-326ecef053da")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 30.48 152.4 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -564,8 +1858,43 @@
 				)
 			)
 		)
-		(property "Value" "CLK_A0"
-			(at 54.61 119.38 0)
+	)
+	(text "Ground: power_bms area."
+		(exclude_from_sim no)
+		(at 53.34 151.765 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "524afaf3-189b-4bda-ae5a-1e26f6b03f6e")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 25.4 161.29 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "431b32a6-bc73-4e78-b86c-8edab8cc30da")
+		(property "Reference" "TP114"
+			(at 24.13 156.21 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "GND"
+			(at 25.4 163.83 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -575,7 +1904,7 @@
 			)
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 54.61 115.57 0)
+			(at 25.4 161.29 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -586,7 +1915,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 54.61 115.57 0)
+			(at 25.4 161.29 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -596,8 +1925,8 @@
 				)
 			)
 		)
-		(property "Description" "Buffer output to the A0 (center) DW3210 XTI pin."
-			(at 54.61 115.57 0)
+		(property "Description" "Ground: regulation area. PLACE: near TPS62A02 output BRING-UP: 0 V"
+			(at 25.4 161.29 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -608,30 +1937,40 @@
 			)
 		)
 		(pin "1"
-			(uuid "e0a730a3-1d36-4e40-adfa-0d482c419e0d")
+			(uuid "e7732ad8-4944-4e22-880c-80a4e4212db5")
 		)
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
-					(reference "TP6")
+					(reference "TP114")
 					(unit 1)
 				)
 			)
 		)
 	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 74.93 115.57 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "88888888-0000-4000-8000-00000000000a")
-		(property "Reference" "TP7"
-			(at 81.026 122.428 0)
+	(wire
+		(pts
+			(xy 25.4 161.29) (xy 30.48 161.29)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "638d46d2-4df9-470a-9419-17d135a2f2b0")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 30.48 161.29 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "ffc5fb91-93af-4c7a-9a9f-78877d5230fb")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 30.48 161.29 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -640,8 +1979,43 @@
 				)
 			)
 		)
-		(property "Value" "CLK_A1"
-			(at 68.072 118.872 0)
+	)
+	(text "Ground: regulation area."
+		(exclude_from_sim no)
+		(at 53.34 160.655 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "4687d80a-0765-4d67-994f-5d7efc8ed1c0")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 25.4 170.18 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "8cd192f9-fc9f-4988-8f03-35f326bca46e")
+		(property "Reference" "TP115"
+			(at 24.13 165.1 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "GND"
+			(at 25.4 172.72 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -651,7 +2025,7 @@
 			)
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 74.93 115.57 0)
+			(at 25.4 170.18 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -662,7 +2036,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 74.93 115.57 0)
+			(at 25.4 170.18 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -672,8 +2046,8 @@
 				)
 			)
 		)
-		(property "Description" "Buffer output to the A1 DW3210 XTI pin."
-			(at 74.93 115.57 0)
+		(property "Description" "Ground: connectivity area (nRF9151 / BT840). PLACE: near the nRF9151 BRING-UP: 0 V"
+			(at 25.4 170.18 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -684,30 +2058,40 @@
 			)
 		)
 		(pin "1"
-			(uuid "8140796b-761b-4c32-ae15-0821921db0f3")
+			(uuid "60b503f4-2600-4e89-b7b5-5773c21b104c")
 		)
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
-					(reference "TP7")
+					(reference "TP115")
 					(unit 1)
 				)
 			)
 		)
 	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 95.25 115.57 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "88888888-0000-4000-8000-00000000000b")
-		(property "Reference" "TP8"
-			(at 95.25 111.76 0)
+	(wire
+		(pts
+			(xy 25.4 170.18) (xy 30.48 170.18)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "db2b4123-eed4-4190-a265-7550d32ffd82")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 30.48 170.18 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "04823e3e-c22e-46e2-9316-e2692f1984f3")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 30.48 170.18 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -716,8 +2100,43 @@
 				)
 			)
 		)
-		(property "Value" "CLK_A2"
-			(at 95.25 119.38 0)
+	)
+	(text "Ground: connectivity area (nRF9151 / BT840)."
+		(exclude_from_sim no)
+		(at 53.34 169.545 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "efdb49f7-914f-4861-8224-a2fdc57b5490")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 25.4 179.07 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "1ead0ebe-6503-4d47-83c7-a80360998da0")
+		(property "Reference" "TP116"
+			(at 24.13 173.99 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "GND"
+			(at 25.4 181.61 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -727,7 +2146,7 @@
 			)
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 95.25 115.57 0)
+			(at 25.4 179.07 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -738,7 +2157,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 95.25 115.57 0)
+			(at 25.4 179.07 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -748,8 +2167,8 @@
 				)
 			)
 		)
-		(property "Description" "Buffer output to the A2 DW3210 XTI pin."
-			(at 95.25 115.57 0)
+		(property "Description" "Ground: UWB array area. PLACE: between the four DW3210 BRING-UP: 0 V"
+			(at 25.4 179.07 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -760,30 +2179,40 @@
 			)
 		)
 		(pin "1"
-			(uuid "c9ab5163-34fd-4c71-ac37-9ae528c96f56")
+			(uuid "a7496467-c42e-49e9-b802-2b5581d95b93")
 		)
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
-					(reference "TP8")
+					(reference "TP116")
 					(unit 1)
 				)
 			)
 		)
 	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 115.57 115.57 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "88888888-0000-4000-8000-00000000000c")
-		(property "Reference" "TP9"
-			(at 115.57 111.76 0)
+	(wire
+		(pts
+			(xy 25.4 179.07) (xy 30.48 179.07)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e209de4b-a2bc-4e91-a17b-e4cc4c63a56c")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 30.48 179.07 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "9138f044-04ac-4639-bbf1-6f49ef214fa6")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 30.48 179.07 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -792,8 +2221,43 @@
 				)
 			)
 		)
-		(property "Value" "CLK_A3"
-			(at 115.57 119.38 0)
+	)
+	(text "Ground: UWB array area."
+		(exclude_from_sim no)
+		(at 53.34 178.435 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "89236c47-c0dc-4903-b603-5a12bb985134")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 25.4 187.96 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "5708626a-0234-49c5-9801-27f213a6cb22")
+		(property "Reference" "TP117"
+			(at 24.13 182.88 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "GND"
+			(at 25.4 190.5 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -803,7 +2267,7 @@
 			)
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 115.57 115.57 0)
+			(at 25.4 187.96 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -814,7 +2278,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 115.57 115.57 0)
+			(at 25.4 187.96 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -824,8 +2288,8 @@
 				)
 			)
 		)
-		(property "Description" "Buffer output to the A3 DW3210 XTI pin."
-			(at 115.57 115.57 0)
+		(property "Description" "Ground: programming / debug area. PLACE: next to the SWD headers BRING-UP: 0 V"
+			(at 25.4 187.96 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -836,20 +2300,317 @@
 			)
 		)
 		(pin "1"
-			(uuid "a0fd7954-250f-48ff-bc7d-8656ba90acee")
+			(uuid "a2995ef9-c263-486b-8c63-0e9da336ffcb")
 		)
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
-					(reference "TP9")
+					(reference "TP117")
 					(unit 1)
 				)
 			)
 		)
 	)
+	(wire
+		(pts
+			(xy 25.4 187.96) (xy 30.48 187.96)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4b059ccc-1df4-4754-862c-fd4876089103")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 30.48 187.96 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "21684003-02a5-44b4-a834-68786812e698")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 30.48 187.96 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "Ground: programming / debug area."
+		(exclude_from_sim no)
+		(at 53.34 187.325 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "e57f48ad-a458-4a23-917f-52a9f2478f96")
+	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 35.56 115.57 0)
+		(at 25.4 196.85 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "b51369b0-3c44-44ac-977f-01839ec10e9d")
+		(property "Reference" "TP118"
+			(at 24.13 191.77 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "GND"
+			(at 25.4 199.39 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
+			(at 25.4 196.85 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 25.4 196.85 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Ground: indicators area. PLACE: near the LEDs BRING-UP: 0 V"
+			(at 25.4 196.85 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "99b240d5-769b-4731-a00d-b9bd4ae999c4")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP118")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 25.4 196.85) (xy 30.48 196.85)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c81de9f7-c760-4750-ac03-6db47cd6ba6b")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 30.48 196.85 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "3a19788a-77ca-45c1-aa14-45efc5d4443e")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 30.48 196.85 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "Ground: indicators area."
+		(exclude_from_sim no)
+		(at 53.34 196.215 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "4f5bead2-b77b-4c56-b7a2-b6010dc5d525")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 25.4 205.74 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "cf8eb54a-6be3-497c-b5cd-4f0b6ecbc161")
+		(property "Reference" "TP119"
+			(at 24.13 200.66 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "GND"
+			(at 25.4 208.28 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
+			(at 25.4 205.74 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 25.4 205.74 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Ground: orientation area. PLACE: near U10/U11, NOT under the magnetometer BRING-UP: 0 V"
+			(at 25.4 205.74 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "b02818b6-7a01-42da-b15f-034164184f4a")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP119")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 25.4 205.74) (xy 30.48 205.74)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7485ff19-fce1-4276-b6ba-618eb9874b9b")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 30.48 205.74 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "5b59d4a3-5e79-407b-a0a1-19c27ca52109")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 30.48 205.74 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "Ground: orientation area."
+		(exclude_from_sim no)
+		(at 53.34 205.105 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "09b00a14-1a85-46b2-bb35-e59e9f3fa4df")
+	)
+	(text "3. UWB SPI + CONTROL (D1.0 pads)"
+		(exclude_from_sim no)
+		(at 96.52 29.21 0)
+		(effects
+			(font
+				(size 1.6 1.6)
+				(bold yes)
+			)
+			(justify left top)
+		)
+		(uuid "a887f819-c074-4e18-ac1f-213574b248cc")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 101.6 38.1 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -859,7 +2620,19 @@
 		(dnp no)
 		(uuid "88888888-0000-4000-8000-000000000010")
 		(property "Reference" "TP10"
-			(at 35.56 111.76 0)
+			(at 100.33 33.02 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "UWB_SCK"
+			(at 101.6 40.64 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -868,18 +2641,8 @@
 				)
 			)
 		)
-		(property "Value" "SPI_SCLK"
-			(at 35.56 119.38 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 35.56 115.57 0)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 101.6 38.1 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -890,7 +2653,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 35.56 115.57 0)
+			(at 101.6 38.1 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -900,8 +2663,8 @@
 				)
 			)
 		)
-		(property "Description" "Shared SPI clock to all four anchors. Must be on SPIM3 -- the only high-speed SPI instance on the nRF52840."
-			(at 35.56 115.57 0)
+		(property "Description" "Shared SPI clock to all four DW3210. PLACE: on the bus trunk, short stub BRING-UP: bursts at the configured SPI rate; idle level per SPI mode 0 = low"
+			(at 101.6 38.1 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -912,7 +2675,7 @@
 			)
 		)
 		(pin "1"
-			(uuid "49359a94-73ef-41fa-bbe6-5ce53dac5a93")
+			(uuid "632c84e9-3b03-47fb-8e1f-6f43cc440378")
 		)
 		(instances
 			(project "bay-station"
@@ -923,9 +2686,52 @@
 			)
 		)
 	)
+	(wire
+		(pts
+			(xy 101.6 38.1) (xy 106.68 38.1)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2561cd98-ca98-42e4-b693-04177a978bd1")
+	)
+	(global_label "UWB_SCK"
+		(shape passive)
+		(at 106.68 38.1 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "2a09a475-d6b9-419b-a2c9-80f406ae043a")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 106.68 38.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "Shared SPI clock to all four DW3210."
+		(exclude_from_sim no)
+		(at 129.54 37.465 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "0ac79b23-d505-47fe-a9dc-ed329663cba0")
+	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 54.61 115.57 0)
+		(at 101.6 46.99 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -935,7 +2741,19 @@
 		(dnp no)
 		(uuid "88888888-0000-4000-8000-000000000011")
 		(property "Reference" "TP11"
-			(at 54.61 111.76 0)
+			(at 100.33 41.91 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "UWB_MOSI"
+			(at 101.6 49.53 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -944,18 +2762,8 @@
 				)
 			)
 		)
-		(property "Value" "SPI_MOSI"
-			(at 54.356 124.714 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 54.61 115.57 0)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 101.6 46.99 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -966,7 +2774,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 54.61 115.57 0)
+			(at 101.6 46.99 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -976,8 +2784,8 @@
 				)
 			)
 		)
-		(property "Description" "Shared SPI MOSI to all four anchors."
-			(at 54.61 115.57 0)
+		(property "Description" "Shared SPI MOSI to all four anchors. PLACE: on the bus trunk BRING-UP: data during CSn low"
+			(at 101.6 46.99 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -988,7 +2796,7 @@
 			)
 		)
 		(pin "1"
-			(uuid "4bd79ca7-ffc6-46c7-b09a-0e6251809c81")
+			(uuid "3ff900bd-d01b-4519-acd3-5b7a6bd91c36")
 		)
 		(instances
 			(project "bay-station"
@@ -999,9 +2807,52 @@
 			)
 		)
 	)
+	(wire
+		(pts
+			(xy 101.6 46.99) (xy 106.68 46.99)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "47a1c788-7db3-4f6c-8508-c5aefd56b2c9")
+	)
+	(global_label "UWB_MOSI"
+		(shape passive)
+		(at 106.68 46.99 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "7a3baeb3-100d-4e2c-ab77-f07d08872a29")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 106.68 46.99 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "Shared SPI MOSI to all four anchors."
+		(exclude_from_sim no)
+		(at 129.54 46.355 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "4aa9b6ac-c44d-4e3b-b345-00aabdc13a61")
+	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 74.93 115.57 0)
+		(at 101.6 55.88 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -1011,7 +2862,19 @@
 		(dnp no)
 		(uuid "88888888-0000-4000-8000-000000000012")
 		(property "Reference" "TP12"
-			(at 82.042 117.094 0)
+			(at 100.33 50.8 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "UWB_MISO"
+			(at 101.6 58.42 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1020,18 +2883,8 @@
 				)
 			)
 		)
-		(property "Value" "SPI_MISO"
-			(at 81.788 114.046 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 74.93 115.57 0)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 101.6 55.88 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1042,7 +2895,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 74.93 115.57 0)
+			(at 101.6 55.88 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1052,8 +2905,8 @@
 				)
 			)
 		)
-		(property "Description" "Shared SPI MISO from all four anchors."
-			(at 74.93 115.57 0)
+		(property "Description" "Shared SPI MISO from all four anchors. PLACE: on the bus trunk BRING-UP: driven only while one CSn is low; DEV_ID read returns the value in the DW3000 User Manual on each CSn"
+			(at 101.6 55.88 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1064,7 +2917,7 @@
 			)
 		)
 		(pin "1"
-			(uuid "af42d6da-eff0-414c-96f0-95121be2fd32")
+			(uuid "eeb4b8f6-b06f-43d4-9698-c3f0a6520ac9")
 		)
 		(instances
 			(project "bay-station"
@@ -1075,161 +2928,52 @@
 			)
 		)
 	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 95.25 115.57 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "88888888-0000-4000-8000-000000000013")
-		(property "Reference" "TP13"
-			(at 95.25 111.76 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
+	(wire
+		(pts
+			(xy 101.6 55.88) (xy 106.68 55.88)
 		)
-		(property "Value" "IRQ_A0"
-			(at 95.25 119.38 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
+		(stroke
+			(width 0)
+			(type default)
 		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 95.25 115.57 0)
+		(uuid "550a8b1e-6dc6-4394-bf03-5c081f52e99a")
+	)
+	(global_label "UWB_MISO"
+		(shape passive)
+		(at 106.68 55.88 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "d692754f-4aca-4f99-8562-c8c72eb447fb")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 106.68 55.88 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 95.25 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Interrupt from the A0 center anchor. Makes the ranging exchange timing visible on a scope."
-			(at 95.25 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "58d65ad5-58c2-4f27-8e81-5c3819b7e0d9")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
-					(reference "TP13")
-					(unit 1)
 				)
 			)
 		)
 	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 115.57 115.57 0)
-		(unit 1)
-		(body_style 1)
+	(text "Shared SPI MISO from all four anchors."
 		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "88888888-0000-4000-8000-000000000014")
-		(property "Reference" "TP14"
-			(at 115.57 111.76 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
+		(at 129.54 55.245 0)
+		(effects
+			(font
+				(size 1 1)
 			)
+			(justify left)
 		)
-		(property "Value" "ANCHOR_RSTn"
-			(at 115.57 119.38 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 115.57 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 115.57 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Shared reset to all four DW3210s."
-			(at 115.57 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "3908e0e5-7142-4e0d-a28c-23aa75ee82af")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
-					(reference "TP14")
-					(unit 1)
-				)
-			)
-		)
+		(uuid "77cdddcd-ff84-40c2-a991-8708cba55d10")
 	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 35.56 135.89 0)
+		(at 101.6 64.77 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -1239,7 +2983,19 @@
 		(dnp no)
 		(uuid "983dc601-2aa1-4857-8447-981400998d21")
 		(property "Reference" "TP15"
-			(at 35.56 132.08 0)
+			(at 100.33 59.69 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "UWB_CS0_N"
+			(at 101.6 67.31 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1248,18 +3004,8 @@
 				)
 			)
 		)
-		(property "Value" "CS_A0"
-			(at 35.56 139.70 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 35.56 135.89 0)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 101.6 64.77 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1270,7 +3016,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 35.56 135.89 0)
+			(at 101.6 64.77 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1280,8 +3026,8 @@
 				)
 			)
 		)
-		(property "Description" "Chip-select to the A0 center anchor's DW3210, on the shared SPI bus. Previously only the shared bus (TP10-TP12) was probed; per-anchor CS was not, and the multi-instance driver cannot be debugged without seeing which anchor is actually being addressed."
-			(at 35.56 135.89 0)
+		(property "Description" "Chip-select A0 (CENTER anchor, TWR). PLACE: near A0 BRING-UP: idle 3.3 V; one low pulse per A0 transaction"
+			(at 101.6 64.77 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1292,7 +3038,7 @@
 			)
 		)
 		(pin "1"
-			(uuid "79f566e3-46c9-4b15-b63f-f155c38c07fb")
+			(uuid "45244f31-4dee-45ab-8f13-6af0a674ff39")
 		)
 		(instances
 			(project "bay-station"
@@ -1303,9 +3049,52 @@
 			)
 		)
 	)
+	(wire
+		(pts
+			(xy 101.6 64.77) (xy 106.68 64.77)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ec43ab7e-2f85-466d-bbf8-b8b0eb8f3fb1")
+	)
+	(global_label "UWB_CS0_N"
+		(shape passive)
+		(at 106.68 64.77 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "8914ff6b-15c4-498f-86f8-021eb390159f")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 106.68 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "Chip-select A0 (CENTER anchor, TWR)."
+		(exclude_from_sim no)
+		(at 129.54 64.135 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "220aacf6-c5c0-4012-a0ea-fbdc1111e2b0")
+	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 45.72 135.89 0)
+		(at 101.6 73.66 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -1315,7 +3104,19 @@
 		(dnp no)
 		(uuid "9cb3d622-737b-46f6-879c-6dccc2ea5757")
 		(property "Reference" "TP16"
-			(at 45.72 132.08 0)
+			(at 100.33 68.58 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "UWB_CS1_N"
+			(at 101.6 76.2 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1324,18 +3125,8 @@
 				)
 			)
 		)
-		(property "Value" "CS_A1"
-			(at 45.72 139.70 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 45.72 135.89 0)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 101.6 73.66 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1346,7 +3137,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 45.72 135.89 0)
+			(at 101.6 73.66 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1356,8 +3147,8 @@
 				)
 			)
 		)
-		(property "Description" "Chip-select to the A1 outer anchor's DW3210, on the shared SPI bus. Previously only the shared bus (TP10-TP12) was probed; per-anchor CS was not, and the multi-instance driver cannot be debugged without seeing which anchor is actually being addressed."
-			(at 45.72 135.89 0)
+		(property "Description" "Chip-select A1 (outer, TDoA). PLACE: near A1 BRING-UP: idle 3.3 V"
+			(at 101.6 73.66 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1368,7 +3159,7 @@
 			)
 		)
 		(pin "1"
-			(uuid "719f8419-287d-4ea9-9abb-68813167445d")
+			(uuid "f8644835-3954-4d80-a060-435098295cdb")
 		)
 		(instances
 			(project "bay-station"
@@ -1379,9 +3170,52 @@
 			)
 		)
 	)
+	(wire
+		(pts
+			(xy 101.6 73.66) (xy 106.68 73.66)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8c7d6c74-92e2-4913-ab14-f2f985c0748c")
+	)
+	(global_label "UWB_CS1_N"
+		(shape passive)
+		(at 106.68 73.66 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "1673d3ca-3d42-4ffb-a8ab-3d735967d0c6")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 106.68 73.66 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "Chip-select A1 (outer, TDoA)."
+		(exclude_from_sim no)
+		(at 129.54 73.025 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "cda65100-a92d-401d-abe0-cab83d4f1f1e")
+	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 55.88 135.89 0)
+		(at 101.6 82.55 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -1391,7 +3225,19 @@
 		(dnp no)
 		(uuid "2a17dde5-2aea-4a26-b52c-7d13c28db659")
 		(property "Reference" "TP17"
-			(at 55.88 132.08 0)
+			(at 100.33 77.47 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "UWB_CS2_N"
+			(at 101.6 85.09 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1400,18 +3246,8 @@
 				)
 			)
 		)
-		(property "Value" "CS_A2"
-			(at 55.88 139.70 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 55.88 135.89 0)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 101.6 82.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1422,7 +3258,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 55.88 135.89 0)
+			(at 101.6 82.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1432,8 +3268,8 @@
 				)
 			)
 		)
-		(property "Description" "Chip-select to the A2 outer anchor's DW3210, on the shared SPI bus. Previously only the shared bus (TP10-TP12) was probed; per-anchor CS was not, and the multi-instance driver cannot be debugged without seeing which anchor is actually being addressed."
-			(at 55.88 135.89 0)
+		(property "Description" "Chip-select A2 (outer, TDoA). PLACE: near A2 BRING-UP: idle 3.3 V"
+			(at 101.6 82.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1444,7 +3280,7 @@
 			)
 		)
 		(pin "1"
-			(uuid "2d4d2a29-d229-4955-9d28-b7cf25cc67c8")
+			(uuid "27ad52b5-fd38-4140-8e6b-e7c958415a2e")
 		)
 		(instances
 			(project "bay-station"
@@ -1455,9 +3291,52 @@
 			)
 		)
 	)
+	(wire
+		(pts
+			(xy 101.6 82.55) (xy 106.68 82.55)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "50881af2-033c-404f-b4e5-fa6f07069ffd")
+	)
+	(global_label "UWB_CS2_N"
+		(shape passive)
+		(at 106.68 82.55 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "d11786cb-19a6-4a0c-98d9-6dac6e65da75")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 106.68 82.55 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "Chip-select A2 (outer, TDoA)."
+		(exclude_from_sim no)
+		(at 129.54 81.915 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "51d18c9c-812b-4d06-91f4-ed585a5e9b7b")
+	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 66.04 135.89 0)
+		(at 101.6 91.44 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -1467,7 +3346,19 @@
 		(dnp no)
 		(uuid "c4c59f63-1389-4d31-a3c1-6fb04636661b")
 		(property "Reference" "TP18"
-			(at 66.04 132.08 0)
+			(at 100.33 86.36 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "UWB_CS3_N"
+			(at 101.6 93.98 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1476,18 +3367,8 @@
 				)
 			)
 		)
-		(property "Value" "CS_A3"
-			(at 66.04 139.70 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 66.04 135.89 0)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 101.6 91.44 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1498,7 +3379,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 66.04 135.89 0)
+			(at 101.6 91.44 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1508,8 +3389,8 @@
 				)
 			)
 		)
-		(property "Description" "Chip-select to the A3 outer anchor's DW3210, on the shared SPI bus. Previously only the shared bus (TP10-TP12) was probed; per-anchor CS was not, and the multi-instance driver cannot be debugged without seeing which anchor is actually being addressed."
-			(at 66.04 135.89 0)
+		(property "Description" "Chip-select A3 (outer, TDoA). PLACE: near A3 BRING-UP: idle 3.3 V"
+			(at 101.6 91.44 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1520,7 +3401,7 @@
 			)
 		)
 		(pin "1"
-			(uuid "f987b091-fb78-4dc7-9517-a5caebb68ed9")
+			(uuid "179280e2-6f52-4341-b72c-f203fc9c7d89")
 		)
 		(instances
 			(project "bay-station"
@@ -1531,9 +3412,52 @@
 			)
 		)
 	)
+	(wire
+		(pts
+			(xy 101.6 91.44) (xy 106.68 91.44)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "58ecfb0d-1df5-487f-b538-5fed967b4eef")
+	)
+	(global_label "UWB_CS3_N"
+		(shape passive)
+		(at 106.68 91.44 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "9285e21a-f9e4-42c7-83e5-7ca8c9832508")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 106.68 91.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "Chip-select A3 (outer, TDoA)."
+		(exclude_from_sim no)
+		(at 129.54 90.805 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "f5741a5e-db6f-486f-9bf2-de6d9b783262")
+	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 76.20 135.89 0)
+		(at 101.6 100.33 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -1541,9 +3465,21 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "220c50fb-b403-42cd-b099-2a203e744de9")
-		(property "Reference" "TP19"
-			(at 76.20 132.08 0)
+		(uuid "88888888-0000-4000-8000-000000000013")
+		(property "Reference" "TP13"
+			(at 100.33 95.25 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "UWB_IRQ0"
+			(at 101.6 102.87 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1552,18 +3488,8 @@
 				)
 			)
 		)
-		(property "Value" "IRQ_A1"
-			(at 76.20 139.70 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 76.20 135.89 0)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 101.6 100.33 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1574,7 +3500,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 76.20 135.89 0)
+			(at 101.6 100.33 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1584,8 +3510,8 @@
 				)
 			)
 		)
-		(property "Description" "Interrupt from the A1 outer anchor. Only A0's IRQ (TP13) was previously probed; confirming each outer anchor's TDoA timestamp latch independently of A0 is necessary bring-up visibility the shared bus alone cannot give."
-			(at 76.20 135.89 0)
+		(property "Description" "IRQ from A0 (center): ranging exchange timing. PLACE: near A0 BRING-UP: low idle (100k pull-down); high pulse per event"
+			(at 101.6 100.33 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1596,7 +3522,128 @@
 			)
 		)
 		(pin "1"
-			(uuid "302124c6-c356-4f5b-8551-89e22cad5f78")
+			(uuid "f09c8779-8cee-40c9-9c8b-b2cc7636a21c")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP13")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 101.6 100.33) (xy 106.68 100.33)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c9ad8df9-d226-4cb2-b0b1-107032126d44")
+	)
+	(global_label "UWB_IRQ0"
+		(shape passive)
+		(at 106.68 100.33 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "78a43137-0a3c-41ca-a862-119e1dbb9f3d")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 106.68 100.33 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "IRQ from A0 (center): ranging exchange timing."
+		(exclude_from_sim no)
+		(at 129.54 99.695 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "ebad0968-58f3-4f16-881c-52ceefe9f3aa")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 101.6 109.22 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "220c50fb-b403-42cd-b099-2a203e744de9")
+		(property "Reference" "TP19"
+			(at 100.33 104.14 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "UWB_IRQ1"
+			(at 101.6 111.76 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 101.6 109.22 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 101.6 109.22 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "IRQ from A1: TDoA timestamp latch, independent of A0. PLACE: near A1 BRING-UP: low idle; pulse on RX of the tag frame, within ns-us of TP13"
+			(at 101.6 109.22 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "fc1b3366-26e3-4243-9c6e-876762bec4c9")
 		)
 		(instances
 			(project "bay-station"
@@ -1607,9 +3654,52 @@
 			)
 		)
 	)
+	(wire
+		(pts
+			(xy 101.6 109.22) (xy 106.68 109.22)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8b855736-64a2-4b3d-8591-02019450a756")
+	)
+	(global_label "UWB_IRQ1"
+		(shape passive)
+		(at 106.68 109.22 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "c055e7de-58af-4639-bbc2-cccba6b58b34")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 106.68 109.22 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "IRQ from A1: TDoA timestamp latch, independen..."
+		(exclude_from_sim no)
+		(at 129.54 108.585 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "1be43d70-2c1d-46c9-a0be-ce4118f0c0b2")
+	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 86.36 135.89 0)
+		(at 101.6 118.11 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -1619,7 +3709,19 @@
 		(dnp no)
 		(uuid "0ca9b34a-95ab-4184-b94e-d3880c73883a")
 		(property "Reference" "TP20"
-			(at 86.36 132.08 0)
+			(at 100.33 113.03 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "UWB_IRQ2"
+			(at 101.6 120.65 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1628,18 +3730,8 @@
 				)
 			)
 		)
-		(property "Value" "IRQ_A2"
-			(at 86.36 139.70 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 86.36 135.89 0)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 101.6 118.11 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1650,7 +3742,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 86.36 135.89 0)
+			(at 101.6 118.11 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1660,8 +3752,8 @@
 				)
 			)
 		)
-		(property "Description" "Interrupt from the A2 outer anchor. Only A0's IRQ (TP13) was previously probed; confirming each outer anchor's TDoA timestamp latch independently of A0 is necessary bring-up visibility the shared bus alone cannot give."
-			(at 86.36 135.89 0)
+		(property "Description" "IRQ from A2. PLACE: near A2 BRING-UP: as TP19"
+			(at 101.6 118.11 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1672,7 +3764,7 @@
 			)
 		)
 		(pin "1"
-			(uuid "e4e2dbd3-b2cd-4d5a-9b36-364a920c913c")
+			(uuid "ea98f74f-4df6-4506-92cb-a19d5014a3e7")
 		)
 		(instances
 			(project "bay-station"
@@ -1683,9 +3775,52 @@
 			)
 		)
 	)
+	(wire
+		(pts
+			(xy 101.6 118.11) (xy 106.68 118.11)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b8c4e0ed-4486-493b-bb2a-9b83ba38ec53")
+	)
+	(global_label "UWB_IRQ2"
+		(shape passive)
+		(at 106.68 118.11 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "026057c5-b6ba-4da7-bb1a-ad20dd9a045f")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 106.68 118.11 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "IRQ from A2."
+		(exclude_from_sim no)
+		(at 129.54 117.475 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "40520dbd-a139-4a97-a508-a994d4333a75")
+	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 96.52 135.89 0)
+		(at 101.6 127 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -1695,7 +3830,19 @@
 		(dnp no)
 		(uuid "e0c7b9d8-bfdc-49d4-a445-b6c8357a6d0a")
 		(property "Reference" "TP21"
-			(at 96.52 132.08 0)
+			(at 100.33 121.92 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "UWB_IRQ3"
+			(at 101.6 129.54 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1704,18 +3851,8 @@
 				)
 			)
 		)
-		(property "Value" "IRQ_A3"
-			(at 96.52 139.70 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 96.52 135.89 0)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 101.6 127 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1726,7 +3863,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 96.52 135.89 0)
+			(at 101.6 127 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1736,8 +3873,8 @@
 				)
 			)
 		)
-		(property "Description" "Interrupt from the A3 outer anchor. Only A0's IRQ (TP13) was previously probed; confirming each outer anchor's TDoA timestamp latch independently of A0 is necessary bring-up visibility the shared bus alone cannot give."
-			(at 96.52 135.89 0)
+		(property "Description" "IRQ from A3. PLACE: near A3 BRING-UP: as TP19"
+			(at 101.6 127 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1748,7 +3885,7 @@
 			)
 		)
 		(pin "1"
-			(uuid "b31f111d-9e37-41f6-a5bb-b496963c75ec")
+			(uuid "4fc05370-ebc2-415e-b0af-53b0d26dd4d4")
 		)
 		(instances
 			(project "bay-station"
@@ -1759,4 +3896,4948 @@
 			)
 		)
 	)
+	(wire
+		(pts
+			(xy 101.6 127) (xy 106.68 127)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b94ed595-167c-4466-9da3-6d7a2ddff15f")
+	)
+	(global_label "UWB_IRQ3"
+		(shape passive)
+		(at 106.68 127 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "817ea042-ae1b-4e67-ab68-f9e099e5e2c6")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 106.68 127 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "IRQ from A3."
+		(exclude_from_sim no)
+		(at 129.54 126.365 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "ab71b48e-ad17-4445-b76d-6c5a42997f19")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 101.6 135.89 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "88888888-0000-4000-8000-000000000014")
+		(property "Reference" "TP14"
+			(at 100.33 130.81 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "UWB_RST_N"
+			(at 101.6 138.43 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 101.6 135.89 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 101.6 135.89 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Shared DW3210 RSTn (open-drain). PLACE: on the shared trunk before the per-anchor 0R links BRING-UP: low during reset, then released high by the DW3210s"
+			(at 101.6 135.89 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "5b656aa0-1fea-4edb-bad4-5d794e975d59")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP14")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 101.6 135.89) (xy 106.68 135.89)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "989cf730-ac3d-475a-bc7e-8212a680ce8a")
+	)
+	(global_label "UWB_RST_N"
+		(shape passive)
+		(at 106.68 135.89 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "9d3594fc-6711-46cb-a19b-c87f79df63ed")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 106.68 135.89 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "Shared DW3210 RSTn (open-drain)."
+		(exclude_from_sim no)
+		(at 129.54 135.255 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "cb102b6f-e219-496e-a6d3-92d28e5338aa")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 101.6 144.78 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "37365ede-a365-4af3-b23d-136b538fc1d8")
+		(property "Reference" "TP130"
+			(at 100.33 139.7 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "UWB_WAKEUP"
+			(at 101.6 147.32 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 101.6 144.78 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 101.6 144.78 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Shared DW3210 WAKEUP. BRING-UP: low idle; high pulse to wake from sleep"
+			(at 101.6 144.78 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "9fbd5d56-ad9b-4c69-b678-b6b6d49ac12c")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP130")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 101.6 144.78) (xy 106.68 144.78)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4db0ac6b-9795-4948-9607-e7495fc6865c")
+	)
+	(global_label "UWB_WAKEUP"
+		(shape passive)
+		(at 106.68 144.78 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "8a5ce8b4-8d0a-4833-a8cc-0f0e51a5a966")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 106.68 144.78 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "Shared DW3210 WAKEUP."
+		(exclude_from_sim no)
+		(at 129.54 144.145 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "d086cc9f-02a2-481e-8c5a-6d358ec0572e")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 101.6 153.67 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "2ea014b6-0aa6-424f-a217-f94b9c8b6389")
+		(property "Reference" "TP131"
+			(at 100.33 148.59 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "UWB_SYNC"
+			(at 101.6 156.21 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 101.6 153.67 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 101.6 153.67 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Shared SYNC/OSTR (use still open in decisions.md). BRING-UP: low unless firmware uses SYNC"
+			(at 101.6 153.67 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "8112e392-0e03-49f9-bb41-75e2527197ca")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP131")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 101.6 153.67) (xy 106.68 153.67)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0759d1f5-6557-4d53-9b3b-7ba45024d501")
+	)
+	(global_label "UWB_SYNC"
+		(shape passive)
+		(at 106.68 153.67 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "9f5a0089-789b-45d7-a286-5a659c6bc76b")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 106.68 153.67 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "Shared SYNC/OSTR (use still open in decisions..."
+		(exclude_from_sim no)
+		(at 129.54 153.035 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "582836d2-a036-493a-923d-f713997c1abc")
+	)
+	(text "4. SENSORS I2C (D1.0 pads)"
+		(exclude_from_sim no)
+		(at 96.52 161.29 0)
+		(effects
+			(font
+				(size 1.6 1.6)
+				(bold yes)
+			)
+			(justify left top)
+		)
+		(uuid "e1b3893b-7b5e-4dd3-8dea-00d7b8207e4d")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 101.6 170.18 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "94700599-3112-4ec8-aff6-63cf4735be0f")
+		(property "Reference" "TP140"
+			(at 100.33 165.1 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "I2C_SCL"
+			(at 101.6 172.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 101.6 170.18 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 101.6 170.18 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Shared I2C SCL (MAX17048 0x36, LIS3MDL 0x1C, LIS2DH 0x19). PLACE: mid-bus BRING-UP: idle 3.3 V; 100/400 kHz bursts; rise time < 300 ns @400k"
+			(at 101.6 170.18 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "c7a223a5-1973-4707-a633-62f72cdcd243")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP140")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 101.6 170.18) (xy 106.68 170.18)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5c5d00e1-02a0-4c33-a39b-4af79842bfe8")
+	)
+	(global_label "I2C_SCL"
+		(shape passive)
+		(at 106.68 170.18 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "7184947d-0de0-481a-b9fd-06188f27b886")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 106.68 170.18 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "Shared I2C SCL (MAX17048 0x36, LIS3MDL 0x1C, ..."
+		(exclude_from_sim no)
+		(at 129.54 169.545 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "bf102469-e428-432b-b9b4-f35bdecde01f")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 101.6 179.07 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "d8e715de-4cb7-45bf-82e4-86bbaf2e073b")
+		(property "Reference" "TP141"
+			(at 100.33 173.99 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "I2C_SDA"
+			(at 101.6 181.61 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 101.6 179.07 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 101.6 179.07 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Shared I2C SDA. PLACE: mid-bus BRING-UP: idle 3.3 V; ACKs from 0x19, 0x1C, 0x36 on a bus scan"
+			(at 101.6 179.07 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "fe5adc9c-8d53-4da3-ad81-dbb742e3130d")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP141")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 101.6 179.07) (xy 106.68 179.07)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0dae218a-c960-4eba-9264-3e9af53fd79f")
+	)
+	(global_label "I2C_SDA"
+		(shape passive)
+		(at 106.68 179.07 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "56bc289c-4a33-4573-a81e-10010adddd01")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 106.68 179.07 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "Shared I2C SDA."
+		(exclude_from_sim no)
+		(at 129.54 178.435 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "b09439c5-6ae2-458d-b17d-4034d514ece7")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 101.6 187.96 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "399eb47f-0542-48ba-86ac-8a6c103ac806")
+		(property "Reference" "TP142"
+			(at 100.33 182.88 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "MAG_DRDY"
+			(at 101.6 190.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 101.6 187.96 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 101.6 187.96 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "LIS3MDL DRDY. PLACE: near U10 but outside its keep-out BRING-UP: toggles at the set ODR once U10 is running"
+			(at 101.6 187.96 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "d57eaca5-733c-435e-8150-d0394cd96789")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP142")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 101.6 187.96) (xy 106.68 187.96)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "daccc907-dad4-4cf6-9661-25675969f15c")
+	)
+	(global_label "MAG_DRDY"
+		(shape passive)
+		(at 106.68 187.96 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "170d56c5-8d2b-468e-8547-460d261b52c4")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 106.68 187.96 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "LIS3MDL DRDY."
+		(exclude_from_sim no)
+		(at 129.54 187.325 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "cc990c57-913a-4f10-bcf4-a0a47a992d7e")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 101.6 196.85 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "7b51c4e4-bbb1-46fc-85a4-2e3c6882228f")
+		(property "Reference" "TP143"
+			(at 100.33 191.77 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "MAG_INT"
+			(at 101.6 199.39 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 101.6 196.85 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 101.6 196.85 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "LIS3MDL INT. BRING-UP: low unless threshold interrupt configured"
+			(at 101.6 196.85 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "5d7a30a9-cfc8-4ffb-a170-a07c72a004b2")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP143")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 101.6 196.85) (xy 106.68 196.85)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "25d21125-4dec-4328-9927-a376c5ee67a6")
+	)
+	(global_label "MAG_INT"
+		(shape passive)
+		(at 106.68 196.85 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "ae151827-6b81-4265-89b3-5a448effa36a")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 106.68 196.85 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "LIS3MDL INT."
+		(exclude_from_sim no)
+		(at 129.54 196.215 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "5f95e5c2-d99f-4030-8a8d-cb9ac1708572")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 101.6 205.74 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "4f50ce9f-b11a-4244-943a-439e19cadc19")
+		(property "Reference" "TP144"
+			(at 100.33 200.66 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "ACC_INT1"
+			(at 101.6 208.28 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 101.6 205.74 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 101.6 205.74 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "LIS2DH INT1 (knock / move detect). BRING-UP: pulses when the board is tapped (after config)"
+			(at 101.6 205.74 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "619ab13c-5540-4733-aedd-e9eb8634d9db")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP144")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 101.6 205.74) (xy 106.68 205.74)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "76926542-d67e-4a28-bbe0-b36462db9c05")
+	)
+	(global_label "ACC_INT1"
+		(shape passive)
+		(at 106.68 205.74 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "4289c6d8-6eef-488a-85cd-1a68966d3d70")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 106.68 205.74 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "LIS2DH INT1 (knock / move detect)."
+		(exclude_from_sim no)
+		(at 129.54 205.105 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "475ef749-4b99-4c4d-8a2a-83f9dfd8ac11")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 101.6 214.63 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "1510629c-972f-4eb0-aa2e-04c2776e77e5")
+		(property "Reference" "TP145"
+			(at 100.33 209.55 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "ACC_INT2"
+			(at 101.6 217.17 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 101.6 214.63 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 101.6 214.63 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "LIS2DH INT2. BRING-UP: low unless configured"
+			(at 101.6 214.63 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "80efe005-64b5-4637-a07b-2854aec79629")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP145")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 101.6 214.63) (xy 106.68 214.63)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "41ed2a99-fe37-4ffd-96e6-49de90375d1b")
+	)
+	(global_label "ACC_INT2"
+		(shape passive)
+		(at 106.68 214.63 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "7cfca55f-cde6-4a1a-8a86-cc598b1e7c01")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 106.68 214.63 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "LIS2DH INT2."
+		(exclude_from_sim no)
+		(at 129.54 213.995 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "12decad3-b3f7-446d-9d1f-c9851a9d3de1")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 101.6 223.52 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "24851781-062e-406a-bf72-9c34be5c97bf")
+		(property "Reference" "TP146"
+			(at 100.33 218.44 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "FG_ALRT"
+			(at 101.6 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 101.6 223.52 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 101.6 223.52 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "MAX17048 ALRT (open-drain, R39 pull-up). PLACE: near power_bms BRING-UP: idle 3.3 V; low on SOC/voltage alert"
+			(at 101.6 223.52 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "21f67ddb-5dd3-4b97-86aa-ab7a8d78093e")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP146")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 101.6 223.52) (xy 106.68 223.52)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a19fa1bd-33bd-495c-9d07-1b4ef7217e46")
+	)
+	(global_label "FG_ALRT"
+		(shape passive)
+		(at 106.68 223.52 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "9a7085ed-51bf-419a-b0af-13a198b0bbb1")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 106.68 223.52 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "MAX17048 ALRT (open-drain, R39 pull-up)."
+		(exclude_from_sim no)
+		(at 129.54 222.885 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "f8221b21-3fb2-4435-865d-d2ccdc2a7ac6")
+	)
+	(text "5. CLOCK -- pads behind DNP 0R (D1.0 pads)"
+		(exclude_from_sim no)
+		(at 172.72 29.21 0)
+		(effects
+			(font
+				(size 1.6 1.6)
+				(bold yes)
+			)
+			(justify left top)
+		)
+		(uuid "da6d2b5a-366f-410e-855c-3e2c5cb0fbe0")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 177.8 38.1 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "88888888-0000-4000-8000-000000000008")
+		(property "Reference" "TP5"
+			(at 176.53 33.02 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "TCXO_OUT"
+			(at 177.8 40.64 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 177.8 38.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 177.8 38.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Raw TCXO output before the 1:4 buffer. PLACE: R402 pad ON the TCXO_OUT trace; TP5 within 3 mm; ground spring TP3 BRING-UP: fit R402 first; 38.4 MHz, amplitude per TCXO datasheet (clipped sine)"
+			(at 177.8 38.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "979d6930-268f-48dc-9c5c-1c39898730c0")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP5")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 177.8 38.1) (xy 180.34 38.1)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "99843f7b-d290-49fd-8516-bd976d8c4a12")
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 184.15 38.1 90)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp yes)
+		(uuid "874b0bde-6d5d-4504-a7f8-a97277bf893b")
+		(property "Reference" "R402"
+			(at 184.15 35.56 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "DNP"
+			(at 184.15 40.64 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 184.15 38.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 184.15 38.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Clock-probe isolation for TP5: DNP by default so the probe pad is NOT on the TCXO_OUT trace. 0402 so the unfitted pad on the trace is the smallest possible stub (clock path, same reasoning as the RF-path 0402 exception). Fit a 0R only while probing, then remove."
+			(at 184.15 38.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "bbfc54e6-a022-4379-bfc5-712fb001ed61")
+		)
+		(pin "2"
+			(uuid "a342d058-6a01-4d84-856f-e204cd67d4be")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "R402")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 187.96 38.1) (xy 190.5 38.1)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "bc259602-a0ca-44e9-bb3f-9251d08a6204")
+	)
+	(global_label "TCXO_OUT"
+		(shape passive)
+		(at 190.5 38.1 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "50cf5b79-beeb-445d-a155-2f79c8c30e87")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 190.5 38.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "Raw TCXO output before the 1:4 buffer."
+		(exclude_from_sim no)
+		(at 205.74 37.465 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "487084d1-5fd1-4c1f-8c35-5750d958507f")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 177.8 46.99 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "88888888-0000-4000-8000-000000000009")
+		(property "Reference" "TP6"
+			(at 176.53 41.91 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "UWB_CLK0"
+			(at 177.8 49.53 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 177.8 46.99 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 177.8 46.99 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Buffer output to A0 (center) XTI, after AC coupling. PLACE: R403 pad on the trace at A0 XTI; ground spring TP110 BRING-UP: fit R403 first; 38.4 MHz, 0.8 V to VDD2 Vpp at XTI (DW3000 DS Table 10)"
+			(at 177.8 46.99 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "87b066e0-2133-4112-a49b-c9721d56c27a")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP6")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 177.8 46.99) (xy 180.34 46.99)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5dc0d1ef-89fb-412c-b2f3-04c5238144a8")
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 184.15 46.99 90)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp yes)
+		(uuid "04a6a5cd-8b85-4182-ba18-5742bed24393")
+		(property "Reference" "R403"
+			(at 184.15 44.45 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "DNP"
+			(at 184.15 49.53 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 184.15 46.99 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 184.15 46.99 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Clock-probe isolation for TP6: DNP by default so the probe pad is NOT on the UWB_CLK0 trace. 0402 so the unfitted pad on the trace is the smallest possible stub (clock path, same reasoning as the RF-path 0402 exception). Fit a 0R only while probing, then remove."
+			(at 184.15 46.99 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "a946fa5c-5bf0-412d-a1b7-f48c0c3ac3ad")
+		)
+		(pin "2"
+			(uuid "cf98396d-2489-4912-acee-1d7498921d93")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "R403")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 187.96 46.99) (xy 190.5 46.99)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "60a7bdc2-8b7d-498a-9ee8-c89b5fbad418")
+	)
+	(global_label "UWB_CLK0"
+		(shape passive)
+		(at 190.5 46.99 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "a6d0428c-48ee-4a37-94d3-e7371d2418f4")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 190.5 46.99 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "Buffer output to A0 (center) XTI, after AC co..."
+		(exclude_from_sim no)
+		(at 205.74 46.355 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "78cdf0b4-90ac-497b-a0ce-a712ba8fc79f")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 177.8 55.88 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "88888888-0000-4000-8000-00000000000a")
+		(property "Reference" "TP7"
+			(at 176.53 50.8 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "UWB_CLK1"
+			(at 177.8 58.42 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 177.8 55.88 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 177.8 55.88 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Buffer output to A1 XTI. PLACE: R404 pad on the trace at A1 XTI BRING-UP: as TP6; compare skew to TP6"
+			(at 177.8 55.88 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "035baaec-1b36-4264-aa15-a1cbfca94dc5")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP7")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 177.8 55.88) (xy 180.34 55.88)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d371f59c-5982-4c82-81b0-9b14d418c223")
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 184.15 55.88 90)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp yes)
+		(uuid "433d2d51-fabd-45c1-99fe-92701031a56b")
+		(property "Reference" "R404"
+			(at 184.15 53.34 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "DNP"
+			(at 184.15 58.42 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 184.15 55.88 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 184.15 55.88 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Clock-probe isolation for TP7: DNP by default so the probe pad is NOT on the UWB_CLK1 trace. 0402 so the unfitted pad on the trace is the smallest possible stub (clock path, same reasoning as the RF-path 0402 exception). Fit a 0R only while probing, then remove."
+			(at 184.15 55.88 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "f1cf4706-f2dd-4483-8873-35e55990f162")
+		)
+		(pin "2"
+			(uuid "e7fa127d-f0ee-455b-a837-1a5d3fe2ffe8")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "R404")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 187.96 55.88) (xy 190.5 55.88)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b48ee85a-c365-48f5-a154-f6e9a9de2f93")
+	)
+	(global_label "UWB_CLK1"
+		(shape passive)
+		(at 190.5 55.88 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "400702c2-0a9c-480e-97c3-a9100beeb98b")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 190.5 55.88 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "Buffer output to A1 XTI."
+		(exclude_from_sim no)
+		(at 205.74 55.245 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "c62da67f-ffda-4e7b-86bd-b2339b0153ed")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 177.8 64.77 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "88888888-0000-4000-8000-00000000000b")
+		(property "Reference" "TP8"
+			(at 176.53 59.69 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "UWB_CLK2"
+			(at 177.8 67.31 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 177.8 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 177.8 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Buffer output to A2 XTI. PLACE: R405 pad at A2 XTI -- droppable if layout cannot take it BRING-UP: as TP6"
+			(at 177.8 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "9d1ca7b4-241f-4c9f-be4c-8bfe726ac184")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP8")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 177.8 64.77) (xy 180.34 64.77)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f67719c4-d89d-4549-8625-908e4d70f4a4")
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 184.15 64.77 90)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp yes)
+		(uuid "b0bc49e8-ee40-4f89-b30b-e45a6a64947f")
+		(property "Reference" "R405"
+			(at 184.15 62.23 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "DNP"
+			(at 184.15 67.31 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 184.15 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 184.15 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Clock-probe isolation for TP8: DNP by default so the probe pad is NOT on the UWB_CLK2 trace. 0402 so the unfitted pad on the trace is the smallest possible stub (clock path, same reasoning as the RF-path 0402 exception). Fit a 0R only while probing, then remove."
+			(at 184.15 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "d0388e31-eef6-419a-9494-7c46833a1acb")
+		)
+		(pin "2"
+			(uuid "4f41167b-ef62-4cf4-bc82-becfaac497f3")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "R405")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 187.96 64.77) (xy 190.5 64.77)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f458cf2b-778e-46cf-9db3-ceda62082a6c")
+	)
+	(global_label "UWB_CLK2"
+		(shape passive)
+		(at 190.5 64.77 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "e7beb55a-d5b9-46a5-b0c1-db44bd2cf3f1")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 190.5 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "Buffer output to A2 XTI."
+		(exclude_from_sim no)
+		(at 205.74 64.135 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "7c8470a7-4862-4f8d-a96b-27052a5ab050")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 177.8 73.66 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "88888888-0000-4000-8000-00000000000c")
+		(property "Reference" "TP9"
+			(at 176.53 68.58 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "UWB_CLK3"
+			(at 177.8 76.2 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 177.8 73.66 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 177.8 73.66 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Buffer output to A3 XTI. PLACE: R406 pad at A3 XTI -- droppable if layout cannot take it BRING-UP: as TP6"
+			(at 177.8 73.66 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "5892275f-cc2a-40c5-984e-0b14282545a6")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP9")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 177.8 73.66) (xy 180.34 73.66)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8f1fbde6-6beb-4414-984b-2de75ea916d7")
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 184.15 73.66 90)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp yes)
+		(uuid "519f104f-799a-4d21-848a-a2d229689fa0")
+		(property "Reference" "R406"
+			(at 184.15 71.12 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "DNP"
+			(at 184.15 76.2 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 184.15 73.66 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 184.15 73.66 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Clock-probe isolation for TP9: DNP by default so the probe pad is NOT on the UWB_CLK3 trace. 0402 so the unfitted pad on the trace is the smallest possible stub (clock path, same reasoning as the RF-path 0402 exception). Fit a 0R only while probing, then remove."
+			(at 184.15 73.66 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "30bbc553-c00b-4889-a8ae-8cc3b8c20067")
+		)
+		(pin "2"
+			(uuid "64a28fb9-2654-4e56-9269-33e2bb957ad4")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "R406")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 187.96 73.66) (xy 190.5 73.66)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8067dfe9-d2c8-4339-b73a-ddcdd01a89f0")
+	)
+	(global_label "UWB_CLK3"
+		(shape passive)
+		(at 190.5 73.66 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "a0259275-a69f-4a31-8f80-458e1e659cd9")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 190.5 73.66 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "Buffer output to A3 XTI."
+		(exclude_from_sim no)
+		(at 205.74 73.025 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "37ec5716-2da7-43c0-aa4d-9b7fa478bd07")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 177.8 82.55 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "4bb990ae-d01f-4d06-9e72-6e353e22afb8")
+		(property "Reference" "TP135"
+			(at 176.53 77.47 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "TCXO_EN"
+			(at 177.8 85.09 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 177.8 82.55 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 177.8 82.55 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "TCXO enable from the host (omit if the TCXO has none). PLACE: not on the clock path -- direct pad BRING-UP: high = TCXO running"
+			(at 177.8 82.55 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "91cda5d0-3c5f-4452-8526-d844b0e4adaa")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP135")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 177.8 82.55) (xy 182.88 82.55)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c0960752-24d4-44f4-969b-0e562169c4e6")
+	)
+	(global_label "TCXO_EN"
+		(shape passive)
+		(at 182.88 82.55 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "862f7e71-6555-4330-a039-4a65c0adf81c")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 182.88 82.55 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "TCXO enable from the host (omit if the TCXO h..."
+		(exclude_from_sim no)
+		(at 205.74 81.915 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "4beb70c1-9568-4d69-8cac-a0481a58906e")
+	)
+	(text "6. BLE BRIDGE nRF9151 <-> BT840 (D1.0 pads)"
+		(exclude_from_sim no)
+		(at 172.72 90.17 0)
+		(effects
+			(font
+				(size 1.6 1.6)
+				(bold yes)
+			)
+			(justify left top)
+		)
+		(uuid "4e84bf74-1de9-4292-b42b-1bb20cbbde44")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 177.8 99.06 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "1b147129-84d2-4f05-9492-391f399423b0")
+		(property "Reference" "TP150"
+			(at 176.53 93.98 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "BRIDGE_TXD"
+			(at 177.8 101.6 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 177.8 99.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 177.8 99.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "nRF9151 TX -> BT840 RX. PLACE: between the 0R link and BT840 BRING-UP: idle high 3.3 V; UART frames at the bridge baud"
+			(at 177.8 99.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "aadc5d0b-7005-445b-adb2-764ac8e5aaae")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP150")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 177.8 99.06) (xy 182.88 99.06)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a323cab0-5152-4153-98b0-f9eb9ebc7fa8")
+	)
+	(global_label "BRIDGE_TXD"
+		(shape passive)
+		(at 182.88 99.06 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "394e4045-e16d-4e48-be33-6ddcee490d6c")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 182.88 99.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "nRF9151 TX -> BT840 RX."
+		(exclude_from_sim no)
+		(at 205.74 98.425 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "c8fa4e38-994f-4b8c-a382-bc3bfa4fcfbf")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 177.8 107.95 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "9fa5ebdf-30d7-4806-972a-026dc2ed2012")
+		(property "Reference" "TP151"
+			(at 176.53 102.87 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "BRIDGE_RXD"
+			(at 177.8 110.49 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 177.8 107.95 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 177.8 107.95 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "BT840 TX -> nRF9151 RX. BRING-UP: idle high 3.3 V"
+			(at 177.8 107.95 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "2d806f5a-7ebf-4965-a746-fc4a07e06942")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP151")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 177.8 107.95) (xy 182.88 107.95)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "61d29a81-537d-4630-91ce-22f3aab589c5")
+	)
+	(global_label "BRIDGE_RXD"
+		(shape passive)
+		(at 182.88 107.95 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "97f5262a-4720-433f-9cbe-d088b67527fa")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 182.88 107.95 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "BT840 TX -> nRF9151 RX."
+		(exclude_from_sim no)
+		(at 205.74 107.315 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "5fefd2b3-b525-4759-b01d-7e9cac232a91")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 177.8 116.84 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "be94df37-ab07-49b2-b89a-e7c94d7465cc")
+		(property "Reference" "TP152"
+			(at 176.53 111.76 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "BRIDGE_RTS"
+			(at 177.8 119.38 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 177.8 116.84 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 177.8 116.84 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Flow control, nRF9151 RTS out. BRING-UP: low = nRF9151 ready to receive"
+			(at 177.8 116.84 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "62f550c8-e344-4da1-ac7d-77d77504a280")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP152")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 177.8 116.84) (xy 182.88 116.84)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b1739951-0742-46b1-96bf-c9666740f0c5")
+	)
+	(global_label "BRIDGE_RTS"
+		(shape passive)
+		(at 182.88 116.84 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "9b50a306-2960-41cf-8723-1b219f63d655")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 182.88 116.84 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "Flow control, nRF9151 RTS out."
+		(exclude_from_sim no)
+		(at 205.74 116.205 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "9015e6c9-9f51-48fe-9193-56cda6eca161")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 177.8 125.73 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "6a3e0ac0-ec82-42be-8b2b-47b0da50ae14")
+		(property "Reference" "TP153"
+			(at 176.53 120.65 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "BRIDGE_CTS"
+			(at 177.8 128.27 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 177.8 125.73 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 177.8 125.73 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Flow control, nRF9151 CTS in. BRING-UP: low = BT840 ready to receive"
+			(at 177.8 125.73 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "d1b25ec9-7b76-4e82-996a-84dae451b5cc")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP153")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 177.8 125.73) (xy 182.88 125.73)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "efa3094b-43fb-4e4c-a52f-cdac786fcd9e")
+	)
+	(global_label "BRIDGE_CTS"
+		(shape passive)
+		(at 182.88 125.73 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "185b26a5-416a-4d01-8f4e-8614760d51f7")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 182.88 125.73 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "Flow control, nRF9151 CTS in."
+		(exclude_from_sim no)
+		(at 205.74 125.095 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "3fb73ef8-c639-49a0-b54b-4b1bad842be2")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 177.8 134.62 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "9582c688-02ea-47af-8357-42fa648087e0")
+		(property "Reference" "TP154"
+			(at 176.53 129.54 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "BRIDGE_IRQ"
+			(at 177.8 137.16 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 177.8 134.62 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 177.8 134.62 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "BT840 -> nRF9151 attention line. BRING-UP: pulse when the BT840 has data / link event"
+			(at 177.8 134.62 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "30d82bcc-298c-48a6-9f49-033ff5cca463")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP154")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 177.8 134.62) (xy 182.88 134.62)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "bf7c7a30-c2ac-4cc5-b1c7-eb85fb9337e4")
+	)
+	(global_label "BRIDGE_IRQ"
+		(shape passive)
+		(at 182.88 134.62 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "eb0c8967-3c36-4c35-abc7-21eb80ee7ed5")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 182.88 134.62 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "BT840 -> nRF9151 attention line."
+		(exclude_from_sim no)
+		(at 205.74 133.985 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "b48c0f67-359e-4f57-a2c1-b8e88bc28d5c")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 177.8 143.51 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "90dcef3c-efd5-4ad7-b35d-a915ee22b688")
+		(property "Reference" "TP155"
+			(at 176.53 138.43 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "RESET_BLE_N"
+			(at 177.8 146.05 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 177.8 143.51 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 177.8 143.51 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "BT840 reset (open-drain, from nRF9151 and SWD header). BRING-UP: idle 3.3 V; pull low with tweezers to GND pad TP115 to reset the BT840"
+			(at 177.8 143.51 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "c01cb2b1-dd77-4b4f-96c6-97665460813b")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP155")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 177.8 143.51) (xy 182.88 143.51)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e4d7d10d-ce9b-4d78-951f-4659f7ac3262")
+	)
+	(global_label "RESET_BLE_N"
+		(shape passive)
+		(at 182.88 143.51 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "30ad4244-c019-4efc-a830-5d6c367c24dc")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 182.88 143.51 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "BT840 reset (open-drain, from nRF9151 and SWD..."
+		(exclude_from_sim no)
+		(at 205.74 142.875 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "f4d4f722-9ea5-4617-b601-0da4c31fd556")
+	)
+	(text "7. DEBUG / PROGRAMMING (D1.0 pads)"
+		(exclude_from_sim no)
+		(at 172.72 151.13 0)
+		(effects
+			(font
+				(size 1.6 1.6)
+				(bold yes)
+			)
+			(justify left top)
+		)
+		(uuid "65de2801-c467-4c23-87f6-53ca0d1aa7dc")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 177.8 160.02 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "a926047b-3b50-4bf2-87b4-aa0354754a32")
+		(property "Reference" "TP160"
+			(at 176.53 154.94 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "SWDIO_MCU"
+			(at 177.8 162.56 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 177.8 160.02 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 177.8 160.02 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "nRF9151 SWDIO (also on the SWD header). PLACE: pogo-friendly 2.54 mm grid with TP161/TP162/TP117 BRING-UP: SWD traffic during flashing"
+			(at 177.8 160.02 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "f26cecb2-5786-463c-9fb4-0f57f8ea61a8")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP160")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 177.8 160.02) (xy 182.88 160.02)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "349cdb41-20f4-4c67-bc81-608e22c31a9d")
+	)
+	(global_label "SWDIO_MCU"
+		(shape passive)
+		(at 182.88 160.02 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "3ae8ceef-a5e6-4eec-a1e1-b9598341caf1")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 182.88 160.02 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "nRF9151 SWDIO (also on the SWD header)."
+		(exclude_from_sim no)
+		(at 205.74 159.385 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "33c56ffd-3e4c-434d-a928-b248a8705b7a")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 177.8 168.91 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "c4054a9f-a33d-4575-86ab-465a54afe2d5")
+		(property "Reference" "TP161"
+			(at 176.53 163.83 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "SWDCLK_MCU"
+			(at 177.8 171.45 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 177.8 168.91 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 177.8 168.91 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "nRF9151 SWDCLK. BRING-UP: clock bursts during flashing"
+			(at 177.8 168.91 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "3eeac666-2835-4449-894d-8b9150146a26")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP161")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 177.8 168.91) (xy 182.88 168.91)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "73a5694e-b287-43a4-b669-29675b492f7a")
+	)
+	(global_label "SWDCLK_MCU"
+		(shape passive)
+		(at 182.88 168.91 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "6288c9d9-6ccf-4898-8925-eb17dc136e7f")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 182.88 168.91 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "nRF9151 SWDCLK."
+		(exclude_from_sim no)
+		(at 205.74 168.275 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "4f11a5d4-b076-4b3b-9131-7364a4222902")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 177.8 177.8 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "d04ab9bb-96b3-4235-bd91-db52bf2c5efb")
+		(property "Reference" "TP162"
+			(at 176.53 172.72 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "RESET_MCU_N"
+			(at 177.8 180.34 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 177.8 177.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 177.8 177.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "nRF9151 reset. BRING-UP: idle 3.3 V (internal pull-up)"
+			(at 177.8 177.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "b1f31aca-1863-46b2-b534-173469560831")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP162")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 177.8 177.8) (xy 182.88 177.8)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9ffec46e-a97c-463b-abcd-79e9ba3b13e5")
+	)
+	(global_label "RESET_MCU_N"
+		(shape passive)
+		(at 182.88 177.8 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "f98511e0-5645-4c59-9803-763686825657")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 182.88 177.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "nRF9151 reset."
+		(exclude_from_sim no)
+		(at 205.74 177.165 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "34cd261d-7970-4d45-a8b7-a1cbe9dbeb92")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 177.8 186.69 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "309d4889-3c02-4afb-b613-8f7200afe8dc")
+		(property "Reference" "TP163"
+			(at 176.53 181.61 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "SWDIO_BLE"
+			(at 177.8 189.23 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 177.8 186.69 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 177.8 186.69 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "BT840 SWDIO. PLACE: pogo grid with TP164/TP155 BRING-UP: SWD traffic during flashing"
+			(at 177.8 186.69 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "74239347-aa37-44dd-895f-fee217923eab")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP163")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 177.8 186.69) (xy 182.88 186.69)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "88655b62-0e26-44c6-9b08-de9d3732017f")
+	)
+	(global_label "SWDIO_BLE"
+		(shape passive)
+		(at 182.88 186.69 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "71112ef2-e4b6-4077-a530-7be3cd528827")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 182.88 186.69 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "BT840 SWDIO."
+		(exclude_from_sim no)
+		(at 205.74 186.055 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "a95fb340-05ed-41c3-855c-43f0dd908d9f")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 177.8 195.58 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "df2e32e2-bb35-4919-9c2f-38d59d2404e0")
+		(property "Reference" "TP164"
+			(at 176.53 190.5 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "SWDCLK_BLE"
+			(at 177.8 198.12 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 177.8 195.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 177.8 195.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "BT840 SWDCLK. BRING-UP: clock bursts during flashing"
+			(at 177.8 195.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "06d6c784-64b9-45ac-a48a-7ecab6cd71c1")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP164")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 177.8 195.58) (xy 182.88 195.58)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f2b41947-5727-41df-8abb-1bc57647570e")
+	)
+	(global_label "SWDCLK_BLE"
+		(shape passive)
+		(at 182.88 195.58 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "d2696f94-410a-44b5-b1c8-c9d1d1e0ff3d")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 182.88 195.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "BT840 SWDCLK."
+		(exclude_from_sim no)
+		(at 205.74 194.945 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "f22b1098-6352-43f7-b917-7a9c4b6613a8")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 177.8 204.47 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "783e8f95-d812-4296-abc2-989d678a8ffe")
+		(property "Reference" "TP165"
+			(at 176.53 199.39 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "DBG_UART_TX"
+			(at 177.8 207.01 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 177.8 204.47 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 177.8 204.47 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "nRF9151 log/shell UART TX. BRING-UP: idle high; boot banner at power-up"
+			(at 177.8 204.47 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "11c154bc-de23-4a00-84f6-5d8cd84978c5")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP165")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 177.8 204.47) (xy 182.88 204.47)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "37a28864-5636-4741-ac21-96fb229b7771")
+	)
+	(global_label "DBG_UART_TX"
+		(shape passive)
+		(at 182.88 204.47 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "b9bfd626-07f0-49f1-9cdf-37865a4ff800")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 182.88 204.47 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "nRF9151 log/shell UART TX."
+		(exclude_from_sim no)
+		(at 205.74 203.835 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "e59f3799-f999-417d-8aad-1994ac7f9f95")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 177.8 213.36 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "58e7d133-7806-41fe-9d37-e3c5493e7dbb")
+		(property "Reference" "TP166"
+			(at 176.53 208.28 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "DBG_UART_RX"
+			(at 177.8 215.9 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 177.8 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 177.8 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "nRF9151 log/shell UART RX. BRING-UP: idle high"
+			(at 177.8 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "ddca92c0-32d4-40e5-8f93-8d6bb9ef6fb5")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP166")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 177.8 213.36) (xy 182.88 213.36)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5bdb368a-1221-4b22-9405-039d5367affc")
+	)
+	(global_label "DBG_UART_RX"
+		(shape passive)
+		(at 182.88 213.36 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "8fe19a15-5902-4f35-98f7-0a0e6f488b1f")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 182.88 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "nRF9151 log/shell UART RX."
+		(exclude_from_sim no)
+		(at 205.74 212.725 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "1fa878d9-00ab-4015-91af-3e3f47560086")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 177.8 222.25 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "c4a79ea4-b7df-4217-9a09-deafb9641c8a")
+		(property "Reference" "TP167"
+			(at 176.53 217.17 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "BTN_USER"
+			(at 177.8 224.79 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 177.8 222.25 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 177.8 222.25 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "User button (active low). BRING-UP: 3.3 V released, 0 V pressed; short to GND to fake a press"
+			(at 177.8 222.25 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "876256b0-c3a3-43c0-b0dc-350b1284cd30")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP167")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 177.8 222.25) (xy 182.88 222.25)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9563acc6-9082-4b85-9781-b910a217c0d6")
+	)
+	(global_label "BTN_USER"
+		(shape passive)
+		(at 182.88 222.25 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "8cef019a-a198-484a-beac-0251f7292347")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 182.88 222.25 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "User button (active low)."
+		(exclude_from_sim no)
+		(at 205.74 221.615 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "7174505a-5136-42e4-86bb-40da0d3bfa7e")
+	)
+	(text "8. STATUS / LED NETS (D1.0 pads)"
+		(exclude_from_sim no)
+		(at 248.92 29.21 0)
+		(effects
+			(font
+				(size 1.6 1.6)
+				(bold yes)
+			)
+			(justify left top)
+		)
+		(uuid "1bcefcdd-573a-4a16-9297-705f4cf5bdeb")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 254 38.1 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "5e6b31e2-3e8f-402f-8e63-cbcd9b2b8f54")
+		(property "Reference" "TP170"
+			(at 252.73 33.02 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "nSTAT1_LBO"
+			(at 254 40.64 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 254 38.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 254 38.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "MCP73871 STAT1/LBO (open-drain, D4). BRING-UP: low while charging; else ~VSYS-VF through D4"
+			(at 254 38.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "cfcc16e9-ef2f-4491-8ac3-9c9929faae83")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP170")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 254 38.1) (xy 259.08 38.1)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1b50893a-27be-4b4a-96db-9df716b165a0")
+	)
+	(global_label "nSTAT1_LBO"
+		(shape passive)
+		(at 259.08 38.1 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "6cf2d802-7285-4c11-8f6e-e75846d5fa28")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 259.08 38.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "MCP73871 STAT1/LBO (open-drain, D4)."
+		(exclude_from_sim no)
+		(at 281.94 37.465 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "5ae3e324-c34c-4818-947c-e83157e947eb")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 254 46.99 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "a13cf0c3-a27d-4c33-b14c-40649ad03686")
+		(property "Reference" "TP171"
+			(at 252.73 41.91 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "nSTAT2"
+			(at 254 49.53 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 254 46.99 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 254 46.99 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "MCP73871 STAT2 (open-drain, D5). BRING-UP: low when charge complete"
+			(at 254 46.99 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "627bdd2d-4eb1-4de7-9768-5511589651ec")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP171")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 254 46.99) (xy 259.08 46.99)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ecdd26b7-ad6b-4c25-8f95-400445d9fb1f")
+	)
+	(global_label "nSTAT2"
+		(shape passive)
+		(at 259.08 46.99 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "39e5e994-636f-46b4-9ba1-fdf432be36d3")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 259.08 46.99 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "MCP73871 STAT2 (open-drain, D5)."
+		(exclude_from_sim no)
+		(at 281.94 46.355 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "2fb3d8cc-3478-4cdf-bb95-9456b0f7b623")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 254 55.88 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "9fce5020-2b7d-44b4-9e1f-6d10c967468e")
+		(property "Reference" "TP172"
+			(at 252.73 50.8 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "nPG"
+			(at 254 58.42 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 254 55.88 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 254 55.88 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "MCP73871 ~PG (pseudo open-drain, D6). BRING-UP: low with adapter present"
+			(at 254 55.88 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "9d26dc16-f76b-46f2-8580-01b3964eed58")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP172")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 254 55.88) (xy 259.08 55.88)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9a9ca43a-87b3-4c7b-a6e0-73060616067a")
+	)
+	(global_label "nPG"
+		(shape passive)
+		(at 259.08 55.88 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "e9c375b4-4a37-4ab3-ad68-a566a652c0e3")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 259.08 55.88 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "MCP73871 ~PG (pseudo open-drain, D6)."
+		(exclude_from_sim no)
+		(at 281.94 55.245 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "c4ce08b0-eb31-49c7-bcab-e46b380b9060")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 254 64.77 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "63e3f862-c202-4f4b-9844-bb7fce79385f")
+		(property "Reference" "TP173"
+			(at 252.73 59.69 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "LED_SYS"
+			(at 254 67.31 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 254 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 254 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "nRF9151 system LED drive (D7). BRING-UP: 3.3 V = LED on (active high)"
+			(at 254 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "80d3c0ba-1f18-4b3f-98df-059d5e557ba0")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP173")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 254 64.77) (xy 259.08 64.77)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "88363454-18b1-46c0-8be6-0c56ca63ebda")
+	)
+	(global_label "LED_SYS"
+		(shape passive)
+		(at 259.08 64.77 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "12e94068-450a-4e61-8611-a10478b493b4")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 259.08 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "nRF9151 system LED drive (D7)."
+		(exclude_from_sim no)
+		(at 281.94 64.135 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "865df8fc-51b0-4a86-823a-ccab30a1d991")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 254 73.66 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "bdcfb368-f307-4c53-bc62-f8fbae350895")
+		(property "Reference" "TP174"
+			(at 252.73 68.58 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "LED_LTE"
+			(at 254 76.2 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 254 73.66 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 254 73.66 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "nRF9151 LTE LED drive (D400). BRING-UP: 3.3 V = LED on"
+			(at 254 73.66 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "61c994e3-dc08-4b53-b088-711102d1edda")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP174")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 254 73.66) (xy 259.08 73.66)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0ef70079-b127-4578-9b74-642df7e720a6")
+	)
+	(global_label "LED_LTE"
+		(shape passive)
+		(at 259.08 73.66 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "09abebf0-b5b4-4025-a8a4-8dc886449d20")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 259.08 73.66 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "nRF9151 LTE LED drive (D400)."
+		(exclude_from_sim no)
+		(at 281.94 73.025 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "ba122bed-cf46-4f94-8a08-441ddfc3e31c")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 254 82.55 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "25fb2f2b-f0ec-4d03-ab2c-e2201a8f00ca")
+		(property "Reference" "TP175"
+			(at 252.73 77.47 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "LED_LINK"
+			(at 254 85.09 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 254 82.55 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 254 82.55 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "BT840 BLE-link LED drive (D401). BRING-UP: 3.3 V = LED on"
+			(at 254 82.55 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "ac86c8a0-9cbb-4e7f-a6e7-35c5868967b9")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
+					(reference "TP175")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 254 82.55) (xy 259.08 82.55)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "105f4425-7083-4921-849a-bbd25c401490")
+	)
+	(global_label "LED_LINK"
+		(shape passive)
+		(at 259.08 82.55 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "6b483623-9d4f-400f-98b5-25ef459f265d")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 259.08 82.55 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "BT840 BLE-link LED drive (D401)."
+		(exclude_from_sim no)
+		(at 281.94 81.915 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "8f29d9c5-2155-42fd-9ec7-b8d4e4ccdc36")
+	)
+	(text "Test Points -- bring-up, rework and verification"
+		(exclude_from_sim no)
+		(at 20.32 12.7 0)
+		(effects
+			(font
+				(size 2.5 2.5)
+				(bold yes)
+			)
+			(justify left top)
+		)
+		(uuid "25c2c4a1-6eba-44d2-944a-d732ea8f0bdb")
+	)
+	(text "CLOCK PADS -- LAYOUT RULE (TCXO_OUT, UWB_CLK0-3).\nA test pad on the clock network is a STUB, and stubs degrade exactly the signal this\ndesign depends on (1 cm of differential path ~ 10 cm of position error at 10 m).\nSo TP5-TP9 are NOT on the clock nets: each sits behind a DNP 0402 0R (R402-R406)\nwhose pad lies directly ON the clock trace. Default build = one unfitted 0402 pad on the\ntrace, nothing else. To probe: fit the 0R, measure with a ground spring to TP3/TP110,\nremove it again. If layout cannot fit all four anchor links, keep R403/R404 (A0/A1)\nand drop R405/R406 -- two is enough to compare skew. Keep the UWB_CLKx routes\nequal-length INCLUDING the R40x pad; never spur a pad off one channel only.\n\nSPI/IRQ pads: place on the trunk, not on a spur; one GND pad pair (TP111/TP112) beside\nthem so a logic analyser / scope can use short grounds.\nGND pads TP113-TP119: one per functional area so a probe ground is never > ~15 mm away."
+		(exclude_from_sim no)
+		(at 248.92 101.6 0)
+		(effects
+			(font
+				(size 1.1 1.1)
+			)
+			(justify left top)
+		)
+		(uuid "82040aee-0799-44f4-bedc-8adc4afd199a")
+	)
+	(text "Every net in docs/net-contract.md sections 1-7 has a pad here, plus extra rail pads at the far ends of\neach rail and a GND pad in every functional area. Rails/GND use D1.5 mm pads, signals D1.0 mm\n(TestPoint_Pad_*: bare SMD copper, no post -- smallest stub, pogo/probe friendly).\nThe full index (TP ref, net, purpose, expected bring-up value) is in bay-station/handoff/io.md and\nfeeds the verification plan. TP1-TP21 keep their numbers; new pads are TP100+."
+		(exclude_from_sim no)
+		(at 248.92 142.24 0)
+		(effects
+			(font
+				(size 1.1 1.1)
+			)
+			(justify left top)
+		)
+		(uuid "1d59604f-2481-4dd6-bed6-e7c854454754")
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+	(embedded_fonts no)
 )
