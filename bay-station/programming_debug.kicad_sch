@@ -1471,7 +1471,7 @@
 				)
 			)
 		)
-		(property "Description" "nRF9151 SWD: standard ARM Cortex 10-pin 1.27 mm header (Samtec FTSH-105-01-x-DV-K style). Pinout per Tag-Connect TC2030-CTX datasheet's Cortex column: 1 VTref, 2 SWDIO, 3 GND, 4 SWCLK, 5 GND, 6 SWO, 7 key/NC, 8 NC/TDI, 9 GNDDetect, 10 nRESET. VTref from +3V3 (= nRF9151 VDD_GPIO). nRESET reaches RESET_MCU_N through R313 1k (Nordic nRF9151 HDG nRESET: series ~1 kOhm, no external pull-up)."
+		(property "Description" "nRF9151 SWD: standard ARM Cortex 10-pin 1.27 mm header (Samtec FTSH-105 style). Pinout per Tag-Connect TC2030-CTX datasheet's Cortex column: 1 VTref, 2 SWDIO, 3 GND, 4 SWCLK, 5 GND, 6 SWO, 7 key/NC, 8 NC/TDI, 9 GNDDetect, 10 nRESET. VTref from +3V3 (= nRF9151 VDD_GPIO). nRESET reaches RESET_MCU_N through R313 1k (Nordic nRF9151 HDG nRESET: series ~1 kOhm, no external pull-up)."
 			(at 59.69 144.78 0)
 			(hide yes)
 			(show_name no)
