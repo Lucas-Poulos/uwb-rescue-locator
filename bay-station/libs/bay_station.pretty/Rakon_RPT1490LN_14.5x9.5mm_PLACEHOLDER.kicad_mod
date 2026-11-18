@@ -1,0 +1,175 @@
+(footprint "Rakon_RPT1490LN_14.5x9.5mm_PLACEHOLDER"
+	(version 20240108)
+	(generator "uwb_rescue_locator_lib_builder")
+	(layer "F.Cu")
+	(descr "PLACEHOLDER land pattern for Rakon RPT1490LN TCXO, 14.5 x 9.5 x 6.0 mm. From Rakon datasheet Issue B (21 Oct 2024) page 2 \"Recommended pad layout (top view)\": six 1.2 x 1.8 mm pads, 2.54 mm pitch, pins 1-2-3 on one row and 6-5-4 opposite, row dimension 7.9 mm. The 7.9 mm is ASSUMED to be pad-centre to pad-centre; the bottom view also shows a 6.3 mm dimension that could instead be the inner gap (which would make centres 8.1 mm). Body outline from the 14.5 x 9.5 mm top view. Pin 1 = Vc, 2/3 = GND, 4 = RF out, 5 = DNC, 6 = Vcc. Verify against Rakon drawing (or a Rakon-supplied footprint) before fab.")
+	(tags "Rakon TCXO RPT1490LN PLACEHOLDER")
+	(property "Reference" "REF**"
+		(at 0 -6 0)
+		(layer "F.SilkS")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "Rakon_RPT1490LN_14.5x9.5mm_PLACEHOLDER"
+		(at 0 6 0)
+		(layer "F.Fab")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr smd)
+	(fp_line
+		(start -7.25 -4.75)
+		(end 7.25 -4.75)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+	)
+	(fp_line
+		(start 7.25 -4.75)
+		(end 7.25 4.75)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+	)
+	(fp_line
+		(start 7.25 4.75)
+		(end -7.25 4.75)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+	)
+	(fp_line
+		(start -7.25 4.75)
+		(end -7.25 -4.75)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+	)
+	(fp_line
+		(start -7.35 -4.85)
+		(end 7.35 -4.85)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+	)
+	(fp_line
+		(start 7.35 -4.85)
+		(end 7.35 4.85)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+	)
+	(fp_line
+		(start 7.35 4.85)
+		(end -7.35 4.85)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+	)
+	(fp_line
+		(start -7.35 4.85)
+		(end -7.35 -4.85)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+	)
+	(fp_line
+		(start -7.6 5.3)
+		(end -6 5.3)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+	)
+	(fp_line
+		(start -7.75 -5.25)
+		(end 7.75 -5.25)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+	)
+	(fp_line
+		(start 7.75 -5.25)
+		(end 7.75 5.25)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+	)
+	(fp_line
+		(start 7.75 5.25)
+		(end -7.75 5.25)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+	)
+	(fp_line
+		(start -7.75 5.25)
+		(end -7.75 -5.25)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+	)
+	(pad "1" smd rect
+		(at -2.54 3.95)
+		(size 1.2 1.8)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "2" smd rect
+		(at 0 3.95)
+		(size 1.2 1.8)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "3" smd rect
+		(at 2.54 3.95)
+		(size 1.2 1.8)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "4" smd rect
+		(at 2.54 -3.95)
+		(size 1.2 1.8)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "5" smd rect
+		(at 0 -3.95)
+		(size 1.2 1.8)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "6" smd rect
+		(at -2.54 -3.95)
+		(size 1.2 1.8)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+)
