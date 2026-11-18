@@ -83,8 +83,8 @@ don't edit a sheet someone else is actively working on, and PRs need review
 **Schematic capture is well along on the bay station and early on the
 wristband.** On branch `redesign/nrf9151-host` every bay-station sheet has
 been wired against one net contract (`docs/net-contract.md`). Neither board
-is fab-ready: the bay station still has placeholder footprints on its two
-biggest new parts (below). If you're an agent or a new teammate picking this
+is fab-ready: the bay station still has placeholder footprints on the TCXO,
+SMA launch, MAX17048 and DNP eSIM (below). If you're an agent or a new teammate picking this
 up cold, read this whole section before touching anything -- it's written to
 be a complete handoff.
 
@@ -158,13 +158,13 @@ in `bay-station/handoff/`.
 | Fortune Semiconductor **FS8205** (commonly sold as "FS8205A" -- see `wristband/libs/README.md`) | Protection dual MOSFET, DW01A's partner IC | Wristband | 1 |
 | AOS **AO3401A** | Reverse-battery-polarity protection P-MOSFET ("ideal diode") | Wristband + Bay Station | 2 |
 | onsemi **ESD5B5.0ST1G** | TVS diode, battery/power-input protection | Wristband (1) + Bay Station (2) | 3 |
-| Nordic **nRF9151** (nRF9151-LACA-R7) | Host SiP: LTE-M/NB-IoT modem + GNSS + Cortex-M33. Replaced the BT840 as host 2026-11-17. **Footprint is a PLACEHOLDER with invented pads** | Bay Station | 1 |
+| Nordic **nRF9151** (nRF9151-LACA-R7) | Host SiP: LTE-M/NB-IoT modem + GNSS + Cortex-M33. Replaced the BT840 as host 2026-11-17. Footprint from Nordic's DK files (2026-11-18) | Bay Station | 1 |
 | Fanstel **BT840** (Nordic nRF52840) | UART BLE bridge to the laptop (host until 2026-11-17; replaced ESP32-S3-WROOM-1 before that) | Bay Station | 1 |
 | Microchip **MCP73871** | Charge management + power-path IC | Bay Station | 1 |
 | Maxim/Analog Devices **MAX17048** | Battery fuel gauge (SOC monitor) | Bay Station | 1 |
 | TI **TPS7A0233PDBVR** | LDO regulator (3.3V) -- battery rail can hit 4.2V, which exceeds the DWM3001C's 3.6V operating max without this. Replaced the MCP1700 on 2026-09-23 | Wristband | 1 |
 | TI **TPS62A02PDDCR** | Buck regulator, `+VSYS` -> `+3V3` | Bay Station | 1 |
-| TI **TPS63802DLAR** | Buck-boost, `+VSYS` -> `+VBAT_LTE` (nRF9151 VDD). Footprint PLACEHOLDER | Bay Station | 1 |
+| TI **TPS63802DLAR** | Buck-boost, `+VSYS` -> `+VBAT_LTE` (nRF9151 VDD). Footprint from TI's land-pattern page (2026-11-18) | Bay Station | 1 |
 | ST **LIS3MDL** / **LIS2DH** | Magnetometer (heading) / accelerometer (tilt, knock). LIS2DH may be EOL -- check | Bay Station | 1 + 1 |
 | Infineon **BGA524N6** + TI **TPS7A0228** | GNSS LNA and its COEX0-switched 2.8 V LDO, as on the nRF9151 DK | Bay Station | 1 + 1 |
 | TI **TPD3F303** | SIM ESD/EMI filter | Bay Station | 1 |
@@ -175,15 +175,14 @@ Footprint caveats: MAX17048 is flagged `_PLACEHOLDER` in its footprint file
 needs re-checking against the real datasheet figure before fab (see
 `bay-station/libs/README.md`). The same caveat applies to the DWM3000
 footprint retained in `shared/`, though nothing uses it now. On the bay
-station, **the nRF9151 (U20) and TPS63802 (U40) footprints are
-placeholders** -- the nRF9151 one has made-up pad positions and must not go
-to fab -- and so are the Rakon TCXO, the SMA edge launch (needs EM
-simulation) and the DNP eSIM.
+station, the nRF9151 (U20), BT840 (U3) and TPS63802 (U40) footprints were
+replaced on 2026-11-18 with vendor-sourced geometry (`docs/decisions.md`,
+Resolved); the Rakon TCXO, the SMA edge launch (needs EM simulation) and the
+DNP eSIM are still placeholders.
 
-**No footprint assigned yet**: `U3` on both boards (BT840, 65 pins; and
-DWM3001C, 48 pins), and bay-station FB1-FB4 (Murata BLM03 case size
-unresolved). L1 and SW2 were closed on 2026-11-17. Not blocking while both
-`.kicad_pcb` files are still empty, but it blocks layout.
+`U3` on both boards (BT840 and DWM3001C) and bay-station FB1-FB4 were given
+footprints on 2026-11-18 (BT840 from Fanstel's library, DWM3001C from Qorvo's;
+FB1-FB4 use stock 0201 pads, Murata land table not yet read).
 
 Standard passive size for this whole project: **0603** for R/C/L (0-ohm
 0603 link/jumper resistors are documented as a standard available option in
@@ -263,12 +262,13 @@ silent corruption from hand-resolving `.kicad_sch` conflicts still stands.
 
 ### Not done yet (in rough next-up order)
 
-1. **Replace the nRF9151 placeholder footprint** with Nordic's real land
-   pattern, and re-verify every Nordic fact against the PDFs -- so far they
-   were read only from Nordic's HTML pages (`docs/decisions.md`, Open).
-2. **Import the BT840 and DWM3001C footprints** from vendor libraries
-   (check pad naming), and resolve the U40, FB1-FB4, TCXO and SMA
-   footprint items.
+1. **Re-verify every Nordic fact against the PDFs** -- so far they were
+   read only from Nordic's HTML pages (`docs/decisions.md`, Open). The
+   nRF9151 footprint itself now comes from Nordic's DK files; compare it with
+   the PS land-pattern figure when the PDF is in hand.
+2. **Footprints**: BT840, DWM3001C, U40 and nRF9151 are done (2026-11-18);
+   still open are FB1-FB4 (read Murata's BLM03PG land table), the TCXO,
+   the SMA launch and the DNP eSIM.
 3. **Close the redesign's open risks** in `docs/decisions.md`. Analysed
    2026-11-18 and reduced to concrete actions: the DW3210 has **no exposed
    pad** (so the QFN footprint must be replaced), the LIS3MDL is terminated
@@ -288,7 +288,8 @@ silent corruption from hand-resolving `.kicad_sch` conflicts still stands.
    (1.048mm finished) but is otherwise empty: 0 footprints, no outline.
    **The wristband's `.kicad_pcb` is not an empty stub** -- it already carries
    36 footprints, a routed board outline, and real DRC findings from the
-   DWM3001C migration (PR #5); U3 (the DWM3001C) still has no footprint.
+   DWM3001C migration (PR #5); U3 (the DWM3001C) now has a footprint in the library (2026-11-18) but the PCB
+   still embeds the old placeholder until it is updated from the schematic.
 
 Done since the last update, for the record: the anchor rework onto four
 discrete DW3210s, the decoupling audit (`docs/passives-reference.md`), the

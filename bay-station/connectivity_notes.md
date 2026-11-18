@@ -251,7 +251,7 @@ Pins: P0.26 RX, P0.27 TX, P0.11 RTS, P1.00 CTS, P0.13 IRQ out, P0.02
 - DCCH (F5) is open. VBUS, D+ and D- are open because USB is unused.
 - C5/C6/C7 are kept: generic values, not from the Fanstel datasheet.
 - R140-R144 are 0R series on all five bridge lines.
-- **The BT840 footprint is still not authored** (pre-existing open item).
+- The BT840 footprint was authored 2026-11-18 (`Fanstel_BT840_Module_14x16mm_16Cast_49LGA`, from Fanstel's own `BT840.lbr`; section 7).
 
 ## 6. I2C pull-ups (re-checked)
 
@@ -267,7 +267,8 @@ nRF9151 only reads it.
 
 | Footprint | Status |
 |---|---|
-| `bay_station:Nordic_nRF9151_LGA-113_12.1x11.1mm_PLACEHOLDER` | **Do not fab.** The body outline is real (PS: D 12.1, E 11.1, A 1.156 nom, e 0.55). The pads are a numbered 11x11 grid so the netlist imports. The PS dimension table could be read, but the drawing that places those dimensions could not. Replace it with Nordic's land pattern from the HDG *Footprint* figures (NSMD, pads inside the outline, 50 um SR extension, 80-100 um stencil) or from the reference-layout download. |
+| `bay_station:Nordic_nRF9151_LGA-113_12.1x11.1mm_P0.5mm` | **Real pads, 2026-11-18.** From Nordic's own nRF9151 DK hardware files (`400797.PcbDoc`, `LGA50P1210X1110X130-113N`); all 113 pad positions/sizes match the DK top-copper Gerber `400797.GTL`, and the pad numbering agrees with the symbol (GND on 1/20/41/60 and 105-113, RSVD 81-104). Edge pitch is 0.5 mm; the PS `e 0.55` is the inner RSVD pitch. Mask and paste are Altium rules, not in the data: reduce paste on the 1.6 mm ground pads. Still to do when the PS PDF is obtainable: compare with its land-pattern figure. |
+| `bay_station:Fanstel_BT840_Module_14x16mm_16Cast_49LGA` | **Real pads, 2026-11-18.** From Fanstel's `BT840.lbr` (package `BT840`, 65 pads), matching the datasheet Ver 1.15 pp. 9-10 drawings. Pad names equal the symbol pin numbers (1-16, Z0-F6). |
 | `bay_station:Infineon_TSNP-6-2_0.7x1.1mm_P0.4mm` | Verified against BGA524N6 DS Fig. 5 and Fig. 7 (0.25 mm pads on a 0.4 mm grid; pin 1 from the mirrored bottom view). Paste is KiCad-default square; the DS shows round 100 um stencil apertures. |
 | `bay_station:eSIM_MFF2_PLACEHOLDER` | DNP part; pad map not verified. |
 | U.FL (Hirose U.FL-R-SMT-1(10)), SIM8060, TPD3F303 USON-8, SOT-23-5/6 | Stock KiCad footprints. The Hirose PDF was not downloaded. |

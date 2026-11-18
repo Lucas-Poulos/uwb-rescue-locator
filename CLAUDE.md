@@ -47,9 +47,11 @@ Consequences an agent must not "simplify" away:
   for the project. The station links to a **laptop over BLE** as its primary
   path and adds an **LTE-M uplink** on top; it must still work fully with no
   SIM. There is no WiFi. Pin assignments live in one place,
-  `bay-station/connectivity_notes.md` section 2. The nRF9151 footprint is a
-  PLACEHOLDER with invented pads and the BT840 footprint is still missing --
-  neither board is fab-ready (`docs/decisions.md`).
+  `bay-station/connectivity_notes.md` section 2. The nRF9151, BT840 and DWM3001C footprints
+  come from vendor files (Nordic DK PcbDoc, Fanstel `BT840.lbr`, Qorvo's
+  Altium library; `docs/decisions.md`, Resolved) -- but the TCXO, SMA launch,
+  MAX17048 and eSIM footprints are still placeholders, so neither board is
+  fab-ready.
 - **The bay station is deployed OUTDOORS and moved between sites**, and
   georeferences itself: the nRF9151's built-in GNSS for position (time-shared
   with LTE, which is fine for a stationary survey-in), LIS3MDL magnetometer

@@ -61,12 +61,10 @@ relitigate them. Keep this updated as the team decides things.
 Raised by the five sheet/firmware handoffs (`bay-station/handoff/*.md`,
 `firmware/handoff.md`). The first three block fab outright.
 
-- **nRF9151 footprint is a PLACEHOLDER with invented pad positions -- do not
-  fab.** `bay_station:Nordic_nRF9151_LGA-113_12.1x11.1mm_PLACEHOLDER` has the
-  real body outline (PS: 12.1 x 11.1 mm, e 0.55) but its pads are a numbered
-  11x11 grid made up so the netlist imports. Replace it with Nordic's land
-  pattern (HDG *Footprint* figures, or the reference-layout download).
-  `connectivity_notes.md` section 7.
+- ~~nRF9151 footprint is a PLACEHOLDER with invented pad positions~~ --
+  **replaced 2026-11-18 with Nordic's own DK pad data**, see Resolved
+  ("Footprints from vendor sources"). Residual: it has not been checked
+  against the PS land-pattern figure, which still needs the PDF (next item).
 - **No Nordic PDF could be fetched.** docs.nordicsemi.com served a
   Cloudflare challenge; every nRF9151 PS / HDG / DK fact in this repo was read
   from Nordic's HTML renditions through a text-extraction fetch, not with
@@ -77,12 +75,11 @@ Raised by the five sheet/firmware handoffs (`bay-station/handoff/*.md`,
   the pinout figure (the "slow pins near the RF corner" placement rests on pin
   *numbers* only), and record the PDF revisions. Same caveat for the
   nRF91x1 PTI / `%XRFTEST` facts in `verification-plan.md`.
-- **U40 (TPS63802) footprint is a PLACEHOLDER** -- the DLA0010A land pattern
-  did not extract cleanly; land sizes for pins 6-10 are estimated. Verify
-  against the rendered SLVSEU9D page or TI's CAD model.
-  `regulation_notes.md` section 8.
-- **U3 (BT840) footprint is still missing** -- see the vendor-import item
-  under Critical path.
+- ~~U40 (TPS63802) footprint is a PLACEHOLDER~~ -- **resolved 2026-11-18**
+  from the rendered SLVSEU9D land-pattern and stencil pages (Resolved,
+  "Footprints from vendor sources").
+- ~~U3 (BT840) footprint is still missing~~ -- **resolved 2026-11-18**, from
+  Fanstel's own Eagle library (same section).
 - **UWB SMA launch needs EM simulation.** The CONSMA020.042-G footprint is a
   PLACEHOLDER and its 1.52 mm centre pad is far wider than the 50 ohm line;
   the taper / ground cut-back at 6.5 GHz has to be designed, not guessed. The
@@ -117,9 +114,12 @@ Raised by the five sheet/firmware handoffs (`bay-station/handoff/*.md`,
   (40 pins, no EP pin) is already right. Residual uncertainty: Figure 38 is
   a package drawing, not a land pattern, and the Figure 35 photo was read by
   eye at 250 dpi, not measured.
-- **FB1-FB4 (BLM03PG330SN1D) have no footprint.** By Murata's naming BLM03
-  is the 0201 imperial size; `components.csv` used to say 0402. Read the
-  Murata datasheet (not obtained 2026-11-17) and assign.
+- **FB1-FB4 (BLM03PG330SN1D): footprint assigned, land pattern unverified.**
+  Case size is 0201 inch / 0603 metric (0.6 x 0.3 x 0.3 mm), assigned the
+  stock `Inductor_SMD:L_0201_0603Metric` on 2026-11-18, but the Murata PDF
+  (ENFA0020) could not be fetched -- murata.com served a maintenance page and
+  Mouser/alldatasheet/DigiKey refused automated fetches -- so Murata's own
+  land-dimension table for BLM03PG was not read. Check it before layout.
 - **TCXO is quote-only, and a smaller CMOS part with a guaranteed 1 kHz
   figure was not found (searched 2026-11-18).** The proposed Rakon RPT1490LN
   (Resolved below) has no catalogue ordering code for 38.4 MHz -- one
@@ -474,23 +474,13 @@ not settle:
   verifying (every figure quoted so far is an estimate), but it is no longer
   a gating number. It sets how much of the 17 dB you spend, which feeds
   timestamp precision via SNR.
-- **Import vendor footprints for BT840 and DWM3001C.** Neither should be
-  hand-authored: both land patterns exist only as mechanical drawings, and
-  guessing pad geometry on a 65- or 48-pad module is not a risk worth taking.
-  The BT840 (U3) is still needed as the BLE bridge, so the redesign did not
-  remove this item. Sources found: SnapMagic/SnapEDA lists a
-  **Qorvo-provided** DWM3001C symbol/footprint/3D model, and both SnapMagic
-  and Ultra Librarian list BT840 -- plus Fanstel ships a 61-pin library
-  component with its EV-BT840F V4 Gerbers. Note that 61-pin part omits F0-F3,
-  which are real solderable ground pads; see the pin-count item below before
-  trusting it.
-
-  **When importing, check pad naming.** KiCad matches symbol pins to footprint
-  pads *by name*. Both symbols here use the datasheets' own schemes -- BT840
-  as 1-16 then Z0-Z6/A0-A6/B0-B6/C0-C6/D0-D6/E0-E6/F0-F6, DWM3001C as 1-48.
-  A vendor footprint numbered differently will silently connect nothing.
-  Also confirm what the vendor does with DWM3001C pin 18, which its own
-  datasheet leaves undocumented.
+- ~~Import vendor footprints for BT840 and DWM3001C~~ -- **done 2026-11-18**,
+  from the vendors' own files (Resolved, "Footprints from vendor sources").
+  Pad naming was checked programmatically: the BT840 footprint has exactly
+  the symbol's 65 pad names and the DWM3001C footprint exactly pads 1-48.
+  Vendor DWM3001C pin 18 is simply pad "18" in Qorvo's library -- it carries
+  no extra information about the pin's function, which the datasheet still
+  leaves undocumented in Table 2.
 - ~~Reconcile the BT840 pin count~~ -- **resolved at 65, after a wrong turn.**
   The datasheet summary says 45 LGA while its own Pin Function table lists
   49 designators. An intermediate revision of this symbol dropped F0-F3 to
@@ -595,6 +585,67 @@ not settle:
   open on purpose; close it from the web UI when convenient.
 - **No-PR workflow** (2026-11-18): commit straight to the trunk branch
   (`redesign/nrf9151-host` until it replaces `main`) -- `CONTRIBUTING.md`.
+### Footprints from vendor sources (2026-11-18)
+
+Rule applied: take pad geometry from a file the vendor itself publishes, then
+confirm it against a second artifact (datasheet drawing or Gerber). Nothing
+from SnapEDA / SnapMagic / Ultra Librarian / Flux was used.
+
+- **nRF9151 (U20) -- real, from Nordic's DK.** The PDFs on docs.nordicsemi.com
+  are behind Cloudflare, but Nordic's *nRF9151 DK Hardware files 1_0_0* ZIP
+  (nordicsemi.com > nRF9151-DK > Download, hosted on Nordic's own blob
+  storage) holds the DK's Altium `400797.PcbDoc` and Gerbers. The DK's M1 is
+  `LGA50P1210X1110X130-113N`. Its 113 pads were parsed out of the binary
+  PcbDoc (un-rotating the 270 degree placement) and **all 113 positions and
+  sizes were matched against flashes in the same ZIP's top-copper Gerber
+  `400797.GTL`**. Pad numbers agree with our symbol: the corner pads 1/20/41/60
+  and centre pads 105-113 are all GND in `bay_station:nRF9151`, 81-104 are
+  RSVD. Edge pitch is 0.5 mm; the PS "e 0.55" recorded earlier is the pitch of
+  the inner RSVD pads. Mask and paste are Altium rules and are not in the
+  data, so the large ground pads need a reduced paste aperture chosen with the
+  stencil. **Not checked against the PS mechanical figure** (PDF
+  unobtainable), so a last look when the PS is in hand is still warranted --
+  but this is the footprint Nordic shipped on its own board.
+  Footprint `Nordic_nRF9151_LGA-113_12.1x11.1mm_P0.5mm`.
+- **BT840 (U3) -- real, from Fanstel.** Fanstel's download page offers
+  `BT840.lbr` (Eagle). Package `BT840` has exactly 65 pads and its geometry
+  reproduces the datasheet's pp. 9-10 drawings: castellations 1.10 mm pitch
+  (1.5 x 0.7 mm, centred on the edge, so 0.75 mm outside the body as the
+  "0.75 mm" dimension shows), LGA columns 1.50 mm and rows 1.20 mm apart,
+  0.6 mm round signal pads, F0-F3 1.5 x 1.5 mm ground pads at 3.625/2.25 mm,
+  F6 a 0.6 mm square. Eagle names (`P$1`, `P$A5`) were renamed to the
+  datasheet's (`1`, `A5`), identical to the symbol's pin numbers. This also
+  confirms F0-F3 are real pads (see the 65-pin item). The library's extra
+  20.8 mm outline is the BT840F's and was not used; the body is the 14 x 16
+  mm of Ver 1.15 p. 10. Footprint `Fanstel_BT840_Module_14x16mm_16Cast_49LGA`.
+- **DWM3001C (U3, wristband) -- real, from Qorvo.** A Qorvo staff member
+  posted Qorvo's own Altium library (`DWM3001C.IntLib` + STEP) on
+  forum.qorvo.com (thread 12741, file dated 2023-03-09). The 48 pads were
+  parsed from its embedded PcbLib and match DWM3001C Data Sheet Rev B
+  Fig. 5: 2.54 x 0.75 mm pads, **1.00 mm pitch on all three edges**, 16.27 mm
+  inner gap, last bottom pad 3.10 mm from the right edge. The earlier
+  PLACEHOLDER's "1.06375 mm back-derived pitch" was wrong: the 17.77 mm on
+  Fig. 5 is the ground-region extent, not the pad span. Pin 1 top-left,
+  18-31 bottom, 32-48 right, as in Fig. 1. Footprint
+  `Qorvo_DWM3001C_Module_19.13x27.1mm_48Pad`. The datasheet's NON-GROUND
+  region above the antenna end still has to be honoured in layout. Only the
+  U3 footprint assignment was changed on the wristband sheets.
+  `wristband.kicad_pcb` still embeds the old placeholder footprint; run
+  *Update PCB from Schematic* with the footprint replaced.
+- **TPS63802DLA (U40) -- real land pattern.** The previous estimate came from
+  `pdftotext`, which drops the dimension leaders. Reading the *rendered*
+  SLVSEU9D pages (drawing 4223750/D) gives: pins 1-5 lands 0.6 x 0.25 mm
+  centred 0.9 mm left of the package centreline; pins 6, 7, 9, 10 lands
+  0.9 x 0.25 mm centred 0.75 mm right; **pin 8 (GND) a 1.3 x 0.25 mm land**
+  spanning from 0.11 mm left of the centreline to 1.2 mm right, with its paste
+  as two 0.55 mm apertures. The old placeholder had pin 8 as just another
+  0.9 mm land. TI's "Example Board Layout" is itself an example, not a
+  mandate, but it is TI's. Footprint `TI_DLA0010A_VSON-HR-10_2x3mm_P0.5mm`.
+- **FB1-FB4 (BLM03PG330SN1D) -- case size resolved, land pattern not.** 0201
+  inch (0603 metric), 0.6 x 0.3 x 0.3 mm, per Murata's naming and every
+  distributor listing seen (DigiKey: "0201 (0603 Metric)"; TTI/SnapEDA
+  dimensions agree). Assigned stock `Inductor_SMD:L_0201_0603Metric`. The
+  Murata PDF could not be fetched, hence the Open item above.
 
 ### nRF9151 host redesign (2026-11-17)
 
