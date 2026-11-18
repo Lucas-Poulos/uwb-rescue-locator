@@ -110,43 +110,62 @@ def net_class_table(board):
 
 
 def board_outline(board):
-    """Axis-aligned bbox (x0,y0,x1,y1) in mm of Edge.Cuts, or None."""
-    bb = None
+    """Axis-aligned bbox (x0,y0,x1,y1) in mm of Edge.Cuts, or None.  Built from the
+    shape end points (PCB_SHAPE.GetBoundingBox aborts headless: wx traits assert)."""
+    xs, ys = [], []
     for d in board.GetDrawings():
-        if d.GetLayer() == pcbnew.Edge_Cuts:
-            b = d.GetBoundingBox()
-            bb = b if bb is None else (bb.Merge(b) or bb)
-    if bb is None:
+        if d.GetLayer() == pcbnew.Edge_Cuts and d.Type() == pcbnew.PCB_SHAPE_T:
+            for q in (d.GetStart(), d.GetEnd()):
+                xs.append(mm(q.x)); ys.append(mm(q.y))
+    if not xs:
         return None
-    return (mm(bb.GetLeft()), mm(bb.GetTop()), mm(bb.GetRight()), mm(bb.GetBottom()))
+    return (min(xs), min(ys), max(xs), max(ys))
+
+
+def _arc_points(d, n=12):
+    """Polyline (start .. end) approximating an Edge.Cuts arc, in mm."""
+    st, mid, en = d.GetStart(), d.GetArcMid(), d.GetEnd()
+    ax, ay, mx, my, bx, by = mm(st.x), mm(st.y), mm(mid.x), mm(mid.y), mm(en.x), mm(en.y)
+    dd = 2 * (ax * (my - by) + mx * (by - ay) + bx * (ay - my))
+    ux = ((ax**2 + ay**2) * (my - by) + (mx**2 + my**2) * (by - ay) + (bx**2 + by**2) * (ay - my)) / dd
+    uy = ((ax**2 + ay**2) * (bx - mx) + (mx**2 + my**2) * (ax - bx) + (bx**2 + by**2) * (mx - ax)) / dd
+    r = math.hypot(ax - ux, ay - uy)
+    a0, am, a1 = math.atan2(ay - uy, ax - ux), math.atan2(my - uy, mx - ux), math.atan2(by - uy, bx - ux)
+    def ccw(a, b):
+        return (b - a) % (2 * math.pi)
+    sweep = ccw(a0, a1) if ccw(a0, am) < ccw(a0, a1) else -ccw(a1, a0)
+    pts = [(ux + r * math.cos(a0 + sweep * k / n), uy + r * math.sin(a0 + sweep * k / n)) for k in range(n + 1)]
+    pts[0], pts[-1] = (ax, ay), (bx, by)
+    return pts
 
 
 def outline_polygon(board):
-    """Board outline as a list of (x,y) mm if Edge.Cuts is a closed rectangle/polygon of
-    straight lines; falls back to the bbox rectangle."""
+    """Board outline as a list of (x,y) mm: a rectangle, or Edge.Cuts lines AND arcs chained
+    into a closed polygon (arcs sampled); falls back to the bbox rectangle."""
     segs = []
     for d in board.GetDrawings():
-        if d.GetLayer() != pcbnew.Edge_Cuts:
+        if d.GetLayer() != pcbnew.Edge_Cuts or d.Type() != pcbnew.PCB_SHAPE_T:
             continue
         if d.GetShape() == pcbnew.SHAPE_T_RECT:
             x0, y0 = mm(d.GetStart().x), mm(d.GetStart().y)
             x1, y1 = mm(d.GetEnd().x), mm(d.GetEnd().y)
             return [(x0, y0), (x1, y0), (x1, y1), (x0, y1)]
         if d.GetShape() == pcbnew.SHAPE_T_SEGMENT:
-            segs.append(((mm(d.GetStart().x), mm(d.GetStart().y)), (mm(d.GetEnd().x), mm(d.GetEnd().y))))
+            segs.append([(mm(d.GetStart().x), mm(d.GetStart().y)), (mm(d.GetEnd().x), mm(d.GetEnd().y))])
+        elif d.GetShape() == pcbnew.SHAPE_T_ARC:
+            segs.append(_arc_points(d))
     if segs:
-        # chain the segments
-        pts = [segs[0][0], segs[0][1]]
+        pts = list(segs[0])
         rest = segs[1:]
         while rest:
             for i, s in enumerate(rest):
                 if math.dist(s[0], pts[-1]) < 1e-3:
-                    pts.append(s[1]); rest.pop(i); break
-                if math.dist(s[1], pts[-1]) < 1e-3:
-                    pts.append(s[0]); rest.pop(i); break
+                    pts += s[1:]; rest.pop(i); break
+                if math.dist(s[-1], pts[-1]) < 1e-3:
+                    pts += s[::-1][1:]; rest.pop(i); break
             else:
                 break
-        if len(pts) > 3 and math.dist(pts[0], pts[-1]) < 1e-3:
+        if len(pts) > 3 and math.dist(pts[0], pts[-1]) < 1e-3 and not rest:
             return pts[:-1]
     bb = board_outline(board)
     if bb:

@@ -100,15 +100,67 @@ def route_uwb_clocks(board, tol_mm=0.5, lock_items=True):
     return {k: v["length"] for k, v in res.items() if k != "_spread_mm"}, res["_spread_mm"]
 
 
+# (net, ref_a, pin_a, ref_b, pin_b, fence): host-side RF50 / clock hops, in signal order.
+# Pins come from the netlist of the placed board (checked at run time against the net).
+HOST_HOPS = [   # GNSS is routed antenna -> modem: the LNA input (noise critical) gets the shortest lane
+    ("/Connectivity/LTE_RF_PIN", "U20", "35", "R130", "1", True),
+    ("/Connectivity/LTE_ANT", "R130", "2", "J10", "1", True),
+    ("/Connectivity/GNSS_ANT", "C123", "1", "J11", "1", True),
+    ("/Connectivity/GNSS_LNA_AI", "U24", "5", "L101", "2", True),
+    ("/Connectivity/GNSS_LNA_IN_DC", "L101", "1", "C123", "2", True),
+    ("/Connectivity/GNSS_LNA_AO", "R123", "1", "U24", "3", True),
+    ("/Connectivity/GNSS_RF_A", "R125", "1", "R123", "2", True),
+    ("/Connectivity/GNSS_RF_PIN", "U20", "42", "R125", "2", True),
+    ("/Clock Distribution/TCXO_RF", "U30", "4", "R230", "1", False),
+    ("TCXO_OUT", "R230", "2", "U31", "1", False),
+]
+
+
+def route_host_rf(board, lock_items=True, report=None):
+    """LTE / GNSS RF50 chains and the TCXO -> buffer clock hops, each a plain pad-to-pad
+    0.45 mm microstrip on F.Cu (A* around obstacles when no orthogonal candidate fits).
+    RF hops get a GND fence; the TCXO clock is not fenced (clock, not RF).  Returns {net: length}."""
+    out, locked = {}, []
+    for netname, ra, pa, rb, pb, fence in HOST_HOPS:
+        have = {(r, k) for r, k, v in pads_on(board, netname)}
+        assert (ra, pa) in have and (rb, pb) in have, (netname, ra, pa, rb, pb, sorted(have))
+        its = None
+        # (width, keep-off to foreign copper): narrower / tighter only where the 0.4 mm pitch
+        # pads of the BGA524N6 force it; the relaxed rows break the .kicad_dru RF50 0.5 mm rule
+        # on purpose and are reported.
+        for w, tc in ((R.RF_W, 0.5), (0.35, 0.5), (0.30, 0.5), (0.24, 0.5), (0.24, 0.3), (0.24, 0.15)):
+            try:
+                its, ln = R.route_pads(board, U.get_net(board, netname), (ra, pa), (rb, pb),
+                                       neck_pads={(ra, pa), (rb, pb)}, width=w, trk_clearance=tc)
+                if (w, tc) != (R.RF_W, 0.5):
+                    print("note: %s routed at %.2f mm width, %.2f keep-off (0.45 / 0.5 did not fit)" % (netname, w, tc))
+                break
+            except RuntimeError as e:
+                err = e
+        if its is None:
+            print("UNROUTED HS hop", netname, err)
+            out[netname] = None
+            continue
+        out[netname] = ln
+        locked += its
+        if fence:
+            locked += R.via_fence(board, its)
+    if lock_items:
+        R.lock(locked)
+    return out
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    ap.add_argument("step", choices=["rf", "clocks", "all"])
+    ap.add_argument("step", choices=["rf", "clocks", "host", "all"])
     ap.add_argument("--board", required=True, help="PLACED board (a scratch copy!)")
     ap.add_argument("--out", help="save here (default: overwrite --board)")
     a = ap.parse_args()
     b = U.load_board(a.board)
     if a.step in ("rf", "all"):
         print("RF lengths (mm):", {k: round(v, 3) for k, v in route_uwb_rf(b).items()})
+    if a.step in ("host", "all"):     # before the clock group: the short TCXO / LTE / GNSS runs take their direct lanes first
+        print("host RF/TCXO lengths (mm):", {k: (None if v is None else round(v, 3)) for k, v in route_host_rf(b).items()})
     if a.step in ("clocks", "all"):
         L, sp = route_uwb_clocks(b)
         print("clock path lengths (mm):", {k: round(v, 3) for k, v in L.items()}, "spread %.3f" % sp)
