@@ -1,0 +1,330 @@
+{
+ "_comment": "Kept bay-station test pads after the 2026-11-18 cut (127 -> 62). label = bottom-side silkscreen text (<= 12 chars, ASCII, no sheet path); group = function row for the bottom-side pad placement (stage 2). Refs are unchanged from the schematic. No pad is on an RF50 or CLK-class net: TP5/TP6 sit behind DNP 0R R402/R403 (nets Net-(R402-Pad1), Net-(R403-Pad1)). See docs/verification-plan.md \"Test-point index\" and docs/decisions.md 2026-11-18.",
+ "schema": 1,
+ "groups": [
+  "power",
+  "gnd",
+  "clock",
+  "spi",
+  "a0",
+  "a1",
+  "a2",
+  "a3",
+  "host",
+  "sensors",
+  "modem"
+ ],
+ "count": 62,
+ "pads": {
+  "TP1": {
+   "label": "3V3 MAIN",
+   "group": "power",
+   "net": "+3V3"
+  },
+  "TP2": {
+   "label": "VSYS",
+   "group": "power",
+   "net": "+VSYS"
+  },
+  "TP100": {
+   "label": "VBAT LTE",
+   "group": "power",
+   "net": "+VBAT_LTE"
+  },
+  "TP101": {
+   "label": "3V3 UWB",
+   "group": "power",
+   "net": "+3V3"
+  },
+  "TP102": {
+   "label": "3V3 HOST",
+   "group": "power",
+   "net": "+3V3"
+  },
+  "TP103": {
+   "label": "VSYS REG",
+   "group": "power",
+   "net": "+VSYS"
+  },
+  "TP104": {
+   "label": "5V IN",
+   "group": "power",
+   "net": "+5V_IN"
+  },
+  "TP400": {
+   "label": "3V3 REG",
+   "group": "power",
+   "net": "+3V3_REG"
+  },
+  "TP403": {
+   "label": "FB 3V3",
+   "group": "power",
+   "net": "FB_3V3"
+  },
+  "TP404": {
+   "label": "EN 3V3",
+   "group": "power",
+   "net": "EN_3V3"
+  },
+  "TP405": {
+   "label": "PG 3V3",
+   "group": "power",
+   "net": "PG_3V3"
+  },
+  "TP406": {
+   "label": "VBAT REG",
+   "group": "power",
+   "net": "+VBAT_LTE_REG"
+  },
+  "TP408": {
+   "label": "EN LTE",
+   "group": "power",
+   "net": "EN_LTE"
+  },
+  "TP409": {
+   "label": "PG LTE",
+   "group": "power",
+   "net": "PG_LTE"
+  },
+  "TP410": {
+   "label": "FB LTE",
+   "group": "power",
+   "net": "FB_LTE"
+  },
+  "TP415": {
+   "label": "VBAT PROT",
+   "group": "power",
+   "net": "VBATT_PROT"
+  },
+  "TP416": {
+   "label": "THERM",
+   "group": "power",
+   "net": "THERM"
+  },
+  "TP417": {
+   "label": "BATT RAW",
+   "group": "power",
+   "net": "BATT_RAW"
+  },
+  "TP3": {
+   "label": "GND CLK1",
+   "group": "gnd",
+   "net": "GND"
+  },
+  "TP110": {
+   "label": "GND CLK2",
+   "group": "gnd",
+   "net": "GND"
+  },
+  "TP111": {
+   "label": "GND SPI",
+   "group": "gnd",
+   "net": "GND"
+  },
+  "TP113": {
+   "label": "GND PWR",
+   "group": "gnd",
+   "net": "GND"
+  },
+  "TP114": {
+   "label": "GND REG",
+   "group": "gnd",
+   "net": "GND"
+  },
+  "TP115": {
+   "label": "GND HOST",
+   "group": "gnd",
+   "net": "GND"
+  },
+  "TP116": {
+   "label": "GND UWB",
+   "group": "gnd",
+   "net": "GND"
+  },
+  "TP5": {
+   "label": "TCXO OUT",
+   "group": "clock",
+   "net": "TCXO_OUT (behind DNP R402)"
+  },
+  "TP6": {
+   "label": "CLK A0",
+   "group": "clock",
+   "net": "UWB_CLK0 (behind DNP R403)"
+  },
+  "TP528": {
+   "label": "3V3 TCXO",
+   "group": "clock",
+   "net": "+3V3_TCXO"
+  },
+  "TP529": {
+   "label": "3V3 CLKBUF",
+   "group": "clock",
+   "net": "+3V3_CLKBUF"
+  },
+  "TP530": {
+   "label": "TCXO VC",
+   "group": "clock",
+   "net": "TCXO_VC"
+  },
+  "TP10": {
+   "label": "SPI SCK",
+   "group": "spi",
+   "net": "UWB_SCK"
+  },
+  "TP11": {
+   "label": "SPI MOSI",
+   "group": "spi",
+   "net": "UWB_MOSI"
+  },
+  "TP12": {
+   "label": "SPI MISO",
+   "group": "spi",
+   "net": "UWB_MISO"
+  },
+  "TP14": {
+   "label": "UWB RSTN",
+   "group": "spi",
+   "net": "UWB_RST_N"
+  },
+  "TP130": {
+   "label": "UWB WAKE",
+   "group": "spi",
+   "net": "UWB_WAKEUP"
+  },
+  "TP13": {
+   "label": "A0 IRQ",
+   "group": "a0",
+   "net": "UWB_IRQ0"
+  },
+  "TP15": {
+   "label": "A0 CSN",
+   "group": "a0",
+   "net": "UWB_CS0_N"
+  },
+  "TP16": {
+   "label": "A1 CSN",
+   "group": "a1",
+   "net": "UWB_CS1_N"
+  },
+  "TP19": {
+   "label": "A1 IRQ",
+   "group": "a1",
+   "net": "UWB_IRQ1"
+  },
+  "TP17": {
+   "label": "A2 CSN",
+   "group": "a2",
+   "net": "UWB_CS2_N"
+  },
+  "TP20": {
+   "label": "A2 IRQ",
+   "group": "a2",
+   "net": "UWB_IRQ2"
+  },
+  "TP18": {
+   "label": "A3 CSN",
+   "group": "a3",
+   "net": "UWB_CS3_N"
+  },
+  "TP21": {
+   "label": "A3 IRQ",
+   "group": "a3",
+   "net": "UWB_IRQ3"
+  },
+  "TP150": {
+   "label": "BR TXD",
+   "group": "host",
+   "net": "BRIDGE_TXD"
+  },
+  "TP151": {
+   "label": "BR RXD",
+   "group": "host",
+   "net": "BRIDGE_RXD"
+  },
+  "TP152": {
+   "label": "BR RTS",
+   "group": "host",
+   "net": "BRIDGE_RTS"
+  },
+  "TP153": {
+   "label": "BR CTS",
+   "group": "host",
+   "net": "BRIDGE_CTS"
+  },
+  "TP154": {
+   "label": "BR IRQ",
+   "group": "host",
+   "net": "BRIDGE_IRQ"
+  },
+  "TP155": {
+   "label": "RST BLE",
+   "group": "host",
+   "net": "RESET_BLE_N"
+  },
+  "TP121": {
+   "label": "3V3 SNS",
+   "group": "sensors",
+   "net": "+3V3_SNS"
+  },
+  "TP140": {
+   "label": "I2C SCL",
+   "group": "sensors",
+   "net": "I2C_SCL"
+  },
+  "TP141": {
+   "label": "I2C SDA",
+   "group": "sensors",
+   "net": "I2C_SDA"
+  },
+  "TP143": {
+   "label": "MAG INT",
+   "group": "sensors",
+   "net": "MAG_INT"
+  },
+  "TP144": {
+   "label": "ACC INT1",
+   "group": "sensors",
+   "net": "ACC_INT1"
+  },
+  "TP145": {
+   "label": "ACC INT2",
+   "group": "sensors",
+   "net": "ACC_INT2"
+  },
+  "TP146": {
+   "label": "FG ALRT",
+   "group": "sensors",
+   "net": "FG_ALRT"
+  },
+  "TP46": {
+   "label": "LNA EN",
+   "group": "modem",
+   "net": "GNSS_LNA_EN"
+  },
+  "TP47": {
+   "label": "LNA VCC",
+   "group": "modem",
+   "net": "GNSS_LNA_VCC"
+  },
+  "TP48": {
+   "label": "NRF VDD",
+   "group": "modem",
+   "net": "NRF_VDD"
+  },
+  "TP49": {
+   "label": "VDD GPIO",
+   "group": "modem",
+   "net": "NRF_VDD_GPIO"
+  },
+  "TP50": {
+   "label": "NRF ENABLE",
+   "group": "modem",
+   "net": "NRF_ENABLE"
+  },
+  "TP162": {
+   "label": "RST MCU",
+   "group": "modem",
+   "net": "RESET_MCU_N"
+  }
+ }
+}

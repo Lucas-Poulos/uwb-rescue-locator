@@ -29,7 +29,7 @@ identically.
 | 1 | IRQ | 100k to GND (R25-R28) + 0R (R208-R211) -> `UWB_IRQn` | DS v1.1 Table 2: floats in SLEEP/DEEPSLEEP, "100kΩ recommended" pull-down. Active high by default. |
 | 2 | GPIO6/SPIPHA | 10k to GND (R11/13/15/17) | SPI mode strap, see below |
 | 5 | GPIO5/SPIPOL | 10k to GND (R10/12/14/16) | SPI mode strap |
-| 3,4,6,7,8 | GPIO0-4 | test pads | Spare; configurable as RXOK/SFD/RX/TX/EXTPA strobes. DS Table 2 note 2: not for driving LEDs. Default input with internal pull-down (s4.9.5), so no external termination needed. |
+| 3,4,6,7,8 | GPIO0-4 | no-connect (test pads TP5xx deleted 2026-11-18) | Spare; configurable as RXOK/SFD/RX/TX/EXTPA strobes. DS Table 2 note 2: not for driving LEDs. Default input with internal pull-down (s4.9.5), so no external termination needed. |
 | 9 | GPIO7/SYNC | DNP 0R (R216-R219) -> `UWB_SYNC` | See SYNC below. "This pin is internally pulled down." |
 | 13 | RF2 | 49R9 to GND (R33-R36) | Non-PDoA: "should be grounded with 50 Ω. A 50 Ω PCB trace ... is also required" (Table 2; Fig 32 DW3110 inset R1 49R9). |
 | 18 | RF1 | RF chain, below | "50 Ω single ended ... A 2pF is required on the pin." |
@@ -39,7 +39,7 @@ identically.
 | 28 | VDD2a | FB1-FB4 from `+3V3_An` | "F-15 requires isolation with a ferrite from B-15" (Table 2); Fig 32 FB1 = BLM03PG330SN1D. |
 | 27 | VTX_D | 220nF to GND (C45/53/61/69) | Decoupling only (Fig 32 C9). |
 | 38 | VIO_D | 100nF to GND (C46/54/62/70) | Decoupling only (Fig 32 C21). |
-| 31 | EXTON | test pad | Output; nothing on this board needs it. |
+| 31 | EXTON | no-connect | Output; nothing on this board needs it (test pad deleted 2026-11-18). |
 | 32 | WAKEUP | shared `UWB_WAKEUP`, 100k pull-down R224 | Active high; "should be connected to ground if not used". Pull-down keeps it low while the host pin is Hi-Z. |
 | 33 | RSTn | 0R (R212-R215) -> shared `UWB_RST_N` | "May be pulled low by external open drain driver ... Must not be pulled high by external source." No pull-up anywhere. |
 | 34-36 | SPICLK/MOSI/MISO | shared `UWB_SCK/MOSI/MISO` | |
@@ -148,10 +148,12 @@ two 0402 pads as stubs on A0's XTI/XTO; keep them tight to the pins.
 
 ## Test pads and rework
 
-TP500-TP527: per anchor `+3V3_An`, EXTON, GPIO0-GPIO4. These refs are
-outside the agent block table in the brief (io owns TP100-TP399; no TP block
-was given to uwb) -- renumber at merge if wanted. Contract nets
-(CS/IRQ/SPI/RST/CLK) get their pads on testpoints.kicad_sch (io).
+TP500-TP527 (per anchor `+3V3_An`, EXTON, GPIO0-GPIO4) were **deleted
+2026-11-18** when the board's test pads were cut from 127 to 62 (no
+verification-plan stage reads them). EXTON and GPIO0-4 are now no-connect
+flags on the DW3210 pins; the per-anchor rail is probed at the R200-R203 0R
+link pads or at TP101. Contract nets (CS/IRQ/SPI/RST/CLK) have their pads on
+testpoints.kicad_sch.
 
 ## Open / not verified
 
@@ -174,9 +176,11 @@ was given to uwb) -- renumber at merge if wanted. Contract nets
 
 ## Bring-up tests for this sheet
 
-1. **Rails:** `+3V3_An` at TP500/TP507/TP514/TP521. Idle current per anchor
+1. **Rails:** `+3V3` far end at TP101; the per-anchor rail is the R200-R203
+   link pads (TP500-TP521 deleted 2026-11-18). Idle current per anchor
    by lifting R200-R203 (DS Table 5: ~18 mA IDLE on CH5).
-2. **Clock first:** 38.4 MHz present at every XTI (testpoints TP6-TP9)
+2. **Clock first:** 38.4 MHz present at A0's XTI (testpoints TP6; TP7-TP9
+   deleted 2026-11-18, probe the 2200 pF cap for A1-A3)
    before expecting SPI -- "the DW3000 digital core will be held in reset
    until the crystal oscillator is stable" (s6). No clock = no DEV_ID.
 3. **SPI DEV_ID per anchor:** one CS at a time, mode 0, start at 2 MHz and

@@ -292,9 +292,9 @@ the cell.** TH1 on the PCB measures the board. Either use a 3-wire pack
 with an integrated 10k NTC (wire it to THERM/GND in place of TH1) or bond
 TH1 to the cell. Unchanged in this pass because the pack is not chosen.
 
-Test pads added on this sheet (2026-11-17): TP414 `+5V_IN`, TP415
-`VBATT_PROT`, TP416 `THERM`, TP417 `BATT_RAW`. `+VSYS` already has one on
-`testpoints.kicad_sch`. No current-break link was added here: the two
+Test pads on this sheet: TP415 `VBATT_PROT`, TP416 `THERM`, TP417 `BATT_RAW`
+(2026-11-17). TP414 `+5V_IN` was deleted 2026-11-18 as a duplicate of TP104;
+`+VSYS` has its pads on `testpoints.kicad_sch`. No current-break link was added here: the two
 regulator break points (`regulation_notes.md` Sec 5) cover the loads, and a
 battery-side break would have to carry the 500 mA charge current plus ~1.2 A
 board peak, beyond a PPK2's 1 A range.

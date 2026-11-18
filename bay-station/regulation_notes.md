@@ -206,26 +206,27 @@ at ~0.45 A.
 
 ## 7. Test pads (local nets, `TestPoint:TestPoint_Pad_D1.0mm`)
 
+**Cut 2026-11-18** (test pads 127 -> 62): TP401 and TP407 (J30/J31 pin 2 carry the same nets), TP402/TP411/TP412 (switch nodes) and TP413 (MODE strap) were deleted; struck-through rows below no longer exist.
+
 | TP | Net | Expect |
 |---|---|---|
 | TP400 | `+3V3_REG` | 3.32 V |
-| TP401 | `+3V3` | 3.32 V (0 V with R300 removed) |
-| TP402 | `SW_3V3` | 2.4 MHz switching (PWM) or bursts (PSM) |
+| ~~TP401~~ | `+3V3` | 3.32 V (0 V with R300 removed) |
+| ~~TP402~~ | `SW_3V3` | 2.4 MHz switching (PWM) or bursts (PSM) |
 | TP403 | `FB_3V3` | 0.600 V |
 | TP404 | `EN_3V3` | RC ramp to 3.59 V, ~40 ms after PG_LTE |
 | TP405 | `PG_3V3` | high once +3V3 >= 96% |
 | TP406 | `+VBAT_LTE_REG` | 3.59 V |
-| TP407 | `+VBAT_LTE` | 3.59 V (0 V with R302 removed) |
+| ~~TP407~~ | `+VBAT_LTE` | 3.59 V (0 V with R302 removed) |
 | TP408 | `EN_LTE` | +VSYS x 0.344 (1.72 V at 5 V) |
 | TP409 | `PG_LTE` | high once VOUT >= 95% |
 | TP410 | `FB_LTE` | 0.500 V |
-| TP411 / TP412 | `L1_LTE` / `L2_LTE` | buck/boost switch nodes |
-| TP413 | `MODE_LTE` | 0 V (PSM) |
+| ~~TP411 / TP412~~ | `L1_LTE` / `L2_LTE` | buck/boost switch nodes |
+| ~~TP413~~ | `MODE_LTE` | 0 V (PSM) |
 
-**Layout rule for TP402/TP411/TP412 (switch nodes):** place the pad on the
-existing switch-node copper with no stub; if that is not possible, leave
-the pad off the board -- a stub on a switch node is an antenna. FB pads are
-high impedance: probe with >= 10 MOhm.
+**Switch nodes:** the pads were the "no stub or leave it off" case; they are
+left off (2026-11-18). Probe the inductor pads. FB pads are high impedance:
+probe with >= 10 MOhm.
 
 ## 8. U40 footprint -- resolved 2026-11-18
 

@@ -116,8 +116,8 @@ the ETM trace pins (P0.21-P0.25) are used as GPIO, so trace is SWO/RTT only.
 | 3 | SWDCLK | `SWDCLK_MCU` | in | debug | J3 |
 | 9 | nRESET | `RESET_MCU_N` | io | reset | C110 100 nF at pin; 1k series is R313 (programming_debug); **no pull-up** |
 | 52 | COEX0 | (local `GNSS_LNA_EN`) | out | `AT%XCOEX0` | GNSS LNA LDO enable, active high |
-| 53 | COEX1 | (local, TP44) | out | modem | GNSS 1PPS |
-| 54 | COEX2 | (local, TP45) | out | modem | LTE/GNSS RF-activity indicator |
+| 53 | COEX1 | no-connect (TP44 deleted 2026-11-18) | out | modem | GNSS 1PPS |
+| 54 | COEX2 | no-connect (TP45 deleted 2026-11-18) | out | modem | LTE/GNSS RF-activity indicator |
 | -- | -- | `nSTAT1_LBO`, `nSTAT2`, `nPG` | -- | **not routed** | LEDs only (out of pins; also over-voltage) |
 | BT840 pin 5 | P0.02 | `LED_LINK` | out | BT840 GPIO | active high |
 
@@ -223,7 +223,10 @@ external GNSS LNA, active high, configured with `AT%XCOEX0`.
 
 **SIM.** Per HDG *UICC*: ESD/EMI filtering between the slot and the
 nRF9151 is recommended, the interface is 1.8 V Class C, SIM_1V8 can take
-100-220 nF, and SIM_RST/CLK/IO should have test pads.
+100-220 nF, and SIM_RST/CLK/IO should have test pads. (Pads TP40-TP43 were
+deleted 2026-11-18 to cut the board's pad count; the J12 socket pads and
+U22 pins are the probe points. This is a deliberate departure from the HDG
+recommendation.)
 
 - U22 TPD3F303DPVR is one of the two integrated parts Nordic names. TI
   SLVSAM5A Fig. 6 puts the socket on the OUT side, so DATA1 = RST and

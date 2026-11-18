@@ -37,7 +37,7 @@ Meter on resistance, board unpowered, battery disconnected.
 | Each UWB SMA centre to GND | DC open or the expected DC path of the match (2 pF series cap blocks DC -- `docs/positioning.md`) |
 | J10 (LTE) centre to GND | **Low ohms is correct**: the nRF9151 ANT pin is DC grounded (HDG *ANT*) and R130 is a 0R |
 | J11 (GNSS) centre to GND | DC open (C123 1 nF DC block ahead of the LNA), unless the DNP bias tee is fitted |
-| Continuity: each test pad to its net | Per Test-point index below |
+| Continuity: each test pad to its net | Per Test-point index below. For a net whose pad was cut, probe the pin or header named in "Cut pads and why" |
 
 ## Stage 2 -- Current-limited power-up
 
@@ -100,7 +100,7 @@ ones above it.
 | Rails x-check | `bringup rails` | Gauge VCELL and modem VBAT agree with the DMM within the gauge's spec | MAX17048 accuracy `PLACEHOLDER` |
 | UWB SPI | `bringup uwb id` | All four anchors 0xDECA0302 | `DWT_DW3000_DEV_ID`, Qorvo dwt_uwb_driver 08.02.02; not cross-checked against the DW3000 User Manual. Proves SPI/CS/power/reset only -- runs on the RC oscillator |
 | UWB IRQ, reset | `bringup uwb irq`, `uwb reset` | IRQ lines low at idle; DEV_ID reads again after reset | -- |
-| Reference clock | Fit R402-R406, scope `TCXO_OUT` and each `UWB_CLKn` pad (TP5-TP9) | 38.4 MHz present at every anchor, amplitude 0.8 V to VDD2 Vpp, duty 40-60 % | DW3000 DS Table 10 via `docs/positioning.md` ("TCXO selection spec"). There is no `TCXO_EN`, so no `tcxo off/on` test: the RPT1490LN has no enable |
+| Reference clock | Fit R402 and R403, scope `TCXO_OUT` (TP5) and `UWB_CLK0` at A0 (TP6) | 38.4 MHz at the TCXO and at A0's XTI, amplitude 0.8 V to VDD2 Vpp, duty 40-60 % (A1-A3 clock presence is covered by `bringup uwb clock`, PLL lock on all four -- the per-anchor scope pads TP7-TP9 were cut 2026-11-18) | DW3000 DS Table 10 via `docs/positioning.md` ("TCXO selection spec"). There is no `TCXO_EN`, so no `tcxo off/on` test: the RPT1490LN has no enable |
 | | `bringup uwb clock` | PLL locked on all four | TODO in firmware (fw-m3) |
 | Bridge | `bringup bridge ping 1000` | 1000/1000, 0 CRC/COBS/len errors | Protocol: `firmware/common/include/uwbrl/bridge_proto.h` |
 | | `bringup bridge reset` | BT840 re-sends HELLO | -- |
@@ -202,152 +202,154 @@ set; `firmware/common/include/uwbrl/calib.h`, `frame_serial`):
 
 ## Test-point index
 
-Every pad on the board, compiled 2026-11-17 from the sheet handoffs and
-notes. Expected values are **design targets** from each block's intent
-unless a source is named -- not measured, and not datasheet guarantees
-(io handoff, "Unverified items"). Assume adapter power unless noted. The
-clock pads TP5-TP9 read nothing until their DNP 0402 0R (R402-R406) is
-fitted. TP135 (`TCXO_EN`) no longer exists: the TCXO has no enable.
+The 62 test pads on the board after the 2026-11-18 cut (127 before; see
+"Cut pads and why" at the end of this section). Compiled 2026-11-17 from the
+sheet handoffs and notes, pruned 2026-11-18. The label in brackets after each
+ref is the bottom-side silkscreen text (`scripts/layout/testpoint_labels.json`,
+which also carries each pad's function-row group). Expected values are
+**design targets** from each block's intent unless a source is named -- not
+measured, and not datasheet guarantees (io handoff, "Unverified items"). Assume
+adapter power unless noted. The clock pads TP5 and TP6 read nothing until
+their DNP 0402 0R (R402, R403) is fitted. TP135 (`TCXO_EN`) no longer exists:
+the TCXO has no enable.
 
-### Contract nets (`testpoints.kicad_sch`, TP1-TP21, TP100-TP175)
+### Contract nets (`testpoints.kicad_sch`, TP1-TP21, TP100-TP175, 42 pads)
 
-One pad per net in `docs/net-contract.md` sections 1-7, plus far-end rail
-pads and GND spring points. Rails/GND are D1.5 pads, signals D1.0.
+The contract-net pads that survived the cut, plus far-end rail pads and GND
+spring points. Contract nets without a row here are probed at a header, LED,
+button or resistor pad instead ("Cut pads and why"). Rails/GND are D1.5 pads,
+signals D1.0.
 
 | TP | Net | Purpose | Expect | Stage |
 |---|---|---|---|---|
-| TP1 | `+3V3` | Main 3.3V rail from TPS62A02 (regulation). Check first when anything misbehaves. | 3.22-3.38 V (Stage 3); io design target ripple < 30 mVpp | 1, 3 |
-| TP101 | `+3V3` | +3V3 at the far end of the UWB array: IR drop across four DW3210. | within 50 mV of TP1 during TX bursts | 1, 3 |
-| TP102 | `+3V3` | +3V3 at the nRF9151 / BT840 end. | within 50 mV of TP1 | 1, 3 |
-| TP2 | `+VSYS` | Unregulated system rail out of the MCP73871 power path (power_bms). | ~4.5-5.0 V on adapter; = VBAT (3.0-4.2 V) on battery | 1, 3 |
-| TP103 | `+VSYS` | +VSYS at the regulator inputs: drop along the system feed. | within 100 mV of TP2 | 1, 3 |
-| TP100 | `+VBAT_LTE` | nRF9151 `VDD` supply, far-end pad. The break point R302/J31 and its pads TP406/TP407 are on regulation. | 3.55-3.62 V (U40 FB 562k/91k, VFB +/-1 %, TI SLVSEU9D); stays >= 3.2 V during LTE TX bursts (Nordic recommendation; 3.0 V floor incl. ripple, nRF9151 HDG *VDD*) -- scope single-shot | 1, 3 |
-| TP104 | `+5V_IN` | Adapter / USB input = MCP73871 IN (also D6 PG LED rail). | 4.75-5.25 V with adapter, 0 V on battery | 1, 3 |
-| TP3 | `GND` | Clock scope ground #1: short ground-spring next to TCXO/clock pads. | 0 V | 1, 3 (scope ground) |
-| TP110 | `GND` | Clock scope ground #2: second spring point at the anchor clock pads. | 0 V | 1, 3 (scope ground) |
-| TP111 | `GND` | SPI scope ground #1: spring ground beside UWB_SCK. | 0 V | 1, 3 (scope ground) |
-| TP112 | `GND` | SPI scope ground #2: spring ground beside UWB_MISO / CS pads. | 0 V | 1, 3 (scope ground) |
-| TP4 | `GND` | General-purpose ground, away from the clock area. | 0 V | 1, 3 (scope ground) |
-| TP113 | `GND` | Ground: power_bms area. | 0 V | 1, 3 (scope ground) |
-| TP114 | `GND` | Ground: regulation area. | 0 V | 1, 3 (scope ground) |
-| TP115 | `GND` | Ground: connectivity area (nRF9151 / BT840). | 0 V | 1, 3 (scope ground) |
-| TP116 | `GND` | Ground: UWB array area. | 0 V | 1, 3 (scope ground) |
-| TP117 | `GND` | Ground: programming / debug area. | 0 V | 1, 3 (scope ground) |
-| TP118 | `GND` | Ground: indicators area. | 0 V | 1, 3 (scope ground) |
-| TP119 | `GND` | Ground: orientation area. | 0 V | 1, 3 (scope ground) |
-| TP10 | `UWB_SCK` | Shared SPI clock to all four DW3210. | bursts at the configured rate, <= 8 MHz (nRF9151 SPIM max); idle low (SPI mode 0) | 5 |
-| TP11 | `UWB_MOSI` | Shared SPI MOSI to all four anchors. | data during CSn low | 5 |
-| TP12 | `UWB_MISO` | Shared SPI MISO from all four anchors. | driven only while one CSn is low; DEV_ID 0xDECA0302 on each CSn (Stage 5; Qorvo driver source, unverified) | 5 |
-| TP15 | `UWB_CS0_N` | Chip-select A0 (CENTER anchor, TWR). | idle 3.3 V; one low pulse per A0 transaction | 5 |
-| TP16 | `UWB_CS1_N` | Chip-select A1 (outer, TDoA). | idle 3.3 V | 5 |
-| TP17 | `UWB_CS2_N` | Chip-select A2 (outer, TDoA). | idle 3.3 V | 5 |
-| TP18 | `UWB_CS3_N` | Chip-select A3 (outer, TDoA). | idle 3.3 V | 5 |
-| TP13 | `UWB_IRQ0` | IRQ from A0 (center): ranging exchange timing. | low idle (100k pull-down); high pulse per event | 5 |
-| TP19 | `UWB_IRQ1` | IRQ from A1: TDoA timestamp latch, independent of A0. | low idle; pulse on RX of the tag frame, within ns-us of TP13 | 5 |
-| TP20 | `UWB_IRQ2` | IRQ from A2. | as TP19 | 5 |
-| TP21 | `UWB_IRQ3` | IRQ from A3. | as TP19 | 5 |
-| TP14 | `UWB_RST_N` | Shared DW3210 RSTn (open-drain). | low during reset, then released high by the DW3210s | 5 |
-| TP130 | `UWB_WAKEUP` | Shared DW3210 WAKEUP. | low idle; high pulse to wake from sleep | 5 |
-| TP131 | `UWB_SYNC` | Shared SYNC/OSTR (use still open in decisions.md). | low unless firmware uses SYNC | 5 |
-| TP140 | `I2C_SCL` | Shared I2C SCL (MAX17048 0x36, IIS2MDC 0x1E, IIS2DLPC 0x19). | idle 3.3 V; 100/400 kHz bursts; rise time < 300 ns @400k | 5 |
-| TP141 | `I2C_SDA` | Shared I2C SDA. | idle 3.3 V; ACKs from 0x19, 0x1E, 0x36 on a bus scan | 5 |
-| TP143 | `MAG_INT` | IIS2MDC INT/DRDY (one pin; replaced `MAG_DRDY` + `MAG_INT`, TP142 deleted). | not driven until `INT_on_PIN` / `DRDY_on_PIN` is set in `CFG_REG_C` (62h), then push-pull | 5 |
-| TP144 | `ACC_INT1` | IIS2DLPC INT1 (knock / move detect). | pulses when the board is tapped (after config) | 5 |
-| TP145 | `ACC_INT2` | IIS2DLPC INT2. | low unless configured | 5 |
-| TP146 | `FG_ALRT` | MAX17048 ALRT (open-drain, R39 pull-up). | idle 3.3 V; low on SOC/voltage alert | 5 |
-| TP5 | `TCXO_OUT` | Raw TCXO output before the 1:4 buffer. (behind DNP R402) | fit R402 first; 38.4 MHz CMOS, VOL <= 0.4 V / VOH >= 2.7 V, duty 49-51 % (Rakon RPT1490LN Issue B) | 5, 6 |
-| TP6 | `UWB_CLK0` | Buffer output to A0 (center) XTI, after AC coupling. (behind DNP R403) | fit R403 first; 38.4 MHz, 0.8 V to VDD2 Vpp at XTI (DW3000 DS Table 10) | 5, 6 |
-| TP7 | `UWB_CLK1` | Buffer output to A1 XTI. (behind DNP R404) | as TP6; compare skew to TP6 | 5, 6 |
-| TP8 | `UWB_CLK2` | Buffer output to A2 XTI. (behind DNP R405) | as TP6 | 5, 6 |
-| TP9 | `UWB_CLK3` | Buffer output to A3 XTI. (behind DNP R406) | as TP6 | 5, 6 |
-| TP150 | `BRIDGE_TXD` | nRF9151 TX -> BT840 RX. | idle high 3.3 V; UART frames at the bridge baud | 5 |
-| TP151 | `BRIDGE_RXD` | BT840 TX -> nRF9151 RX. | idle high 3.3 V | 5 |
-| TP152 | `BRIDGE_RTS` | Flow control, nRF9151 RTS out. | low = nRF9151 ready to receive | 5 |
-| TP153 | `BRIDGE_CTS` | Flow control, nRF9151 CTS in. | low = BT840 ready to receive | 5 |
-| TP154 | `BRIDGE_IRQ` | BT840 -> nRF9151 attention line. | pulse when the BT840 has data / link event | 5 |
-| TP155 | `RESET_BLE_N` | BT840 reset (open-drain, from nRF9151 and SWD header). | idle 3.3 V; pull low with tweezers to GND pad TP115 to reset the BT840 | 5 |
-| TP160 | `SWDIO_MCU` | nRF9151 SWDIO (also on the SWD header). | SWD traffic during flashing | 4 |
-| TP161 | `SWDCLK_MCU` | nRF9151 SWDCLK. | clock bursts during flashing | 4 |
-| TP162 | `RESET_MCU_N` | nRF9151 reset. | idle ~2.2 V -- the 13k internal pull-up goes to 2.2 V, not 3.3 V (nRF9151 HDG *nRESET*); never driven above 2.2 V; < 0.66 V with SW2 pressed | 4 |
-| TP163 | `SWDIO_BLE` | BT840 SWDIO. | SWD traffic during flashing | 4 |
-| TP164 | `SWDCLK_BLE` | BT840 SWDCLK. | clock bursts during flashing | 4 |
-| TP165 | `DBG_UART_TX` | nRF9151 log/shell UART TX. | idle high; boot banner at power-up | 4 |
-| TP166 | `DBG_UART_RX` | nRF9151 log/shell UART RX. | idle high | 4 |
-| TP167 | `BTN_USER` | User button (active low). | 3.3 V released, 0 V pressed; short to GND to fake a press | 5 |
-| TP170 | `nSTAT1_LBO` | MCP73871 STAT1/LBO (open-drain, D4). | low while charging; else ~VSYS-VF through D4 | 5 |
-| TP171 | `nSTAT2` | MCP73871 STAT2 (open-drain, D5). | low when charge complete | 5 |
-| TP172 | `nPG` | MCP73871 ~PG (pseudo open-drain, D6). | low with adapter present | 5 |
-| TP173 | `LED_SYS` | nRF9151 system LED drive (D7). | 3.3 V = LED on (active high), ~1.1 mA via R32 | 5 |
-| TP174 | `LED_LTE` | nRF9151 LTE LED drive (D400). | 3.3 V = LED on, ~1.1 mA via R400 | 5 |
-| TP175 | `LED_LINK` | BT840 BLE-link LED drive (D401). | 3.3 V = LED on, ~1.2 mA via R401 | 5 |
+| TP1 (3V3 MAIN) | `+3V3` | Main 3.3V rail from TPS62A02 (regulation). Check first when anything misbehaves. | 3.22-3.38 V (Stage 3); io design target ripple < 30 mVpp | 1, 3 |
+| TP101 (3V3 UWB) | `+3V3` | +3V3 at the far end of the UWB array: IR drop across four DW3210. | within 50 mV of TP1 during TX bursts | 1, 3 |
+| TP102 (3V3 HOST) | `+3V3` | +3V3 at the nRF9151 / BT840 end. | within 50 mV of TP1 | 1, 3 |
+| TP2 (VSYS) | `+VSYS` | Unregulated system rail out of the MCP73871 power path (power_bms). | ~4.5-5.0 V on adapter; = VBAT (3.0-4.2 V) on battery | 1, 3 |
+| TP103 (VSYS REG) | `+VSYS` | +VSYS at the regulator inputs: drop along the system feed. | within 100 mV of TP2 | 1, 3 |
+| TP100 (VBAT LTE) | `+VBAT_LTE` | nRF9151 `VDD` supply, far-end pad. The break point R302/J31 and its pads TP406/TP407 are on regulation. | 3.55-3.62 V (U40 FB 562k/91k, VFB +/-1 %, TI SLVSEU9D); stays >= 3.2 V during LTE TX bursts (Nordic recommendation; 3.0 V floor incl. ripple, nRF9151 HDG *VDD*) -- scope single-shot | 1, 3 |
+| TP104 (5V IN) | `+5V_IN` | Adapter / USB input = MCP73871 IN (also D6 PG LED rail). | 4.75-5.25 V with adapter, 0 V on battery | 1, 3 |
+| TP3 (GND CLK1) | `GND` | Clock scope ground #1: short ground-spring next to TCXO/clock pads. | 0 V | 1, 3 (scope ground) |
+| TP110 (GND CLK2) | `GND` | Clock scope ground #2: second spring point at the anchor clock pads. | 0 V | 1, 3 (scope ground) |
+| TP111 (GND SPI) | `GND` | SPI scope ground: spring ground beside UWB_SCK / UWB_MISO. | 0 V | 1, 3 (scope ground) |
+| TP113 (GND PWR) | `GND` | Ground: power_bms area. | 0 V | 1, 3 (scope ground) |
+| TP114 (GND REG) | `GND` | Ground: regulation area. | 0 V | 1, 3 (scope ground) |
+| TP115 (GND HOST) | `GND` | Ground: connectivity area (nRF9151 / BT840). | 0 V | 1, 3 (scope ground) |
+| TP116 (GND UWB) | `GND` | Ground: UWB array area. | 0 V | 1, 3 (scope ground) |
+| TP10 (SPI SCK) | `UWB_SCK` | Shared SPI clock to all four DW3210. | bursts at the configured rate, <= 8 MHz (nRF9151 SPIM max); idle low (SPI mode 0) | 5 |
+| TP11 (SPI MOSI) | `UWB_MOSI` | Shared SPI MOSI to all four anchors. | data during CSn low | 5 |
+| TP12 (SPI MISO) | `UWB_MISO` | Shared SPI MISO from all four anchors. | driven only while one CSn is low; DEV_ID 0xDECA0302 on each CSn (Stage 5; Qorvo driver source, unverified) | 5 |
+| TP15 (A0 CSN) | `UWB_CS0_N` | Chip-select A0 (CENTER anchor, TWR). | idle 3.3 V; one low pulse per A0 transaction | 5 |
+| TP16 (A1 CSN) | `UWB_CS1_N` | Chip-select A1 (outer, TDoA). | idle 3.3 V | 5 |
+| TP17 (A2 CSN) | `UWB_CS2_N` | Chip-select A2 (outer, TDoA). | idle 3.3 V | 5 |
+| TP18 (A3 CSN) | `UWB_CS3_N` | Chip-select A3 (outer, TDoA). | idle 3.3 V | 5 |
+| TP13 (A0 IRQ) | `UWB_IRQ0` | IRQ from A0 (center): ranging exchange timing. | low idle (100k pull-down); high pulse per event | 5 |
+| TP19 (A1 IRQ) | `UWB_IRQ1` | IRQ from A1: TDoA timestamp latch, independent of A0. | low idle; pulse on RX of the tag frame, within ns-us of TP13 | 5 |
+| TP20 (A2 IRQ) | `UWB_IRQ2` | IRQ from A2. | as TP19 | 5 |
+| TP21 (A3 IRQ) | `UWB_IRQ3` | IRQ from A3. | as TP19 | 5 |
+| TP14 (UWB RSTN) | `UWB_RST_N` | Shared DW3210 RSTn (open-drain). | low during reset, then released high by the DW3210s | 5 |
+| TP130 (UWB WAKE) | `UWB_WAKEUP` | Shared DW3210 WAKEUP. | low idle; high pulse to wake from sleep | 5 |
+| TP140 (I2C SCL) | `I2C_SCL` | Shared I2C SCL (MAX17048 0x36, IIS2MDC 0x1E, IIS2DLPC 0x19). | idle 3.3 V; 100/400 kHz bursts; rise time < 300 ns @400k | 5 |
+| TP141 (I2C SDA) | `I2C_SDA` | Shared I2C SDA. | idle 3.3 V; ACKs from 0x19, 0x1E, 0x36 on a bus scan | 5 |
+| TP143 (MAG INT) | `MAG_INT` | IIS2MDC INT/DRDY (one pin; replaced `MAG_DRDY` + `MAG_INT`, TP142 deleted). | not driven until `INT_on_PIN` / `DRDY_on_PIN` is set in `CFG_REG_C` (62h), then push-pull | 5 |
+| TP144 (ACC INT1) | `ACC_INT1` | IIS2DLPC INT1 (knock / move detect). | pulses when the board is tapped (after config) | 5 |
+| TP145 (ACC INT2) | `ACC_INT2` | IIS2DLPC INT2. | low unless configured | 5 |
+| TP146 (FG ALRT) | `FG_ALRT` | MAX17048 ALRT (open-drain, R39 pull-up). | idle 3.3 V; low on SOC/voltage alert | 5 |
+| TP5 (TCXO OUT) | `TCXO_OUT` | Raw TCXO output before the 1:4 buffer. (behind DNP R402; net `Net-(R402-Pad1)`, not on the CLK-class net) | fit R402 first; 38.4 MHz CMOS, VOL <= 0.4 V / VOH >= 2.7 V, duty 49-51 % (Rakon RPT1490LN Issue B) | 5, 6 |
+| TP6 (CLK A0) | `UWB_CLK0` | Buffer output to A0 (center) XTI, after AC coupling. (behind DNP R403; net `Net-(R403-Pad1)`) | fit R403 first; 38.4 MHz, 0.8 V to VDD2 Vpp at XTI (DW3000 DS Table 10) | 5, 6 |
+| TP150 (BR TXD) | `BRIDGE_TXD` | nRF9151 TX -> BT840 RX. | idle high 3.3 V; UART frames at the bridge baud | 5 |
+| TP151 (BR RXD) | `BRIDGE_RXD` | BT840 TX -> nRF9151 RX. | idle high 3.3 V | 5 |
+| TP152 (BR RTS) | `BRIDGE_RTS` | Flow control, nRF9151 RTS out. | low = nRF9151 ready to receive | 5 |
+| TP153 (BR CTS) | `BRIDGE_CTS` | Flow control, nRF9151 CTS in. | low = BT840 ready to receive | 5 |
+| TP154 (BR IRQ) | `BRIDGE_IRQ` | BT840 -> nRF9151 attention line. | pulse when the BT840 has data / link event | 5 |
+| TP155 (RST BLE) | `RESET_BLE_N` | BT840 reset (open-drain, from nRF9151 and SWD header). | idle 3.3 V; pull low with tweezers to GND pad TP115 to reset the BT840 | 5 |
+| TP162 (RST MCU) | `RESET_MCU_N` | nRF9151 reset. | idle ~2.2 V -- the 13k internal pull-up goes to 2.2 V, not 3.3 V (nRF9151 HDG *nRESET*); never driven above 2.2 V; < 0.66 V with SW2 pressed | 4 |
 
-### Regulation and power_bms local pads (TP400-TP417)
+### Regulation and power_bms local pads (TP400, TP403-TP406, TP408-TP410, TP415-TP417)
 
 Source: `bay-station/regulation_notes.md` section 7, `power_bms_notes.md`,
 and the bring-up steps in `bay-station/handoff/power.md`. Probe FB pads with
->= 10 MOhm. TP402/TP411/TP412 exist only if layout can put them on the
-switch-node copper with no stub.
+>= 10 MOhm. The switch-node pads TP402/TP411/TP412 were deleted 2026-11-18 (a pad on
+a switch node is a stub on the noisiest copper); use a scope probe tip on the
+inductor pad instead.
 
 | TP | Net | Purpose | Expect | Stage |
 |---|---|---|---|---|
-| TP400 | `+3V3_REG` | U8 output, regulator side of the R300 break | 3.28-3.35 V unloaded | 3 |
-| TP401 | `+3V3` | Load side of R300 (PPK2 VOUT pin on J30) | = TP400 with R300 fitted; 0 V with it removed | 2, 3 |
-| TP402 | `SW_3V3` | U8 switch node | 2.4 MHz switching (PWM) or bursts (PSM) | 3 |
-| TP403 | `FB_3V3` | U8 feedback | 0.594-0.606 V (TI SLUSEG9E) | 3 |
-| TP404 | `EN_3V3` | U8 enable, RC-delayed from `PG_LTE` | RC ramp after PG_LTE releases; `+3V3` must start >= 6 ms after `+VBAT_LTE` (expect 12-41 ms) | 3 |
-| TP405 | `PG_3V3` | U8 power good (gates nothing) | high once `+3V3` >= 96 % | 3 |
-| TP406 | `+VBAT_LTE_REG` | U40 output, regulator side of the R302 break | 3.55-3.62 V | 3 |
-| TP407 | `+VBAT_LTE` | Load side of R302 (PPK2 VOUT pin on J31) | as TP406; >= 3.2 V during TX bursts; 0 V with R302 removed | 2, 3, 6 |
-| TP408 | `EN_LTE` | U40 EN = battery UVLO divider | `+VSYS` x 0.344 (~1.72 V at 5 V); rails off below `+VSYS` 2.82-3.00 V, on above 3.11-3.29 V | 3 |
-| TP409 | `PG_LTE` | U40 power good, releases `EN_3V3` | high once VOUT >= 95 % | 3 |
-| TP410 | `FB_LTE` | U40 feedback | 0.495-0.505 V (TI SLVSEU9D) | 3 |
-| TP411 | `L1_LTE` | U40 buck-side switch node | switching waveform | 3 |
-| TP412 | `L2_LTE` | U40 boost-side switch node | switching waveform | 3 |
-| TP413 | `MODE_LTE` | U40 MODE strap | 0 V (power-save mode, R311 fitted) | 3 |
-| TP414 | `+5V_IN` | Input at the charger (second pad; TP104 is on testpoints) | 4.75-5.25 V with adapter, 0 V on battery | 3 |
-| TP415 | `VBATT_PROT` | Cell after the Q1 reverse-polarity FET | = cell voltage (3.0-4.2 V) | 3 |
-| TP416 | `THERM` | MCP73871 THERM / NTC | ~0.5 V at 25 C (10k x ~50 uA); charging stops at 1.20-1.26 V, i.e. +1.1..+5.3 C | 7 |
-| TP417 | `BATT_RAW` | Raw cell at the connector | record at each UVLO event | 3 |
+| TP400 (3V3 REG) | `+3V3_REG` | U8 output, regulator side of the R300 break | 3.28-3.35 V unloaded | 3 |
+| TP403 (FB 3V3) | `FB_3V3` | U8 feedback | 0.594-0.606 V (TI SLUSEG9E) | 3 |
+| TP404 (EN 3V3) | `EN_3V3` | U8 enable, RC-delayed from `PG_LTE` | RC ramp after PG_LTE releases; `+3V3` must start >= 6 ms after `+VBAT_LTE` (expect 12-41 ms) | 3 |
+| TP405 (PG 3V3) | `PG_3V3` | U8 power good (gates nothing) | high once `+3V3` >= 96 % | 3 |
+| TP406 (VBAT REG) | `+VBAT_LTE_REG` | U40 output, regulator side of the R302 break | 3.55-3.62 V | 3 |
+| TP408 (EN LTE) | `EN_LTE` | U40 EN = battery UVLO divider | `+VSYS` x 0.344 (~1.72 V at 5 V); rails off below `+VSYS` 2.82-3.00 V, on above 3.11-3.29 V | 3 |
+| TP409 (PG LTE) | `PG_LTE` | U40 power good, releases `EN_3V3` | high once VOUT >= 95 % | 3 |
+| TP410 (FB LTE) | `FB_LTE` | U40 feedback | 0.495-0.505 V (TI SLVSEU9D) | 3 |
+| TP415 (VBAT PROT) | `VBATT_PROT` | Cell after the Q1 reverse-polarity FET | = cell voltage (3.0-4.2 V) | 3 |
+| TP416 (THERM) | `THERM` | MCP73871 THERM / NTC | ~0.5 V at 25 C (10k x ~50 uA); charging stops at 1.20-1.26 V, i.e. +1.1..+5.3 C | 7 |
+| TP417 (BATT RAW) | `BATT_RAW` | Raw cell at the connector | record at each UVLO event | 3 |
 
-### UWB array and clock local pads (TP500-TP530)
+### Clock local pads (TP528-TP530)
 
-Source: `bay-station/uwb_array_notes.md` ("Test pads and rework") and
-`clock_dist_notes.md` ("Supplies", "Bring-up tests"). Seven pads per anchor,
-in the same order for A0..A3: n = 0 at TP500, 1 at TP507, 2 at TP514, 3 at
-TP521.
+Source: `bay-station/clock_dist_notes.md` ("Supplies", "Bring-up tests"). The 28
+per-anchor pads TP500-TP527 (`+3V3_An`, `An_EXTON`, `An_GPIO0-4`) were deleted
+2026-11-18: no stage below needs them. Per-anchor current is measured by lifting
+the 0R link R200-R203 (probe its pads); the `+3V3` far end is TP101.
 
 | TP | Net | Purpose | Expect | Stage |
 |---|---|---|---|---|
-| TP500 / TP507 / TP514 / TP521 | `+3V3_A0` .. `+3V3_A3` | Per-anchor rail after the R200-R203 break | = `+3V3`; ~18 mA IDLE per anchor on CH5 by lifting R20n (DW3000 DS v1.1 Table 5) | 3, 5 |
-| TP501 / TP508 / TP515 / TP522 | `A0_EXTON` .. `A3_EXTON` | DW3210 EXTON output, unused on this board | no criterion set (not needed by the design) | 5 |
-| TP502-TP506, TP509-TP513, TP516-TP520, TP523-TP527 | `An_GPIO0` .. `An_GPIO4` | Spare DW3210 GPIO0-4; configurable as RXOK/SFD/RX/TX/EXTPA strobes for timing debug | low by default (input with internal pull-down, DS v1.1 s4.9.5) | 5, 6 |
-| TP528 | `+3V3_TCXO` | TCXO rail after R225 | = `+3V3`; ~10 mA typ by lifting R225 (Rakon RPT1490LN Issue B: 10 mA typ, 15 mA max) | 3 |
-| TP529 | `+3V3_CLKBUF` | Buffer rail after R226; also the bench 2.5 V injection point for the XTI-amplitude test | = `+3V3` | 3, 5 |
-| TP530 | `TCXO_VC` | TCXO tuning voltage (R227/R228 divider) | ~1.49 V; lift R228 to over-drive for array frequency trim | 5 |
+| TP528 (3V3 TCXO) | `+3V3_TCXO` | TCXO rail after R225 | = `+3V3`; ~10 mA typ by lifting R225 (Rakon RPT1490LN Issue B: 10 mA typ, 15 mA max) | 3 |
+| TP529 (3V3 CLKBUF) | `+3V3_CLKBUF` | Buffer rail after R226; also the bench 2.5 V injection point for the XTI-amplitude test | = `+3V3` | 3, 5 |
+| TP530 (TCXO VC) | `TCXO_VC` | TCXO tuning voltage (R227/R228 divider) | ~1.49 V; lift R228 to over-drive for array frequency trim | 5 |
 
-### Connectivity local pads (TP40-TP53)
+### Connectivity local pads (TP46-TP50)
 
 Source: `bay-station/connectivity_notes.md` sections 3-4 and the pad
-Descriptions on `connectivity.kicad_sch`. TP51 is unused.
+Descriptions on `connectivity.kicad_sch`. TP40-TP45, TP52 and TP53 were deleted 2026-11-18; TP51 never existed.
 
 | TP | Net | Purpose | Expect | Stage |
 |---|---|---|---|---|
-| TP40 | `SIM_RST` | SIM reset (HDG *UICC* asks for RST/CLK/IO pads) | 1.8 V Class C levels during SIM activation | 5 |
-| TP41 | `SIM_CLK` | SIM clock | clock bursts during SIM activity | 5 |
-| TP42 | `SIM_IO` | SIM data | 1.8 V data during SIM activity | 5 |
-| TP43 | `SIM_1V8` | SIM supply from the nRF9151 | 1.8 V while the SIM is powered, else 0 V | 5 |
-| TP44 | `NRF_COEX1_1PPS` | COEX1 = GNSS 1PPS | 1 Hz pulse once 1PPS is enabled in firmware and GNSS has a fix | 5 |
-| TP45 | `NRF_COEX2_RFACT` | COEX2 = LTE/GNSS RF-activity indicator | toggles with radio activity (polarity not checked) | 5, 6 |
-| TP46 | `GNSS_LNA_EN` | COEX0 -> U25 LDO enable | high only during GNSS reception (`AT%XCOEX0`) | 5 |
-| TP47 | `GNSS_LNA_VCC` | BGA524N6 supply (U25 output) | 2.8 V during GNSS, else 0 V | 5 |
-| TP48 | `NRF_VDD` | nRF9151 VDD after FB10 | = `+VBAT_LTE` minus the bead drop (FB10 8 mOhm DCR) | 3 |
-| TP49 | `NRF_VDD_GPIO` | nRF9151 VDD_GPIO pin side | = `+3V3`, rising >= 6 ms after `NRF_VDD` (HDG *ENABLE sequence*) | 3 |
-| TP50 | `NRF_ENABLE` | ENABLE, R101 10k from `NRF_VDD` | = `NRF_VDD`; high threshold >= 0.89 x VDD (HDG *ENABLE*) | 3 |
-| TP52 | `NRF_DEC0` | Internal-regulator decoupling (C109) | no criterion: the HDG text read gives no DEC0 voltage. Observe only -- never load or drive it | 3 |
-| TP53 | `NRF_VGPIO_IN` | Between the R104 current-measure link and R103 | = `+3V3`; lift R104 to measure VDD_GPIO current | 3 |
+| TP46 (LNA EN) | `GNSS_LNA_EN` | COEX0 -> U25 LDO enable | high only during GNSS reception (`AT%XCOEX0`) | 5 |
+| TP47 (LNA VCC) | `GNSS_LNA_VCC` | BGA524N6 supply (U25 output) | 2.8 V during GNSS, else 0 V | 5 |
+| TP48 (NRF VDD) | `NRF_VDD` | nRF9151 VDD after FB10 | = `+VBAT_LTE` minus the bead drop (FB10 8 mOhm DCR) | 3 |
+| TP49 (VDD GPIO) | `NRF_VDD_GPIO` | nRF9151 VDD_GPIO pin side | = `+3V3`, rising >= 6 ms after `NRF_VDD` (HDG *ENABLE sequence*) | 3 |
+| TP50 (NRF ENABLE) | `NRF_ENABLE` | ENABLE, R101 10k from `NRF_VDD` | = `NRF_VDD`; high threshold >= 0.89 x VDD (HDG *ENABLE*) | 3 |
 
 ### Orientation local pad
 
 | TP | Net | Purpose | Expect | Stage |
 |---|---|---|---|---|
-| TP121 | `+3V3_SNS` | Sensor rail after the R411 current break | = TP1 with R411 fitted; 0 V with R411 lifted | 3 |
+| TP121 (3V3 SNS) | `+3V3_SNS` | Sensor rail after the R411 current break | = TP1 with R411 fitted; 0 V with R411 lifted | 3 |
+
+### Cut pads and why (2026-11-18)
+
+127 pads were more than the board can place and route well, so 65 were cut and 62
+kept (counts by group: `scripts/layout/testpoint_labels.json`). Rule: a pad stays
+if it is the only convenient probe of a rail, a verification-stage signal, an
+interrupt/reset or a scope ground; it goes if another probe point on the same
+net exists, or if no stage reads it. **No kept pad is on an RF50 or CLK-class net**
+(`scripts/layout/hs_nets.json`): TP5/TP6 reach the clock only through DNP 0R
+links. Refs of kept pads were not renumbered.
+
+| Cut | Count | Probe it here instead |
+|---|---|---|
+| TP500-TP527: per-anchor `+3V3_An`, `An_EXTON`, `An_GPIO0-4` | 28 | Rail: lift R200-R203 and probe its pads, or TP101 at the array far end. EXTON/GPIO0-4 were unused spares (now no-connect flags); solder a wire to the DW3210 pin if a strobe is ever needed |
+| TP7-TP9 `UWB_CLK1-3` (and their DNP links R404-R406) | 3 (+3 R) | `bringup uwb clock` (PLL lock on all four); scope XTI of A1-A3 at the 2200 pF series cap if needed. Removes three stubs from the clock nets |
+| TP4, TP112, TP117, TP118, TP119: duplicate GND | 5 | TP3, TP110, TP111, TP113-TP116 (7 GND pads kept: clock x2, SPI, power, regulation, host, UWB) |
+| TP160, TP161, TP163, TP164: SWD | 4 | SWD headers J3/J34 (nRF9151) and J32/J35 (BT840) |
+| TP165, TP166: `DBG_UART_TX/RX` | 2 | Pins 2 and 3 of J33 |
+| TP167 `BTN_USER` | 1 | The button pad (short to GND to fake a press) |
+| TP170-TP172 `nSTAT1_LBO`, `nSTAT2`, `nPG` | 3 | Pad 1 of D4, D5, D6 (the LED pad on that net) |
+| TP173-TP175 `LED_SYS/LTE/LINK` | 3 | Pad 1 of the series resistors R32, R400, R401 (LED anode side net) |
+| TP131 `UWB_SYNC` | 1 | R216-R219 DNP link pads (use of SYNC still open, decisions.md) |
+| TP401, TP407: load side of the R300/R302 breaks | 2 | J30 / J31 pin 2 (the PPK2 pins); same nets as TP1 and TP100 |
+| TP414 `+5V_IN` (second pad) | 1 | TP104 |
+| TP402, TP411, TP412 switch nodes; TP413 `MODE_LTE` | 4 | Inductor pads L1 / L300 and R311/R312 pads |
+| TP40-TP43 `SIM_*` | 4 | J12 socket pads / U22 pins. HDG *UICC* asks for RST/CLK/IO pads; the socket pads are the probe points (not read from the HDG PDF, which was HTML only) |
+| TP44, TP45 COEX1/COEX2 | 2 | None: both pins are now no-connect flags; no stage reads them |
+| TP52 `NRF_DEC0`, TP53 `NRF_VGPIO_IN` | 2 | DEC0 is observe-only (C109 pad); R104 pads measure VDD_GPIO current |
+
+Consequences to carry into layout: R404-R406 no longer exist (removed with their
+pads), so only CLK0 carries an unfitted R403 pad -- the reroute must length-match
+CLK0 to CLK1-CLK3 including that pad. Unresolved: TP5/TP6 are still the only
+scope points on the clock, so the 38.4 MHz amplitude/overshoot check at A1-A3
+XTI (decisions.md, "scope XTI (TP6-TP9)") now needs a probe tip on the XTI
+series cap instead of a pad.

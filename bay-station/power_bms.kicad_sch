@@ -3075,7 +3075,7 @@
 			(embedded_fonts no)
 		)
 	)
-	(text "Test pads TP414-TP417 and the THERM window (2026-11-17, power agent)\n\nTH1 sizing, MCP73871 DS20002090E Sec 1.0: ITHERM 47/50/53 uA,\nVT1 1.20/1.24/1.26 V, VT2 0.23/0.25/0.27 V. Charging is suspended when\nR_NTC > VT1/ITHERM = 22.6-26.8k (cold) or < VT2/ITHERM = 4.3-5.7k (hot).\n10k NTC, B25/50 = 3380 K (e.g. Murata NCP18XH103F03RB): cold cut-off\n+1.1 to +5.0 C, hot cut-off +40 to +49 C. Cold limit is always above 0 C,\nso NO trim resistor is needed (B = 3435 K shifts both by < 0.5 C).\nThe NTC must be thermally bonded to the CELL (use a 3-wire pack's own\n10k NTC), not left on the PCB.\n\nI2C: FG_SCL/FG_SDA renamed I2C_SCL/I2C_SDA per docs/net-contract.md."
+	(text "Test pads TP415-TP417 (TP414 +5V_IN deleted 2026-11-18: duplicate of TP104) and the THERM window (2026-11-17, power agent)\n\nTH1 sizing, MCP73871 DS20002090E Sec 1.0: ITHERM 47/50/53 uA,\nVT1 1.20/1.24/1.26 V, VT2 0.23/0.25/0.27 V. Charging is suspended when\nR_NTC > VT1/ITHERM = 22.6-26.8k (cold) or < VT2/ITHERM = 4.3-5.7k (hot).\n10k NTC, B25/50 = 3380 K (e.g. Murata NCP18XH103F03RB): cold cut-off\n+1.1 to +5.0 C, hot cut-off +40 to +49 C. Cold limit is always above 0 C,\nso NO trim resistor is needed (B = 3435 K shifts both by < 0.5 C).\nThe NTC must be thermally bonded to the CELL (use a 3-wire pack's own\n10k NTC), not left on the PCB.\n\nI2C: FG_SCL/FG_SDA renamed I2C_SCL/I2C_SDA per docs/net-contract.md."
 		(exclude_from_sim no)
 		(at 279.4 223.52 0)
 		(effects
@@ -3355,16 +3355,6 @@
 			(type default)
 		)
 		(uuid "80c11309-d9e8-4ed5-be5c-2c281a76132b")
-	)
-	(wire
-		(pts
-			(xy 279.4 208.28) (xy 279.4 210.82)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "867c2484-a7ba-42e9-a20e-71a17a03ef6b")
 	)
 	(wire
 		(pts
@@ -4485,28 +4475,6 @@
 		(uuid "6480cb8c-a3c0-4e98-9574-f50dcc4149be")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 360.68 76.2 180)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "+5V_IN"
-		(shape passive)
-		(at 279.4 210.82 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "64dd40e0-fbaa-4bdd-ad2e-345b61a648a0")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 279.4 210.82 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6803,82 +6771,6 @@
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/b2362bec-be69-491d-a07e-a9d16de4ad17"
 					(reference "R4")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 279.4 208.28 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "a0d1afff-4467-4835-a407-155cd509d1a4")
-		(property "Reference" "TP414"
-			(at 279.4 201.93 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "+5V_IN"
-			(at 279.4 203.71 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 279.4 208.28 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 279.4 208.28 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "External input after D1/D2 (barrel or USB-C VBUS), MCP73871 IN. Expect 4.75-5.25 V; must stay below MCP73871 IN 6 V recommended / 7 V abs max."
-			(at 279.4 208.28 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "4e49544a-f65c-4b7e-b902-62a352f5e8c9")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/b2362bec-be69-491d-a07e-a9d16de4ad17"
-					(reference "TP414")
 					(unit 1)
 				)
 			)

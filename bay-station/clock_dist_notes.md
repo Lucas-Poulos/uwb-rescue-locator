@@ -109,7 +109,7 @@ option": fitted 0R, the pads take a low-DCR 0603 bead if the TCXO or buffer
 supply noise shows up as phase-noise spurs (TI SNAS791D s11 recommends but
 does not require a bead). No bead part number chosen. Both 0Rs double as
 current-measure break points. Test pads: TP528 `+3V3_TCXO`, TP529
-`+3V3_CLKBUF`. Decoupling per TI Fig 11-1 (10 µF board side, 1 µF + 0.1 µF
+`+3V3_CLKBUF` (and TP530 `TCXO_VC`). Decoupling per TI Fig 11-1 (10 µF board side, 1 µF + 0.1 µF
 at the pin); TCXO 10 µF + 100 nF (Rakon gives no decoupling guidance).
 
 ## Terminations
@@ -125,8 +125,10 @@ must stay equal.** Put R231-R234 at the buffer pins and C24-C27 at each XTI.
   count, away from SPI and RF. Skew (≤ 50 ps) is fixed and calibrates out;
   what has to be avoided is a long or unequal run whose delay moves with
   temperature.
-- Clock test pads (TP5-TP9 on testpoints) are stubs: smallest pad, on the
-  trace.
+- Clock test pads (TP5 and TP6 on testpoints; TP7-TP9 and R404-R406 deleted
+  2026-11-18) sit behind DNP 0R links R402/R403, so the only thing on the
+  trace is an unfitted 0402 pad. CLK0 therefore carries one such pad that
+  CLK1-CLK3 do not: length-match with it included.
 
 ## Bring-up tests for this sheet
 
@@ -134,7 +136,7 @@ must stay equal.** Put R231-R234 at the buffer pins and C24-C27 at each XTI.
    (~10 mA typ).
 2. `TCXO_OUT` (testpoints TP5): 38.4 MHz on a counter, within the ±1 ppm
    calibration plus reflow shift; duty ~50 %.
-3. Each `UWB_CLKn` at the XTI side of its cap: same amplitude on all four,
+3. Each `UWB_CLKn` at the XTI side of its cap (TP6 for A0; for A1-A3 probe the cap itself, their pads were cut): same amplitude on all four,
    within 0.8 V..VDD2 Vpp, duty 45-55 %, no ringing.
 4. Skew UWB_CLK0 vs 1/2/3 on a two-channel scope with matched probes and the
    short ground spring (TP3). Record it: it is part of the calibration

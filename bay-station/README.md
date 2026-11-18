@@ -54,7 +54,7 @@ table is the summary. Pins are assigned in one place:
 | `orientation` (was `gnss`) | **Wired** | IIS2MDC (U10, 0x1E) + IIS2DLPC (U11, 0x19) on `+3V3_SNS`; MAX-M10S removed | sheet notes; `components.csv` |
 | `indicators` | **Wired** | D4/D5 (STAT1/STAT2, from `+VSYS`), D6 (PG, from `+5V_IN`), D7 `LED_SYS`, D400 `LED_LTE`, D401 `LED_LINK` | `../docs/decisions.md`, LED drive rails |
 | `programming_debug` | **Wired** | J3 nRF9151 SWD, J32 BT840 SWD, DNP Tag-Connect J34/J35, J33 debug UART, SW2/SW11 resets, SW12 `BTN_USER` | `programming_debug_notes.md` |
-| `testpoints` | **Wired** | 64 pads on every net-contract net, GND spring pairs; clock pads behind DNP 0R | `../docs/verification-plan.md`, Test-point index |
+| `testpoints` | **Wired** | 62 pads project-wide (cut from 127 on 2026-11-18: 42 on this sheet, the other 20 local to regulation 8, connectivity 5, power_bms 3, clock_dist 3, orientation 1): rails incl. far ends, shared SPI, per-anchor CSn/IRQ, interrupts, resets, 7 GND springs; clock pads TP5/TP6 behind DNP 0R. Labels and function groups: `../scripts/layout/testpoint_labels.json` | `../docs/verification-plan.md`, Test-point index and "Cut pads and why" |
 | `mechanical` | Placement only | H1-H4 (M3, NPTH), FID1-FID3 | grounding the holes is Open |
 
 **ERC.** Each sheet owner ran `kicad-cli` ERC on the whole project during

@@ -6213,7 +6213,7 @@
 		)
 		(uuid "85f1d8e5-44ad-4e44-92b8-efd3e90f49de")
 	)
-	(text "Local test pads (sheet-local nets only; contract nets get theirs on testpoints.kicad_sch). TP40-TP59 used here\n(no TP block was allocated to this sheet; TP1-TP21 exist, TP100+ belong to testpoints)."
+	(text "Local test pads (sheet-local nets only; contract nets get theirs on testpoints.kicad_sch). Cut down 2026-11-18: kept\nTP46 GNSS_LNA_EN, TP47 GNSS_LNA_VCC, TP48 NRF_VDD, TP49 NRF_VDD_GPIO, TP50 NRF_ENABLE. Deleted TP40-TP45, TP52, TP53\n(SIM pins are on the J12 socket / U22; COEX1 and COEX2 are now no-connect flags; DEC0 is observe-only; R104 pad\nmeasures VDD_GPIO current). TP51 never existed."
 		(exclude_from_sim no)
 		(at 20.32 353.06 0)
 		(effects
@@ -6701,16 +6701,6 @@
 			(type default)
 		)
 		(uuid "0301f9c9-4f50-4dda-8e97-dfdeca567746")
-	)
-	(wire
-		(pts
-			(xy 55.88 368.3) (xy 55.88 370.84)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "03f2cf54-1d68-4c7a-bbb6-3fc02611a933")
 	)
 	(wire
 		(pts
@@ -7554,16 +7544,6 @@
 	)
 	(wire
 		(pts
-			(xy 25.4 368.3) (xy 25.4 370.84)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "5fe6ac13-f008-4b76-a79d-2f196fd9ef49")
-	)
-	(wire
-		(pts
 			(xy 411.48 130.81) (xy 411.48 133.35)
 		)
 		(stroke
@@ -7631,16 +7611,6 @@
 			(type default)
 		)
 		(uuid "656ff08d-df50-4d18-85a2-3bbbdbf9f863")
-	)
-	(wire
-		(pts
-			(xy 86.36 368.3) (xy 86.36 370.84)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "65e66b1d-f546-46b1-8d21-7cd007fdda22")
 	)
 	(wire
 		(pts
@@ -7721,16 +7691,6 @@
 			(type default)
 		)
 		(uuid "701b8665-3fc3-442a-a88c-964624d66d7c")
-	)
-	(wire
-		(pts
-			(xy 101.6 368.3) (xy 101.6 370.84)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "71a2e270-d689-4852-9313-7d34c1502e39")
 	)
 	(wire
 		(pts
@@ -7951,16 +7911,6 @@
 			(type default)
 		)
 		(uuid "8784cd37-baba-495d-a28f-ea8e9860f44d")
-	)
-	(wire
-		(pts
-			(xy 193.04 368.3) (xy 193.04 370.84)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "896985e3-610f-413a-86ea-3deb8a2f3109")
 	)
 	(wire
 		(pts
@@ -8204,16 +8154,6 @@
 	)
 	(wire
 		(pts
-			(xy 40.64 368.3) (xy 40.64 370.84)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "9e272179-9de7-4d5f-838b-f81f968167cc")
-	)
-	(wire
-		(pts
 			(xy 101.6 293.37) (xy 101.6 290.83)
 		)
 		(stroke
@@ -8251,16 +8191,6 @@
 			(type default)
 		)
 		(uuid "a787f120-af6a-48a6-a710-d5e9c0f1199a")
-	)
-	(wire
-		(pts
-			(xy 208.28 368.3) (xy 208.28 370.84)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a862cd91-aa96-4051-83ca-747b22a40fc2")
 	)
 	(wire
 		(pts
@@ -8391,16 +8321,6 @@
 			(type default)
 		)
 		(uuid "af5b9cfe-f410-45bd-955c-b01ebb32121c")
-	)
-	(wire
-		(pts
-			(xy 71.12 368.3) (xy 71.12 370.84)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "afc8f17b-00c2-4704-9db7-6904aa67f5cb")
 	)
 	(wire
 		(pts
@@ -9242,16 +9162,6 @@
 		)
 		(uuid "134255a2-00ad-4e75-bd8f-70631308a6f3")
 	)
-	(label "NRF_VGPIO_IN"
-		(at 208.28 370.84 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "138f9c28-cc2d-4880-bf6d-c735870b1934")
-	)
 	(label "LTE_RF_PIN"
 		(at 330.2 54.61 90)
 		(effects
@@ -9622,16 +9532,6 @@
 		)
 		(uuid "52725ed3-37d1-4cf2-abcb-2bb22e7c553c")
 	)
-	(label "NRF_COEX1_1PPS"
-		(at 198.12 167.64 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "552e5c26-a28e-4a3d-8366-c1b8f14f8ce8")
-	)
 	(label "SIM_CLK_F"
 		(at 91.44 269.24 0)
 		(effects
@@ -9651,16 +9551,6 @@
 			(justify left bottom)
 		)
 		(uuid "585fdb3e-660f-427c-98bc-629da6e13798")
-	)
-	(label "NRF_DEC0"
-		(at 193.04 370.84 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "5cf9e359-3a22-481e-b936-bb7bb79fdd48")
 	)
 	(label "NRF_UWB_MISO"
 		(at 312.42 120.65 90)
@@ -9752,16 +9642,6 @@
 		)
 		(uuid "6b3d5c04-6085-4d74-bc79-b6364d278b10")
 	)
-	(label "SIM_CLK"
-		(at 40.64 370.84 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "6bbea7df-0e58-4c17-ba15-3a35f89ed836")
-	)
 	(label "NRF_VGPIO_IN"
 		(at 25.4 128.27 270)
 		(effects
@@ -9821,16 +9701,6 @@
 			(justify right bottom)
 		)
 		(uuid "7352cdd6-f7e8-4077-b766-3b2f0cc61c74")
-	)
-	(label "NRF_COEX2_RFACT"
-		(at 101.6 370.84 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "74b9cd3d-7391-4029-8e63-6751dbc87f0c")
 	)
 	(label "ESIM_IO"
 		(at 132.08 303.53 270)
@@ -9941,16 +9811,6 @@
 			(justify right bottom)
 		)
 		(uuid "91874719-c2c5-4a89-b592-985f3fd66316")
-	)
-	(label "SIM_IO"
-		(at 55.88 370.84 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "976f8402-99a9-4985-ba1f-fc9caab54a09")
 	)
 	(label "GNSS_LNA_EN"
 		(at 238.76 325.12 180)
@@ -10071,16 +9931,6 @@
 			(justify right bottom)
 		)
 		(uuid "ab76f4d9-b79a-4882-a083-f0dc1ae693d4")
-	)
-	(label "NRF_COEX1_1PPS"
-		(at 86.36 370.84 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "ae4937ab-4273-4338-a2f8-d7925226e809")
 	)
 	(label "SIM_CARD_IO"
 		(at 162.56 271.78 180)
@@ -10241,16 +10091,6 @@
 			(justify left bottom)
 		)
 		(uuid "be7d80c2-444b-4db1-88f6-994ed3da6088")
-	)
-	(label "NRF_COEX2_RFACT"
-		(at 198.12 170.18 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "c0e21cdb-4451-40cd-9bb9-f21c49805c83")
 	)
 	(label "GNSS_LNA_VCC"
 		(at 322.58 274.32 90)
@@ -10512,16 +10352,6 @@
 		)
 		(uuid "e8dec51b-2d07-4a2b-a86b-e2b8eb17fa9d")
 	)
-	(label "SIM_1V8"
-		(at 71.12 370.84 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "ea022531-ed10-49f6-889e-ad9f1529326f")
-	)
 	(label "SIM_CARD_VCC"
 		(at 162.56 259.08 180)
 		(effects
@@ -10541,16 +10371,6 @@
 			(justify left bottom)
 		)
 		(uuid "eb0a199a-d81e-4364-9dda-9632fe0ee650")
-	)
-	(label "SIM_RST"
-		(at 25.4 370.84 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "ed513877-e218-4d30-b838-9ca258116358")
 	)
 	(label "BT_UART_CTS"
 		(at 431.8 133.35 270)
@@ -14861,82 +14681,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 71.12 368.3 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "48b9e7c2-451e-452f-aa07-76fdab1af5d8")
-		(property "Reference" "TP43"
-			(at 71.12 363.22 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "SIM_1V8"
-			(at 71.12 360.68 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 71.12 368.3 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 71.12 368.3 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Local test pad on SIM_1V8."
-			(at 71.12 368.3 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "6a9ddb69-2b18-49f3-b15c-080db704832a")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/615db515-37ad-4c26-9aab-9d4c2fc23c63"
-					(reference "TP43")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:R")
 		(at 25.4 121.92 0)
 		(unit 1)
@@ -16258,82 +16002,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 86.36 368.3 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "6cb56e27-424a-42c7-bf29-40011514fae7")
-		(property "Reference" "TP44"
-			(at 86.36 363.22 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "NRF_COEX1_1PPS"
-			(at 86.36 360.68 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 86.36 368.3 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 86.36 368.3 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Local test pad on NRF_COEX1_1PPS."
-			(at 86.36 368.3 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "595275a7-0794-4a43-a9ed-9d2efe17e9f3")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/615db515-37ad-4c26-9aab-9d4c2fc23c63"
-					(reference "TP44")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:R")
 		(at 401.32 127 0)
 		(unit 1)
@@ -16739,82 +16407,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 40.64 368.3 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "7618c02b-7c2f-4ac0-86d3-1adfcf61ed56")
-		(property "Reference" "TP41"
-			(at 40.64 363.22 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "SIM_CLK"
-			(at 40.64 360.68 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 40.64 368.3 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 40.64 368.3 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Local test pad on SIM_CLK."
-			(at 40.64 368.3 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "cd063688-0321-40b0-81b7-c2182b0f3566")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/615db515-37ad-4c26-9aab-9d4c2fc23c63"
-					(reference "TP41")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Connector:Conn_Coaxial")
 		(at 215.9 271.78 0)
 		(unit 1)
@@ -16888,82 +16480,6 @@
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/615db515-37ad-4c26-9aab-9d4c2fc23c63"
 					(reference "J11")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 208.28 368.3 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "76cb22f6-76c2-4e42-a832-ffba78ab3078")
-		(property "Reference" "TP53"
-			(at 208.28 363.22 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "NRF_VGPIO_IN"
-			(at 208.28 360.68 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 208.28 368.3 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 208.28 368.3 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Local test pad on NRF_VGPIO_IN."
-			(at 208.28 368.3 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "365e9673-9295-4ed3-b671-3952f0fa6dd1")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/615db515-37ad-4c26-9aab-9d4c2fc23c63"
-					(reference "TP53")
 					(unit 1)
 				)
 			)
@@ -19161,82 +18677,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 55.88 368.3 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "a666da6d-2dc4-4485-830c-b0ca98505304")
-		(property "Reference" "TP42"
-			(at 55.88 363.22 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "SIM_IO"
-			(at 55.88 360.68 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 55.88 368.3 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 55.88 368.3 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Local test pad on SIM_IO."
-			(at 55.88 368.3 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "83952712-2d14-4997-b06d-5c6d371a9583")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/615db515-37ad-4c26-9aab-9d4c2fc23c63"
-					(reference "TP42")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Connector:SIM_Card_Shielded")
 		(at 177.8 266.7 0)
 		(unit 1)
@@ -19723,82 +19163,6 @@
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/615db515-37ad-4c26-9aab-9d4c2fc23c63"
 					(reference "TP47")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 25.4 368.3 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "c5682123-bb24-4ec4-9773-d736ca469d6e")
-		(property "Reference" "TP40"
-			(at 25.4 363.22 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "SIM_RST"
-			(at 25.4 360.68 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 25.4 368.3 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 25.4 368.3 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Local test pad on SIM_RST."
-			(at 25.4 368.3 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "c398eac1-5f34-4c74-b27e-3642a9fb09c7")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/615db515-37ad-4c26-9aab-9d4c2fc23c63"
-					(reference "TP40")
 					(unit 1)
 				)
 			)
@@ -20307,82 +19671,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 193.04 368.3 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "d3b87fdf-1a4b-4608-9b06-ab1a78b8d73c")
-		(property "Reference" "TP52"
-			(at 193.04 363.22 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "NRF_DEC0"
-			(at 193.04 360.68 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 193.04 368.3 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 193.04 368.3 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Local test pad on NRF_DEC0."
-			(at 193.04 368.3 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "b2f1a1d4-8317-41ee-9fe9-8e2258cf62f5")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/615db515-37ad-4c26-9aab-9d4c2fc23c63"
-					(reference "TP52")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:L")
 		(at 289.56 287.02 0)
 		(unit 1)
@@ -20788,82 +20076,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 101.6 368.3 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "ed909ed7-f50c-4dae-be30-bf5d3147081a")
-		(property "Reference" "TP45"
-			(at 101.6 363.22 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "NRF_COEX2_RFACT"
-			(at 101.6 360.68 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 101.6 368.3 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 101.6 368.3 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Local test pad on NRF_COEX2_RFACT."
-			(at 101.6 368.3 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "b53a4fe0-32de-4414-8b77-d10e008b76e9")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/615db515-37ad-4c26-9aab-9d4c2fc23c63"
-					(reference "TP45")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:C")
 		(at 401.32 287.02 0)
 		(unit 1)
@@ -20943,5 +20155,13 @@
 				)
 			)
 		)
+	)
+	(no_connect
+		(at 198.12 167.64)
+		(uuid "9d867f4e-7faa-4f29-9786-955fb7398cf3")
+	)
+	(no_connect
+		(at 198.12 170.18)
+		(uuid "a679f133-ecab-49cb-b4f3-b53843779ef8")
 	)
 )

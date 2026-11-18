@@ -38,7 +38,7 @@ outlines touching a pad do not reach the Gerber.
 | Battery | `+` / `-` beside each BT1 pad, from the pad's net (GND = `-`). BT1 pad 1 = `BATT_RAW`, pad 2 = `GND`. | PCB netlist |
 | Function labels | J/SW/LED/link table `LABELS` in the script, each with shorter fallbacks: J1 `5V DC IN / CENTRE + / 5V ONLY`, J2 `USB-C 5V PWR ONLY`, J3 `SWD 9151`, J32 `SWD BT840`, J33 `UART 1=GND`, J34/J35 `TC SWD/BLE DNP`, J30/J31 `PPK ... DNP`, J10 `LTE u.FL`, J11 `GNSS u.FL`, J12 `SIM`, J13 `LTE TEST DNP`, J20 `A0 CTR TWR`, J21-J23 `A1-A3 TDoA`, BT1 `BATT`, SW2 `RESET`, SW11 `RESET BLE`, SW12 `USER`, D4 `CHG`, D5 `FULL`, D6 `PG`, D7 `SYS`, D400 `LTE`, D401 `LINK`, R300/R302 `CUT 3V3` / `CUT VBAT`, R402-R406 `FIT`, U10 `MAG`, U11 `ACC`, H1-H4 `M3`. | A0 centre / A1-A3 outer, `Jn = An`: `uwb_array_notes.md` header; LED roles: `indicators.kicad_sch` truth table (D4 only = charging, D5 only = charged, D6 = adapter present); R300/R302 break links and PPK headers: `docs/verification-plan.md` Stage 2/3; clock links R402-R406 fitted for bring-up: verification plan Stage 5; USB-C power-only: `bay-station/README.md` |
 | DNP | `DNP` text beside DNP parts without a custom label, except 0201/0402/0603 passives (their ref is on silk, "DNP" is on the Fab layer and BOM); `--dnp-all` adds them too. | |
-| Test points | Net name (short, <= 12 chars, sheet path stripped) beside every TP pad, 1.0 mm else 0.8 mm. TP designators go to F.Fab unless the net label did not fit, in which case the `TPnnn` designator is tried on silk so the pad can still be found in the test-point index. | `docs/verification-plan.md` Test-point index |
+| Test points | Label from `scripts/layout/testpoint_labels.json` (<= 12 chars, sheet path stripped; 62 pads after the 2026-11-18 cut, bottom side) beside every TP pad, instead of the raw net name, 1.0 mm else 0.8 mm. TP designators go to F.Fab unless the net label did not fit, in which case the `TPnnn` designator is tried on silk so the pad can still be found in the test-point index. | `docs/verification-plan.md` Test-point index |
 | RF | `UWB CH5 6.5GHz` near the SMA group (6489.6 MHz, rounded). | CLAUDE.md |
 | Magnetometer | `MAG: NO FERROUS / >10mA KEEP OFF` beside U10. ST's wording is "keep currents higher than 10 mA a few millimeters away" (IIS2MDC DocID030986 Rev 1 s5.2, quoted in `orientation.kicad_sch`). No ring radius is drawn because ST gives no number. | |
 | BLE keep-out | Dashed outline of the BT840 antenna region (footprint-local y < -1.5 mm, Fanstel BT840 footprint description, datasheet Ver 1.15 p.16) with `BLE ANT / NO METAL / KEEP OUT`. Dashes that would hit pads or other silk are dropped. Footprint-internal rule areas (e.g. SIM, u.FL) larger than 4 x 1.5 mm get `NO METAL / KEEP OUT` text too. | footprint file |
@@ -106,7 +106,7 @@ Stand-ins for the real placement (shelf-packed, not a layout), kicad-cli 10.0.5:
 | Board | 158 x 91 mm | 108 x 84 mm |
 | Refs on silk (of 428) | 312 (11 at 0.8 mm), TP refs on Fab | 189 (21 at 0.8 mm) |
 | Refs on F.Fab only | 20 (+ 96 TPs with net label) | 213 (+ 26 TPs) |
-| TP net labels | 96 / 127 | 26 / 127 |
+| TP net labels (127-pad build, before the 2026-11-18 cut to 62) | 96 / 127 | 26 / 127 |
 | Pin-1 dots / cathode bars | 26 / 11 | 26 / 8 (3 bars dropped) |
 | Sensor axes glyphs | 2 / 2 | 0 / 2 (no free 7 x 7 mm within 14 mm) |
 | Own checker | 0 pad / 0 overlap / 0 edge / 0 via | same |

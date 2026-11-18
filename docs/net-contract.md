@@ -26,7 +26,9 @@ Rules:
 - Names are exact and case-sensitive. `_N` suffix = active low.
 - A sheet must not invent a cross-sheet net that is not listed here. If you
   need one, add it to this file in the same change and say so.
-- Every net in sections 2-7 gets a test pad on `testpoints.kicad_sch`.
+- Nets in sections 2-7 get a test pad on `testpoints.kicad_sch` **unless cut** on
+  2026-11-18 (127 -> 62 pads project-wide): where a contract net has no pad it is probed at a header,
+  LED/button/resistor pad -- see `docs/verification-plan.md`, "Cut pads and why".
 - Direction column is from the nRF9151's point of view unless stated.
 
 ## 1. Rails

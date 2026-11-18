@@ -2124,7 +2124,7 @@
 		)
 		(uuid "38ba4a05-eb1e-4791-aeb4-666026d1c316")
 	)
-	(text "BRING-UP TESTS FOR THIS SHEET (details in uwb_array_notes.md)\n 1. Rails: +3V3_A0..A3 at TP500/407/414/421; current per anchor via R200-R203.\n 2. Clock at every XTI (TP6-TP9 on testpoints) BEFORE expecting SPI: the\n    core is held in reset until the oscillator is stable (DS v1.1 s6).\n 3. SPI DEV_ID read on each CS in turn, mode 0, start at 2MHz then raise.\n    A wrong-mode read returns shifted garbage on all four the same way.\n 4. Release UWB_RST_N; confirm every IRQ idles low (R25-R28).\n 5. CW / continuous-frame TX per anchor into a spectrum analyser at the SMA\n    (conducted). Compare the four: same power within ~1dB or a path is off.\n 6. Loopback: A0 TX -> attenuator -> A1 RX by cable; repeat each pair.\n 7. Skew: one tag at a fixed, surveyed position; log RX timestamps on all\n    four for N frames; per-anchor offsets must be stable to <~30ps over\n    temperature/time -- the absolute value calibrates out, drift does not."
+	(text "BRING-UP TESTS FOR THIS SHEET (details in uwb_array_notes.md)\n 1. Rails: +3V3 at TP101 (array far end); per-anchor current by lifting R200-R203 (TP500-TP527 deleted 2026-11-18).\n 2. Clock at A0 XTI (TP6 on testpoints; TP7-TP9 deleted) BEFORE expecting SPI: the\n    core is held in reset until the oscillator is stable (DS v1.1 s6).\n 3. SPI DEV_ID read on each CS in turn, mode 0, start at 2MHz then raise.\n    A wrong-mode read returns shifted garbage on all four the same way.\n 4. Release UWB_RST_N; confirm every IRQ idles low (R25-R28).\n 5. CW / continuous-frame TX per anchor into a spectrum analyser at the SMA\n    (conducted). Compare the four: same power within ~1dB or a path is off.\n 6. Loopback: A0 TX -> attenuator -> A1 RX by cable; repeat each pair.\n 7. Skew: one tag at a fixed, surveyed position; log RX timestamps on all\n    four for N frames; per-anchor offsets must be stable to <~30ps over\n    temperature/time -- the absolute value calibrates out, drift does not."
 		(exclude_from_sim no)
 		(at 391.16 325.12 0)
 		(effects
@@ -2201,7 +2201,7 @@
 		)
 		(uuid "a67580a1-e5d7-4c1e-b088-006184eb272d")
 	)
-	(text "REWORK / DFT OPTIONS ON THIS SHEET\n  R200-R203  0R   per-anchor +3V3 link: current measurement, isolate a dead anchor.\n  R204-R207  0R   CS links.   R208-R211 0R IRQ links.   R212-R215 0R RSTn links.\n  R216-R219  DNP  SYNC links (fit to enable OSTR on chosen anchors).\n  C200-C207  DNP  pi-match shunts; R220-R223 0R pi-match series.\n  Y1, C208, C209 DNP  A0-only fallback crystal (TXC 8Y38472012, DS Fig 32\n                   X1 / Table 22). Remove C24 + C28 and fit these: A0 then\n                   ranges on its own crystal while the shared clock is\n                   debugged. TDoA is meaningless in that state.\n  TP500-TP527 test pads: per anchor +3V3_An, EXTON, GPIO0-GPIO4.\n     GPIO2/RXLED, GPIO3/TXLED, GPIO0/RXOKLED, GPIO1/SFDLED can be configured\n     as LED-style strobes: scope them across anchors to see RX/TX timing.\n     (Do not hang LEDs on them -- DS Table 2 note 2.)\n  TP refs TP500+ are outside the agent block table: renumber at merge if\n  the coordinator prefers."
+	(text "REWORK / DFT OPTIONS ON THIS SHEET\n  R200-R203  0R   per-anchor +3V3 link: current measurement, isolate a dead anchor.\n  R204-R207  0R   CS links.   R208-R211 0R IRQ links.   R212-R215 0R RSTn links.\n  R216-R219  DNP  SYNC links (fit to enable OSTR on chosen anchors).\n  C200-C207  DNP  pi-match shunts; R220-R223 0R pi-match series.\n  Y1, C208, C209 DNP  A0-only fallback crystal (TXC 8Y38472012, DS Fig 32\n                   X1 / Table 22). Remove C24 + C28 and fit these: A0 then\n                   ranges on its own crystal while the shared clock is\n                   debugged. TDoA is meaningless in that state.\n  TP500-TP527 test pads (per anchor +3V3_An, EXTON, GPIO0-GPIO4): DELETED 2026-11-18 to cut the\n     test-pad count. GPIO0-4 and EXTON are now no-connect flags; solder a wire to the DW3210 pad\n     (or the 0R link R20n for the rail) if a timing strobe is ever needed.\n     GPIO2/RXLED, GPIO3/TXLED, GPIO0/RXOKLED, GPIO1/SFDLED can be configured\n     as LED-style strobes (do not hang LEDs on them -- DS Table 2 note 2)."
 		(exclude_from_sim no)
 		(at 20.32 325.12 0)
 		(effects
@@ -2322,16 +2322,6 @@
 	)
 	(wire
 		(pts
-			(xy 378.46 299.72) (xy 378.46 302.26)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "025cd0bc-a9e5-4910-9292-a13bafc448ea")
-	)
-	(wire
-		(pts
 			(xy 318.77 226.06) (xy 316.23 226.06)
 		)
 		(stroke
@@ -2439,16 +2429,6 @@
 			(type default)
 		)
 		(uuid "0861de7d-cb2c-44a8-b99b-b6a404cb4a86")
-	)
-	(wire
-		(pts
-			(xy 78.74 299.72) (xy 78.74 302.26)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "08af4463-83e2-4706-84e0-b863e137d376")
 	)
 	(wire
 		(pts
@@ -2622,16 +2602,6 @@
 	)
 	(wire
 		(pts
-			(xy 187.96 299.72) (xy 187.96 302.26)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "14f8c281-b64a-40d6-a141-244a2ba26d1c")
-	)
-	(wire
-		(pts
 			(xy 68.58 248.92) (xy 73.66 248.92)
 		)
 		(stroke
@@ -2749,16 +2719,6 @@
 			(type default)
 		)
 		(uuid "1d81cd08-2a74-4eca-8979-75aa570f7383")
-	)
-	(wire
-		(pts
-			(xy 177.8 299.72) (xy 177.8 302.26)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "1e6bd9bd-1d0a-4977-834a-91d531346f94")
 	)
 	(wire
 		(pts
@@ -3232,16 +3192,6 @@
 	)
 	(wire
 		(pts
-			(xy 38.1 299.72) (xy 38.1 302.26)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "38df2c18-c9c8-4d1c-9bc6-0e2f8b5c5b94")
-	)
-	(wire
-		(pts
 			(xy 516.89 210.82) (xy 519.43 210.82)
 		)
 		(stroke
@@ -3299,16 +3249,6 @@
 			(type default)
 		)
 		(uuid "414a7790-4c28-41e4-87f3-d00bbc08ed5a")
-	)
-	(wire
-		(pts
-			(xy 99.06 299.72) (xy 99.06 302.26)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "4269a734-df5c-4adb-9638-a87c7040cf08")
 	)
 	(wire
 		(pts
@@ -3522,26 +3462,6 @@
 	)
 	(wire
 		(pts
-			(xy 48.26 299.72) (xy 48.26 302.26)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "551bc17f-8816-4b50-8682-8bcd6b751d07")
-	)
-	(wire
-		(pts
-			(xy 198.12 299.72) (xy 198.12 302.26)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "5590432d-10f5-4e1d-8989-14af10ae6f78")
-	)
-	(wire
-		(pts
 			(xy 90.17 210.82) (xy 87.63 210.82)
 		)
 		(stroke
@@ -3612,16 +3532,6 @@
 	)
 	(wire
 		(pts
-			(xy 518.16 299.72) (xy 518.16 302.26)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "5cb187c6-a636-46f8-bcdf-a0b9c7c0133e")
-	)
-	(wire
-		(pts
 			(xy 518.16 132.08) (xy 520.7 132.08)
 		)
 		(stroke
@@ -3642,16 +3552,6 @@
 	)
 	(wire
 		(pts
-			(xy 58.42 299.72) (xy 58.42 302.26)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "5e2ffe52-7716-48fc-aa0f-c096034be615")
-	)
-	(wire
-		(pts
 			(xy 516.89 180.34) (xy 519.43 180.34)
 		)
 		(stroke
@@ -3659,16 +3559,6 @@
 			(type default)
 		)
 		(uuid "5e6381d4-bf82-406f-a4ff-09db516112fc")
-	)
-	(wire
-		(pts
-			(xy 467.36 299.72) (xy 467.36 302.26)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "5e8286e8-c220-4901-8071-e089fda457af")
 	)
 	(wire
 		(pts
@@ -3832,16 +3722,6 @@
 	)
 	(wire
 		(pts
-			(xy 208.28 299.72) (xy 208.28 302.26)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "6c9c970c-6619-45fb-8f6b-82b1a3c17b6d")
-	)
-	(wire
-		(pts
 			(xy 99.06 142.24) (xy 101.6 142.24)
 		)
 		(stroke
@@ -3912,16 +3792,6 @@
 	)
 	(wire
 		(pts
-			(xy 238.76 299.72) (xy 238.76 302.26)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "71221dc9-6062-44ea-ba26-a7b1df0a7a0e")
-	)
-	(wire
-		(pts
 			(xy 46.99 180.34) (xy 49.53 180.34)
 		)
 		(stroke
@@ -3939,16 +3809,6 @@
 			(type default)
 		)
 		(uuid "72a36822-7dda-4746-a314-5e7e6bd78df0")
-	)
-	(wire
-		(pts
-			(xy 368.3 299.72) (xy 368.3 302.26)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "731adec8-d879-48cc-bd9f-ed1e111fcd7a")
 	)
 	(wire
 		(pts
@@ -4292,16 +4152,6 @@
 	)
 	(wire
 		(pts
-			(xy 347.98 299.72) (xy 347.98 302.26)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "89af25c1-abe1-40d5-8aaf-efd69752a524")
-	)
-	(wire
-		(pts
 			(xy 73.66 248.92) (xy 78.74 248.92)
 		)
 		(stroke
@@ -4412,16 +4262,6 @@
 	)
 	(wire
 		(pts
-			(xy 358.14 299.72) (xy 358.14 302.26)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "9794a724-a5eb-4264-9deb-a3c63a161349")
-	)
-	(wire
-		(pts
 			(xy 458.47 210.82) (xy 455.93 210.82)
 		)
 		(stroke
@@ -4472,16 +4312,6 @@
 	)
 	(wire
 		(pts
-			(xy 327.66 299.72) (xy 327.66 302.26)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "9af9760d-d9ec-4e9f-801c-988993df0a93")
-	)
-	(wire
-		(pts
 			(xy 472.44 142.24) (xy 469.9 142.24)
 		)
 		(stroke
@@ -4489,16 +4319,6 @@
 			(type default)
 		)
 		(uuid "9cbedc83-a804-4a85-a8a2-1f144bd61232")
-	)
-	(wire
-		(pts
-			(xy 337.82 299.72) (xy 337.82 302.26)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "9ce20211-a7ba-4ea9-9e34-a8b39ec6219f")
 	)
 	(wire
 		(pts
@@ -4832,16 +4652,6 @@
 	)
 	(wire
 		(pts
-			(xy 317.5 299.72) (xy 317.5 302.26)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "ace022e4-ffc9-4ea6-b083-b32314697f39")
-	)
-	(wire
-		(pts
 			(xy 458.47 195.58) (xy 455.93 195.58)
 		)
 		(stroke
@@ -4859,16 +4669,6 @@
 			(type default)
 		)
 		(uuid "ad9c6d6f-18ae-4932-a850-c923e9350748")
-	)
-	(wire
-		(pts
-			(xy 218.44 299.72) (xy 218.44 302.26)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "aea53ab5-445e-49a3-8254-a3b2a1261f4b")
 	)
 	(wire
 		(pts
@@ -5092,16 +4892,6 @@
 	)
 	(wire
 		(pts
-			(xy 497.84 299.72) (xy 497.84 302.26)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "bd68fa9b-92e0-4a68-bb85-7a50cb7f4e03")
-	)
-	(wire
-		(pts
 			(xy 53.34 129.54) (xy 50.8 129.54)
 		)
 		(stroke
@@ -5192,16 +4982,6 @@
 	)
 	(wire
 		(pts
-			(xy 228.6 299.72) (xy 228.6 302.26)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c5a62da0-32b3-4e6b-b88f-4376b94b0b42")
-	)
-	(wire
-		(pts
 			(xy 237.49 210.82) (xy 240.03 210.82)
 		)
 		(stroke
@@ -5279,16 +5059,6 @@
 			(type default)
 		)
 		(uuid "cb12e8f9-9896-484f-b28d-7d267589ad01")
-	)
-	(wire
-		(pts
-			(xy 457.2 299.72) (xy 457.2 302.26)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "cb8f8f37-8000-4cfc-a86b-1cf618873eec")
 	)
 	(wire
 		(pts
@@ -5432,26 +5202,6 @@
 	)
 	(wire
 		(pts
-			(xy 508 299.72) (xy 508 302.26)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "d5c1d689-f03c-4c26-9237-08b5438e49fd")
-	)
-	(wire
-		(pts
-			(xy 477.52 299.72) (xy 477.52 302.26)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "d604c6f9-07f5-45a9-89d2-4cc05ffb5abc")
-	)
-	(wire
-		(pts
 			(xy 466.09 195.58) (xy 468.63 195.58)
 		)
 		(stroke
@@ -5489,16 +5239,6 @@
 			(type default)
 		)
 		(uuid "d8b41b4d-6e02-4f6f-aab4-275ee3968491")
-	)
-	(wire
-		(pts
-			(xy 68.58 299.72) (xy 68.58 302.26)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "d924e034-9864-4ba2-8d91-f511801be723")
 	)
 	(wire
 		(pts
@@ -5639,16 +5379,6 @@
 			(type default)
 		)
 		(uuid "df002810-b3bd-4918-92b5-206e547dcf71")
-	)
-	(wire
-		(pts
-			(xy 487.68 299.72) (xy 487.68 302.26)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "df71fb12-5b1a-4770-b056-c0ab9580c571")
 	)
 	(wire
 		(pts
@@ -6022,16 +5752,6 @@
 	)
 	(wire
 		(pts
-			(xy 88.9 299.72) (xy 88.9 302.26)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "f4f2e72f-094f-4346-b21e-05c9dad8e1ce")
-	)
-	(wire
-		(pts
 			(xy 377.19 172.72) (xy 379.73 172.72)
 		)
 		(stroke
@@ -6150,16 +5870,6 @@
 		)
 		(uuid "028c2eeb-e690-419e-90e2-211fc3417066")
 	)
-	(label "A1_GPIO3"
-		(at 228.6 302.26 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "050642f3-8bce-48a5-b9cb-9da5b8bdb583")
-	)
 	(label "+3V3_A3"
 		(at 533.4 302.26 270)
 		(effects
@@ -6179,16 +5889,6 @@
 			(justify left bottom)
 		)
 		(uuid "06113e80-bfa0-480f-8765-3bd1dd34ef26")
-	)
-	(label "A2_GPIO4"
-		(at 330.2 119.38 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "06bad5cb-416c-4331-b112-ebfc44c258c2")
 	)
 	(label "A2_RSTN"
 		(at 381 132.08 0)
@@ -6230,16 +5930,6 @@
 		)
 		(uuid "0851b13d-1814-421d-bafe-d3c5054ed3e7")
 	)
-	(label "A2_EXTON"
-		(at 381 127 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "0a67886d-eb2a-48a2-bf04-2e52f7f35d52")
-	)
 	(label "A3_VDD2A"
 		(at 520.7 119.38 0)
 		(effects
@@ -6269,36 +5959,6 @@
 			(justify right bottom)
 		)
 		(uuid "12ceff03-801e-40f9-8ca0-219d935b15d6")
-	)
-	(label "A3_EXTON"
-		(at 467.36 302.26 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "1778d039-8a67-454f-b78a-226abf7b2d8b")
-	)
-	(label "A3_GPIO4"
-		(at 518.16 302.26 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "1903b02f-c67f-4285-b666-2b38cf819edc")
-	)
-	(label "A1_GPIO2"
-		(at 190.5 114.3 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "1955a617-5458-4621-b322-859df65ff830")
 	)
 	(label "A2_CSN"
 		(at 367.03 165.1 180)
@@ -6410,16 +6070,6 @@
 		)
 		(uuid "27e96bca-590d-48e4-9a9b-53272a58a55b")
 	)
-	(label "A0_GPIO4"
-		(at 99.06 302.26 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "2c58e4e4-4221-48f3-bcd7-f12bb1111102")
-	)
 	(label "A1_IRQ"
 		(at 190.5 101.6 180)
 		(effects
@@ -6460,16 +6110,6 @@
 		)
 		(uuid "2df34101-af60-4594-aee0-05e360caf945")
 	)
-	(label "A3_GPIO2"
-		(at 469.9 114.3 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "2e74b4df-3034-466b-adeb-b2a098ccb224")
-	)
 	(label "A3_SYNC"
 		(at 469.9 121.92 180)
 		(effects
@@ -6480,26 +6120,6 @@
 		)
 		(uuid "32029338-6216-48fa-a8e3-209ebcd78730")
 	)
-	(label "A3_EXTON"
-		(at 520.7 127 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "331834dc-8b2c-4d97-b76b-7dda5fc437a2")
-	)
-	(label "A1_GPIO2"
-		(at 218.44 302.26 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "33b3dae1-0c94-40f4-a8d5-40938b0dd2ce")
-	)
 	(label "+3V3_A2"
 		(at 316.23 180.34 180)
 		(effects
@@ -6509,36 +6129,6 @@
 			(justify right bottom)
 		)
 		(uuid "33d6def3-5229-477a-a39a-2482a5cdb25c")
-	)
-	(label "A3_GPIO0"
-		(at 469.9 106.68 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "3648767a-7e26-4cef-ad19-6da854f65af6")
-	)
-	(label "A2_GPIO0"
-		(at 337.82 302.26 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "3aee1b53-6c6e-4c8c-a39c-38ea84da30fc")
-	)
-	(label "+3V3_A3"
-		(at 457.2 302.26 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "3c69a7f4-37f2-41ea-bbe0-1c5a831fc7fb")
 	)
 	(label "+3V3_A1"
 		(at 176.53 180.34 180)
@@ -6570,36 +6160,6 @@
 		)
 		(uuid "3e7e9a2f-93dc-4e61-8062-23100a44a6e2")
 	)
-	(label "A0_EXTON"
-		(at 48.26 302.26 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "40dd7672-f1d4-4bca-93a5-46c45a0bd2e0")
-	)
-	(label "A2_GPIO3"
-		(at 330.2 116.84 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "41f73cea-cfec-4867-82fc-797a28977747")
-	)
-	(label "A1_GPIO3"
-		(at 190.5 116.84 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "42e1817e-87a4-4ae3-aeb7-51786310da6a")
-	)
 	(label "A3_GPIO6"
 		(at 506.73 210.82 180)
 		(effects
@@ -6629,16 +6189,6 @@
 			(justify right bottom)
 		)
 		(uuid "486a84f8-06cd-4868-9d16-ba2cef7f3dee")
-	)
-	(label "A2_GPIO3"
-		(at 368.3 302.26 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "486ffe58-d8f8-49a6-bae8-900782b2e8f7")
 	)
 	(label "+3V3_A1"
 		(at 176.53 172.72 180)
@@ -6670,26 +6220,6 @@
 		)
 		(uuid "4cad3768-54bb-4057-8f3f-61ea7ab236f7")
 	)
-	(label "+3V3_A1"
-		(at 177.8 302.26 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "5278dc0b-a909-4a4d-b1fa-3d5b00a9304a")
-	)
-	(label "A0_GPIO3"
-		(at 88.9 302.26 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "53877e0b-da56-49e6-af61-dd51d27aabe5")
-	)
 	(label "A1_CSN"
 		(at 241.3 142.24 0)
 		(effects
@@ -6699,16 +6229,6 @@
 			(justify left bottom)
 		)
 		(uuid "5531f8ab-5bc9-4f97-a71e-c9a82bd88229")
-	)
-	(label "A0_GPIO3"
-		(at 50.8 116.84 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "55536351-90a9-4046-8fbb-02031cecbd88")
 	)
 	(label "+3V3_A1"
 		(at 176.53 203.2 180)
@@ -6810,16 +6330,6 @@
 		)
 		(uuid "5d28f7a5-59f0-4734-87f9-7c8b4306bf71")
 	)
-	(label "A2_GPIO0"
-		(at 330.2 106.68 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "5e3c2536-4a9d-4519-b9d6-7805fee59e71")
-	)
 	(label "A0_VDD2A"
 		(at 36.83 210.82 180)
 		(effects
@@ -6829,16 +6339,6 @@
 			(justify right bottom)
 		)
 		(uuid "61944d89-2c85-41f4-b6a1-5e990c05f323")
-	)
-	(label "A3_GPIO1"
-		(at 469.9 109.22 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "625fc56e-f9f2-4362-a674-30b834206075")
 	)
 	(label "A0_GPIO5"
 		(at 87.63 203.2 180)
@@ -6870,26 +6370,6 @@
 		)
 		(uuid "6c4a6875-d12f-4e9f-9ee4-811b49919bfe")
 	)
-	(label "A2_GPIO1"
-		(at 330.2 109.22 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "6c7a19d1-70ac-48d6-a124-e43513719df5")
-	)
-	(label "A1_GPIO1"
-		(at 208.28 302.26 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "6cfd3504-8ef9-4770-8b99-84ca7472d839")
-	)
 	(label "+3V3_A3"
 		(at 455.93 180.34 180)
 		(effects
@@ -6920,16 +6400,6 @@
 		)
 		(uuid "74aa486c-dc13-4bfb-9a0d-fa78ec01fc0f")
 	)
-	(label "A0_GPIO0"
-		(at 58.42 302.26 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "76e9b24f-feae-4e4c-98f7-f579435c8f38")
-	)
 	(label "A0_SYNC"
 		(at 50.8 121.92 180)
 		(effects
@@ -6939,16 +6409,6 @@
 			(justify right bottom)
 		)
 		(uuid "77e9de8b-27bf-425d-b317-28cafedcbde8")
-	)
-	(label "A2_EXTON"
-		(at 327.66 302.26 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "7a764944-8c9e-49cb-a5c1-d4c9daee4e7b")
 	)
 	(label "A0_VTXD"
 		(at 101.6 116.84 0)
@@ -6969,16 +6429,6 @@
 			(justify right bottom)
 		)
 		(uuid "7d95bce1-8f2b-4cad-86bd-a4cb3598da7b")
-	)
-	(label "A0_GPIO1"
-		(at 68.58 302.26 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "7f4c130c-1b20-41f1-9be9-8040f02e6886")
 	)
 	(label "A2_RF1"
 		(at 320.04 248.92 180)
@@ -7040,16 +6490,6 @@
 		)
 		(uuid "88c14c41-8f27-42f7-acf2-c290fc1d5004")
 	)
-	(label "+3V3_A2"
-		(at 317.5 302.26 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "8a064fc3-7706-4953-ae7f-c4e2c7f0ff16")
-	)
 	(label "A2_VDD2A"
 		(at 316.23 210.82 180)
 		(effects
@@ -7069,16 +6509,6 @@
 			(justify right bottom)
 		)
 		(uuid "8b46f56b-526d-4e6b-9ba0-1688f313a81f")
-	)
-	(label "A1_GPIO4"
-		(at 190.5 119.38 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "8d5b3ede-d6fa-48b9-ab29-ff9557b83c6f")
 	)
 	(label "A0_VDD2A"
 		(at 101.6 119.38 0)
@@ -7110,16 +6540,6 @@
 		)
 		(uuid "90fa0a1e-c36f-4804-96c4-ac69b3125d34")
 	)
-	(label "A1_GPIO4"
-		(at 238.76 302.26 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "9117c699-96cc-43bb-be09-8dd83d8f19cf")
-	)
 	(label "A3_RSTN"
 		(at 506.73 187.96 180)
 		(effects
@@ -7129,36 +6549,6 @@
 			(justify right bottom)
 		)
 		(uuid "913c4d2e-275f-4593-a420-fe91a803b653")
-	)
-	(label "A3_GPIO3"
-		(at 508 302.26 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "93f09d71-ed70-4dab-b091-bfb9ba53ceef")
-	)
-	(label "A0_GPIO2"
-		(at 50.8 114.3 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "946d3841-504a-46be-b88f-406a2c4e4a3f")
-	)
-	(label "A0_GPIO1"
-		(at 50.8 109.22 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "946e0115-418a-418d-924a-3726c83b2824")
 	)
 	(label "+3V3_A0"
 		(at 36.83 187.96 180)
@@ -7209,16 +6599,6 @@
 			(justify right bottom)
 		)
 		(uuid "9a20fb66-982a-4d6b-aa60-a8670966880a")
-	)
-	(label "A1_EXTON"
-		(at 241.3 127 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "9ac9112f-1474-48b7-ae09-f62c0d2a4d45")
 	)
 	(label "+3V3_A2"
 		(at 328.93 165.1 0)
@@ -7280,16 +6660,6 @@
 		)
 		(uuid "a80df9dc-bc49-45f1-95b8-eb02bb3192b3")
 	)
-	(label "A0_GPIO2"
-		(at 78.74 302.26 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "a8eecf1e-57be-4ebe-a49b-a247a02eb3fa")
-	)
 	(label "A0_XTO"
 		(at 36.83 279.4 180)
 		(effects
@@ -7299,16 +6669,6 @@
 			(justify right bottom)
 		)
 		(uuid "a94a43c2-1c2a-4a32-9102-0260e490a2d5")
-	)
-	(label "A1_EXTON"
-		(at 187.96 302.26 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "a9b22bea-d4ef-4261-9609-4c7a78f9f90d")
 	)
 	(label "+3V3_A2"
 		(at 381 106.68 0)
@@ -7420,16 +6780,6 @@
 		)
 		(uuid "b6922538-d165-440c-ae82-ef2d094853e8")
 	)
-	(label "A1_GPIO0"
-		(at 198.12 302.26 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "b863b041-ac44-467c-89cc-3d0f8cc71c08")
-	)
 	(label "A1_IRQ"
 		(at 227.33 172.72 180)
 		(effects
@@ -7459,16 +6809,6 @@
 			(justify right bottom)
 		)
 		(uuid "ba536763-b16a-48f0-aa07-a679d96a6c3d")
-	)
-	(label "A0_GPIO4"
-		(at 50.8 119.38 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "bab593c0-7837-47e6-a22c-c135408037d4")
 	)
 	(label "+3V3_A2"
 		(at 393.7 302.26 270)
@@ -7550,26 +6890,6 @@
 		)
 		(uuid "c1867534-5c75-4fbe-91e4-0ca3397345ae")
 	)
-	(label "A1_GPIO1"
-		(at 190.5 109.22 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "c409ef75-8547-4eff-b9b1-f9b14e4fc000")
-	)
-	(label "A0_EXTON"
-		(at 101.6 127 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "c59aaae8-55ed-4d4c-9d16-7ec8aba8c1bf")
-	)
 	(label "A0_RF2"
 		(at 87.63 218.44 180)
 		(effects
@@ -7610,16 +6930,6 @@
 		)
 		(uuid "c7360f9e-9755-4c63-bbfd-20e8941e1487")
 	)
-	(label "A3_GPIO1"
-		(at 487.68 302.26 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "c84615c4-1bbc-4294-af8e-333a45c44827")
-	)
 	(label "A0_GPIO5"
 		(at 50.8 111.76 180)
 		(effects
@@ -7639,16 +6949,6 @@
 			(justify left bottom)
 		)
 		(uuid "cb5ed250-bd22-4f4c-85e6-73488af91699")
-	)
-	(label "A1_GPIO0"
-		(at 190.5 106.68 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "cb98b361-f400-4dbd-a6a7-1f2a742c3308")
 	)
 	(label "A1_RSTN"
 		(at 241.3 132.08 0)
@@ -7750,16 +7050,6 @@
 		)
 		(uuid "d3c2a41b-30a6-4104-b05e-34ef2d7b2343")
 	)
-	(label "+3V3_A0"
-		(at 38.1 302.26 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "d4f7cb8c-679d-4cf9-a64e-479df5f22cf5")
-	)
 	(label "A2_VIOD"
 		(at 381 144.78 0)
 		(effects
@@ -7779,16 +7069,6 @@
 			(justify left bottom)
 		)
 		(uuid "d55adf96-570c-4af7-b314-6bbfcd545b6f")
-	)
-	(label "A3_GPIO3"
-		(at 469.9 116.84 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "d82b0cf5-dd1a-4de5-9ac9-42baaf1e96a2")
 	)
 	(label "A0_GPIO6"
 		(at 50.8 104.14 180)
@@ -7819,16 +7099,6 @@
 			(justify right bottom)
 		)
 		(uuid "da5e0740-61e0-4102-b662-18265fa65f1c")
-	)
-	(label "A3_GPIO4"
-		(at 469.9 119.38 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "dc9e6a17-185d-4159-aafc-3a7ebb6dc9aa")
 	)
 	(label "A3_RF1"
 		(at 459.74 248.92 180)
@@ -7880,16 +7150,6 @@
 		)
 		(uuid "e45881aa-9fc7-4159-ae83-cc3a3b818720")
 	)
-	(label "A2_GPIO2"
-		(at 330.2 114.3 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "e773aa1c-44fd-4a05-a0c3-f750842c58f0")
-	)
 	(label "A0_CSN"
 		(at 87.63 165.1 180)
 		(effects
@@ -7909,16 +7169,6 @@
 			(justify right bottom)
 		)
 		(uuid "e894eca3-1ed5-4b38-beb6-2839caf6fa49")
-	)
-	(label "A3_GPIO0"
-		(at 477.52 302.26 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "e9f6a325-bd12-479c-b0a4-928a1647897f")
 	)
 	(label "A1_VTXD"
 		(at 241.3 116.84 0)
@@ -7980,16 +7230,6 @@
 		)
 		(uuid "ebe0824b-0f81-4591-baad-fa5b15bffdf4")
 	)
-	(label "A0_GPIO0"
-		(at 50.8 106.68 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "ed378da1-f917-4491-89ab-9931494daa82")
-	)
 	(label "A1_VIOD"
 		(at 176.53 226.06 180)
 		(effects
@@ -8029,26 +7269,6 @@
 			(justify left bottom)
 		)
 		(uuid "f071edeb-d191-449a-9a5a-02d5728a007d")
-	)
-	(label "A2_GPIO4"
-		(at 378.46 302.26 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "f1cd812f-bec8-4f18-b618-f54b3780af58")
-	)
-	(label "A3_GPIO2"
-		(at 497.84 302.26 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "f2d55d63-cf53-4ac2-aba9-148fdcb6731b")
 	)
 	(label "A2_VTXD"
 		(at 316.23 218.44 180)
@@ -8100,16 +7320,6 @@
 		)
 		(uuid "fba3d5ea-23d7-4999-87af-6efc44018b40")
 	)
-	(label "A2_GPIO1"
-		(at 347.98 302.26 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "fbccff64-a47e-426a-9494-a125823de0c2")
-	)
 	(label "A3_VTXD"
 		(at 520.7 116.84 0)
 		(effects
@@ -8129,16 +7339,6 @@
 			(justify right bottom)
 		)
 		(uuid "fd401458-60be-460b-884c-badce2a09c78")
-	)
-	(label "A2_GPIO2"
-		(at 358.14 302.26 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "fd83ad36-979d-4bb9-ae86-733d8748d360")
 	)
 	(label "A3_VIOD"
 		(at 520.7 144.78 0)
@@ -9425,85 +8625,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 68.58 299.72 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "03d5acd9-8fa7-413a-8ebc-d068a5991f14")
-		(property "Reference" "TP503"
-			(at 69.85 295.275 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "A0_GPIO1"
-			(at 69.85 293.37 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 68.58 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 68.58 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Test pad on A0_GPIO1"
-			(at 68.58 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "7a89c263-ac9f-45b4-ba82-286c96050073")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP503")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:GND")
 		(at 468.63 226.06 90)
 		(unit 1)
@@ -9905,164 +9026,6 @@
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
 					(reference "C70")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 358.14 299.72 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "0754628d-4317-42f4-95be-08a28bd07a25")
-		(property "Reference" "TP518"
-			(at 359.41 295.275 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "A2_GPIO2"
-			(at 359.41 293.37 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 358.14 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 358.14 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Test pad on A2_GPIO2"
-			(at 358.14 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "c8bff41d-59b0-43e6-afe7-8b0f6120f934")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP518")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 368.3 299.72 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "0844bef9-0b08-451f-a9b2-508aa5cae3e8")
-		(property "Reference" "TP519"
-			(at 369.57 295.275 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "A2_GPIO3"
-			(at 369.57 293.37 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 368.3 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 368.3 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Test pad on A2_GPIO3"
-			(at 368.3 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "caa0c3ac-21c0-4918-97d9-54c1c9dbc3bf")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP519")
 					(unit 1)
 				)
 			)
@@ -10612,85 +9575,6 @@
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
 					(reference "R212")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 337.82 299.72 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "129b31a5-a0fa-4482-80b9-06a5de951aa4")
-		(property "Reference" "TP516"
-			(at 339.09 295.275 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "A2_GPIO0"
-			(at 339.09 293.37 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 337.82 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 337.82 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Test pad on A2_GPIO0"
-			(at 337.82 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "86e35b3e-7e65-45fa-85fe-4dfa2ca9b553")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP516")
 					(unit 1)
 				)
 			)
@@ -11425,164 +10309,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 317.5 299.72 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "1f20d6f3-3d4c-49f8-8406-49d4cbb33de5")
-		(property "Reference" "TP514"
-			(at 318.77 295.275 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "+3V3_A2"
-			(at 318.77 293.37 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 317.5 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 317.5 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Test pad on +3V3_A2"
-			(at 317.5 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "472118b1-44d2-4fc6-9bd9-82b2fa00a743")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP514")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 477.52 299.72 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "2019d6da-291c-4a07-abfa-3c2cea235456")
-		(property "Reference" "TP523"
-			(at 478.79 295.275 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "A3_GPIO0"
-			(at 478.79 293.37 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 477.52 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 477.52 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Test pad on A3_GPIO0"
-			(at 477.52 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "031b1aac-d0e7-4634-9ccd-f933cfffc3ae")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP523")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:GND")
 		(at 330.2 147.32 270)
 		(unit 1)
@@ -11733,85 +10459,6 @@
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
 					(reference "#PWR01094")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 228.6 299.72 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "228d9f5b-c6f7-4718-806e-e695e36ae126")
-		(property "Reference" "TP512"
-			(at 229.87 295.275 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "A1_GPIO3"
-			(at 229.87 293.37 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 228.6 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 228.6 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Test pad on A1_GPIO3"
-			(at 228.6 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "990b4f4a-6ba5-447b-8daa-ddf9c5e2149b")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP512")
 					(unit 1)
 				)
 			)
@@ -12217,85 +10864,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 497.84 299.72 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "25d2fb94-636b-4f31-9358-9aff43f09832")
-		(property "Reference" "TP525"
-			(at 499.11 295.275 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "A3_GPIO2"
-			(at 499.11 293.37 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 497.84 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 497.84 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Test pad on A3_GPIO2"
-			(at 497.84 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "27ff732a-b842-4801-915f-c638845291ba")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP525")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:GND")
 		(at 190.5 127 270)
 		(unit 1)
@@ -12616,85 +11184,6 @@
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
 					(reference "C65")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 99.06 299.72 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "2fba14c2-0572-421a-902e-9bdb8f4195c2")
-		(property "Reference" "TP506"
-			(at 100.33 295.275 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "A0_GPIO4"
-			(at 100.33 293.37 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 99.06 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 99.06 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Test pad on A0_GPIO4"
-			(at 99.06 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "4acbcc56-4a50-4b27-9133-0a660fe6b92e")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP506")
 					(unit 1)
 				)
 			)
@@ -14495,85 +12984,6 @@
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
 					(reference "#PWR01025")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 177.8 299.72 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "4be615f1-2de2-4d9b-b9ab-835a9b1e79a3")
-		(property "Reference" "TP507"
-			(at 179.07 295.275 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "+3V3_A1"
-			(at 179.07 293.37 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 177.8 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 177.8 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Test pad on +3V3_A1"
-			(at 177.8 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "2429f540-2e1e-40c1-92e0-e72f04c7080e")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP507")
 					(unit 1)
 				)
 			)
@@ -18723,85 +17133,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 518.16 299.72 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "67bd71e1-2025-449b-9c43-05776fa6dbd5")
-		(property "Reference" "TP527"
-			(at 519.43 295.275 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "A3_GPIO4"
-			(at 519.43 293.37 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 518.16 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 518.16 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Test pad on A3_GPIO4"
-			(at 518.16 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "bcfa0f32-f7ee-425f-968c-a6ec23c7210c")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP527")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:GND")
 		(at 520.7 149.86 90)
 		(unit 1)
@@ -19058,85 +17389,6 @@
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
 					(reference "C59")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 487.68 299.72 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "6f79e995-b2f4-4d37-9a8b-a3929be22625")
-		(property "Reference" "TP524"
-			(at 488.95 295.275 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "A3_GPIO1"
-			(at 488.95 293.37 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 487.68 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 487.68 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Test pad on A3_GPIO1"
-			(at 487.68 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "ce47fb7d-668c-4ce2-8ec4-3854fc3fb338")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP524")
 					(unit 1)
 				)
 			)
@@ -19772,85 +18024,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 88.9 299.72 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "74a12a88-a532-427f-83d1-f1f4d3950e1a")
-		(property "Reference" "TP505"
-			(at 90.17 295.275 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "A0_GPIO3"
-			(at 90.17 293.37 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 88.9 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 88.9 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Test pad on A0_GPIO3"
-			(at 88.9 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "f312d22f-3243-459f-af5b-8a2fa114db28")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP505")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:GND")
 		(at 100.33 203.2 90)
 		(unit 1)
@@ -20394,85 +18567,6 @@
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
 					(reference "#PWR01051")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 457.2 299.72 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "7d4b19a4-4082-4f1d-a0d1-b82e98d72a2f")
-		(property "Reference" "TP521"
-			(at 458.47 295.275 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "+3V3_A3"
-			(at 458.47 293.37 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 457.2 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 457.2 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Test pad on +3V3_A3"
-			(at 457.2 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "42ba4e0e-8d5e-469d-b1cb-17725b9619d2")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP521")
 					(unit 1)
 				)
 			)
@@ -21380,85 +19474,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 327.66 299.72 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "8b6f0032-7b70-437e-8532-5a3691300569")
-		(property "Reference" "TP515"
-			(at 328.93 295.275 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "A2_EXTON"
-			(at 328.93 293.37 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 327.66 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 327.66 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Test pad on A2_EXTON"
-			(at 327.66 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "c30e77cd-72ab-461b-b2f2-851f5ebc3ee6")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP515")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:GND")
 		(at 49.53 210.82 90)
 		(unit 1)
@@ -21693,85 +19708,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 58.42 299.72 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "8d478edd-2845-48e9-8f07-21603c50d7a8")
-		(property "Reference" "TP502"
-			(at 59.69 295.275 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "A0_GPIO0"
-			(at 59.69 293.37 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 58.42 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 58.42 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Test pad on A0_GPIO0"
-			(at 58.42 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "eac48f98-71a7-491f-bf6d-2d39a0f8c38a")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP502")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:GND")
 		(at 330.2 127 270)
 		(unit 1)
@@ -21922,85 +19858,6 @@
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
 					(reference "#PWR01105")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 78.74 299.72 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "8edfcfa3-520b-496c-9e23-03a4e4dc570d")
-		(property "Reference" "TP504"
-			(at 80.01 295.275 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "A0_GPIO2"
-			(at 80.01 293.37 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 78.74 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 78.74 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Test pad on A0_GPIO2"
-			(at 78.74 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "85328a1c-a0bb-47aa-94ee-3a324b4d919b")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP504")
 					(unit 1)
 				)
 			)
@@ -23379,85 +21236,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 508 299.72 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "a83bdb36-f5cd-41e4-a7da-6cb72ad7b838")
-		(property "Reference" "TP526"
-			(at 509.27 295.275 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "A3_GPIO3"
-			(at 509.27 293.37 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 508 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 508 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Test pad on A3_GPIO3"
-			(at 508 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "d0cc5b16-b744-47a6-890d-83211c3de9e2")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP526")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:GND")
 		(at 328.93 226.06 90)
 		(unit 1)
@@ -24010,85 +21788,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 38.1 299.72 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "ae01be3d-79b9-40c5-9284-4d606b250047")
-		(property "Reference" "TP500"
-			(at 39.37 295.275 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "+3V3_A0"
-			(at 39.37 293.37 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 38.1 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 38.1 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Test pad on +3V3_A0"
-			(at 38.1 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "3a01aa67-53aa-43c7-b250-071273c7fe7a")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP500")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:GND")
 		(at 189.23 218.44 90)
 		(unit 1)
@@ -24473,85 +22172,6 @@
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
 					(reference "#PWR01106")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 218.44 299.72 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "b4ae96b0-134a-4ebe-9d28-8cd124bbaeed")
-		(property "Reference" "TP511"
-			(at 219.71 295.275 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "A1_GPIO2"
-			(at 219.71 293.37 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 218.44 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 218.44 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Test pad on A1_GPIO2"
-			(at 218.44 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "112d5069-8ccd-4e18-8df6-61aeac3ebe04")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP511")
 					(unit 1)
 				)
 			)
@@ -25810,85 +23430,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 467.36 299.72 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "c5b1dcd4-b38c-475c-9ec9-0bbd80c2edc0")
-		(property "Reference" "TP522"
-			(at 468.63 295.275 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "A3_EXTON"
-			(at 468.63 293.37 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 467.36 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 467.36 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Test pad on A3_EXTON"
-			(at 467.36 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "7a27dcb9-54f7-4db5-89c1-cf901073ca96")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP522")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:R")
 		(at 204.47 248.92 90)
 		(unit 1)
@@ -26048,85 +23589,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 48.26 299.72 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "c8072b61-5d0b-41e7-8ca5-174cd11ee3de")
-		(property "Reference" "TP501"
-			(at 49.53 295.275 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "A0_EXTON"
-			(at 49.53 293.37 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 48.26 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 48.26 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Test pad on A0_EXTON"
-			(at 48.26 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "1c746b0b-73bc-48eb-a366-c08a2fccb29f")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP501")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:GND")
 		(at 50.8 137.16 270)
 		(unit 1)
@@ -26199,164 +23661,6 @@
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
 					(reference "#PWR01005")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 238.76 299.72 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "c89b6755-cffd-41a9-9e06-19f0f5aa1a94")
-		(property "Reference" "TP513"
-			(at 240.03 295.275 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "A1_GPIO4"
-			(at 240.03 293.37 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 238.76 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 238.76 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Test pad on A1_GPIO4"
-			(at 238.76 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "274b044b-10f3-4224-ba93-44555a7303df")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP513")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 378.46 299.72 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "cae66f92-5a89-4497-aa8f-6b38c9da4ff9")
-		(property "Reference" "TP520"
-			(at 379.73 295.275 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "A2_GPIO4"
-			(at 379.73 293.37 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 378.46 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 378.46 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Test pad on A2_GPIO4"
-			(at 378.46 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "07b5eb24-e7c7-49e4-8997-9bfae1a501a1")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP520")
 					(unit 1)
 				)
 			)
@@ -26594,85 +23898,6 @@
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
 					(reference "#PWR01042")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 347.98 299.72 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "cd64f892-a6bd-4be5-965b-5ca5ca3eb35f")
-		(property "Reference" "TP517"
-			(at 349.25 295.275 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "A2_GPIO1"
-			(at 349.25 293.37 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 347.98 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 347.98 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Test pad on A2_GPIO1"
-			(at 347.98 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "6329c2a2-0a07-4ac4-a625-f076bd6cb108")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP517")
 					(unit 1)
 				)
 			)
@@ -27005,85 +24230,6 @@
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
 					(reference "C54")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 208.28 299.72 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "d1c8577c-3eee-4383-92c2-b8874c1c06d5")
-		(property "Reference" "TP510"
-			(at 209.55 295.275 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "A1_GPIO1"
-			(at 209.55 293.37 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 208.28 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 208.28 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Test pad on A1_GPIO1"
-			(at 208.28 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "0e8c54ce-d159-4f92-a72a-32f65fc19c30")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP510")
 					(unit 1)
 				)
 			)
@@ -29416,85 +26562,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 187.96 299.72 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "ee042e3b-696c-49e1-b2a4-9425b72c3a27")
-		(property "Reference" "TP508"
-			(at 189.23 295.275 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "A1_EXTON"
-			(at 189.23 293.37 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 187.96 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 187.96 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Test pad on A1_EXTON"
-			(at 187.96 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "6c45bf18-2c9e-4e60-9ff8-62c66c841371")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP508")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:GND")
 		(at 379.73 203.2 90)
 		(unit 1)
@@ -30361,85 +27428,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 198.12 299.72 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "f8a0595c-814a-4fa8-a027-e81e9ea035bf")
-		(property "Reference" "TP509"
-			(at 199.39 295.275 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "A1_GPIO0"
-			(at 199.39 293.37 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 198.12 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 198.12 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Test pad on A1_GPIO0"
-			(at 198.12 299.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "0601f619-b648-42a7-901b-639f331b9bde")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP509")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:C")
 		(at 233.68 241.3 90)
 		(unit 1)
@@ -30784,5 +27772,101 @@
 				)
 			)
 		)
+	)
+	(no_connect
+		(at 330.2 119.38)
+		(uuid "e5196a5b-6cd7-4e99-a630-2f6dfe9554e0")
+	)
+	(no_connect
+		(at 381 127)
+		(uuid "e3ec44cc-4c02-43b0-b468-a2472da1ec91")
+	)
+	(no_connect
+		(at 190.5 114.3)
+		(uuid "45b266a5-8665-460f-aa4d-042fd49dfb29")
+	)
+	(no_connect
+		(at 469.9 114.3)
+		(uuid "b5de8f10-e847-4ec4-b8c7-88f5ba2dfa83")
+	)
+	(no_connect
+		(at 520.7 127)
+		(uuid "c70241f5-ac8b-46c2-b371-78cc024c6be5")
+	)
+	(no_connect
+		(at 469.9 106.68)
+		(uuid "a3a0cc5f-bcb6-4c88-9156-ec71611bf18e")
+	)
+	(no_connect
+		(at 330.2 116.84)
+		(uuid "b917e08c-1e0a-4f7d-bffe-b59b19b2a750")
+	)
+	(no_connect
+		(at 190.5 116.84)
+		(uuid "501f3c12-0c1c-425b-8c8c-34d995c163bf")
+	)
+	(no_connect
+		(at 50.8 116.84)
+		(uuid "9c7b22b1-184c-4d80-aa77-cc37f58d43b6")
+	)
+	(no_connect
+		(at 330.2 106.68)
+		(uuid "9a69a75b-12e3-46ab-801f-7e41a215e02e")
+	)
+	(no_connect
+		(at 469.9 109.22)
+		(uuid "a4445a9d-4ba3-4290-a886-d7de0cbdeb28")
+	)
+	(no_connect
+		(at 330.2 109.22)
+		(uuid "cf946f9a-da84-4c8e-ab13-ccada1a2185f")
+	)
+	(no_connect
+		(at 190.5 119.38)
+		(uuid "ede3bd7a-d6fb-42a4-9a37-1df74b4b26d4")
+	)
+	(no_connect
+		(at 50.8 114.3)
+		(uuid "e3fc53b1-d958-4953-af4d-8885a015bb06")
+	)
+	(no_connect
+		(at 50.8 109.22)
+		(uuid "9ccba78e-6ffe-4bac-add6-fe8c8654feae")
+	)
+	(no_connect
+		(at 241.3 127)
+		(uuid "2a6b5708-262c-44c7-a9c5-093ccd9fbd90")
+	)
+	(no_connect
+		(at 50.8 119.38)
+		(uuid "587a3287-cdb2-4855-9963-02f8aec2a641")
+	)
+	(no_connect
+		(at 190.5 109.22)
+		(uuid "7c9a0f5a-3ab8-4511-af10-797d003c7f60")
+	)
+	(no_connect
+		(at 101.6 127)
+		(uuid "dafac1b0-ff2e-4ffd-8224-04002f3647e6")
+	)
+	(no_connect
+		(at 190.5 106.68)
+		(uuid "d54a2071-7d99-4347-a2c6-fb4fc558ee4e")
+	)
+	(no_connect
+		(at 469.9 116.84)
+		(uuid "a072a37e-02c7-437b-8e8b-8e59f41ff4a8")
+	)
+	(no_connect
+		(at 469.9 119.38)
+		(uuid "3e2d988b-77e5-44c2-8623-471423863296")
+	)
+	(no_connect
+		(at 330.2 114.3)
+		(uuid "80606487-c8ba-44f1-812d-251607af7c48")
+	)
+	(no_connect
+		(at 50.8 106.68)
+		(uuid "8fad89ed-c3ef-480c-882b-236ed0540e61")
 	)
 )

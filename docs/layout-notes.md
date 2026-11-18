@@ -22,7 +22,7 @@ mechanical) are the `FIXED` table plus `chain_positions()`. Everything else is p
    neighbouring courtyards are >= 0.4 mm apart (was 0.6 mm in the first pass; the 0.1 mm per part bought about
    10 % of total wirelength, because the pin neighbourhoods were the bottleneck). Order of priority: clock
    R/C pairs (22R at the buffer pin, 2200 pF at the XTI pin) -> DW3210 supply pins -> sensors -> nRF9151
-   supply, GNSS/LTE front end, SIM, +VBAT_LTE hot loop, 3V3 buck, charger -> **all 127 test pads** (so they
+   supply, GNSS/LTE front end, SIM, +VBAT_LTE hot loop, 3V3 buck, charger -> **all test pads (127 in this run; 62 since 2026-11-18)** (so they
    claim a slot beside their pin before the low-priority series links, pull-ups, DNP options and UI parts do)
    -> the rest.
 2. **Polish** (`polish`, 6 passes): every greedily placed part except the clock tree is lifted out and re-seated,
@@ -190,6 +190,8 @@ the GNSS parts where a lid can show them (**enclosure not designed: all UI posit
 provisional**).
 
 ### Test pads (`verification-plan.md` test-point index)
+
+**Superseded 2026-11-18: the pads were cut from 127 to 62 and move to the bottom side in function rows (`scripts/layout/testpoint_labels.json`); the board grows to 150 x 80 mm. The numbers below describe the earlier 127-pad, top-side placement and are kept as a record, not as current.**
 
 127 pads, D1.0 (107) and D1.5 (20), all on F.Cu, on a 1.25 mm grid; minimum centre distance 3.75 mm
 (>= 2.5 mm probe spacing). All pads are placed right after the pin-critical parts (see the stage list), each

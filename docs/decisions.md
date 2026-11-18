@@ -108,7 +108,7 @@ Raised by the five sheet/firmware handoffs (`bay-station/handoff/*.md`,
   margin, and overshoot from a fast edge through the 22R is extra. The
   earlier ">= 2.6 Vpp" was a lower bound from the 1 mA VOH, not the likely
   value. Not a certain violation, but not something to fab blind: scope XTI
-  (TP6-TP9) for overshoot beyond VDD2 at `+3V3` = 3.38 V; if it overshoots,
+  (TP6 for A0; TP7-TP9 were cut 2026-11-18, so probe the series cap for A1-A3) for overshoot beyond VDD2 at `+3V3` = 3.38 V; if it overshoots,
   lift R226 and feed the buffer at 2.5 V via TP529 (LMK1C1104 VDD min
   2.375 V, CLKIN stays 3.3 V tolerant) before designing a 2.5 V LDO.
 - **Shared RSTn contention.** Four O-H RSTn pins are tied (each via 0R) to
@@ -478,6 +478,36 @@ not settle:
 
 ## Resolved
 
+- **Bay-station test pads cut from 127 to 62, and moving to the bottom side (2026-11-18).**
+  The 127-pad top-side placement (`docs/layout-notes.md`, "Test pads") cost 548 mm of ratsnest and
+  was the first thing to trim if the board needed room; the board is now growing to **150 x 80 mm**
+  (placement and reroute are separate later stages) with the pads in function rows on the
+  bottom side. Decision from the user: remove the pads we can do without. 65 TP symbols were
+  deleted from `testpoints`, `connectivity`, `regulation`, `power_bms`, `uwb_array` (28) and their
+  footprints from `bay-station.kicad_pcb`; refs of the 62 kept pads were not renumbered. Rule:
+  keep a pad if it is the only convenient probe of a rail, a verification-plan signal, an
+  interrupt/reset or a scope ground; cut it if the same net has another probe point (SWD/UART
+  header, LED, button, break-link or resistor pad) or if no stage reads it. Per-pad reasons and
+  where to probe instead: `docs/verification-plan.md`, "Cut pads and why".
+  - **Kept (62):** power 18 (`+3V3` x3, `+VSYS` x2, `+VBAT_LTE`, `+5V_IN`, regulator-side
+    `+3V3_REG`/`+VBAT_LTE_REG`, VBATT_PROT, BATT_RAW, THERM, FB/EN/PG of both regulators), gnd 7,
+    clock 5 (TCXO_OUT, UWB_CLK0, three clock-block rails), spi 5, a0-a3 2 each (CSn, IRQ),
+    sensors 7 (I2C, three interrupts, FG_ALRT, `+3V3_SNS`), host 6 (bridge UART, `RESET_BLE_N`),
+    modem 6 (`RESET_MCU_N`, GNSS LNA enable and rail, nRF VDD, VDD_GPIO, ENABLE). Silk labels and
+    groups: `scripts/layout/testpoint_labels.json`.
+  - **Cut (65):** all 28 per-anchor `+3V3_An`/`EXTON`/`GPIO0-4` pads; TP7-TP9 clock pads together
+    with R404-R406 (three fewer stubs on the CLK nets); 5 duplicate GNDs; SWD/UART/button/LED/
+    charger-status pads (probe the header, button or LED pad); both break-link load sides; the
+    switch-node and MODE pads; SIM, COEX1/2, DEC0 and VGPIO_IN pads; second `+5V_IN`; `UWB_SYNC`.
+  - **Side effects.** EXTON, GPIO0-4 and COEX1/COEX2 pins are now explicit no-connect flags (they
+    were wired only to their pad). Only CLK0 keeps an unfitted R403 pad, so the reroute must
+    length-match CLK0 to CLK1-3 with that pad counted. No kept pad is on an RF50 or CLK-class net.
+  - **Not covered any more, honestly:** per-anchor XTI amplitude/overshoot (see the TP6-TP9 item in
+    Open) now needs a probe tip on the 2200 pF cap; the HDG *UICC* recommendation for SIM_RST/CLK/IO
+    pads is not followed (the J12 socket pads are the probe points); nothing probes the DW3210 spare
+    GPIOs as timing strobes unless a wire is soldered on. The `bay-station/handoff/*.md` session
+    logs still describe the 127-pad state and were left as history.
+
 - **Bay-station board outline and floorplan (placement only), 2026-11-18.** 128 x 68 mm, 3 mm corner
   radius, everything on the top side; UWB array as a 2 x 2 block at the west end with SMA J20-J23 on the
   north and south edges (chosen over a row of four for clock-path equality: spread ~10 mm instead of
@@ -778,13 +808,13 @@ from SnapEDA / SnapMagic / Ultra Librarian / Flux was used.
   PS *GPIO*) -- at the edge of the guaranteed minimum, so firmware may set
   H0H1 if the LEDs look dim. Parts are Kingbright low-current 0805s specified
   at IF = 2 mA, VF read from each datasheet (`components.csv`).
-- **Clock test pads behind DNP 0R.** Supersedes "keep TP5-TP9 as minimal pads
+- **Clock test pads behind DNP 0R** *(partly superseded 2026-11-18: only TP5/TP6 and R402/R403 remain)*. Supersedes "keep TP5-TP9 as minimal pads
   on the existing routing" (test-points entry below). TP5-TP9 reach `TCXO_OUT`
   / `UWB_CLK0-3` only through DNP 0402 0R links R402-R406 whose pad sits on
   the trace; the default build carries one unfitted 0402 pad per clock net
   and no probe stub. Fit to probe, then remove. If layout cannot take all four
   anchor links, keep A0/A1 (R403/R404).
-- **Test-point coverage: every net-contract net.** 66 pads: all of
+- **Test-point coverage: every net-contract net** *(superseded 2026-11-18: cut to 62 pads project-wide; see the first Resolved entry)*. 66 pads: all of
   `net-contract.md` sections 1-7 on `testpoints.kicad_sch` (TP1-TP21,
   TP100-TP175), far-end rail pads, GND spring pairs at the clock and SPI bus,
   one GND per area, plus TP121 on `+3V3_SNS`. Rails/GND D1.5, signals D1.0.

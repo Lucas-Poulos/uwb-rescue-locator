@@ -1660,16 +1660,6 @@
 	)
 	(wire
 		(pts
-			(xy 259.08 226.06) (xy 259.08 228.6)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "192d1cbf-0a1b-4feb-9a83-08e4c9858375")
-	)
-	(wire
-		(pts
 			(xy 198.12 90.17) (xy 195.58 90.17)
 		)
 		(stroke
@@ -1727,16 +1717,6 @@
 			(type default)
 		)
 		(uuid "27031c3a-7820-4415-9882-cbc0c3568a2b")
-	)
-	(wire
-		(pts
-			(xy 299.72 226.06) (xy 299.72 228.6)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "315793e1-e3aa-49a0-afc1-fae355dbd661")
 	)
 	(wire
 		(pts
@@ -1837,16 +1817,6 @@
 			(type default)
 		)
 		(uuid "45c0969d-f0d4-4cef-9049-68f48e24f263")
-	)
-	(wire
-		(pts
-			(xy 320.04 226.06) (xy 320.04 228.6)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "45deb27e-6415-4097-989d-45e780254646")
 	)
 	(wire
 		(pts
@@ -2150,16 +2120,6 @@
 	)
 	(wire
 		(pts
-			(xy 284.48 99.06) (xy 284.48 101.6)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "b1deb735-f859-4e94-8a96-630e93bb4d72")
-	)
-	(wire
-		(pts
 			(xy 63.5 187.96) (xy 63.5 190.5)
 		)
 		(stroke
@@ -2177,16 +2137,6 @@
 			(type default)
 		)
 		(uuid "b940b7a3-ad6b-423e-a07b-59e07a12c192")
-	)
-	(wire
-		(pts
-			(xy 274.32 99.06) (xy 274.32 101.6)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "b9b07f86-eb71-419c-962b-787d63ee7dce")
 	)
 	(wire
 		(pts
@@ -2347,16 +2297,6 @@
 			(type default)
 		)
 		(uuid "f55adffe-08ec-459c-83f9-a14b0061320a")
-	)
-	(wire
-		(pts
-			(xy 309.88 226.06) (xy 309.88 228.6)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "fa8852db-9202-4e69-a026-0eebb68aadf6")
 	)
 	(wire
 		(pts
@@ -2548,16 +2488,6 @@
 		)
 		(uuid "47781207-cd64-42f5-bf89-80cd1fbbbe96")
 	)
-	(label "L2_LTE"
-		(at 309.88 228.6 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "50621a3b-913f-4f2e-9b9d-c0795c19a552")
-	)
 	(label "PG_LTE"
 		(at 220.98 134.62 90)
 		(effects
@@ -2648,16 +2578,6 @@
 		)
 		(uuid "74864009-9f35-43c0-97ff-70efcde03ac3")
 	)
-	(label "MODE_LTE"
-		(at 320.04 228.6 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "77bac904-4eeb-4c19-93cb-f6a822c54466")
-	)
 	(label "+VBAT_LTE_REG"
 		(at 165.1 201.93 90)
 		(effects
@@ -2697,16 +2617,6 @@
 			(justify left bottom)
 		)
 		(uuid "abc4752e-cf18-4aa7-a823-8bc9f57ded68")
-	)
-	(label "SW_3V3"
-		(at 284.48 101.6 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "ae4f9eaa-8dff-48ea-ade0-182d09473a7a")
 	)
 	(label "EN_LTE"
 		(at 63.5 190.5 270)
@@ -2818,16 +2728,6 @@
 		)
 		(uuid "e38851c8-a0e4-4935-b964-ea4647513eb0")
 	)
-	(label "L1_LTE"
-		(at 299.72 228.6 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "ee7e89cc-410a-48a6-936a-6596dd185e07")
-	)
 	(label "MODE_LTE"
 		(at 76.2 214.63 90)
 		(effects
@@ -2870,28 +2770,6 @@
 		(uuid "0bf8e4b6-871a-4b3b-9e6c-6f1aa23188cb")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 165.1 229.87 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "+3V3"
-		(shape passive)
-		(at 274.32 101.6 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "24a5567f-09fa-4595-9d35-fd48394300e8")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 274.32 101.6 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3188,28 +3066,6 @@
 			)
 		)
 	)
-	(global_label "+VBAT_LTE"
-		(shape passive)
-		(at 259.08 228.6 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "a409e1ad-15ca-45cd-a0df-3c7de4ecaca2")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 259.08 228.6 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
 	(global_label "GND"
 		(shape passive)
 		(at 152.4 219.71 270)
@@ -3460,82 +3316,6 @@
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
 					(reference "J30")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 259.08 226.06 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "143b8d3e-a92d-4104-8958-1bfd437c0543")
-		(property "Reference" "TP407"
-			(at 259.08 219.71 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "+VBAT_LTE"
-			(at 259.08 221.49 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 259.08 226.06 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 259.08 226.06 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "+VBAT_LTE load side of R302 = nRF9151 VDD."
-			(at 259.08 226.06 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "d0f2e24d-5191-44a9-a9ca-92126a93f39e")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
-					(reference "TP407")
 					(unit 1)
 				)
 			)
@@ -3933,82 +3713,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 320.04 226.06 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "239d3fd9-aab4-4366-935e-2ccb6057097a")
-		(property "Reference" "TP413"
-			(at 320.04 219.71 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "MODE_LTE"
-			(at 320.04 221.49 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 320.04 226.06 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 320.04 226.06 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "U40 MODE strap (low = PSM)."
-			(at 320.04 226.06 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "4bb9f9b0-0ee9-49d4-af4f-87fefe767d96")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
-					(reference "TP413")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:R")
 		(at 143.51 104.14 0)
 		(unit 1)
@@ -4167,82 +3871,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 299.72 226.06 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "356e15dc-6781-43ef-adcd-aa2266176682")
-		(property "Reference" "TP411"
-			(at 299.72 219.71 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "L1_LTE"
-			(at 299.72 221.49 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 299.72 226.06 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 299.72 226.06 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "U40 L1 switch node. LAYOUT: pad on the existing L1 copper only, no stub; otherwise leave unplaced."
-			(at 299.72 226.06 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "fc310b6a-75dd-4bbb-a561-598591d0dc17")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
-					(reference "TP411")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:R")
 		(at 195.58 140.97 0)
 		(unit 1)
@@ -4316,82 +3944,6 @@
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
 					(reference "R303")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 274.32 99.06 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "3b7a8df3-dfda-4dfa-80a9-74e9838917cb")
-		(property "Reference" "TP401"
-			(at 274.32 92.71 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 274.32 94.49 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 274.32 99.06 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 274.32 99.06 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "+3V3 load side of break point R300."
-			(at 274.32 99.06 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "7108e3f7-7ab6-4f15-b3d9-023b5261f1b2")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
-					(reference "TP401")
 					(unit 1)
 				)
 			)
@@ -4550,82 +4102,6 @@
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
 					(reference "C303")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 284.48 99.06 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "45ac1aa4-b015-4d8e-bc93-3f4f2ce98e76")
-		(property "Reference" "TP402"
-			(at 284.48 92.71 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "SW_3V3"
-			(at 284.48 94.49 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 284.48 99.06 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 284.48 99.06 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "U8 SW node. LAYOUT: place this pad directly on the SW copper between U8 pin 3 and L1 with no stub trace -- a stub on a 2.4 MHz switch node radiates. If it cannot sit on the existing copper, leave it unplaced. Probe with a short ground spring, not a long ground lead."
-			(at 284.48 99.06 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "a0f0527f-35fe-4764-b341-e62e2010c09f")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
-					(reference "TP402")
 					(unit 1)
 				)
 			)
@@ -5826,82 +5302,6 @@
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
 					(reference "TP408")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 309.88 226.06 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "b0f1e2cf-5fae-4f5d-bdc4-5e285a642196")
-		(property "Reference" "TP412"
-			(at 309.88 219.71 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "L2_LTE"
-			(at 309.88 221.49 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 309.88 226.06 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 309.88 226.06 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "U40 L2 switch node. LAYOUT: pad on the existing L2 copper only, no stub; otherwise leave unplaced."
-			(at 309.88 226.06 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "f25eb038-e15d-4a3c-afff-9b8da5fecf87")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/5c2a31d1-5b69-4a48-a195-eba324445020"
-					(reference "TP412")
 					(unit 1)
 				)
 			)
