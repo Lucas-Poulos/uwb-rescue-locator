@@ -51,7 +51,7 @@ too, so the whole project is one toolchain.
 - DW3210 x4 over SPIM3: multi-instance driver, configuration (CH5),
   exchange scheduling, timestamp collection.
 - Calibration table: store, ship to laptop, stamp every record with its CRC.
-- Sensors on one I2C bus: LIS3MDL (heading), LIS2DH (tilt, knock
+- Sensors on one I2C bus: IIS2MDC (heading), IIS2DLPC (tilt, knock
   detect on `ACC_INT1`), MAX17048 (battery).
 - Modem: LTE-M attach / PSM, GNSS fixes in LTE idle windows, survey-in
   averaging.
@@ -188,7 +188,7 @@ stationary and its absolute position is an average anyway.
 - **A-GNSS: optional.** It needs LTE up and an assistance source (e.g.
   nRF Cloud), which a remote rescue site may not have. Survey-in does not
   need it. Treat it as a time-to-first-fix improvement, not a dependency.
-- **Knock invalidates everything.** `ACC_INT1` (LIS2DH) during averaging
+- **Knock invalidates everything.** `ACC_INT1` (IIS2DLPC) during averaging
   restarts survey-in and heading calibration.
 
 ## DW3210 multi-instance driver
@@ -348,7 +348,7 @@ per block, in the order `docs/verification-plan.md` uses them:
 |---|---|---|
 | `bringup rails` | MAX17048 VCELL, modem `AT%XVBAT` | Cross-check only; DMM at test pads is the real test. MAX17048 registers **UNVERIFIED** |
 | `bringup i2c scan` | ACKs on the sensor bus | 3 devices at the strapped addresses |
-| `bringup i2c id` | WHO_AM_I / VERSION | LIS3MDL 0x3D (ST DocID024204 Rev 4, Table 17, verified). LIS2DH 0x33 **UNVERIFIED** (register pages missing from the copy obtained). MAX17048 VERSION **UNVERIFIED** |
+| `bringup i2c id` | WHO_AM_I / VERSION | IIS2DLPC 0x44 (ST DocID031788 Rev 4, s8.3, verified). IIS2MDC 0x40 **UNVERIFIED** (register pages missing from the copy obtained; the LIS2MDL, same family, reads 0x40 at 4Fh per DocID030621 Rev 5). MAX17048 VERSION **UNVERIFIED** |
 | `bringup uwb id [n]` | Raw DEV_ID read per anchor | 0xDECA0302 (`DWT_DW3000_DEV_ID`, Qorvo driver 08.02.02; non-PDoA). Header octet 0x00 = short-addressed read of base 0 (DW3000 DS v1.1 s4.9.4, Figure 16). Works on the RC oscillator -- **does not prove the clock** |
 | `bringup uwb clock` | PLL lock per anchor = reference clock present | TODO (needs driver). Until then, scope the clock test pads |
 | `bringup uwb irq` / `uwb reset` | IRQ line levels, shared reset pulse | IRQ low at idle (pulldowns R25-R28) |

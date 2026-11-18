@@ -52,7 +52,7 @@ connectors.
 | MCU/radio | Nordic nRF52833, inside the DWM3001C (resolved) | Nordic nRF9151 SiP host (LTE-M + GNSS); Fanstel BT840 (nRF52840) as BLE bridge (resolved 2026-11-17) |
 | Power | Single-cell battery + BMS, sized for just enough runtime -- core function takes priority over battery life | Battery + BMS optimized for longevity, not size |
 | Link to the outside | None (talks only to the bay station over UWB) | BLE to a nearby laptop (primary); LTE-M reports when a SIM is fitted |
-| Georeferencing | n/a | nRF9151 GNSS (time-shared with LTE) + LIS3MDL magnetometer + LIS2DH accelerometer. Position AND heading are both needed to place a frame-relative bearing on a map |
+| Georeferencing | n/a | nRF9151 GNSS (time-shared with LTE) + IIS2MDC magnetometer + IIS2DLPC accelerometer. Position AND heading are both needed to place a frame-relative bearing on a map |
 
 ## UWB part status
 

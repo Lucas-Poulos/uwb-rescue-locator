@@ -54,8 +54,8 @@ Consequences an agent must not "simplify" away:
   fab-ready.
 - **The bay station is deployed OUTDOORS and moved between sites**, and
   georeferences itself: the nRF9151's built-in GNSS for position (time-shared
-  with LTE, which is fine for a stationary survey-in), LIS3MDL magnetometer
-  for heading, LIS2DH accelerometer for tilt compensation
+  with LTE, which is fine for a stationary survey-in), IIS2MDC magnetometer
+  for heading, IIS2DLPC accelerometer for tilt compensation
   (`orientation.kicad_sch`).
   **Position and heading are both required** -- the array reports bearing
   relative to its own frame, so a GNSS fix without heading gives a circle of

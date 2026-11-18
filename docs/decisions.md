@@ -119,17 +119,18 @@ Raised by the five sheet/firmware handoffs (`bay-station/handoff/*.md`,
   input is 0 dBm abs max. Choose between an LTE-to-GNSS antenna isolation
   budget, a verified 1575 MHz SAW footprint, or an active antenna with an
   integrated SAW and the U24 bypass (R124).
-- **No spare nRF9151 GPIOs, and all four serial instances are used.** 35
-  GPIO-type signals competed for 32 pins; the charger status nets were
+- **One spare nRF9151 GPIO (P0.24), and all four serial instances are used.** 35
+  GPIO-type signals competed for 32 pins (P0.24 was freed on 2026-11-18, below); the charger status nets were
   dropped to LEDs only (Resolved below). Anything new -- a second button, a
   per-anchor reset, the `VSYS_SENSE` divider firmware asked for, a TCXO
   enable -- needs a pin freed elsewhere, an expander, or a move to the BT840.
   ETM trace pins are in use as GPIO, so trace is SWO/RTT only. Candidate ways
   to free pins, from `connectivity_notes.md` section 2, cheapest first (none
   applied; each is a firmware/hardware trade to decide):
-  1. `MAG_DRDY` + `MAG_INT` (P0.24/P0.25, 2 pins): poll the magnetometer over
-     I2C at the heading rate. Moot-to-free if the magnetometer is re-picked
-     (lifecycle item below).
+  1. ~~`MAG_DRDY` + `MAG_INT` (P0.24/P0.25, 2 pins)~~ -- **done for one pin,
+     2026-11-18:** the replacement IIS2MDC has a single INT/DRDY pin, so
+     `MAG_DRDY` (P0.24) is gone and `MAG_INT` stays. P0.25 could still be freed
+     by polling the magnetometer over I2C at the heading rate.
   2. `ACC_INT2` (P0.26, 1 pin): INT1 alone covers knock/move.
   3. `FG_ALRT` (P0.27, 1 pin): poll the MAX17048 over I2C; the alert is a
      convenience, not a safety path (the MCP73871 terminates charge itself).
@@ -190,47 +191,9 @@ Raised by the five sheet/firmware handoffs (`bay-station/handoff/*.md`,
     (R150 gives a 33-100R series option), and keep outer-anchor reads off
     the bus during A0's reply window. A separate bus for A0 would need pins
     the GPIO item says do not exist.
-- **LIS2DH is probably obsolete and the magnetometer LIS3MDL is terminated
-  (checked 2026-11-18; ST product pages could not be fetched from this
-  environment, so neither is confirmed from ST itself).**
-  - **LIS3MDL (U10) is the worse one.** ST product termination notice PCN
-    15054 (Mouser copy `STMicroelectronics_15054_1.pdf`; its text could not be
-    fetched, so the dates below come from a search-engine summary of it):
-    reason "front-end technology obsolescence", **last order entry
-    2025-05-13, last delivery 2025-11-13** -- both past (today 2026-11-18).
-    ST's moderator on the ST community thread (Dec 2024, Feb 2025): buy
-    remaining stock from distributors; "STMicroelectronics is unfortunately
-    unable to offer a fully-fledged or better successor"; LIS2MDL and IIS2MDC
-    are "alternative proposals", not official replacements, with coarser
-    resolution; one user cites the AKM AK09940A (third party). The same
-    search summary says ST's product page shows NRND. **Treat U10 as
-    unobtainable from ST.** KiCad 10.0.5 ships `Sensor_Magnetic:LIS2MDL`
-    (LGA-12 2x2 mm; the stock symbol has no SA1 pin, so the address strap and
-    possibly the `MAG_INT` net change). Its pin map and whether its
-    resolution is adequate for tilt-compensated heading are still to be
-    verified from the LIS2MDL PDF before U10 is re-authored.
-  - **LIS2DH (U11).** DigiKey, Findchips and RS list the LIS2DH / LIS2DHTR as
-    obsolete or discontinued, and DigiKey's substitute field names ST's own
-    LIS2DH12TR (search summary; a direct fetch returned 403). Three searches
-    found **no ST termination notice** for the LIS2DH and one IBS listing
-    still says "Production", so ST's own status stays unconfirmed. On the
-    replacement: ST's PTN AMS/15/9055 (2015) names LIS2DH12TR as the
-    replacement for older accelerometers, and an ST employee advised
-    LIS2DW12 / LIS2DTW12 for 5-10 year designs. **LIS2DH12 is not a drop-in**
-    (LGA-12 vs the LIS2DH's LGA-14, different pinout -- the existing note,
-    not re-checked: no LIS2DH12 datasheet was obtainable here). KiCad ships
-    no LIS2DH12 or LIS2DW12 symbol, so U11's replacement needs a
-    hand-authored symbol plus an LGA-12 footprint.
-  Decision needed (not made here): re-pick both sensors before PCB layout,
-  since both sit on `orientation.kicad_sch` and both LGA footprints are still
-  to be drawn. Candidates to verify from ST PDFs: accelerometer LIS2DH12
-  (closest register family) or LIS2DW12; magnetometer LIS2MDL or IIS2MDC.
-  Re-verify the `bringup i2c scan` / `i2c id` expectations too: addresses
-  0x1C / 0x19 and WHO_AM_I 0x3D / 0x33 are LIS3MDL/LIS2DH values and will
-  change.
 - **Third-party copies stand in for several datasheets.** BGA524N6 (Rev 3.5
-  from a mirror; its E6327/XTSA1 OPN seen only at distributors), LIS3MDL and
-  LIS2DH (ST mirrors), Hirose U.FL (not read at all), MFF2 eSIM pad map
+  from a mirror; its E6327/XTSA1 OPN seen only at distributors), IIS2MDC,
+  IIS2DLPC and LIS2MDL (distributor mirrors; the IIS2MDC copy is truncated), Hirose U.FL (not read at all), MFF2 eSIM pad map
   (unverified, DNP part). Replace with manufacturer copies before ordering.
 - **RF small parts not chosen:** ESD diodes D100/D101 (DNP footprints), the
   active-antenna bias-tee values (R122/L100/C122, estimates), and the L101
@@ -303,7 +266,7 @@ not settle:
 - **Never built.** The NCS skeletons (`firmware/bay-station/`) were not built
   with `west`; Kconfig names, `SPI_DT_SPEC_GET` arity, NUS callback signatures
   and SoC dtsi paths come from docs/upstream `main`, not a pinned NCS tree.
-  LIS2DH WHO_AM_I, every MAX17048 register/address, and the DW3210 DEV_ID
+  IIS2MDC WHO_AM_I, every MAX17048 register/address, and the DW3210 DEV_ID
   (from Qorvo driver source, not the User Manual) are unverified.
   `firmware/handoff.md`.
 
@@ -359,7 +322,7 @@ not settle:
   Every digital part is 3.3 V-native or 3.3 V-tolerant: DW3210 (VDD1
   1.62-3.6 V, and VDD1 supplies the I/O), nRF9151 (`VDD_GPIO` 1.7-3.6 V, fed
   from `+3V3`; nRF9151 PS *Operating conditions*, HTML), Fanstel BT840 /
-  nRF52840 (1.7-3.6 V), LIS3MDL and LIS2DH (separate VDD_IO, on `+3V3_SNS`),
+  nRF52840 (1.7-3.6 V), IIS2MDC and IIS2DLPC (separate VDD_IO, on `+3V3_SNS`),
   LMK1C1104 (CLKIN 3.3 V-tolerant at every VDD). The nRF9151's only sub-3.3 V I/O -- the 1.8 V SIM, MAGPIO and
   MIPI RFFE pins -- are sheet-local and talk to 1.8 V parts or nothing.
 
@@ -386,7 +349,8 @@ not settle:
 - **Pull-ups: three are required.** Placed 2026-09-28 as R37 (SDA), R38
   (SCL), R39 (ALRT) to `+3V3` on `connectivity.kicad_sch`; before that the
   bay station had **zero** I2C pull-ups while carrying three devices (MAX17048
-  0x36, LIS3MDL 0x1C, LIS2DH 0x19). I2C is open-drain and cannot return high
+  0x36, then LIS3MDL 0x1C and LIS2DH 0x19, now IIS2MDC 0x1E and IIS2DLPC 0x19).
+  I2C is open-drain and cannot return high
   without them; ALRT is separately open-drain and needs its own.
 
   **R37/R38 are 3.3k, R39 is 2.2k -- derived, not defaulted** (changed from
@@ -513,6 +477,58 @@ not settle:
   Moot for the bay station, which uses discrete ICs with remote antennas.
 
 ## Resolved
+
+- **Magnetometer and accelerometer re-picked: ST IIS2MDC (U10) and ST IIS2DLPC
+  (U11), 2026-11-18.** Replaces the LIS3MDL (terminated: ST PCN 15054, last
+  order 2025-05-13, last delivery 2025-11-13, both past) and the LIS2DH
+  (listed obsolete by DigiKey, Findchips and RS; no ST notice found).
+  - **Why these two.** Both are ST industrial-grade parts, and ST's product
+    pages show a 10-year longevity commitment for them (IIS2MDC from
+    2020-01-01, IIS2DLPC from 2023-01-01; ST's longevity PDF instead dates them
+    from their 2017/2018 introductions, so the start dates disagree between
+    sources). The commercial LIS2MDL, LIS2DH12 and LIS2DW12 pages show Active
+    but no longevity commitment. All of that is from search summaries of st.com, which
+    could not be fetched here, so ST's own status is not confirmed first-hand.
+  - **IIS2MDC (heading).** Same pinout and I2C address as the LIS2MDL
+    (DocID030986 Rev 1 Table 2 and Table 21 read against DocID030621 Rev 5):
+    LGA-12 2x2x0.7 mm, 0x1E fixed, supply 1.71-3.6 V. Resolution is coarser than
+    the LIS3MDL (1.5 mgauss/LSB; noise 3 mgauss RMS typ, 4.6 max, Table 3), which
+    does not matter for a compass: against an assumed ~200 mgauss horizontal
+    Earth field it is under 1 degree, and the real error is the hard/soft-iron
+    calibration (Open). Drops the SA1 strap.
+  - **IIS2DLPC (tilt, knock).** 14-bit, +/-2/4/8/16 g, 0.244 mg/digit at +/-2 g,
+    90 ug/rtHz, INT1/INT2, tap / double-tap / wake-up, LGA-12 2x2x0.7 mm,
+    0x18/0x19 by SA0 (DocID031788 Rev 4, read in full, pin table checked against
+    the rendered Figure 2). Rejected: LIS2DH12 / LIS2DW12 (no longevity
+    commitment found), LIS2DE12 (8-bit: 16 mg/LSB at +/-2 g by my arithmetic, about 1 degree of tilt) and
+    LIS3DH (distributor-obsolete). KiCad has no symbol for any of the LGA-12
+    candidates, so U11's is hand-authored; U10's is derived from KiCad's stock
+    LIS2MDL.
+  - **Wiring consequences (the part-swap traps).** The pin numbering is not
+    the old parts', so every pin was re-mapped and the netlist re-read
+    pin by pin. **C1 is 220 nF, not the LIS3MDL's 100 nF** (Table 2; low ESR,
+    max 200 mOhm, right at pins 5/6: C400 changed). Vdd bulk C401 went 1 uF to
+    10 uF (sec 5 asks for 100 nF + 10 uF). R412/R413 (the SA1 strap) are gone.
+    IIS2DLPC: CS (pin 2) high for I2C, RES (pin 7) to GND, NC pin 5 open.
+  - **One interrupt pin.** The IIS2MDC has a single INT/DRDY output, so
+    `MAG_DRDY` and TP142 were deleted and `MAG_INT` stays (P0.25). **P0.24 is the
+    first spare nRF9151 GPIO** (no-connect flag on `connectivity.kicad_sch`).
+    The pin is not driven until `INT_on_PIN` or `DRDY_on_PIN` is set in
+    `CFG_REG_C` (62h), then push-pull (LIS2MDL DocID030621 Rev 5 note and
+    CFG_REG_C text; the IIS2MDC copy has the same note).
+  - **Checks.** Whole-project ERC unchanged (0 errors, 7 `lib_symbol_mismatch`),
+    BOM 425 -> 422 (R412, R413, TP142), every U10/U11 pin on the right net in the
+    exported netlist, `MAG_DRDY` absent from it. Both footprints are KiCad's
+    stock `LGA-12_2x2mm_P0.5mm`: its pad numbering and 0.5 mm pitch match ST's
+    Figure 2 bottom view and package outline (Figure 21: 2.0 x 2.0 x 0.7 mm), but
+    its 0.375 x 0.35 mm pads are KiCad's generic size and ST's own land pattern
+    ("available at www.st.com") was not read.
+  - **Not verified.** IIS2MDC register pages (the mirror stops in the SPI
+    section), so its WHO_AM_I is the LIS2MDL's 0x40, marked UNVERIFIED in the
+    shell; ST's lifecycle pages; the Zephyr/NCS devicetree bindings
+    `st,iis2mdc` / `st,iis2dlpc` (firmware has never been built); capacitor MPNs.
+    Firmware pins header, devicetree, shell, verification plan, passives
+    reference, net contract and BOM were updated in the same commit.
 
 - **U8 lib_id renamed to `TPS62A02PDDC` (2026-11-18).** Applied in
   `regulation.kicad_sch` only (cache symbol name, its two unit sub-symbols, the
@@ -669,7 +685,7 @@ from SnapEDA / SnapMagic / Ultra Librarian / Flux was used.
   `firmware/boards/.../*_pins.h`). The three MCP73871 status nets go to LEDs
   only: the chip is out of pins, and the nodes idle near `+VSYS`, above
   `VDD_GPIO`. Charge state stays visible through the MAX17048. `LED_LINK` is on
-  the BT840. Zero spare GPIOs remain (Open).
+  the BT840. Zero spare GPIOs remained (Open; one freed 2026-11-18 by the sensor re-pick).
 - **UWB SPI is 8 MHz max.** That is every nRF91 SPIM instance -- the nrfx MDK
   (`nrf9120_peripherals.h`, `SPIMn_MAX_DATARATE 8`; the nRF9151 uses the
   nRF9120 die in nrfx) -- and no faster instance exists. The DW3000 accepts
@@ -773,7 +789,7 @@ from SnapEDA / SnapMagic / Ultra Librarian / Flux was used.
 - **Orientation sheet (was GNSS / Orientation).** MAX-M10S U9 and its C32-C34
   removed (GNSS now from the nRF9151); `gnss.kicad_sch` renamed
   `orientation.kicad_sch`, same sheet UUID. LIS3MDL strapped to 0x1C and LIS2DH
-  to 0x19, distinct from the MAX17048's fixed 0x36 (19-6171 Rev 7); each
+  to 0x19 (IIS2MDC 0x1E fixed and IIS2DLPC 0x19 since the 2026-11-18 re-pick), distinct from the MAX17048's fixed 0x36 (19-6171 Rev 7); each
   sensor has its own SCL/SDA 0R and a shared `+3V3_SNS` current break.
 
 ### Earlier decisions
@@ -886,8 +902,9 @@ from SnapEDA / SnapMagic / Ultra Librarian / Flux was used.
   not one:
   - **U9 u-blox MAX-M10S** -- where the station is. *(Removed 2026-11-17;
     the nRF9151 GNSS does this now.)*
-  - **U10 ST LIS3MDL** magnetometer -- which way it faces.
-  - **U11 ST LIS2DH** accelerometer -- tilt compensation, because a
+  - **U10 ST LIS3MDL** magnetometer -- which way it faces. *(Re-picked to the
+    IIS2MDC 2026-11-18; the LIS3MDL was terminated.)*
+  - **U11 ST LIS2DH** accelerometer *(re-picked to the IIS2DLPC 2026-11-18)* -- tilt compensation, because a
     magnetometer only reads heading correctly when level and this station is
     set down on varying terrain. It also detects the station being knocked,
     which silently invalidates both the fix and the heading.

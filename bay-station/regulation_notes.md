@@ -6,7 +6,7 @@ Hierarchical sub-sheet "Regulation" (sheet-symbol uuid
 
 | Rail | Converter | Loads | Nominal |
 |---|---|---|---|
-| `+3V3` | U8, TI TPS62A02PDDCR buck | 4x DW3210, BT840, nRF9151 `VDD_GPIO`, LIS3MDL/LIS2DH, TCXO + fan-out buffer, LEDs, I2C pull-ups | 3.318 V |
+| `+3V3` | U8, TI TPS62A02PDDCR buck | 4x DW3210, BT840, nRF9151 `VDD_GPIO`, IIS2MDC/IIS2DLPC, TCXO + fan-out buffer, LEDs, I2C pull-ups | 3.318 V |
 | `+VBAT_LTE` | U40, TI TPS63802DLAR buck-boost | nRF9151 `VDD` only | 3.588 V |
 
 **Wired 2026-11-17** (nRF9151 host redesign). Every pin now lands on a wire

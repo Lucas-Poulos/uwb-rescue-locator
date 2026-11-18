@@ -64,7 +64,7 @@ lines are visible early.
 | GNSS antenna, u.FL pigtail | 1 | $10 | $10 | [E] -- not yet selected |
 | LTE-M antenna, u.FL pigtail | 1 | -- | -- | [--] -- not yet selected |
 | GNSS LNA + LDO, SIM holder + ESD filter, 2x U.FL | 6 | -- | -- | [--] |
-| LIS3MDL magnetometer + LIS2DH accelerometer | 2 | $2 | $4 | [E] |
+| IIS2MDC magnetometer + IIS2DLPC accelerometer | 2 | $2 | $4 | [E] |
 | Passives, ~55x 0603/0805 | 55 | $0.05 | $2.75 | [E] -- now well over 55; recount from `components.csv` |
 | | | | **~$263 + [--] rows** | |
 

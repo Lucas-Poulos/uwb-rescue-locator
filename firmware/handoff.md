@@ -108,8 +108,8 @@ New Open:
   and `.../bay_station_ble/bay_station_ble_pins.h`, flip the `*_ASSIGNED`
   flag. The instance table above means every nRF9151 serial instance is
   used -- no spare SPI/UART for anything added later.
-- **io (orientation)**: firmware needs the LIS3MDL SDO/SA1 and LIS2DH SA0
-  strap levels to set the I2C addresses in the pins header.
+- **io (orientation)**: firmware needs U11's SA0 strap level to set its I2C
+  address in the pins header (the IIS2MDC is fixed at 0x1E).
 - **io (indicators)**: LED polarity (sink vs source) sets `LED_ACTIVE_FLAGS`.
 - **coordinator**: fill "Test-point index" in `docs/verification-plan.md`
   from the io agent's table. Root `CLAUDE.md` / `README.md` /
@@ -122,7 +122,7 @@ New Open:
    `CONFIG_TFM_LOG_LEVEL_SILENCE`, `CONFIG_BT_NUS`, ...), the
    `SPI_DT_SPEC_GET` arity, NUS callback signatures and SoC dtsi include
    paths are from docs/upstream `main`, not from a pinned NCS tree.
-2. **LIS2DH WHO_AM_I (0x33) and every MAX17048 register/address** are
+2. **IIS2MDC WHO_AM_I (0x40, expected from the LIS2MDL) and every MAX17048 register/address** are
    unverified -- the full PDFs could not be downloaded (ST/ADI blocked or
    truncated mirrors). Marked UNVERIFIED in code and plan.
 3. **DW3210 DEV_ID 0xDECA0302** is from Qorvo's driver source, not the

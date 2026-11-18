@@ -130,10 +130,10 @@ collisions) -- see each `libs/components.csv` for the full part-by-part BOM.
 | Connectivity | **Wired** | **nRF9151 (U20)** host with Nordic's HDG decoupling, LTE + GNSS (BGA524N6 LNA) on u.FL, nano-SIM (+ DNP eSIM); **BT840 (U3)** as UART BLE bridge |
 | UWB Array | **Wired** | 4x DW3210 (U4=A0 center, U5-U7=A1-A3 outer), Qorvo Fig 32 decoupling, per-anchor 0R rework links, pi-match pads, SMA J20-J23 (proposed CONSMA020.042-G) |
 | Clock Distribution | **Wired** | Proposed Rakon RPT1490LN TCXO -> TI LMK1C1104 1:4 buffer -> 2200 pF -> each XTI |
-| Orientation (was GNSS / Orientation) | **Wired** | LIS3MDL magnetometer (U10, 0x1C) + LIS2DH accelerometer (U11, 0x19) |
+| Orientation (was GNSS / Orientation) | **Wired** | IIS2MDC magnetometer (U10, 0x1E) + IIS2DLPC accelerometer (U11, 0x19) |
 | Indicators | **Wired** | D4-D6 charger status, D7 `LED_SYS`, D400 `LED_LTE`, D401 `LED_LINK`, resistors computed per rail |
 | Programming/Debug | **Wired** | J3 nRF9151 SWD, J32 BT840 SWD, DNP Tag-Connect pads, J33 debug UART, SW2/SW11 resets, SW12 user button |
-| Test Points | **Wired** | 65 pads covering every net-contract net (+ local pads on each sheet); index in `docs/verification-plan.md` |
+| Test Points | **Wired** | 64 pads covering every net-contract net (+ local pads on each sheet); index in `docs/verification-plan.md` |
 | Mechanical | Placement only | 4x M3 mounting holes, 3 fiducials |
 
 Whole-project ERC after the merge (2026-11-17, `kicad-cli` 10.0.5,
@@ -167,7 +167,7 @@ in `bay-station/handoff/`.
 | TI **TPS7A0233PDBVR** | LDO regulator (3.3V) -- battery rail can hit 4.2V, which exceeds the DWM3001C's 3.6V operating max without this. Replaced the MCP1700 on 2026-09-23 | Wristband | 1 |
 | TI **TPS62A02PDDCR** | Buck regulator, `+VSYS` -> `+3V3` | Bay Station | 1 |
 | TI **TPS63802DLAR** | Buck-boost, `+VSYS` -> `+VBAT_LTE` (nRF9151 VDD). Footprint from TI's land-pattern page (2026-11-18) | Bay Station | 1 |
-| ST **LIS3MDL** / **LIS2DH** | Magnetometer (heading) / accelerometer (tilt, knock). LIS2DH may be EOL -- check | Bay Station | 1 + 1 |
+| ST **IIS2MDC** / **IIS2DLPC** | Magnetometer (heading) / accelerometer (tilt, knock). Industrial grade with ST's 10-year longevity commitment; replaced the terminated LIS3MDL and the obsolete LIS2DH on 2026-11-18 | Bay Station | 1 + 1 |
 | Infineon **BGA524N6** + TI **TPS7A0228** | GNSS LNA and its COEX0-switched 2.8 V LDO, as on the nRF9151 DK | Bay Station | 1 + 1 |
 | TI **TPD3F303** | SIM ESD/EMI filter | Bay Station | 1 |
 | Rakon **RPT1490LN** / TI **LMK1C1104** | 38.4 MHz CMOS TCXO / 1:4 clock buffer -- **PROPOSED**; the TCXO looks quote-only | Bay Station | 1 + 1 |
@@ -273,11 +273,11 @@ silent corruption from hand-resolving `.kicad_sch` conflicts still stands.
    the SMA launch and the DNP eSIM.
 3. **Close the redesign's open risks** in `docs/decisions.md`. Analysed
    2026-11-18 and reduced to concrete actions: the DW3210 has **no exposed
-   pad** (so the QFN footprint must be replaced), the LIS3MDL is terminated
-   and the LIS2DH probably obsolete (re-pick both sensors), the 8 MHz SPI cap
-   is a reply-delay measurement not a throughput problem, XTI amplitude is
-   at the DW3000 limit and needs a bench check, and there is a ranked list of
-   ways to free GPIOs. Still open: TCXO availability (quote), GNSS LNA
+   pad** (footprint since replaced), the 8 MHz SPI cap is a reply-delay
+   measurement not a throughput problem, XTI amplitude is at the DW3000 limit
+   and needs a bench check, and there is a ranked list of ways to free GPIOs
+   (one is free since the sensor re-pick: P0.24). The terminated LIS3MDL and
+   obsolete LIS2DH were replaced by the IIS2MDC / IIS2DLPC on 2026-11-18. Still open: TCXO availability (quote), GNSS LNA
    pre-filter.
 4. **Array calibration procedure and fixture** -- the project's critical
    path; drafted in `docs/verification-plan.md`.
@@ -397,7 +397,7 @@ Hybrid two-way-ranging + TDoA, not symmetric multilateration -- see
 | Wristband <-> bay station | UWB only -- one tag transmission per exchange, no other radio link |
 | Bay station -> laptop | Bluetooth LE via the BT840 bridge (NUS, framed relay, raw timestamps) -- primary path, no WiFi |
 | Bay station -> network | LTE-M from the nRF9151, optional (station must work with no SIM); service still open |
-| Georeferencing | nRF9151 GNSS (time-shared with LTE) + ST LIS3MDL magnetometer + ST LIS2DH accelerometer (bay station only; position + heading both required) |
+| Georeferencing | nRF9151 GNSS (time-shared with LTE) + ST IIS2MDC magnetometer + ST IIS2DLPC accelerometer (bay station only; position + heading both required) |
 
 **Cost** (one prototype pair, hobbyist qty-1 pricing -- see `docs/bom-cost.md`)
 | | |

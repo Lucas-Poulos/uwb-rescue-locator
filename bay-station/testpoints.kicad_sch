@@ -306,7 +306,7 @@
 		)
 		(uuid "0c4b73b8-35c2-422e-8798-4738b0ff61fe")
 	)
-	(text "LIS2DH INT2."
+	(text "IIS2DLPC INT2."
 		(exclude_from_sim no)
 		(at 129.54 213.995 0)
 		(effects
@@ -495,7 +495,7 @@
 		)
 		(uuid "4687d80a-0765-4d67-994f-5d7efc8ed1c0")
 	)
-	(text "LIS2DH INT1 (knock / move detect)."
+	(text "IIS2DLPC INT1 (knock / move detect)."
 		(exclude_from_sim no)
 		(at 129.54 205.105 0)
 		(effects
@@ -639,7 +639,7 @@
 		)
 		(uuid "5ae3e324-c34c-4818-947c-e83157e947eb")
 	)
-	(text "LIS3MDL INT."
+	(text "IIS2MDC INT/DRDY (one pin)."
 		(exclude_from_sim no)
 		(at 129.54 196.215 0)
 		(effects
@@ -906,7 +906,7 @@
 		)
 		(uuid "ba122bed-cf46-4f94-8a08-441ddfc3e31c")
 	)
-	(text "Shared I2C SCL (MAX17048 0x36, LIS3MDL 0x1C, ..."
+	(text "Shared I2C SCL (MAX17048 0x36, IIS2MDC 0x1E, ..."
 		(exclude_from_sim no)
 		(at 129.54 169.545 0)
 		(effects
@@ -960,17 +960,6 @@
 			(justify left)
 		)
 		(uuid "cb102b6f-e219-496e-a6d3-92d28e5338aa")
-	)
-	(text "LIS3MDL DRDY."
-		(exclude_from_sim no)
-		(at 129.54 187.325 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "cc990c57-913a-4f10-bcf4-a0a47a992d7e")
 	)
 	(text "Chip-select A1 (outer, TDoA)."
 		(exclude_from_sim no)
@@ -1701,16 +1690,6 @@
 	)
 	(wire
 		(pts
-			(xy 101.6 187.96) (xy 106.68 187.96)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "daccc907-dad4-4cf6-9661-25675969f15c")
-	)
-	(wire
-		(pts
 			(xy 25.4 170.18) (xy 30.48 170.18)
 		)
 		(stroke
@@ -1951,28 +1930,6 @@
 		(uuid "1673d3ca-3d42-4ffb-a8ab-3d735967d0c6")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 106.68 73.66 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "MAG_DRDY"
-		(shape passive)
-		(at 106.68 187.96 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "170d56c5-8d2b-468e-8547-460d261b52c4")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 106.68 187.96 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3471,7 +3428,7 @@
 				)
 			)
 		)
-		(property "Description" "LIS2DH INT2. BRING-UP: low unless configured"
+		(property "Description" "IIS2DLPC INT2. BRING-UP: low unless configured"
 			(at 101.6 214.63 0)
 			(hide yes)
 			(show_name no)
@@ -4354,84 +4311,6 @@
 	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 101.6 187.96 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "399eb47f-0542-48ba-86ac-8a6c103ac806")
-		(property "Reference" "TP142"
-			(at 100.33 182.88 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Value" "MAG_DRDY"
-			(at 101.6 190.5 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 101.6 187.96 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 101.6 187.96 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "LIS3MDL DRDY. PLACE: near U10 but outside its keep-out BRING-UP: toggles at the set ODR once U10 is running"
-			(at 101.6 187.96 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "d57eaca5-733c-435e-8150-d0394cd96789")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/9b2c3d4e-5f60-4172-8384-95a617b8c9da"
-					(reference "TP142")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Connector:TestPoint")
 		(at 25.4 161.29 0)
 		(unit 1)
 		(body_style 1)
@@ -4642,7 +4521,7 @@
 				)
 			)
 		)
-		(property "Description" "LIS2DH INT1 (knock / move detect). BRING-UP: pulses when the board is tapped (after config)"
+		(property "Description" "IIS2DLPC INT1 (knock / move detect). BRING-UP: pulses when the board is tapped (after config)"
 			(at 101.6 205.74 0)
 			(hide yes)
 			(show_name no)
@@ -5423,7 +5302,7 @@
 				)
 			)
 		)
-		(property "Description" "LIS3MDL INT. BRING-UP: low unless threshold interrupt configured"
+		(property "Description" "IIS2MDC INT/DRDY (the only interrupt/data-ready pin; replaced MAG_DRDY + MAG_INT). BRING-UP: not driven until INT_on_PIN or DRDY_on_PIN is set in CFG_REG_C (62h), then push-pull"
 			(at 101.6 196.85 0)
 			(hide yes)
 			(show_name no)
@@ -6906,7 +6785,7 @@
 				)
 			)
 		)
-		(property "Description" "Shared I2C SCL (MAX17048 0x36, LIS3MDL 0x1C, LIS2DH 0x19). PLACE: mid-bus BRING-UP: idle 3.3 V; 100/400 kHz bursts; rise time < 300 ns @400k"
+		(property "Description" "Shared I2C SCL (MAX17048 0x36, IIS2MDC 0x1E, IIS2DLPC 0x19). PLACE: mid-bus BRING-UP: idle 3.3 V; 100/400 kHz bursts; rise time < 300 ns @400k"
 			(at 101.6 170.18 0)
 			(hide yes)
 			(show_name no)

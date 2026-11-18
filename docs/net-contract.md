@@ -18,8 +18,8 @@ Decided 2026-11-17 (see `decisions.md`):
   nRF9151's built-in GNSS replaces it. GNSS is
   time-shared with LTE (fixes only while LTE is idle / PSM / eDRX), which is
   acceptable for a stationary station doing survey-in averaging. The
-  LIS3MDL magnetometer and LIS2DH accelerometer stay -- heading is still
-  required.
+  IIS2MDC magnetometer and IIS2DLPC accelerometer stay (re-picked 2026-11-18
+  from the terminated LIS3MDL / obsolete LIS2DH) -- heading is still required.
 
 Rules:
 
@@ -69,9 +69,9 @@ links).
 
 | Net | Dir | Notes |
 |---|---|---|
-| `I2C_SCL`, `I2C_SDA` | od | One bus: LIS3MDL 0x1C, LIS2DH 0x19, MAX17048 0x36. Replaces the old `FG_SCL`/`FG_SDA` names (done on power_bms). Pull-ups R37/R38 3.3k on connectivity (`decisions.md`, pull-ups). |
-| `MAG_DRDY`, `MAG_INT` | in | LIS3MDL. |
-| `ACC_INT1`, `ACC_INT2` | in | LIS2DH. INT1 = knock/move detect. |
+| `I2C_SCL`, `I2C_SDA` | od | One bus: IIS2MDC 0x1E, IIS2DLPC 0x19, MAX17048 0x36. Replaces the old `FG_SCL`/`FG_SDA` names (done on power_bms). Pull-ups R37/R38 3.3k on connectivity (`decisions.md`, pull-ups). |
+| `MAG_INT` | in | IIS2MDC INT/DRDY, one pin. Not driven until `INT_on_PIN` or `DRDY_on_PIN` is set in `CFG_REG_C` (62h). `MAG_DRDY` was removed 2026-11-18; P0.24 is spare. |
+| `ACC_INT1`, `ACC_INT2` | in | IIS2DLPC. INT1 = knock/move detect. |
 | `FG_ALRT` | in | MAX17048 (existing name). |
 
 ## 5. BLE bridge (connectivity, nRF9151 <-> BT840)

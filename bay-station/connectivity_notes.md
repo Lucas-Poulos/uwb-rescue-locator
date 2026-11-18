@@ -75,7 +75,7 @@ and `nPG` were dropped. They go to LEDs only (indicators sheet). They also
 must not touch a GPIO directly: they are open-drain with LEDs pulled to
 +VSYS/+5V_IN, so the off-state node sits near +VSYS, above VDD_GPIO
 (io agent). Charge state is still visible through the MAX17048 on I2C.
-`LED_LINK` is on the BT840, per the contract. **No spare GPIOs remain**, and
+`LED_LINK` is on the BT840, per the contract. **One spare GPIO remains (P0.24, freed 2026-11-18 by the IIS2MDC re-pick)**, and
 the ETM trace pins (P0.21-P0.25) are used as GPIO, so trace is SWO/RTT only.
 
 | nRF9151 pin | Port | Net (contract) | Dir | Peripheral / config | Notes |
@@ -87,7 +87,7 @@ the ETM trace pins (P0.21-P0.25) are used as GPIO, so trace is SWO/RTT only.
 | 61 | P0.04 | `BRIDGE_IRQ` | in | GPIOTE | <- R144 <- BT840 P0.13; pull-down/up per protocol |
 | 62 | P0.05 | `I2C_SCL` | od | TWIM2 SCL | via R153 0R; pull-up R37/R38 3.3k |
 | 63 | P0.06 | `I2C_SDA` | od | TWIM2 SDA | via R154 0R |
-| 64 | P0.07 | `ACC_INT1` | in | GPIOTE | LIS2DH INT1 (knock/move) |
+| 64 | P0.07 | `ACC_INT1` | in | GPIOTE | IIS2DLPC INT1 (knock/move) |
 | 67 | P0.08 | `UWB_IRQ0` | in | GPIOTE | A0 centre (TWR) |
 | 68 | P0.09 | `UWB_IRQ1` | in | GPIOTE | A1 |
 | 69 | P0.10 | `UWB_IRQ2` | in | GPIOTE | A2 |
@@ -104,9 +104,9 @@ the ETM trace pins (P0.21-P0.25) are used as GPIO, so trace is SWO/RTT only.
 | 5 | P0.21 | `UWB_SYNC` | out | GPIO (/TIMER+PPI) | shared SYNC/OSTR |
 | 6 | P0.22 | `DBG_UART_TX` | out | UARTE0 TXD | log/shell |
 | 8 | P0.23 | `DBG_UART_RX` | in | UARTE0 RXD | pull-up |
-| 11 | P0.24 | `MAG_DRDY` | in | GPIOTE | LIS3MDL |
-| 12 | P0.25 | `MAG_INT` | in | GPIOTE | LIS3MDL |
-| 44 | P0.26 | `ACC_INT2` | in | GPIOTE | LIS2DH INT2 |
+| 11 | P0.24 | -- spare -- | -- | no-connect flag on the sheet | was `MAG_DRDY`; freed 2026-11-18 (the IIS2MDC has one INT/DRDY pin) |
+| 12 | P0.25 | `MAG_INT` | in | GPIOTE | IIS2MDC INT/DRDY |
+| 44 | P0.26 | `ACC_INT2` | in | GPIOTE | IIS2DLPC INT2 |
 | 45 | P0.27 | `FG_ALRT` | in | GPIOTE | MAX17048 ALRT, pull-up R39 2.2k |
 | 47 | P0.28 | `RESET_BLE_N` | od | GPIO, S0D1 | via R145 0R; **open-drain only** (SW11 + BT840 header share it) |
 | 48 | P0.29 | `BTN_USER` | in | GPIOTE | active low; internal pull-up unless programming_debug fits one |

@@ -60,7 +60,7 @@ footprints placed on the PCB, no wires drawn -- every net is carried by
 
   **Renamed 2026-11-17:** `FG_SCL`/`FG_SDA` are now **`I2C_SCL`/`I2C_SDA`**
   (`docs/net-contract.md` Sec 4: one housekeeping bus for the MAX17048,
-  LIS3MDL and LIS2DH). `FG_ALRT` keeps its name. The connectivity sheet
+  IIS2MDC and IIS2DLPC). `FG_ALRT` keeps its name. The connectivity sheet
   terminates them. See "Known ERC finding" below.
 - **Barrel jack and USB-C share one `+5V_IN` net.** Per
   `libs/components.csv`, the USB-C receptacle is documented as an

@@ -17,7 +17,7 @@ The fixed reference station. Open `bay-station.kicad_pro` in KiCad.
   nRF52840) stays as a **UART BLE bridge** to a nearby laptop, which remains
   the primary link; LTE-M is optional (the station must work with no SIM).
   See `../docs/decisions.md`, "nRF9151 host redesign".
-- **Georeferencing**: nRF9151 GNSS for position, LIS3MDL + LIS2DH for heading
+- **Georeferencing**: nRF9151 GNSS for position, IIS2MDC + IIS2DLPC for heading
   and tilt (`orientation.kicad_sch`).
 - **BMS**: optimized for longevity rather than size, since this board isn't
   worn (contrast with the wristband's compromise-heavy BMS).
@@ -50,10 +50,10 @@ table is the summary. Pins are assigned in one place:
 | `connectivity` | **Wired** | U20 nRF9151 + HDG decoupling; LTE (J10) and GNSS (J11, BGA524N6 LNA) on u.FL; nano-SIM + DNP eSIM; U3 BT840 bridge; I2C pull-ups R37/R38 3.3k, R39 2.2k | `connectivity_notes.md` |
 | `uwb_array` | **Wired** | 4x DW3210 (U4 = A0 center, U5-U7 = A1-A3 outer), Fig 32 decoupling, per-anchor 0R links, SPI-mode-0 straps, pi-match pads, SMA J20-J23, XTO caps C28-C31, DNP A0 fallback crystal | `uwb_array_notes.md` |
 | `clock_dist` | **Wired** | Proposed RPT1490LN TCXO -> LMK1C1104 -> 22R -> 2200 pF -> `UWB_CLK0..3`; no `TCXO_EN` | `clock_dist_notes.md` |
-| `orientation` (was `gnss`) | **Wired** | LIS3MDL (U10, 0x1C) + LIS2DH (U11, 0x19) on `+3V3_SNS`; MAX-M10S removed | sheet notes; `components.csv` |
+| `orientation` (was `gnss`) | **Wired** | IIS2MDC (U10, 0x1E) + IIS2DLPC (U11, 0x19) on `+3V3_SNS`; MAX-M10S removed | sheet notes; `components.csv` |
 | `indicators` | **Wired** | D4/D5 (STAT1/STAT2, from `+VSYS`), D6 (PG, from `+5V_IN`), D7 `LED_SYS`, D400 `LED_LTE`, D401 `LED_LINK` | `../docs/decisions.md`, LED drive rails |
 | `programming_debug` | **Wired** | J3 nRF9151 SWD, J32 BT840 SWD, DNP Tag-Connect J34/J35, J33 debug UART, SW2/SW11 resets, SW12 `BTN_USER` | `programming_debug_notes.md` |
-| `testpoints` | **Wired** | 65 pads on every net-contract net, GND spring pairs; clock pads behind DNP 0R | `../docs/verification-plan.md`, Test-point index |
+| `testpoints` | **Wired** | 64 pads on every net-contract net, GND spring pairs; clock pads behind DNP 0R | `../docs/verification-plan.md`, Test-point index |
 | `mechanical` | Placement only | H1-H4 (M3, NPTH), FID1-FID3 | grounding the holes is Open |
 
 **ERC.** Each sheet owner ran `kicad-cli` ERC on the whole project during

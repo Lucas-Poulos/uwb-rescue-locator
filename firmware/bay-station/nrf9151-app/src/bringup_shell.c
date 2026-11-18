@@ -22,20 +22,21 @@
 
 static const struct device *const i2c = DEVICE_DT_GET(DT_NODELABEL(i2c2));
 
-#define LIS3MDL_ADDR  DT_REG_ADDR(DT_NODELABEL(lis3mdl))
-#define LIS2DH_ADDR   DT_REG_ADDR(DT_NODELABEL(lis2dh))
+#define IIS2MDC_ADDR  DT_REG_ADDR(DT_NODELABEL(iis2mdc))
+#define IIS2DLPC_ADDR DT_REG_ADDR(DT_NODELABEL(iis2dlpc))
 #define MAX17048_ADDR DT_REG_ADDR(DT_NODELABEL(max17048))
 
-/* LIS3MDL WHO_AM_I @0x0F = 0x3D: ST DocID024204 Rev 4, s7.1 Table 17 and
- * Table 16 register map. VERIFIED from the PDF. */
-#define LIS3MDL_REG_WHO_AM_I 0x0F
-#define LIS3MDL_WHO_AM_I     0x3D
-/* LIS2DH WHO_AM_I @0x0F: register exists (ST Doc ID 022516 Rev 1, s7.4,
- * listed in the contents), but the copy we could obtain was truncated
- * before the register pages. 0x33 is UNVERIFIED -- do not "fix" a board
+/* IIS2DLPC WHO_AM_I @0x0F = 0x44: ST DocID031788 Rev 4, s8.3 "fixed at 44h"
+ * and the register map. VERIFIED from the PDF. */
+#define IIS2DLPC_REG_WHO_AM_I 0x0F
+#define IIS2DLPC_WHO_AM_I     0x44
+/* IIS2MDC WHO_AM_I @0x4F: register exists (ST DocID030986 Rev 1, s8.4, listed
+ * in the contents), but the copy we could obtain stops in the SPI section,
+ * before the register pages. 0x40 is the LIS2MDL value (DocID030621 Rev 5,
+ * register map) and is UNVERIFIED for the IIS2MDC -- do not "fix" a board
  * that reads something else until the full PDF is checked. */
-#define LIS2DH_REG_WHO_AM_I  0x0F
-#define LIS2DH_WHO_AM_I_UNVERIFIED 0x33
+#define IIS2MDC_REG_WHO_AM_I  0x4F
+#define IIS2MDC_WHO_AM_I_UNVERIFIED 0x40
 /* MAX17048: VERSION and VCELL register addresses and scaling are
  * UNVERIFIED (datasheet 19-6171 download was blocked). The values below
  * are placeholders to be confirmed before trusting any pass/fail. */
@@ -71,8 +72,8 @@ static int cmd_i2c_scan(const struct shell *sh, size_t argc, char **argv)
 			found++;
 		}
 	}
-	shell_print(sh, "%d device(s); expect 3 (LIS3MDL 0x%02x, LIS2DH 0x%02x, MAX17048 0x%02x)",
-		    found, LIS3MDL_ADDR, LIS2DH_ADDR, MAX17048_ADDR);
+	shell_print(sh, "%d device(s); expect 3 (IIS2MDC 0x%02x, IIS2DLPC 0x%02x, MAX17048 0x%02x)",
+		    found, IIS2MDC_ADDR, IIS2DLPC_ADDR, MAX17048_ADDR);
 	return found == 3 ? 0 : -EIO;
 }
 
@@ -83,20 +84,20 @@ static int cmd_i2c_id(const struct shell *sh, size_t argc, char **argv)
 	uint16_t w;
 	int fails = 0;
 
-	if (i2c_rd8(LIS3MDL_ADDR, LIS3MDL_REG_WHO_AM_I, &v) == 0) {
-		bool ok = v == LIS3MDL_WHO_AM_I;
+	if (i2c_rd8(IIS2DLPC_ADDR, IIS2DLPC_REG_WHO_AM_I, &v) == 0) {
+		bool ok = v == IIS2DLPC_WHO_AM_I;
 
-		shell_print(sh, "LIS3MDL  WHO_AM_I=0x%02x %s", v, ok ? "PASS" : "FAIL (want 0x3D)");
+		shell_print(sh, "IIS2DLPC WHO_AM_I=0x%02x %s", v, ok ? "PASS" : "FAIL (want 0x44)");
 		fails += !ok;
 	} else {
-		shell_error(sh, "LIS3MDL  no response at 0x%02x", LIS3MDL_ADDR);
+		shell_error(sh, "IIS2DLPC no response at 0x%02x", IIS2DLPC_ADDR);
 		fails++;
 	}
-	if (i2c_rd8(LIS2DH_ADDR, LIS2DH_REG_WHO_AM_I, &v) == 0) {
-		shell_print(sh, "LIS2DH   WHO_AM_I=0x%02x (UNVERIFIED expectation 0x%02x)", v,
-			    LIS2DH_WHO_AM_I_UNVERIFIED);
+	if (i2c_rd8(IIS2MDC_ADDR, IIS2MDC_REG_WHO_AM_I, &v) == 0) {
+		shell_print(sh, "IIS2MDC  WHO_AM_I=0x%02x (UNVERIFIED expectation 0x%02x)", v,
+			    IIS2MDC_WHO_AM_I_UNVERIFIED);
 	} else {
-		shell_error(sh, "LIS2DH   no response at 0x%02x", LIS2DH_ADDR);
+		shell_error(sh, "IIS2MDC  no response at 0x%02x", IIS2MDC_ADDR);
 		fails++;
 	}
 	if (i2c_rd16be(MAX17048_ADDR, MAX17048_REG_VERSION_PLACEHOLDER, &w) == 0) {
@@ -334,7 +335,7 @@ static int cmd_lines(const struct shell *sh, size_t argc, char **argv)
 
 SHELL_STATIC_SUBCMD_SET_CREATE(sub_i2c,
 	SHELL_CMD(scan, NULL, "Probe 0x08-0x77 on I2C_SCL/I2C_SDA", cmd_i2c_scan),
-	SHELL_CMD(id, NULL, "WHO_AM_I / VERSION for LIS3MDL, LIS2DH, MAX17048", cmd_i2c_id),
+	SHELL_CMD(id, NULL, "WHO_AM_I / VERSION for IIS2DLPC, IIS2MDC, MAX17048", cmd_i2c_id),
 	SHELL_SUBCMD_SET_END);
 
 SHELL_STATIC_SUBCMD_SET_CREATE(sub_uwb,
@@ -358,7 +359,7 @@ SHELL_STATIC_SUBCMD_SET_CREATE(sub_bringup,
 	SHELL_CMD_ARG(gnss, NULL, "[timeout_s] GNSS-only fix + C/N0", cmd_gnss, 1, 1),
 	SHELL_CMD_ARG(led, NULL, "<sys|lte> <on|off>", cmd_led, 3, 0),
 	SHELL_CMD(btn, NULL, "Wait for BTN_USER press", cmd_btn),
-	SHELL_CMD(lines, NULL, "Read MAG_DRDY, MAG_INT, ACC_INT1/2, FG_ALRT", cmd_lines),
+	SHELL_CMD(lines, NULL, "Read MAG_INT, ACC_INT1/2, FG_ALRT", cmd_lines),
 	SHELL_SUBCMD_SET_END);
 
 SHELL_CMD_REGISTER(bringup, &sub_bringup, "Bay-station board bring-up tests", NULL);

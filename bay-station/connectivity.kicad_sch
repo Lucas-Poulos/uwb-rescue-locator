@@ -6291,6 +6291,10 @@
 		(uuid "ed3851e4-4727-4e2e-b268-9038a37ee6cf")
 	)
 	(no_connect
+		(at 256.54 180.34)
+		(uuid "e92e648f-3aed-4615-9bfe-5110bb5d18ad")
+	)
+	(no_connect
 		(at 234.95 111.76)
 		(uuid "032a5a07-5eed-4fbd-b13c-cf6910b18ad9")
 	)
@@ -8697,16 +8701,6 @@
 			(type default)
 		)
 		(uuid "cd7171d8-7f0e-4e2c-af41-fb31adb0a794")
-	)
-	(wire
-		(pts
-			(xy 256.54 180.34) (xy 259.08 180.34)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "ce14b256-4b10-41a8-989e-607ea16949a3")
 	)
 	(wire
 		(pts
@@ -11852,28 +11846,6 @@
 		(uuid "6fce603c-9ffa-479d-946f-83b090bbb110")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 259.08 162.56 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "MAG_DRDY"
-		(shape passive)
-		(at 259.08 180.34 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "701b38a7-5829-433c-9735-1f8ca43c9003")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 259.08 180.34 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15100,7 +15072,7 @@
 				)
 			)
 		)
-		(property "Description" "I2C SDA Pull-up for the shared I2C bus (nRF9151 host; MAX17048 0x36, LIS3MDL 0x1C/0x1E, LIS2DH 0x18/0x19). 3.3k: Rp(min) = (3.3-0.4)/IOL = 2.9k for the nRF9151 standard-drive IOL,SD min 1 mA (nRF9151 PS GPIO electrical spec), so 2.2k (sized for the nRF52840) would need high-drive pins. tr = 0.8473*Rp*Cb (NXP UM10204) allows ~107 pF at 400 kHz. MUST pull up to +3V3, never to VBATT_PROT (MAX17048 VDD reaches 4.2 V; nRF9151 VDD_GPIO max 3.6 V)."
+		(property "Description" "I2C SDA Pull-up for the shared I2C bus (nRF9151 host; MAX17048 0x36, IIS2MDC 0x1E, IIS2DLPC 0x18/0x19). 3.3k: Rp(min) = (3.3-0.4)/IOL = 2.9k for the nRF9151 standard-drive IOL,SD min 1 mA (nRF9151 PS GPIO electrical spec), so 2.2k (sized for the nRF52840) would need high-drive pins. tr = 0.8473*Rp*Cb (NXP UM10204) allows ~107 pF at 400 kHz. MUST pull up to +3V3, never to VBATT_PROT (MAX17048 VDD reaches 4.2 V; nRF9151 VDD_GPIO max 3.6 V)."
 			(at 431.8 177.8 0)
 			(hide yes)
 			(show_name no)
@@ -16016,7 +15988,7 @@
 				)
 			)
 		)
-		(property "Description" "I2C SCL Pull-up for the shared I2C bus (nRF9151 host; MAX17048 0x36, LIS3MDL 0x1C/0x1E, LIS2DH 0x18/0x19). 3.3k: Rp(min) = (3.3-0.4)/IOL = 2.9k for the nRF9151 standard-drive IOL,SD min 1 mA (nRF9151 PS GPIO electrical spec), so 2.2k (sized for the nRF52840) would need high-drive pins. tr = 0.8473*Rp*Cb (NXP UM10204) allows ~107 pF at 400 kHz. MUST pull up to +3V3, never to VBATT_PROT (MAX17048 VDD reaches 4.2 V; nRF9151 VDD_GPIO max 3.6 V)."
+		(property "Description" "I2C SCL Pull-up for the shared I2C bus (nRF9151 host; MAX17048 0x36, IIS2MDC 0x1E, IIS2DLPC 0x18/0x19). 3.3k: Rp(min) = (3.3-0.4)/IOL = 2.9k for the nRF9151 standard-drive IOL,SD min 1 mA (nRF9151 PS GPIO electrical spec), so 2.2k (sized for the nRF52840) would need high-drive pins. tr = 0.8473*Rp*Cb (NXP UM10204) allows ~107 pF at 400 kHz. MUST pull up to +3V3, never to VBATT_PROT (MAX17048 VDD reaches 4.2 V; nRF9151 VDD_GPIO max 3.6 V)."
 			(at 441.96 177.8 0)
 			(hide yes)
 			(show_name no)

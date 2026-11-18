@@ -48,8 +48,8 @@
 /* ---- net-contract s4: sensors (TWIM2) --------------------------------- */
 #define PIN_I2C_SCL      5       /* P0.05 */
 #define PIN_I2C_SDA      6       /* P0.06 */
-#define PIN_MAG_DRDY     24      /* P0.24 */
-#define PIN_MAG_INT      25      /* P0.25 */
+/* P0.24 is spare since 2026-11-18: the IIS2MDC has one INT/DRDY pin, so MAG_DRDY is gone. */
+#define PIN_MAG_INT      25      /* P0.25 -- IIS2MDC INT/DRDY */
 #define PIN_ACC_INT1     7       /* P0.07 */
 #define PIN_ACC_INT2     26      /* P0.26 */
 #define PIN_FG_ALRT      27      /* P0.27 */
@@ -57,18 +57,18 @@
 /*
  * 7-bit I2C addresses. Set by address-strap pins on the orientation sheet,
  * not by firmware. Values per datasheet once the strap is known:
- *   LIS3MDL: 0x1C (SDO/SA1 = GND) or 0x1E (SDO/SA1 = VDD)
- *            -- ST DocID024204 Rev 4, Section 5.1.1 (I2C operation)
- *   LIS2DH:  0x18 (SA0 = GND) or 0x19 (SA0 = VDD)
- *            -- ST Doc ID 022516 Rev 1, Section 5.1.1
+ *   IIS2MDC:  0x1E, fixed (no address pin)
+ *             -- ST DocID030986 Rev 1, Table 21 (default address 0011110b)
+ *   IIS2DLPC: 0x18 (SA0 = GND) or 0x19 (SA0 = VDD)
+ *             -- ST DocID031788 Rev 4, "SAD associated to the IIS2DLPC is 001100xb"
  *   MAX17048: 0x36 fixed -- Maxim 19-6171 Rev 7, "Slave Address"
  */
 /* Devicetree needs each address twice: as a cell (0x..) and as the node's
  * unit address (bare hex). Keep each pair in step. */
-#define I2C_ADDR_LIS3MDL  0x1c /* SDO/SA1 -> GND via R412 (orientation sheet) */
-#define I2C_UNIT_LIS3MDL  1c
-#define I2C_ADDR_LIS2DH   0x19 /* SDO/SA0 -> Vdd_IO via R414 (orientation sheet) */
-#define I2C_UNIT_LIS2DH   19
+#define I2C_ADDR_IIS2MDC  0x1e /* fixed */
+#define I2C_UNIT_IIS2MDC  1e
+#define I2C_ADDR_IIS2DLPC 0x19 /* SA0 -> Vdd_IO via R414 (orientation sheet) */
+#define I2C_UNIT_IIS2DLPC 19
 #define I2C_ADDR_MAX17048 0x36 /* fixed, 19-6171 Rev 7 "Slave Address" 0110110 (io handoff) */
 #define I2C_UNIT_MAX17048 36
 

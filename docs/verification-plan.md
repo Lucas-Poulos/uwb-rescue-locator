@@ -93,9 +93,9 @@ ones above it.
 |---|---|---|---|
 | LEDs, button | `bringup led sys on`, `led lte on`, `btn` | Visual; press detected | -- |
 | Sensor lines | `bringup lines` | Idle levels sane (e.g. `FG_ALRT` high via R39 pull-up) | -- |
-| I2C | `bringup i2c scan` | Exactly 3 ACKs: 0x1C, 0x19, 0x36 | LIS3MDL 0x1C as strapped (SA1 to GND via R412; ST DocID024204 Rev 4, s5.1.1); LIS2DH 0x19 as strapped (SA0 high via R414; ST Doc ID 022516 Rev 1, s5.1.1); MAX17048 fixed 0x36 (19-6171 Rev 7 "Slave Address", read by the io agent; the firmware agent could not obtain this PDF -- see the register rows below) |
-| I2C IDs | `bringup i2c id` | LIS3MDL WHO_AM_I = 0x3D | Verified: DocID024204 Rev 4, s7.1 Table 17 |
-| | | LIS2DH WHO_AM_I = 0x33 | **UNVERIFIED** -- copy obtained was truncated before the register pages |
+| I2C | `bringup i2c scan` | Exactly 3 ACKs: 0x1E, 0x19, 0x36 | IIS2MDC 0x1E fixed (ST DocID030986 Rev 1, Table 21); IIS2DLPC 0x19 as strapped (SA0 high via R414; ST DocID031788 Rev 4, "SAD ... 001100xb"); MAX17048 fixed (19-6171 Rev 7, "Slave Address") |
+| I2C IDs | `bringup i2c id` | IIS2DLPC WHO_AM_I = 0x44 | Verified: DocID031788 Rev 4, s8.3 |
+| | | IIS2MDC WHO_AM_I = 0x40 | **UNVERIFIED** -- the copy obtained stops before the register pages; 0x40 is the LIS2MDL value (DocID030621 Rev 5) |
 | | | MAX17048 VERSION | **UNVERIFIED** -- datasheet 19-6171 not obtained |
 | Rails x-check | `bringup rails` | Gauge VCELL and modem VBAT agree with the DMM within the gauge's spec | MAX17048 accuracy `PLACEHOLDER` |
 | UWB SPI | `bringup uwb id` | All four anchors 0xDECA0302 | `DWT_DW3000_DEV_ID`, Qorvo dwt_uwb_driver 08.02.02; not cross-checked against the DW3000 User Manual. Proves SPI/CS/power/reset only -- runs on the RC oscillator |
@@ -249,12 +249,11 @@ pads and GND spring points. Rails/GND are D1.5 pads, signals D1.0.
 | TP14 | `UWB_RST_N` | Shared DW3210 RSTn (open-drain). | low during reset, then released high by the DW3210s | 5 |
 | TP130 | `UWB_WAKEUP` | Shared DW3210 WAKEUP. | low idle; high pulse to wake from sleep | 5 |
 | TP131 | `UWB_SYNC` | Shared SYNC/OSTR (use still open in decisions.md). | low unless firmware uses SYNC | 5 |
-| TP140 | `I2C_SCL` | Shared I2C SCL (MAX17048 0x36, LIS3MDL 0x1C, LIS2DH 0x19). | idle 3.3 V; 100/400 kHz bursts; rise time < 300 ns @400k | 5 |
-| TP141 | `I2C_SDA` | Shared I2C SDA. | idle 3.3 V; ACKs from 0x19, 0x1C, 0x36 on a bus scan | 5 |
-| TP142 | `MAG_DRDY` | LIS3MDL DRDY. | toggles at the set ODR once U10 is running | 5 |
-| TP143 | `MAG_INT` | LIS3MDL INT. | low unless threshold interrupt configured | 5 |
-| TP144 | `ACC_INT1` | LIS2DH INT1 (knock / move detect). | pulses when the board is tapped (after config) | 5 |
-| TP145 | `ACC_INT2` | LIS2DH INT2. | low unless configured | 5 |
+| TP140 | `I2C_SCL` | Shared I2C SCL (MAX17048 0x36, IIS2MDC 0x1E, IIS2DLPC 0x19). | idle 3.3 V; 100/400 kHz bursts; rise time < 300 ns @400k | 5 |
+| TP141 | `I2C_SDA` | Shared I2C SDA. | idle 3.3 V; ACKs from 0x19, 0x1E, 0x36 on a bus scan | 5 |
+| TP143 | `MAG_INT` | IIS2MDC INT/DRDY (one pin; replaced `MAG_DRDY` + `MAG_INT`, TP142 deleted). | not driven until `INT_on_PIN` / `DRDY_on_PIN` is set in `CFG_REG_C` (62h), then push-pull | 5 |
+| TP144 | `ACC_INT1` | IIS2DLPC INT1 (knock / move detect). | pulses when the board is tapped (after config) | 5 |
+| TP145 | `ACC_INT2` | IIS2DLPC INT2. | low unless configured | 5 |
 | TP146 | `FG_ALRT` | MAX17048 ALRT (open-drain, R39 pull-up). | idle 3.3 V; low on SOC/voltage alert | 5 |
 | TP5 | `TCXO_OUT` | Raw TCXO output before the 1:4 buffer. (behind DNP R402) | fit R402 first; 38.4 MHz CMOS, VOL <= 0.4 V / VOH >= 2.7 V, duty 49-51 % (Rakon RPT1490LN Issue B) | 5, 6 |
 | TP6 | `UWB_CLK0` | Buffer output to A0 (center) XTI, after AC coupling. (behind DNP R403) | fit R403 first; 38.4 MHz, 0.8 V to VDD2 Vpp at XTI (DW3000 DS Table 10) | 5, 6 |

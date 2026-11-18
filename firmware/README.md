@@ -46,7 +46,7 @@ before boards exist.
 | fw-m5 | Exchange: POLL/RESP/FINAL with the wristband; OTA frame formats in `common/`; DS-TWR range at A0 | fw-m4 + wristband fw | range to a tag at a taped distance |
 | fw-m6 | Calibration: table store on station, fixture procedure + table generator in `tools/` | fw-m5 | table loaded, CRC in every record |
 | fw-m7 | Laptop solve (sphere + 3 hyperboloids, residual as quality) + logging | fw-m6 | position at surveyed points within target |
-| fw-m8 | Georeferencing: GNSS survey-in in LTE idle windows, LIS3MDL heading with LIS2DH tilt compensation, hard/soft-iron cal, knock detect | fw-m1 | station reports lat/lon/heading with a settled/unsettled flag |
+| fw-m8 | Georeferencing: GNSS survey-in in LTE idle windows, IIS2MDC heading with IIS2DLPC tilt compensation, hard/soft-iron cal, knock detect | fw-m1 | station reports lat/lon/heading with a settled/unsettled flag |
 | fw-m9 | LTE-M uplink: attach, PSM, status + quick-look positions | fw-m7, fw-m8, SIM | report received at the endpoint |
 | fw-m10 | Power management, multi-tag scheduling, FOTA (app + modem) | all | battery-life target met (target still to be set) |
 

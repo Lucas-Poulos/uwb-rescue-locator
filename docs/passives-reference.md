@@ -312,21 +312,22 @@ guidance; the buffer follows TI SNAS791D Fig 11-1.
 | C24-C27 | 2200pF | AC coupling into each XTI -- "2200 pF is recommended" (DW3000 Table 10) | Placed, at each XTI |
 | C28-C31 | 1pF 0402 | XTO to GND, external-clock case (DW3000 v1.3 XTO row) | **Moved to `uwb_array`** 2026-11-17, at pin 22 |
 
-## ST LIS3MDL + LIS2DH (bay-station orientation, U10/U11)
+## ST IIS2MDC + IIS2DLPC (bay-station orientation, U10/U11)
 
-From the ST datasheets (LIS3MDL DocID024204 Rev 4; LIS2DH Doc ID 022516 Rev 1
--- both read from mirrors, ST's site refused the download). Both sensors run
-from `+3V3_SNS` behind the R411 current break.
+From the ST datasheets (IIS2MDC DocID030986 Rev 1; IIS2DLPC DocID031788
+Rev 4 -- both read from distributor mirrors, ST's site refused the download).
+Both sensors run from `+3V3_SNS` behind the R411 current break. Replaced the
+LIS3MDL / LIS2DH on 2026-11-18.
 
 | Passive | Value | Role | Status |
 |---|---|---|---|
-| C400 | 100nF | LIS3MDL C1 (pin 4) -- mandatory (Table 2 / sec 4.1) | Placed |
-| C35 + C401 | 100nF + 1uF | LIS3MDL Vdd (sec 4.1 / Figure 5) | Placed |
-| C402 | 100nF | LIS3MDL Vdd_IO -- extra, not in Figure 5 | Placed, DNP-able |
-| C36 + C403 | 100nF + 10uF | LIS2DH Vdd at pin 8 (sec 3: "100 nF ceramic, 10 uF aluminum"); 10 uF X5R ceramic used -- check DC-bias derating | Placed |
-| C404 | 100nF | LIS2DH Vdd_IO -- extra | Placed, DNP-able |
-| R412 / R413 | 0R / 0R DNP | LIS3MDL SA1 strap: GND = 0x1C (DNP high = 0x1E), sec 5.1.1 | Placed |
-| R414 / R415 | 0R / 0R DNP | LIS2DH SA0 strap: high = 0x19 (DNP GND = 0x18), sec 5.1.1 / Table 14 | Placed |
+| C400 | **220nF** | IIS2MDC C1 (pin 5) -- mandatory, low ESR (max 200 mOhm), right at pins 5/6 (Table 2 / sec 5). Was 100nF for the LIS3MDL | Placed |
+| C35 + C401 | 100nF + **10uF** | IIS2MDC Vdd at pin 9 (sec 5: "100 nF ceramic, 10 uF aluminum"); 10 uF X5R ceramic used -- check DC-bias derating. C401 was 1uF for the LIS3MDL | Placed |
+| C402 | 100nF | IIS2MDC Vdd_IO -- extra, not in the datasheet | Placed, DNP-able |
+| C36 + C403 | 100nF + 10uF | IIS2DLPC Vdd at pin 9 (sec 4: "100 nF ceramic, 10 uF aluminum"); 10 uF X5R ceramic used -- check DC-bias derating | Placed |
+| C404 | 100nF | IIS2DLPC Vdd_IO -- extra | Placed, DNP-able |
+| R412 / R413 | -- | **Removed 2026-11-18**: the IIS2MDC address is fixed at 0x1E, no strap | Deleted |
+| R414 / R415 | 0R / 0R DNP | IIS2DLPC SA0 strap: high = 0x19 (DNP GND = 0x18), DocID031788 Rev 4 sec 6 | Placed |
 | R407-R410 | 0R | Per-sensor SCL/SDA isolation links | Placed |
 
 ## Status LEDs (bay-station indicators, D4-D7, D400, D401)

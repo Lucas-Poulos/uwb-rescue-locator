@@ -6,7 +6,7 @@
 	(paper "A3")
 	(title_block
 		(title "Orientation")
-		(comment 1 "Bay station -- LIS3MDL heading + LIS2DH tilt on the shared I2C bus")
+		(comment 1 "Bay station -- IIS2MDC heading + IIS2DLPC tilt on the shared I2C bus")
 	)
 	(lib_symbols
 		(symbol "Connector:TestPoint"
@@ -427,7 +427,7 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "Sensor_Magnetic:LIS3MDL"
+		(symbol "bay_station:IIS2MDC"
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
@@ -443,7 +443,7 @@
 					)
 				)
 			)
-			(property "Value" "LIS3MDL"
+			(property "Value" "IIS2MDC"
 				(at 7.62 11.43 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -464,7 +464,7 @@
 					)
 				)
 			)
-			(property "Datasheet" "https://www.st.com/resource/en/datasheet/lis3mdl.pdf"
+			(property "Datasheet" "https://www.st.com/resource/en/datasheet/iis2mdc.pdf"
 				(at 38.1 -10.16 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -475,7 +475,7 @@
 					)
 				)
 			)
-			(property "Description" "Ultra-low-power, 3-axis digital output magnetometer, LGA-12"
+			(property "Description" "Industrial 3-axis digital magnetometer, I2C 0x1E, single INT/DRDY pin, LGA-12 2x2x0.7 mm (pinout identical to LIS2MDL; DocID030986 Rev 1 Table 2)"
 				(at 0 0 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -508,7 +508,7 @@
 					)
 				)
 			)
-			(symbol "LIS3MDL_0_1"
+			(symbol "IIS2MDC_0_1"
 				(rectangle
 					(start -10.16 10.16)
 					(end 10.16 -10.16)
@@ -521,7 +521,7 @@
 					)
 				)
 			)
-			(symbol "LIS3MDL_1_1"
+			(symbol "IIS2MDC_1_1"
 				(pin input line
 					(at -12.7 2.54 0)
 					(length 2.54)
@@ -540,11 +540,11 @@
 						)
 					)
 				)
-				(pin passive line
-					(at 0 -12.7 90)
+				(pin no_connect line
+					(at -10.16 -5.08 0)
 					(length 2.54)
 					(hide yes)
-					(name "GND"
+					(name "NC"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -552,132 +552,6 @@
 						)
 					)
 					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin power_in line
-					(at 0 -12.7 90)
-					(length 2.54)
-					(name "GND"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "3"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin power_out line
-					(at 12.7 -2.54 180)
-					(length 2.54)
-					(name "C1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "4"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin power_in line
-					(at 0 12.7 270)
-					(length 2.54)
-					(name "Vdd"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "5"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin power_in line
-					(at 2.54 12.7 270)
-					(length 2.54)
-					(name "Vdd_IO"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "6"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin output line
-					(at 12.7 2.54 180)
-					(length 2.54)
-					(name "INT"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "7"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin output line
-					(at 12.7 5.08 180)
-					(length 2.54)
-					(name "DRDY"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "8"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin bidirectional line
-					(at -12.7 -2.54 0)
-					(length 2.54)
-					(name "SDO/SA1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "9"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -695,7 +569,7 @@
 							)
 						)
 					)
-					(number "10"
+					(number "3"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -713,7 +587,61 @@
 							)
 						)
 					)
-					(number "11"
+					(number "4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_out line
+					(at 12.7 -2.54 180)
+					(length 2.54)
+					(name "C1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_in line
+					(at 0 -12.7 90)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "6"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at 12.7 5.08 180)
+					(length 2.54)
+					(name "INT/DRDY"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "7"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -732,234 +660,7 @@
 							)
 						)
 					)
-					(number "12"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-			(embedded_fonts no)
-		)
-		(symbol "Sensor_Motion:LIS2DH"
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(in_pos_files yes)
-			(duplicate_pin_numbers_are_jumpers no)
-			(property "Reference" "U"
-				(at -8.89 11.43 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify right)
-				)
-			)
-			(property "Value" "LIS2DH"
-				(at 3.81 11.43 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify left)
-				)
-			)
-			(property "Footprint" "Package_LGA:LGA-14_2x2mm_P0.35mm_LayoutBorder3x4y"
-				(at 0 -11.43 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Datasheet" "http://www.st.com/web/en/resource/technical/document/datasheet/DM00042751.pdf"
-				(at 0 -15.24 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Description" "3-Axis Accelerometer, 2/4/8/16g range, I2C/SPI interface, LGA-14"
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "ki_keywords" "3-axis accelerometer spi mems LGA-14"
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "ki_fp_filters" "LGA*2x2mm*P0.35mm*LayoutBorder3x4y*"
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(symbol "LIS2DH_0_1"
-				(rectangle
-					(start -7.62 10.16)
-					(end 10.16 -10.16)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type background)
-					)
-				)
-			)
-			(symbol "LIS2DH_1_1"
-				(pin input line
-					(at -10.16 -2.54 0)
-					(length 2.54)
-					(name "SCL/SPC"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin bidirectional line
-					(at -10.16 2.54 0)
-					(length 2.54)
-					(name "SDA/SDI"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin output line
-					(at -10.16 0 0)
-					(length 2.54)
-					(name "SDO"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "3"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(alternate "SA0" passive line)
-				)
-				(pin input line
-					(at -10.16 5.08 0)
-					(length 2.54)
-					(name "~{CS}"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "4"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin output line
-					(at 12.7 0 180)
-					(length 2.54)
-					(name "INT2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "5"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin output line
-					(at 12.7 2.54 180)
-					(length 2.54)
-					(name "INT1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "6"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin power_in line
-					(at 2.54 12.7 270)
-					(length 2.54)
-					(name "Vdd_IO"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "7"
+					(number "8"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -977,7 +678,252 @@
 							)
 						)
 					)
-					(number "8"
+					(number "9"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_in line
+					(at 2.54 12.7 270)
+					(length 2.54)
+					(name "Vdd_IO"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "10"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin no_connect line
+					(at -10.16 -7.62 0)
+					(length 2.54)
+					(hide yes)
+					(name "NC"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "11"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin no_connect line
+					(at 10.16 -7.62 180)
+					(length 2.54)
+					(hide yes)
+					(name "NC"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "12"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+		(symbol "bay_station:IIS2DLPC"
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "U"
+				(at -8.89 11.43 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "IIS2DLPC"
+				(at 7.62 11.43 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" "Package_LGA:LGA-12_2x2mm_P0.5mm"
+				(at 30.48 -7.62 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" "https://www.st.com/resource/en/datasheet/iis2dlpc.pdf"
+				(at 38.1 -10.16 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Industrial ultra-low-power 3-axis accelerometer (14-bit, +/-2/4/8/16 g), I2C 0x18/0x19, INT1/INT2, LGA-12 2x2x0.7 mm (DocID031788 Rev 4 Table 2)"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "accelerometer 3-axis"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "LGA*2x2mm*P0.5mm*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "IIS2DLPC_0_1"
+				(rectangle
+					(start -10.16 10.16)
+					(end 10.16 -10.16)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+			)
+			(symbol "IIS2DLPC_1_1"
+				(pin input line
+					(at -12.7 -2.54 0)
+					(length 2.54)
+					(name "SCL/SPC"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -12.7 5.08 0)
+					(length 2.54)
+					(name "~{CS}"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -12.7 0 0)
+					(length 2.54)
+					(name "SDO/SA0"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at -12.7 2.54 0)
+					(length 2.54)
+					(name "SDA/SDI/SDO"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin no_connect line
+					(at -10.16 -5.08 0)
+					(length 2.54)
+					(hide yes)
+					(name "NC"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "5"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -995,7 +941,26 @@
 							)
 						)
 					)
-					(number "9"
+					(number "6"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 0 -12.7 90)
+					(length 2.54)
+					(hide yes)
+					(name "RES"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "7"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -1008,6 +973,42 @@
 					(length 2.54)
 					(hide yes)
 					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "8"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_in line
+					(at 0 12.7 270)
+					(length 2.54)
+					(name "Vdd"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "9"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_in line
+					(at 2.54 12.7 270)
+					(length 2.54)
+					(name "Vdd_IO"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -1022,11 +1023,10 @@
 						)
 					)
 				)
-				(pin passive line
-					(at 0 -12.7 90)
+				(pin output line
+					(at 12.7 0 180)
 					(length 2.54)
-					(hide yes)
-					(name "GND"
+					(name "INT2"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -1041,11 +1041,10 @@
 						)
 					)
 				)
-				(pin passive line
-					(at 0 -12.7 90)
+				(pin output line
+					(at 12.7 2.54 180)
 					(length 2.54)
-					(hide yes)
-					(name "GND"
+					(name "INT1"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -1053,44 +1052,6 @@
 						)
 					)
 					(number "12"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 0 -12.7 90)
-					(length 2.54)
-					(hide yes)
-					(name "GND"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "13"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 0 -12.7 90)
-					(length 2.54)
-					(hide yes)
-					(name "GND"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "14"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -1217,7 +1178,7 @@
 			(embedded_fonts no)
 		)
 	)
-	(text "I2C BUS (shared with MAX17048 on power_bms; pull-ups R37/R38 2.2k on connectivity):\n  MAX17048  0x36  fixed       (19-6171 Rev 7, \"Slave Address\": 0110110b)\n  LIS3MDL   0x1C  SA1 = GND   (DocID024204 Rev 4 sec 5.1.1; 0x1E with SA1 high)\n  LIS2DH    0x19  SA0 = VddIO (Doc ID 022516 Rev 1 sec 5.1.1; 0x18 with SA0 low)\nNo collisions in either strap position. Both CS pins tied to Vdd_IO = I2C mode, as both\ndatasheets require (LIS3MDL sec 5.1 \"CS line must be tied high\"; LIS2DH sec 3).\nREWORK: R407-R410 isolate each sensor from SCL/SDA; R412-R415 re-strap addresses;\nR411 is the sensor-rail current break (TP121 on +3V3_SNS).\nINT/DRDY outputs are push-pull by default (no pull-ups placed); both sensors run\nVdd = Vdd_IO = 3.3V (LIS3MDL Vdd 1.9-3.6V, LIS2DH 1.71-3.6V, Vdd_IO <= Vdd+0.1V,\nTable 5 of each datasheet)."
+	(text "I2C BUS (shared with MAX17048 on power_bms; pull-ups R37/R38 3.3k on connectivity):\n  MAX17048  0x36  fixed       (19-6171 Rev 7, \"Slave Address\": 0110110b)\n  IIS2MDC   0x1E  fixed       (DocID030986 Rev 1 Table 21, default address 0011110b; no address pin)\n  IIS2DLPC  0x19  SA0 = VddIO (DocID031788 Rev 4: SAD 001100xb, SA0 to supply = 0011001b, to GND = 0011000b)\nNo collisions. Both CS pins tied to Vdd_IO = I2C mode, as both datasheets require\n(IIS2MDC sec 5 \"CS must be tied high\"; IIS2DLPC sec 4).\nREWORK: R407-R410 isolate each sensor from SCL/SDA; R414/R415 re-strap U11's address;\nR411 is the sensor-rail current break (TP121 on +3V3_SNS).\nINT outputs are push-pull by default (no pull-ups placed); both sensors run\nVdd = Vdd_IO = 3.3V (IIS2MDC Vdd 1.71-3.6V, IIS2DLPC 1.62-3.6V, Vdd_IO <= Vdd+0.1V,\nTable 5 of each datasheet). The IIS2MDC has ONE INT/DRDY pin (MAG_INT); the old LIS3MDL's\nseparate MAG_DRDY line is gone."
 		(exclude_from_sim no)
 		(at 20.32 50.8 0)
 		(effects
@@ -1252,7 +1213,7 @@
 		)
 		(uuid "4905094c-ed56-461f-a1e5-a530a45b1cb6")
 	)
-	(text "VERIFIED vs NOT. Verified from the real PDFs (pdftotext -raw and -layout): pinouts\n(LIS3MDL Table 2, LIS2DH Table 2 -- both match the KiCad stock symbols), I2C\naddresses, CS/SDO strapping rules, C1 = 100nF, decoupling values, supply ranges.\nLIS2DH copy read: Doc ID 022516 Rev 1 (Nov 2011) via a distributor mirror -- ST's\nsite refused the download. NOT verified: LIS2DH current lifecycle status\n(one distributor lists it as no longer manufactured -- check before ordering),\nand the exact capacitor MPNs."
+	(text "VERIFIED vs NOT. Verified from the real PDFs (pdftotext -raw and -layout): pinouts\n(IIS2MDC Table 2 -- identical to the LIS2MDL Table 2 and to the KiCad stock LIS2MDL symbol;\nIIS2DLPC Table 2), I2C addresses, CS/SA0 rules, C1 = 220nF low ESR, decoupling values,\nsupply ranges. Copies read: IIS2MDC DocID030986 Rev 1 (Sep 2017, a truncated distributor\nmirror that stops in the SPI section), IIS2DLPC DocID031788 Rev 4 (May 2019, distributor\nmirror), LIS2MDL DocID030621 Rev 5 -- ST's site refused the downloads. NOT verified: the\nLGA-12 land pattern against ST's recommendation (stock KiCad footprint used), ST's\ncurrent lifecycle pages (10-year commitment start dates read from search summaries of\nst.com: IIS2MDC 2020-01-01, IIS2DLPC 2023-01-01), and the exact capacitor MPNs."
 		(exclude_from_sim no)
 		(at 200.66 200.66 0)
 		(effects
@@ -1287,7 +1248,7 @@
 		)
 		(uuid "9a2695ed-1c51-4d3c-b2cb-fbf5eea4e67d")
 	)
-	(text "Orientation -- heading (LIS3MDL) + tilt (LIS2DH)"
+	(text "Orientation -- heading (IIS2MDC) + tilt (IIS2DLPC)"
 		(exclude_from_sim no)
 		(at 20.32 15.24 0)
 		(effects
@@ -1299,7 +1260,7 @@
 		)
 		(uuid "d5294970-05c1-4c8c-9919-fc120c20f55b")
 	)
-	(text "WHY THIS SHEET EXISTS. The UWB array reports a tag RELATIVE to its own antenna frame.\nGeoreferencing needs WHERE the station is (GNSS) and WHICH WAY it faces (heading).\nGNSS now comes from the nRF9151 on the connectivity sheet (MAX-M10S U9 removed\n2026-11-17, with its C32/C33/C34, which decoupled only U9). Heading stays here:\n  U10 LIS3MDL magnetometer -> heading\n  U11 LIS2DH accelerometer -> pitch/roll for tilt-compensating U10, and INT1 knock /\n      move detect (a moved station silently invalidates both fix and heading).\nPosition without heading gives a circle of tag locations, not a point -- do not drop U10."
+	(text "WHY THIS SHEET EXISTS. The UWB array reports a tag RELATIVE to its own antenna frame.\nGeoreferencing needs WHERE the station is (GNSS) and WHICH WAY it faces (heading).\nGNSS now comes from the nRF9151 on the connectivity sheet (MAX-M10S U9 removed\n2026-11-17, with its C32/C33/C34, which decoupled only U9). Heading stays here:\n  U10 IIS2MDC magnetometer -> heading\n  U11 IIS2DLPC accelerometer -> pitch/roll for tilt-compensating U10, and INT1 knock /\n      move detect (a moved station silently invalidates both fix and heading).\nPosition without heading gives a circle of tag locations, not a point -- do not drop U10."
 		(exclude_from_sim no)
 		(at 20.32 22.86 0)
 		(effects
@@ -1310,7 +1271,7 @@
 		)
 		(uuid "e5307542-914b-4264-a838-4c83638ed62c")
 	)
-	(text "MAGNETOMETER LAYOUT KEEP-OUT (U10) -- this decides heading accuracy, not the part.\nST: \"Keep currents higher than 10 mA a few millimeters away from the sensor IC\"\n(DocID024204 Rev 4 sec 4.3). This board has three much bigger sources:\n  1. BUCK INDUCTOR (TPS62A02 L1, regulation sheet): switching AC field + DC bias.\n     Keep U10 >= 25 mm from L1 and its SW node loop; never on the opposite side under it.\n  2. LTE ANTENNA FEED (nRF9151, connectivity): up to ~23 dBm TX and the PA supply\n     current bursts on +VBAT_LTE. Keep U10 >= 20 mm from the LTE feed / matching network\n     and from the +VBAT_LTE trace and its bulk caps.\n  3. BATTERY CURRENT LOOPS (power_bms): cell, AO3401A Q1, MCP73871 VBAT/OUT and\n     charge paths carry 0.5-1 A. Keep U10 out of the loop area; route those\n     out-and-return pairs tightly so their fields cancel.\nAlso: no steel near U10 (screws, standoffs, SMA bodies are often nickel-plated brass,\nwhich is fine; plated steel is not), no ground-plane splits that force return\ncurrents under it. U11 sits beside U10 -- tilt compensation assumes the two share\none rigid frame, and its axes must be documented relative to U10 in firmware.\nHard/soft-iron calibration is per build and IN the enclosure (decisions.md, Open).\nDistances above are engineering guidance, not ST figures -- verify by logging\nheading with the LTE modem and charger cycling at bring-up."
+	(text "MAGNETOMETER LAYOUT KEEP-OUT (U10) -- this decides heading accuracy, not the part.\nST: \"Keep currents higher than 10 mA a few millimeters away from the sensor IC\"\n(IIS2MDC DocID030986 Rev 1 sec 5.2). This board has three much bigger sources:\n  1. BUCK INDUCTOR (TPS62A02 L1, regulation sheet): switching AC field + DC bias.\n     Keep U10 >= 25 mm from L1 and its SW node loop; never on the opposite side under it.\n  2. LTE ANTENNA FEED (nRF9151, connectivity): up to ~23 dBm TX and the PA supply\n     current bursts on +VBAT_LTE. Keep U10 >= 20 mm from the LTE feed / matching network\n     and from the +VBAT_LTE trace and its bulk caps.\n  3. BATTERY CURRENT LOOPS (power_bms): cell, AO3401A Q1, MCP73871 VBAT/OUT and\n     charge paths carry 0.5-1 A. Keep U10 out of the loop area; route those\n     out-and-return pairs tightly so their fields cancel.\nAlso: no steel near U10 (screws, standoffs, SMA bodies are often nickel-plated brass,\nwhich is fine; plated steel is not), no ground-plane splits that force return\ncurrents under it. U11 sits beside U10 -- tilt compensation assumes the two share\none rigid frame, and its axes must be documented relative to U10 in firmware.\nHard/soft-iron calibration is per build and IN the enclosure (decisions.md, Open).\nDistances above are engineering guidance, not ST figures -- verify by logging\nheading with the LTE modem and charger cycling at bring-up."
 		(exclude_from_sim no)
 		(at 20.32 200.66 0)
 		(effects
@@ -1320,12 +1281,6 @@
 			(justify left top)
 		)
 		(uuid "e750421d-ff4d-4dbe-af85-f42a3dd75419")
-	)
-	(junction
-		(at 279.4 179.07)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "991ac701-031b-4d2b-a3cb-453c46bee99f")
 	)
 	(junction
 		(at 309.88 179.07)
@@ -1365,16 +1320,6 @@
 	)
 	(wire
 		(pts
-			(xy 279.4 168.91) (xy 279.4 166.37)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "119c4b1e-5c7d-4e06-a9f7-3cf14f74d002")
-	)
-	(wire
-		(pts
 			(xy 120.65 175.26) (xy 118.11 175.26)
 		)
 		(stroke
@@ -1395,16 +1340,6 @@
 	)
 	(wire
 		(pts
-			(xy 279.4 179.07) (xy 276.86 179.07)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "24e92634-91c4-4b54-ac64-40fb50e94ecd")
-	)
-	(wire
-		(pts
 			(xy 182.88 107.95) (xy 182.88 105.41)
 		)
 		(stroke
@@ -1412,16 +1347,6 @@
 			(type default)
 		)
 		(uuid "24eb0cb7-466d-4f4f-a2dc-a29299407d77")
-	)
-	(wire
-		(pts
-			(xy 193.04 118.11) (xy 195.58 118.11)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "268f32e4-b249-4f9f-9756-6988e1a74ddf")
 	)
 	(wire
 		(pts
@@ -1505,16 +1430,6 @@
 	)
 	(wire
 		(pts
-			(xy 279.4 186.69) (xy 279.4 189.23)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "4c510d26-759e-4f29-871e-77c73cdc81a1")
-	)
-	(wire
-		(pts
 			(xy 175.26 171.45) (xy 175.26 168.91)
 		)
 		(stroke
@@ -1585,16 +1500,6 @@
 	)
 	(wire
 		(pts
-			(xy 279.4 176.53) (xy 279.4 179.07)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "8a863b5b-8cd4-4fe1-8586-214bb3853860")
-	)
-	(wire
-		(pts
 			(xy 271.78 107.95) (xy 271.78 105.41)
 		)
 		(stroke
@@ -1645,7 +1550,7 @@
 	)
 	(wire
 		(pts
-			(xy 259.08 123.19) (xy 256.54 123.19)
+			(xy 256.54 123.19) (xy 254 123.19)
 		)
 		(stroke
 			(width 0)
@@ -1675,7 +1580,7 @@
 	)
 	(wire
 		(pts
-			(xy 259.08 120.65) (xy 256.54 120.65)
+			(xy 256.54 120.65) (xy 254 120.65)
 		)
 		(stroke
 			(width 0)
@@ -1705,7 +1610,7 @@
 	)
 	(wire
 		(pts
-			(xy 259.08 115.57) (xy 256.54 115.57)
+			(xy 256.54 115.57) (xy 254 115.57)
 		)
 		(stroke
 			(width 0)
@@ -1765,7 +1670,7 @@
 	)
 	(wire
 		(pts
-			(xy 259.08 118.11) (xy 256.54 118.11)
+			(xy 256.54 118.11) (xy 254 118.11)
 		)
 		(stroke
 			(width 0)
@@ -1855,16 +1760,6 @@
 	)
 	(wire
 		(pts
-			(xy 167.64 123.19) (xy 165.1 123.19)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "e271dffb-3b62-43d9-953c-386389eb2448")
-	)
-	(wire
-		(pts
 			(xy 213.36 179.07) (xy 213.36 181.61)
 		)
 		(stroke
@@ -1884,7 +1779,7 @@
 		(uuid "ff4238da-0a01-43e0-8f1e-c601314dcc31")
 	)
 	(label "+3V3_SNS"
-		(at 256.54 115.57 180)
+		(at 254 115.57 180)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1904,7 +1799,7 @@
 		(uuid "0dae6597-84e9-4f25-a98d-0af7349d97f0")
 	)
 	(label "U11_SDA"
-		(at 256.54 118.11 180)
+		(at 254 118.11 180)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1963,16 +1858,6 @@
 		)
 		(uuid "433df969-acb3-466a-8a94-c70c7ca2d3c4")
 	)
-	(label "U10_SA1"
-		(at 165.1 123.19 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "54dc4cef-1d09-424e-8281-313af331ba25")
-	)
 	(label "+3V3_SNS"
 		(at 175.26 168.91 90)
 		(effects
@@ -2012,16 +1897,6 @@
 			(justify left bottom)
 		)
 		(uuid "756e339a-45ab-402a-8647-4372f3657197")
-	)
-	(label "U10_SA1"
-		(at 276.86 179.07 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "77effe6b-36f2-4988-9bf2-6a5ecefe0922")
 	)
 	(label "U10_SCL"
 		(at 165.1 118.11 180)
@@ -2084,7 +1959,7 @@
 		(uuid "c86b959e-940a-46e6-90d9-ffeadb38cbb6")
 	)
 	(label "U11_SA0"
-		(at 256.54 120.65 180)
+		(at 254 120.65 180)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -2102,16 +1977,6 @@
 			(justify left bottom)
 		)
 		(uuid "ccfb4ff1-8ed3-4537-9969-84a417dbc882")
-	)
-	(label "+3V3_SNS"
-		(at 279.4 166.37 90)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "e2d10c84-d486-4baf-8e20-4898af536cb5")
 	)
 	(label "+3V3_SNS"
 		(at 187.96 168.91 90)
@@ -2154,7 +2019,7 @@
 		(uuid "f3926232-f75d-48b5-94b8-ada808020679")
 	)
 	(label "U11_SCL"
-		(at 256.54 123.19 180)
+		(at 254 123.19 180)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -2185,28 +2050,6 @@
 		(uuid "106feaf6-8f7e-4d18-8fde-49f36e045bd8")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 118.11 185.42 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "MAG_INT"
-		(shape passive)
-		(at 195.58 118.11 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "1cf20928-0440-4f5c-bccb-9ef742003bf0")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 195.58 118.11 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2339,28 +2182,6 @@
 		(uuid "76092975-4f05-4972-ba8b-c0fb5711416b")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 284.48 120.65 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "GND"
-		(shape passive)
-		(at 279.4 189.23 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "77bac986-c201-4aa2-826c-e138b7140569")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 279.4 189.23 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2547,7 +2368,7 @@
 			)
 		)
 	)
-	(global_label "MAG_DRDY"
+	(global_label "MAG_INT"
 		(shape passive)
 		(at 195.58 115.57 0)
 		(effects
@@ -2609,87 +2430,6 @@
 			(effects
 				(font
 					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 279.4 172.72 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp yes)
-		(uuid "0d7b584e-c952-4114-948a-694916c9dcc9")
-		(property "Reference" "R413"
-			(at 281.94 171.45 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "DNP"
-			(at 281.94 173.99 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 279.4 172.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 279.4 172.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "DNP alternate: U10 SA1 to Vdd_IO -> LIS3MDL address 0x1E (DocID024204 sec 5.1.1). Fit only with R412 removed."
-			(at 279.4 172.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "3fb6a4fa-885a-4e2f-9fdd-453218269289")
-		)
-		(pin "2"
-			(uuid "8e2b24a1-2995-417f-9ea8-f588d3ff8a41")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/a1c2e3f4-5b6d-4708-9a1b-2c3d4e5f6071"
-					(reference "R413")
-					(unit 1)
 				)
 			)
 		)
@@ -2826,7 +2566,7 @@
 				)
 			)
 		)
-		(property "Description" "I2C isolation link for U11 LIS2DH SCL: lift to take this device off the shared bus (MAX17048 + LIS3MDL + LIS2DH) when a stuck/NAKing part needs to be found. Pull-ups are NOT here -- R37/R38 on connectivity."
+		(property "Description" "I2C isolation link for U11 SCL: lift to take this device off the shared bus (MAX17048 + IIS2MDC + IIS2DLPC) when a stuck/NAKing part needs to be found. Pull-ups are NOT here -- R37/R38 on connectivity."
 			(at 124.46 185.42 0)
 			(hide yes)
 			(show_name no)
@@ -2905,7 +2645,7 @@
 				)
 			)
 		)
-		(property "Description" "I2C isolation link for U10 LIS3MDL SDA: lift to take this device off the shared bus (MAX17048 + LIS3MDL + LIS2DH) when a stuck/NAKing part needs to be found. Pull-ups are NOT here -- R37/R38 on connectivity."
+		(property "Description" "I2C isolation link for U10 SDA: lift to take this device off the shared bus (MAX17048 + IIS2MDC + IIS2DLPC) when a stuck/NAKing part needs to be found. Pull-ups are NOT here -- R37/R38 on connectivity."
 			(at 124.46 175.26 0)
 			(hide yes)
 			(show_name no)
@@ -2953,7 +2693,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "100nF"
+		(property "Value" "220nF"
 			(at 215.9 176.53 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2986,7 +2726,7 @@
 				)
 			)
 		)
-		(property "Description" "U10 LIS3MDL C1 (pin 4) to GND -- REQUIRED by the part, value fixed by ST: C1 = 100nF (DocID024204 Rev 4 Table 2 and sec 4.1)."
+		(property "Description" "U10 IIS2MDC C1 (pin 5) to GND -- REQUIRED by the part, value fixed by ST: C1 = 220nF (was 100nF for the LIS3MDL), low ESR (max 200 mOhm), as close as possible to pins 5 and 6 (DocID030986 Rev 1 Table 2 and sec 5)."
 			(at 213.36 175.26 0)
 			(hide yes)
 			(show_name no)
@@ -3174,87 +2914,6 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 279.4 182.88 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "50f5cfb4-f214-4f9c-9d51-ac2a74d33277")
-		(property "Reference" "R412"
-			(at 281.94 181.61 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "0R"
-			(at 281.94 184.15 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 279.4 182.88 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 279.4 182.88 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "U10 LIS3MDL SDO/SA1 to GND -> address 0x1C. SA1 must be tied to Vdd_IO or GND in I2C mode (sec 4.1), never left floating."
-			(at 279.4 182.88 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "99242c65-f12c-47a5-897b-e0f6d31ab33d")
-		)
-		(pin "2"
-			(uuid "4c4dd7ff-6874-4e03-a473-54d528a68bb0")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/a1c2e3f4-5b6d-4708-9a1b-2c3d4e5f6071"
-					(reference "R412")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
 		(at 124.46 165.1 90)
 		(unit 1)
 		(body_style 1)
@@ -3306,7 +2965,7 @@
 				)
 			)
 		)
-		(property "Description" "I2C isolation link for U10 LIS3MDL SCL: lift to take this device off the shared bus (MAX17048 + LIS3MDL + LIS2DH) when a stuck/NAKing part needs to be found. Pull-ups are NOT here -- R37/R38 on connectivity."
+		(property "Description" "I2C isolation link for U10 SCL: lift to take this device off the shared bus (MAX17048 + IIS2MDC + IIS2DLPC) when a stuck/NAKing part needs to be found. Pull-ups are NOT here -- R37/R38 on connectivity."
 			(at 124.46 165.1 0)
 			(hide yes)
 			(show_name no)
@@ -3354,7 +3013,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "1uF"
+		(property "Value" "10uF"
 			(at 190.5 176.53 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3387,7 +3046,7 @@
 				)
 			)
 		)
-		(property "Description" "U10 LIS3MDL Vdd low-frequency cap = ST C2 1uF (sec 4.1 says electrolytic; X5R/X7R ceramic 0603 is the practical equivalent here)."
+		(property "Description" "U10 IIS2MDC Vdd bulk = 10uF (ST asks for aluminium, sec 5, with 100nF at pin 9; X5R ceramic 0603 used -- check DC-bias derating at 3.3V when picking the MPN). Was 1uF for the LIS3MDL."
 			(at 187.96 175.26 0)
 			(hide yes)
 			(show_name no)
@@ -3468,7 +3127,7 @@
 				)
 			)
 		)
-		(property "Description" "DNP alternate: U11 SA0 to GND -> LIS2DH address 0x18. Fit only with R414 removed."
+		(property "Description" "DNP alternate: U11 SA0 to GND -> IIS2DLPC address 0x18. Fit only with R414 removed."
 			(at 309.88 182.88 0)
 			(hide yes)
 			(show_name no)
@@ -3495,7 +3154,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Sensor_Magnetic:LIS3MDL")
+		(lib_id "bay_station:IIS2MDC")
 		(at 180.34 120.65 0)
 		(unit 1)
 		(body_style 1)
@@ -3515,7 +3174,7 @@
 				)
 			)
 		)
-		(property "Value" "LIS3MDL"
+		(property "Value" "IIS2MDC"
 			(at 187.96 105.41 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3536,7 +3195,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "https://www.st.com/resource/en/datasheet/lis3mdl.pdf"
+		(property "Datasheet" "https://www.st.com/resource/en/datasheet/iis2mdc.pdf"
 			(at 180.34 120.65 0)
 			(hide yes)
 			(show_name no)
@@ -3547,7 +3206,7 @@
 				)
 			)
 		)
-		(property "Description" "ST LIS3MDL 3-axis magnetometer: the station HEADING. I2C 7-bit address 0x1C (SDO/SA1 strapped to GND via R412; fit R413/remove R412 for 0x1E) -- DocID024204 Rev 4 sec 5.1.1. CS tied to Vdd_IO for I2C mode (sec 5.1). C1 pin 4 = 100nF (C400), Vdd 100nF + 1uF (C35, C401), sec 4.1 / Figure 5. Siting: keep >10mA currents a few mm away (sec 4.3) -- see sheet keep-out note."
+		(property "Description" "ST IIS2MDC 3-axis magnetometer (industrial grade, ST 10-year longevity commitment): the station HEADING. Replaces the LIS3MDL, terminated by ST PCN 15054. I2C 7-bit address 0x1E, fixed (DocID030986 Rev 1 Table 21, default address 0011110b) -- no address strap. CS (pin 3) tied to Vdd_IO for I2C mode (Table 2, sec 5). C1 (pin 5) = 220nF low ESR (max 200 mOhm), as close as possible to pins 5 and 6 (Table 2, sec 5). Vdd (pin 9) 100nF + 10uF (sec 5). One INT/DRDY output (pin 7) -> MAG_INT. NC pins 2/11/12 left unconnected. Siting: keep >10mA currents a few mm away (sec 5.2) -- see sheet keep-out note."
 			(at 180.34 120.65 0)
 			(hide yes)
 			(show_name no)
@@ -3604,7 +3263,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Sensor_Motion:LIS2DH")
+		(lib_id "bay_station:IIS2DLPC")
 		(at 269.24 120.65 0)
 		(unit 1)
 		(body_style 1)
@@ -3624,7 +3283,7 @@
 				)
 			)
 		)
-		(property "Value" "LIS2DH"
+		(property "Value" "IIS2DLPC"
 			(at 276.86 105.41 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3634,7 +3293,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_LGA:LGA-14_2x2mm_P0.35mm_LayoutBorder3x4y"
+		(property "Footprint" "Package_LGA:LGA-12_2x2mm_P0.5mm"
 			(at 269.24 120.65 0)
 			(hide yes)
 			(show_name no)
@@ -3645,7 +3304,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "https://www.st.com/resource/en/datasheet/lis2dh.pdf"
+		(property "Datasheet" "https://www.st.com/resource/en/datasheet/iis2dlpc.pdf"
 			(at 269.24 120.65 0)
 			(hide yes)
 			(show_name no)
@@ -3656,7 +3315,7 @@
 				)
 			)
 		)
-		(property "Description" "ST LIS2DH 3-axis accelerometer: tilt compensation for U10 + knock/move detect on INT1. I2C 7-bit address 0x19 (SDO/SA0 strapped to Vdd_IO via R414; fit R415/remove R414 for 0x18) -- Doc ID 022516 Rev 1 sec 5.1.1 / Table 14. CS tied high for I2C (sec 3). Pins 10-14 Res = connect to GND (Table 2). Decoupling 100nF + 10uF at pin 8 (sec 3). LIFECYCLE NOT CONFIRMED: a distributor lists LIS2DH as no longer manufactured; check ST before ordering (LIS2DH12 is a different, LGA-12 part)."
+		(property "Description" "ST IIS2DLPC 3-axis accelerometer (industrial grade, ST 10-year longevity commitment; replaces the LIS2DH, which distributors list as obsolete): tilt compensation for U10 + knock/move detect on INT1 (tap, double-tap, wake-up). I2C 7-bit address 0x19 (SA0 strapped to Vdd_IO via R414; fit R415/remove R414 for 0x18) -- DocID031788 Rev 4, \"SAD associated to the IIS2DLPC is 001100xb\". CS (pin 2) tied high for I2C (sec 4). RES (pin 7) to GND, NC pin 5 unconnected (Table 2). Vdd (pin 9) 100nF + 10uF (sec 4). 14-bit, 0.244 mg/digit at +/-2 g (Table 4); Vdd 1.62-3.6V, Vdd_IO 1.62..Vdd+0.1V (Table 5)."
 			(at 269.24 120.65 0)
 			(hide yes)
 			(show_name no)
@@ -3702,12 +3361,6 @@
 		)
 		(pin "12"
 			(uuid "fad72481-5931-4167-afda-3d82177f0cab")
-		)
-		(pin "13"
-			(uuid "11530b38-7606-47ba-bf25-29dfb2888f9f")
-		)
-		(pin "14"
-			(uuid "e0df88e7-151a-45fb-b023-f1b33f127c9e")
 		)
 		(instances
 			(project "bay-station"
@@ -3773,7 +3426,7 @@
 				)
 			)
 		)
-		(property "Description" "U10 LIS3MDL Vdd (pin 5) HF decoupling = ST C3 100nF ceramic, as near the pin as possible (DocID024204 Rev 4 sec 4.1, Figure 5)."
+		(property "Description" "U10 IIS2MDC Vdd (pin 9) HF decoupling = 100nF ceramic, as near the pin as possible (DocID030986 Rev 1 sec 5)."
 			(at 175.26 175.26 0)
 			(hide yes)
 			(show_name no)
@@ -3854,7 +3507,7 @@
 				)
 			)
 		)
-		(property "Description" "U11 LIS2DH Vdd (pin 8) decoupling, 100nF ceramic, as near pin 8 as possible (Doc ID 022516 Rev 1 sec 3)."
+		(property "Description" "U11 IIS2DLPC Vdd (pin 9) decoupling, 100nF ceramic, as near pin 9 as possible (DocID031788 Rev 4 sec 4)."
 			(at 226.06 175.26 0)
 			(hide yes)
 			(show_name no)
@@ -3933,7 +3586,7 @@
 				)
 			)
 		)
-		(property "Description" "Sensor-rail current-measure break point: lift to put an ammeter between +3V3 and +3V3_SNS (U10+U11 together, ~0.3 mA LIS3MDL ultra-high-res @20Hz per DocID024204 Table 5), or to isolate both sensors from the rail during rework."
+		(property "Description" "Sensor-rail current-measure break point: lift to put an ammeter between +3V3 and +3V3_SNS (U10+U11 together, ~1.1 mA IIS2MDC high-resolution @100Hz per DocID030986 Table 5, plus the IIS2DLPC at tens of uA), or to isolate both sensors from the rail during rework."
 			(at 60.96 172.72 0)
 			(hide yes)
 			(show_name no)
@@ -4093,7 +3746,7 @@
 				)
 			)
 		)
-		(property "Description" "I2C isolation link for U11 LIS2DH SDA: lift to take this device off the shared bus (MAX17048 + LIS3MDL + LIS2DH) when a stuck/NAKing part needs to be found. Pull-ups are NOT here -- R37/R38 on connectivity."
+		(property "Description" "I2C isolation link for U11 SDA: lift to take this device off the shared bus (MAX17048 + IIS2MDC + IIS2DLPC) when a stuck/NAKing part needs to be found. Pull-ups are NOT here -- R37/R38 on connectivity."
 			(at 124.46 195.58 0)
 			(hide yes)
 			(show_name no)
@@ -4174,7 +3827,7 @@
 				)
 			)
 		)
-		(property "Description" "U11 LIS2DH SDO/SA0 to Vdd_IO -> address 0x19 (Doc ID 022516 Rev 1 sec 5.1.1). High chosen over low because SDO has an internal pull-up (Table 6 note 3), so a GND strap would burn pull-up current."
+		(property "Description" "U11 IIS2DLPC SA0 to Vdd_IO -> address 0x19 (DocID031788 Rev 4, SAD 001100xb). High chosen over low because SDO/SA0 has an internal pull-up (Table 2 note 1, Table 3), so a GND strap would burn pull-up current."
 			(at 309.88 172.72 0)
 			(hide yes)
 			(show_name no)
@@ -4255,7 +3908,7 @@
 				)
 			)
 		)
-		(property "Description" "U11 LIS2DH Vdd bulk: ST asks for 10uF aluminium near pin 8 (sec 3); X5R ceramic 0603 used (check DC-bias derating at 3.3V when picking the MPN)."
+		(property "Description" "U11 IIS2DLPC Vdd bulk: ST asks for 10uF aluminium near pin 9 (sec 4); X5R ceramic 0603 used (check DC-bias derating at 3.3V when picking the MPN)."
 			(at 238.76 175.26 0)
 			(hide yes)
 			(show_name no)

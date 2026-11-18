@@ -70,12 +70,11 @@
 	 * shell reads levels; drivers can take them over later. */
 	sensor_irqs: sensor-irqs {
 		compatible = "uwbrl,gpio-set";
-		gpios = <&gpio0 PIN_MAG_DRDY GPIO_ACTIVE_HIGH>,  /* MAG_DRDY */
-			<&gpio0 PIN_MAG_INT GPIO_ACTIVE_HIGH>,   /* MAG_INT */
+		gpios = <&gpio0 PIN_MAG_INT GPIO_ACTIVE_HIGH>,   /* MAG_INT (IIS2MDC INT/DRDY) */
 			<&gpio0 PIN_ACC_INT1 GPIO_ACTIVE_HIGH>,  /* ACC_INT1 */
 			<&gpio0 PIN_ACC_INT2 GPIO_ACTIVE_HIGH>,  /* ACC_INT2 */
 			<&gpio0 PIN_FG_ALRT GPIO_ACTIVE_LOW>;    /* FG_ALRT (open-drain, R39 pull-up) */
-		gpio-names = "MAG_DRDY", "MAG_INT", "ACC_INT1", "ACC_INT2", "FG_ALRT";
+		gpio-names = "MAG_INT", "ACC_INT1", "ACC_INT2", "FG_ALRT";
 	};
 };
 
@@ -119,13 +118,15 @@
 	clock-frequency = <I2C_BITRATE_STANDARD>;
 	status = "okay";
 
-	lis3mdl: lis3mdl@I2C_UNIT_LIS3MDL {
-		compatible = "st,lis3mdl-magn";
-		reg = <I2C_ADDR_LIS3MDL>;
+	/* Zephyr binding names below are not checked against the pinned NCS tree
+	 * (never built); the shell does not use a driver for either part. */
+	iis2mdc: iis2mdc@I2C_UNIT_IIS2MDC {
+		compatible = "st,iis2mdc";
+		reg = <I2C_ADDR_IIS2MDC>;
 	};
-	lis2dh: lis2dh@I2C_UNIT_LIS2DH {
-		compatible = "st,lis2dh";
-		reg = <I2C_ADDR_LIS2DH>;
+	iis2dlpc: iis2dlpc@I2C_UNIT_IIS2DLPC {
+		compatible = "st,iis2dlpc";
+		reg = <I2C_ADDR_IIS2DLPC>;
 	};
 	max17048: max17048@I2C_UNIT_MAX17048 {
 		compatible = "maxim,max17048";
