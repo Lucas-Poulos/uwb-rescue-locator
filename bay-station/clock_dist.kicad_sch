@@ -1608,7 +1608,7 @@
 				)
 			)
 		)
-		(property "Description" "Clock-buffer supply link: 0R fitted, 0603 pads take a low-DCR ferrite bead (TI SNAS791D s11 recommends, does not require, a bead). Lift to bench-supply the buffer at 2.5V/1.8V through TP429 if XTI amplitude must drop."
+		(property "Description" "Clock-buffer supply link: 0R fitted, 0603 pads take a low-DCR ferrite bead (TI SNAS791D s11 recommends, does not require, a bead). Lift to bench-supply the buffer at 2.5V/1.8V through TP529 if XTI amplitude must drop."
 			(at 63.5 104.14 0)
 			(hide yes)
 			(show_name no)
@@ -2785,7 +2785,7 @@
 				)
 			)
 		)
-		(property "Description" "Vc divider bottom. Swap to DNP and drive TCXO_VC from TP430 to trim frequency on the bench."
+		(property "Description" "Vc divider bottom. Swap to DNP and drive TCXO_VC from TP530 to trim frequency on the bench."
 			(at 101.6 106.68 0)
 			(hide yes)
 			(show_name no)
@@ -4739,7 +4739,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "8e591fda-5fe5-4d48-9d53-a8a25e0af4c8")
-		(property "Reference" "TP428"
+		(property "Reference" "TP528"
 			(at 64.77 140.335 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4801,7 +4801,7 @@
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/6b2a9d38-4e15-4c7f-a093-2f5c8e1d70b4"
-					(reference "TP428")
+					(reference "TP528")
 					(unit 1)
 				)
 			)
@@ -4838,7 +4838,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "d723417d-8c02-423a-bfd4-20c8225b4b7c")
-		(property "Reference" "TP429"
+		(property "Reference" "TP529"
 			(at 77.47 140.335 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4900,7 +4900,7 @@
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/6b2a9d38-4e15-4c7f-a093-2f5c8e1d70b4"
-					(reference "TP429")
+					(reference "TP529")
 					(unit 1)
 				)
 			)
@@ -4937,7 +4937,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "8ebfe750-96a6-4880-abd0-f58cd485695f")
-		(property "Reference" "TP430"
+		(property "Reference" "TP530"
 			(at 90.17 140.335 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4999,7 +4999,7 @@
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/6b2a9d38-4e15-4c7f-a093-2f5c8e1d70b4"
-					(reference "TP430")
+					(reference "TP530")
 					(unit 1)
 				)
 			)
@@ -5230,7 +5230,7 @@
 		)
 		(uuid "e3c71f56-0000-4000-8000-000000000001")
 	)
-	(text "THE defining block of this board. All four DW3210 run from ONE reference: at the 1m baseline\n1cm of differential path is 10cm of position error at 10m. A passive crystal CANNOT be shared (each\nXTI/XTO pair is its own oscillator). Topology:\n   U30 38.4MHz TCXO -> R230 -> TCXO_OUT -> U31 1:4 buffer -> 22R R231-R234 -> 2200pF C24-C27\n   -> UWB_CLK0..3 -> DW3210 XTI (pin 21); XTO (pin 22) 1pF to GND on uwb_array (C28-C31).\nY0 -> A0 (center), Y1 -> A1, Y2 -> A2, Y3 -> A3.\n\nDW3000 DS Table 10 \"External Reference (For example a TCXO)\" vs the PROPOSED parts:\n  Amplitude 0.8V..VDD2 Vpp  : LMK1C1104 at 3.3V: VOH>=2.8V, VOL<=0.2V @1mA -> >=2.6Vpp, up to ~3.3Vpp\n                              unloaded: inside, but near the top of the window when VDD2 = 3.3V. AC coupled, so the DC\n                              level is XTI's own. If it proves marginal: run U31 at 2.5V (R226 lifted,\n                              feed TP429) -- CLKIN is 3.3V tolerant at all VDD (SNAS791D).\n  AC coupled, 2200pF        : C24-C27 2200pF.\n  -132 dBc/Hz @1kHz         : RPT1490LN -151.3 typ (Rakon plot, 38.4MHz CMOS). Buffer adds ~nothing at\n  -145 dBc/Hz @10kHz        :            -165.7 typ.  3.3V (SNAS791D Fig 10-2 vs 10-3, 156.25MHz).\n  Duty 40-60%               : TCXO 49-51%; buffer ODC 45-55% with 50% input.\nPhase-noise figures are TYPICAL plot readings, not guaranteed maxima. Margin is ~19-20dB."
+	(text "THE defining block of this board. All four DW3210 run from ONE reference: at the 1m baseline\n1cm of differential path is 10cm of position error at 10m. A passive crystal CANNOT be shared (each\nXTI/XTO pair is its own oscillator). Topology:\n   U30 38.4MHz TCXO -> R230 -> TCXO_OUT -> U31 1:4 buffer -> 22R R231-R234 -> 2200pF C24-C27\n   -> UWB_CLK0..3 -> DW3210 XTI (pin 21); XTO (pin 22) 1pF to GND on uwb_array (C28-C31).\nY0 -> A0 (center), Y1 -> A1, Y2 -> A2, Y3 -> A3.\n\nDW3000 DS Table 10 \"External Reference (For example a TCXO)\" vs the PROPOSED parts:\n  Amplitude 0.8V..VDD2 Vpp  : LMK1C1104 at 3.3V: VOH>=2.8V, VOL<=0.2V @1mA -> >=2.6Vpp, up to ~3.3Vpp\n                              unloaded: inside, but near the top of the window when VDD2 = 3.3V. AC coupled, so the DC\n                              level is XTI's own. If it proves marginal: run U31 at 2.5V (R226 lifted,\n                              feed TP529) -- CLKIN is 3.3V tolerant at all VDD (SNAS791D).\n  AC coupled, 2200pF        : C24-C27 2200pF.\n  -132 dBc/Hz @1kHz         : RPT1490LN -151.3 typ (Rakon plot, 38.4MHz CMOS). Buffer adds ~nothing at\n  -145 dBc/Hz @10kHz        :            -165.7 typ.  3.3V (SNAS791D Fig 10-2 vs 10-3, 156.25MHz).\n  Duty 40-60%               : TCXO 49-51%; buffer ODC 45-55% with 50% input.\nPhase-noise figures are TYPICAL plot readings, not guaranteed maxima. Margin is ~19-20dB."
 		(exclude_from_sim no)
 		(at 20.32 24.13 0)
 		(effects
@@ -5241,7 +5241,7 @@
 		)
 		(uuid "e3c71f56-0000-4000-8000-000000000002")
 	)
-	(text "WHY NOT THE QORVO-LISTED TCXOs: DS v1.1 Table 22 lists TXC 7Z38470005 and Rakon IT2200K.\nTXC's own 7Z series sheet gives \"Phase Noise at 1 kHz offset -130 dBc/Hz\" -- 2dB WORSE than the\nsame datasheet's Table 10 limit -- and a 0.8Vpp clipped-sine output, which does not meet the\nLMK1C1104's LVCMOS VIH/VIL (0.7/0.3 x VDD). Raltron RTX-2520AF31-S-38.400 is the same story\n(-130/-145 typ, clipped sine). If a small clipped-sine TCXO is preferred anyway, pair it with a\nuniversal-input buffer (TI LMK00105: single-ended AC-coupled input 0.3-2Vpp, 1:5) and accept the\nlow-slew-rate noise-floor penalty TI warns about (SNAS579G s8.1.1). Not drawn.\n\nSUPPLIES: +3V3 -> R225 -> +3V3_TCXO (TP428), +3V3 -> R226 -> +3V3_CLKBUF (TP429). Both 0R\nfitted, 0603 pads take a bead; both are current-measure break points. Decoupling per\nTI SNAS791D Fig 11-1 (10uF board side, 1uF + 0.1uF chip side).\nTCXO Vc: 10k/8.2k -> 1.49V (Rakon reference point 1.5V), 100nF, TP430. Pin 5 is Do-Not-Connect.\nTCXO_EN: OMITTED. The RPT1490LN has no enable; U31 1G is pulled up (R229)."
+	(text "WHY NOT THE QORVO-LISTED TCXOs: DS v1.1 Table 22 lists TXC 7Z38470005 and Rakon IT2200K.\nTXC's own 7Z series sheet gives \"Phase Noise at 1 kHz offset -130 dBc/Hz\" -- 2dB WORSE than the\nsame datasheet's Table 10 limit -- and a 0.8Vpp clipped-sine output, which does not meet the\nLMK1C1104's LVCMOS VIH/VIL (0.7/0.3 x VDD). Raltron RTX-2520AF31-S-38.400 is the same story\n(-130/-145 typ, clipped sine). If a small clipped-sine TCXO is preferred anyway, pair it with a\nuniversal-input buffer (TI LMK00105: single-ended AC-coupled input 0.3-2Vpp, 1:5) and accept the\nlow-slew-rate noise-floor penalty TI warns about (SNAS579G s8.1.1). Not drawn.\n\nSUPPLIES: +3V3 -> R225 -> +3V3_TCXO (TP528), +3V3 -> R226 -> +3V3_CLKBUF (TP529). Both 0R\nfitted, 0603 pads take a bead; both are current-measure break points. Decoupling per\nTI SNAS791D Fig 11-1 (10uF board side, 1uF + 0.1uF chip side).\nTCXO Vc: 10k/8.2k -> 1.49V (Rakon reference point 1.5V), 100nF, TP530. Pin 5 is Do-Not-Connect.\nTCXO_EN: OMITTED. The RPT1490LN has no enable; U31 1G is pulled up (R229)."
 		(exclude_from_sim no)
 		(at 20.32 172.72 0)
 		(effects
@@ -5252,7 +5252,7 @@
 		)
 		(uuid "d1d8263c-1e02-4504-a9b1-aba6319199a9")
 	)
-	(text "LAYOUT\n - UWB_CLK0..3 (Yn -> Rn -> Cn -> XTI): EQUAL LENGTH, same layer, same via count. Output skew is\n   50ps max (SNAS791D) and fixed -- it calibrates out; what must not happen is a long or\n   unequal trace that makes the skew temperature-dependent.\n - Put R231-R234 at the buffer pins, C24-C27 at each XTI. Keep 3W spacing from SPI and RF.\n - Test pads on the clock (TP5-TP9, testpoints sheet) are stubs: smallest pad, on the trace.\n - U30 is 14.5 x 9.5 x 6.0mm. Footprint is _PLACEHOLDER (pad 1.2x1.8mm x6, 2.54mm pitch,\n   row spacing 7.9mm read as centre-to-centre from the Rakon drawing -- confirm).\n\nBRING-UP: (1) +3V3_TCXO / +3V3_CLKBUF at TP428/TP429; (2) 38.4MHz at TCXO_OUT (TP5),\nfrequency counter: within ~1-2ppm; (3) 4 outputs at the XTI side of each AC cap, same\namplitude, duty 45-55%, no ringing below 0V/above VDD2; (4) skew between UWB_CLK0 and each\nof 1-3 on a 2-channel scope with matched probes -- record it, it is part of the calibration\nbaseline; (5) phase noise at TCXO_OUT and at one XTI if an analyser is available.\n\nSTATUS: TCXO + buffer PROPOSED (verified against their PDFs, availability of the Rakon part\nNOT confirmed -- it appears to be quote-only). Footprint for U30 is a PLACEHOLDER."
+	(text "LAYOUT\n - UWB_CLK0..3 (Yn -> Rn -> Cn -> XTI): EQUAL LENGTH, same layer, same via count. Output skew is\n   50ps max (SNAS791D) and fixed -- it calibrates out; what must not happen is a long or\n   unequal trace that makes the skew temperature-dependent.\n - Put R231-R234 at the buffer pins, C24-C27 at each XTI. Keep 3W spacing from SPI and RF.\n - Test pads on the clock (TP5-TP9, testpoints sheet) are stubs: smallest pad, on the trace.\n - U30 is 14.5 x 9.5 x 6.0mm. Footprint is _PLACEHOLDER (pad 1.2x1.8mm x6, 2.54mm pitch,\n   row spacing 7.9mm read as centre-to-centre from the Rakon drawing -- confirm).\n\nBRING-UP: (1) +3V3_TCXO / +3V3_CLKBUF at TP528/TP529; (2) 38.4MHz at TCXO_OUT (TP5),\nfrequency counter: within ~1-2ppm; (3) 4 outputs at the XTI side of each AC cap, same\namplitude, duty 45-55%, no ringing below 0V/above VDD2; (4) skew between UWB_CLK0 and each\nof 1-3 on a 2-channel scope with matched probes -- record it, it is part of the calibration\nbaseline; (5) phase noise at TCXO_OUT and at one XTI if an analyser is available.\n\nSTATUS: TCXO + buffer PROPOSED (verified against their PDFs, availability of the Rakon part\nNOT confirmed -- it appears to be quote-only). Footprint for U30 is a PLACEHOLDER."
 		(exclude_from_sim no)
 		(at 215.9 172.72 0)
 		(effects

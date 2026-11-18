@@ -149,7 +149,7 @@ two 0402 pads as stubs on A0's XTI/XTO; keep them tight to the pins.
 
 ## Test pads and rework
 
-TP400-TP427: per anchor `+3V3_An`, EXTON, GPIO0-GPIO4. These refs are
+TP500-TP527: per anchor `+3V3_An`, EXTON, GPIO0-GPIO4. These refs are
 outside the agent block table in the brief (io owns TP100-TP399; no TP block
 was given to uwb) -- renumber at merge if wanted. Contract nets
 (CS/IRQ/SPI/RST/CLK) get their pads on testpoints.kicad_sch (io).
@@ -173,7 +173,7 @@ was given to uwb) -- renumber at merge if wanted. Contract nets
 
 ## Bring-up tests for this sheet
 
-1. **Rails:** `+3V3_An` at TP400/TP407/TP414/TP421. Idle current per anchor
+1. **Rails:** `+3V3_An` at TP500/TP507/TP514/TP521. Idle current per anchor
    by lifting R200-R203 (DS Table 5: ~18 mA IDLE on CH5).
 2. **Clock first:** 38.4 MHz present at every XTI (testpoints TP6-TP9)
    before expecting SPI -- "the DW3000 digital core will be held in reset

@@ -8832,7 +8832,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "ae01be3d-79b9-40c5-9284-4d606b250047")
-		(property "Reference" "TP400"
+		(property "Reference" "TP500"
 			(at 39.37 295.275 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -8894,7 +8894,7 @@
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP400")
+					(reference "TP500")
 					(unit 1)
 				)
 			)
@@ -8931,7 +8931,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "c8072b61-5d0b-41e7-8ca5-174cd11ee3de")
-		(property "Reference" "TP401"
+		(property "Reference" "TP501"
 			(at 49.53 295.275 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -8993,7 +8993,7 @@
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP401")
+					(reference "TP501")
 					(unit 1)
 				)
 			)
@@ -9030,7 +9030,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "8d478edd-2845-48e9-8f07-21603c50d7a8")
-		(property "Reference" "TP402"
+		(property "Reference" "TP502"
 			(at 59.69 295.275 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -9092,7 +9092,7 @@
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP402")
+					(reference "TP502")
 					(unit 1)
 				)
 			)
@@ -9129,7 +9129,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "03d5acd9-8fa7-413a-8ebc-d068a5991f14")
-		(property "Reference" "TP403"
+		(property "Reference" "TP503"
 			(at 69.85 295.275 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -9191,7 +9191,7 @@
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP403")
+					(reference "TP503")
 					(unit 1)
 				)
 			)
@@ -9228,7 +9228,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "8edfcfa3-520b-496c-9e23-03a4e4dc570d")
-		(property "Reference" "TP404"
+		(property "Reference" "TP504"
 			(at 80.01 295.275 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -9290,7 +9290,7 @@
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP404")
+					(reference "TP504")
 					(unit 1)
 				)
 			)
@@ -9327,7 +9327,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "74a12a88-a532-427f-83d1-f1f4d3950e1a")
-		(property "Reference" "TP405"
+		(property "Reference" "TP505"
 			(at 90.17 295.275 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -9389,7 +9389,7 @@
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP405")
+					(reference "TP505")
 					(unit 1)
 				)
 			)
@@ -9426,7 +9426,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "2fba14c2-0572-421a-902e-9bdb8f4195c2")
-		(property "Reference" "TP406"
+		(property "Reference" "TP506"
 			(at 100.33 295.275 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -9488,7 +9488,7 @@
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP406")
+					(reference "TP506")
 					(unit 1)
 				)
 			)
@@ -16256,7 +16256,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "4be615f1-2de2-4d9b-b9ab-835a9b1e79a3")
-		(property "Reference" "TP407"
+		(property "Reference" "TP507"
 			(at 179.07 295.275 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16318,7 +16318,7 @@
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP407")
+					(reference "TP507")
 					(unit 1)
 				)
 			)
@@ -16355,7 +16355,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "ee042e3b-696c-49e1-b2a4-9425b72c3a27")
-		(property "Reference" "TP408"
+		(property "Reference" "TP508"
 			(at 189.23 295.275 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16417,7 +16417,7 @@
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP408")
+					(reference "TP508")
 					(unit 1)
 				)
 			)
@@ -16454,7 +16454,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "f8a0595c-814a-4fa8-a027-e81e9ea035bf")
-		(property "Reference" "TP409"
+		(property "Reference" "TP509"
 			(at 199.39 295.275 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16516,7 +16516,7 @@
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP409")
+					(reference "TP509")
 					(unit 1)
 				)
 			)
@@ -16553,7 +16553,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "d1c8577c-3eee-4383-92c2-b8874c1c06d5")
-		(property "Reference" "TP410"
+		(property "Reference" "TP510"
 			(at 209.55 295.275 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16615,7 +16615,7 @@
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP410")
+					(reference "TP510")
 					(unit 1)
 				)
 			)
@@ -16652,7 +16652,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "b4ae96b0-134a-4ebe-9d28-8cd124bbaeed")
-		(property "Reference" "TP411"
+		(property "Reference" "TP511"
 			(at 219.71 295.275 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16714,7 +16714,7 @@
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP411")
+					(reference "TP511")
 					(unit 1)
 				)
 			)
@@ -16751,7 +16751,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "228d9f5b-c6f7-4718-806e-e695e36ae126")
-		(property "Reference" "TP412"
+		(property "Reference" "TP512"
 			(at 229.87 295.275 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16813,7 +16813,7 @@
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP412")
+					(reference "TP512")
 					(unit 1)
 				)
 			)
@@ -16850,7 +16850,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "c89b6755-cffd-41a9-9e06-19f0f5aa1a94")
-		(property "Reference" "TP413"
+		(property "Reference" "TP513"
 			(at 240.03 295.275 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16912,7 +16912,7 @@
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP413")
+					(reference "TP513")
 					(unit 1)
 				)
 			)
@@ -23044,7 +23044,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "1f20d6f3-3d4c-49f8-8406-49d4cbb33de5")
-		(property "Reference" "TP414"
+		(property "Reference" "TP514"
 			(at 318.77 295.275 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -23106,7 +23106,7 @@
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP414")
+					(reference "TP514")
 					(unit 1)
 				)
 			)
@@ -23143,7 +23143,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "8b6f0032-7b70-437e-8532-5a3691300569")
-		(property "Reference" "TP415"
+		(property "Reference" "TP515"
 			(at 328.93 295.275 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -23205,7 +23205,7 @@
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP415")
+					(reference "TP515")
 					(unit 1)
 				)
 			)
@@ -23242,7 +23242,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "129b31a5-a0fa-4482-80b9-06a5de951aa4")
-		(property "Reference" "TP416"
+		(property "Reference" "TP516"
 			(at 339.09 295.275 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -23304,7 +23304,7 @@
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP416")
+					(reference "TP516")
 					(unit 1)
 				)
 			)
@@ -23341,7 +23341,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "cd64f892-a6bd-4be5-965b-5ca5ca3eb35f")
-		(property "Reference" "TP417"
+		(property "Reference" "TP517"
 			(at 349.25 295.275 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -23403,7 +23403,7 @@
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP417")
+					(reference "TP517")
 					(unit 1)
 				)
 			)
@@ -23440,7 +23440,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "0754628d-4317-42f4-95be-08a28bd07a25")
-		(property "Reference" "TP418"
+		(property "Reference" "TP518"
 			(at 359.41 295.275 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -23502,7 +23502,7 @@
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP418")
+					(reference "TP518")
 					(unit 1)
 				)
 			)
@@ -23539,7 +23539,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "0844bef9-0b08-451f-a9b2-508aa5cae3e8")
-		(property "Reference" "TP419"
+		(property "Reference" "TP519"
 			(at 369.57 295.275 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -23601,7 +23601,7 @@
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP419")
+					(reference "TP519")
 					(unit 1)
 				)
 			)
@@ -23638,7 +23638,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "cae66f92-5a89-4497-aa8f-6b38c9da4ff9")
-		(property "Reference" "TP420"
+		(property "Reference" "TP520"
 			(at 379.73 295.275 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -23700,7 +23700,7 @@
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP420")
+					(reference "TP520")
 					(unit 1)
 				)
 			)
@@ -29832,7 +29832,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "7d4b19a4-4082-4f1d-a0d1-b82e98d72a2f")
-		(property "Reference" "TP421"
+		(property "Reference" "TP521"
 			(at 458.47 295.275 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -29894,7 +29894,7 @@
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP421")
+					(reference "TP521")
 					(unit 1)
 				)
 			)
@@ -29931,7 +29931,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "c5b1dcd4-b38c-475c-9ec9-0bbd80c2edc0")
-		(property "Reference" "TP422"
+		(property "Reference" "TP522"
 			(at 468.63 295.275 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -29993,7 +29993,7 @@
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP422")
+					(reference "TP522")
 					(unit 1)
 				)
 			)
@@ -30030,7 +30030,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "2019d6da-291c-4a07-abfa-3c2cea235456")
-		(property "Reference" "TP423"
+		(property "Reference" "TP523"
 			(at 478.79 295.275 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -30092,7 +30092,7 @@
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP423")
+					(reference "TP523")
 					(unit 1)
 				)
 			)
@@ -30129,7 +30129,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "6f79e995-b2f4-4d37-9a8b-a3929be22625")
-		(property "Reference" "TP424"
+		(property "Reference" "TP524"
 			(at 488.95 295.275 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -30191,7 +30191,7 @@
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP424")
+					(reference "TP524")
 					(unit 1)
 				)
 			)
@@ -30228,7 +30228,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "25d2fb94-636b-4f31-9358-9aff43f09832")
-		(property "Reference" "TP425"
+		(property "Reference" "TP525"
 			(at 499.11 295.275 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -30290,7 +30290,7 @@
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP425")
+					(reference "TP525")
 					(unit 1)
 				)
 			)
@@ -30327,7 +30327,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "a83bdb36-f5cd-41e4-a7da-6cb72ad7b838")
-		(property "Reference" "TP426"
+		(property "Reference" "TP526"
 			(at 509.27 295.275 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -30389,7 +30389,7 @@
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP426")
+					(reference "TP526")
 					(unit 1)
 				)
 			)
@@ -30426,7 +30426,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "67bd71e1-2025-449b-9c43-05776fa6dbd5")
-		(property "Reference" "TP427"
+		(property "Reference" "TP527"
 			(at 519.43 295.275 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -30488,7 +30488,7 @@
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/7a56b57e-fbec-43eb-be10-7a1a5f682193"
-					(reference "TP427")
+					(reference "TP527")
 					(unit 1)
 				)
 			)
@@ -30719,7 +30719,7 @@
 		)
 		(uuid "66666666-0000-4000-8000-000000000001")
 	)
-	(text "THE FOUR ANCHORS ARE NOT INTERCHANGEABLE PEERS.\n  U4 = A0, the CENTER anchor: two-way ranging with the wristband -> RANGE.\n  U5-U7 = A1-A3, the OUTER anchors: timestamp the SAME tag frame, TDoA vs A0\n          -> DIRECTION. One tag transmission, four measurements.\n  CS0/IRQ0/UWB_CLK0/J20 are A0. Index n = anchor An everywhere on this sheet.\nWhy discrete DW3210 (QFN40, non-PDoA) and not DWM3000 modules: TDoA needs one\ntime base and the module has no clock pin. XTI (pin 21) is an \"external\nreference overdrive pin\" (DS Table 2); all four are driven from clock_dist.\n\nWIRED 2026-11-17 against docs/net-contract.md. Per anchor:\n  SPICLK/MOSI/MISO 34/35/36 -> shared UWB_SCK/MOSI/MISO.\n  SPICSn 37 -> 0R (R204-R207) -> UWB_CSn_N.   (internal pull-up, DS s4.9.5)\n  IRQ 1 -> 100k pull-down R25-R28 (DS Table 2: floats in SLEEP) and\n          0R R208-R211 -> UWB_IRQn.\n  RSTn 33 -> 0R R212-R215 -> shared UWB_RST_N. Open-drain from the host only:\n          \"Must not be pulled high by external source\" (DS Table 2). No pull-up.\n  WAKEUP 32 -> shared UWB_WAKEUP, 100k pull-down R224 (DS: ground if unused).\n  GPIO7/SYNC 9 -> DNP 0R R216-R219 -> UWB_SYNC. Internally pulled down.\n  EXTON 31, GPIO0-4 (3,4,6,7,8) -> test pads TP400-TP427 only.\n  RF2 13 -> 49R9 R33-R36 to GND on a 50 ohm trace (non-PDoA, DS Table 2)."
+	(text "THE FOUR ANCHORS ARE NOT INTERCHANGEABLE PEERS.\n  U4 = A0, the CENTER anchor: two-way ranging with the wristband -> RANGE.\n  U5-U7 = A1-A3, the OUTER anchors: timestamp the SAME tag frame, TDoA vs A0\n          -> DIRECTION. One tag transmission, four measurements.\n  CS0/IRQ0/UWB_CLK0/J20 are A0. Index n = anchor An everywhere on this sheet.\nWhy discrete DW3210 (QFN40, non-PDoA) and not DWM3000 modules: TDoA needs one\ntime base and the module has no clock pin. XTI (pin 21) is an \"external\nreference overdrive pin\" (DS Table 2); all four are driven from clock_dist.\n\nWIRED 2026-11-17 against docs/net-contract.md. Per anchor:\n  SPICLK/MOSI/MISO 34/35/36 -> shared UWB_SCK/MOSI/MISO.\n  SPICSn 37 -> 0R (R204-R207) -> UWB_CSn_N.   (internal pull-up, DS s4.9.5)\n  IRQ 1 -> 100k pull-down R25-R28 (DS Table 2: floats in SLEEP) and\n          0R R208-R211 -> UWB_IRQn.\n  RSTn 33 -> 0R R212-R215 -> shared UWB_RST_N. Open-drain from the host only:\n          \"Must not be pulled high by external source\" (DS Table 2). No pull-up.\n  WAKEUP 32 -> shared UWB_WAKEUP, 100k pull-down R224 (DS: ground if unused).\n  GPIO7/SYNC 9 -> DNP 0R R216-R219 -> UWB_SYNC. Internally pulled down.\n  EXTON 31, GPIO0-4 (3,4,6,7,8) -> test pads TP500-TP527 only.\n  RF2 13 -> 49R9 R33-R36 to GND on a 50 ohm trace (non-PDoA, DS Table 2)."
 		(exclude_from_sim no)
 		(at 20.32 24.13 0)
 		(effects
@@ -30752,7 +30752,7 @@
 		)
 		(uuid "90a8c0c6-28f5-4b3a-ac27-fe901b5aa2b0")
 	)
-	(text "REWORK / DFT OPTIONS ON THIS SHEET\n  R200-R203  0R   per-anchor +3V3 link: current measurement, isolate a dead anchor.\n  R204-R207  0R   CS links.   R208-R211 0R IRQ links.   R212-R215 0R RSTn links.\n  R216-R219  DNP  SYNC links (fit to enable OSTR on chosen anchors).\n  C200-C207  DNP  pi-match shunts; R220-R223 0R pi-match series.\n  Y1, C208, C209 DNP  A0-only fallback crystal (TXC 8Y38472012, DS Fig 32\n                   X1 / Table 22). Remove C24 + C28 and fit these: A0 then\n                   ranges on its own crystal while the shared clock is\n                   debugged. TDoA is meaningless in that state.\n  TP400-TP427 test pads: per anchor +3V3_An, EXTON, GPIO0-GPIO4.\n     GPIO2/RXLED, GPIO3/TXLED, GPIO0/RXOKLED, GPIO1/SFDLED can be configured\n     as LED-style strobes: scope them across anchors to see RX/TX timing.\n     (Do not hang LEDs on them -- DS Table 2 note 2.)\n  TP refs TP400+ are outside the agent block table: renumber at merge if\n  the coordinator prefers."
+	(text "REWORK / DFT OPTIONS ON THIS SHEET\n  R200-R203  0R   per-anchor +3V3 link: current measurement, isolate a dead anchor.\n  R204-R207  0R   CS links.   R208-R211 0R IRQ links.   R212-R215 0R RSTn links.\n  R216-R219  DNP  SYNC links (fit to enable OSTR on chosen anchors).\n  C200-C207  DNP  pi-match shunts; R220-R223 0R pi-match series.\n  Y1, C208, C209 DNP  A0-only fallback crystal (TXC 8Y38472012, DS Fig 32\n                   X1 / Table 22). Remove C24 + C28 and fit these: A0 then\n                   ranges on its own crystal while the shared clock is\n                   debugged. TDoA is meaningless in that state.\n  TP500-TP527 test pads: per anchor +3V3_An, EXTON, GPIO0-GPIO4.\n     GPIO2/RXLED, GPIO3/TXLED, GPIO0/RXOKLED, GPIO1/SFDLED can be configured\n     as LED-style strobes: scope them across anchors to see RX/TX timing.\n     (Do not hang LEDs on them -- DS Table 2 note 2.)\n  TP refs TP500+ are outside the agent block table: renumber at merge if\n  the coordinator prefers."
 		(exclude_from_sim no)
 		(at 20.32 325.12 0)
 		(effects
@@ -30774,7 +30774,7 @@
 		)
 		(uuid "0d34268f-0100-466e-a1b4-2a3bc8fd8865")
 	)
-	(text "BRING-UP TESTS FOR THIS SHEET (details in uwb_array_notes.md)\n 1. Rails: +3V3_A0..A3 at TP400/407/414/421; current per anchor via R200-R203.\n 2. Clock at every XTI (TP6-TP9 on testpoints) BEFORE expecting SPI: the\n    core is held in reset until the oscillator is stable (DS v1.1 s6).\n 3. SPI DEV_ID read on each CS in turn, mode 0, start at 2MHz then raise.\n    A wrong-mode read returns shifted garbage on all four the same way.\n 4. Release UWB_RST_N; confirm every IRQ idles low (R25-R28).\n 5. CW / continuous-frame TX per anchor into a spectrum analyser at the SMA\n    (conducted). Compare the four: same power within ~1dB or a path is off.\n 6. Loopback: A0 TX -> attenuator -> A1 RX by cable; repeat each pair.\n 7. Skew: one tag at a fixed, surveyed position; log RX timestamps on all\n    four for N frames; per-anchor offsets must be stable to <~30ps over\n    temperature/time -- the absolute value calibrates out, drift does not."
+	(text "BRING-UP TESTS FOR THIS SHEET (details in uwb_array_notes.md)\n 1. Rails: +3V3_A0..A3 at TP500/407/414/421; current per anchor via R200-R203.\n 2. Clock at every XTI (TP6-TP9 on testpoints) BEFORE expecting SPI: the\n    core is held in reset until the oscillator is stable (DS v1.1 s6).\n 3. SPI DEV_ID read on each CS in turn, mode 0, start at 2MHz then raise.\n    A wrong-mode read returns shifted garbage on all four the same way.\n 4. Release UWB_RST_N; confirm every IRQ idles low (R25-R28).\n 5. CW / continuous-frame TX per anchor into a spectrum analyser at the SMA\n    (conducted). Compare the four: same power within ~1dB or a path is off.\n 6. Loopback: A0 TX -> attenuator -> A1 RX by cable; repeat each pair.\n 7. Skew: one tag at a fixed, surveyed position; log RX timestamps on all\n    four for N frames; per-anchor offsets must be stable to <~30ps over\n    temperature/time -- the absolute value calibrates out, drift does not."
 		(exclude_from_sim no)
 		(at 391.16 325.12 0)
 		(effects

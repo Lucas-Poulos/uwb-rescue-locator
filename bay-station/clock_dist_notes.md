@@ -47,7 +47,7 @@ row dimension is read as centre-to-centre; the bottom view's 6.3 mm could make
 it 8.1 mm).
 
 Vc: R227 10k / R228 8.2k from `+3V3_TCXO` = 1.49 V, the 1.5 V reference
-point. C215 100 nF (modulation bandwidth is 3.5 Hz). TP430 lets you
+point. C215 100 nF (modulation bandwidth is 3.5 Hz). TP530 lets you
 over-drive Vc on the bench (lift R228) to trim the array's frequency.
 
 **Why not the TCXOs Qorvo lists (DS v1.1 Table 22: TXC 7Z38470005, Rakon
@@ -86,7 +86,7 @@ TI datasheet SNAS791D (Dec 2019, rev. Feb 2022):
 **Amplitude at XTI:** 3.3 V LVCMOS through 2200 pF gives ≥ 2.6 Vpp, up to
 ~3.3 Vpp -- inside "0.8 V to VDD2", but close to the top when VDD2 = 3.3 V.
 If XTI shows over-drive symptoms, the cheap experiment is to lift R226 and
-supply the buffer at 2.5 V through TP429 (still above its 2.375 V minimum,
+supply the buffer at 2.5 V through TP529 (still above its 2.375 V minimum,
 CLKIN stays 3.3 V tolerant). If that fixes it, the permanent fix is a 2.5 V
 LDO for the buffer.
 
@@ -101,7 +101,7 @@ Each part has its own rail through a 0603 0R (R225, R226) -- the "0R/bead
 option": fitted 0R, the pads take a low-DCR 0603 bead if the TCXO or buffer
 supply noise shows up as phase-noise spurs (TI SNAS791D s11 recommends but
 does not require a bead). No bead part number chosen. Both 0Rs double as
-current-measure break points. Test pads: TP428 `+3V3_TCXO`, TP429
+current-measure break points. Test pads: TP528 `+3V3_TCXO`, TP529
 `+3V3_CLKBUF`. Decoupling per TI Fig 11-1 (10 µF board side, 1 µF + 0.1 µF
 at the pin); TCXO 10 µF + 100 nF (Rakon gives no decoupling guidance).
 
@@ -123,7 +123,7 @@ must stay equal.** Put R231-R234 at the buffer pins and C24-C27 at each XTI.
 
 ## Bring-up tests for this sheet
 
-1. `+3V3_TCXO` / `+3V3_CLKBUF` at TP428/TP429; TCXO current by lifting R225
+1. `+3V3_TCXO` / `+3V3_CLKBUF` at TP528/TP529; TCXO current by lifting R225
    (~10 mA typ).
 2. `TCXO_OUT` (testpoints TP5): 38.4 MHz on a counter, within the ±1 ppm
    calibration plus reflow shift; duty ~50 %.

@@ -23,7 +23,7 @@ file is what the coordinator needs to merge.
   -> SMA J20-J23 (Linx/TE CONSMA020.042-G). RF parts 0402 (in-track pads).
 - XTI <- `UWB_CLKn`. XTO 1pF C28-C31 **moved here from clock_dist** (same refs).
 - A0-only DNP fallback crystal Y1 (TXC 8Y38472012) + C208/C209.
-- Test pads TP400-TP427 (+3V3_An, EXTON, GPIO0-4 per anchor). PWR_FLAGs on
+- Test pads TP500-TP527 (+3V3_An, EXTON, GPIO0-4 per anchor). PWR_FLAGs on
   the local rails.
 - DW3210 symbol: SPIMISO pin type `output` -> `tri_state` (DS Table 19 t6),
   in both the embedded copy and `libs/bay_station.kicad_sym`.
@@ -32,7 +32,7 @@ file is what the coordinator needs to merge.
 R230 22R -> `TCXO_OUT` -> PROPOSED U31 TI LMK1C1104PWR -> R231-R234 22R ->
 existing C24-C27 2200pF -> `UWB_CLK0..3`. Own rails `+3V3_TCXO` (R225 0R)
 and `+3V3_CLKBUF` (R226 0R), 0603 pads take a bead; decoupling C210-C214;
-Vc divider R227/R228 + C215; 1G pull-up R229; TP428-TP430.
+Vc divider R227/R228 + C215; 1G pull-up R229; TP528-TP530.
 
 **Library:** new symbols `bay_station:LMK1C1104PW`, `bay_station:RPT1490LN`;
 new footprints `Rakon_RPT1490LN_14.5x9.5mm_PLACEHOLDER`,
@@ -74,7 +74,7 @@ Add:
 "Clock-tree supply links (clock_dist.kicad_sch, R225-R226)",0R 0603 (pads accept an 0603 ferrite bead),Device:R (KiCad default),Resistor_SMD:R_0603_1608Metric (KiCad default),n/a (generic passive),"+3V3 -> +3V3_TCXO and +3V3 -> +3V3_CLKBUF. 0R/bead option and current-measure point. TI SNAS791D s11 recommends (not requires) a low-DCR bead for the buffer; no bead PN chosen."
 "Clock-tree decoupling (clock_dist.kicad_sch, C210-C215)","10uF, 100nF, 10uF, 1uF, 100nF, 100nF ceramic 0603",Device:C (KiCad default),Capacitor_SMD:C_0603_1608Metric (KiCad default),n/a (generic passive),"C210/C211 TCXO; C212 board-side 10uF, C213 1uF, C214 0.1uF at buffer VDD per TI SNAS791D Fig 11-1; C215 TCXO Vc filter."
 "Clock-tree resistors (clock_dist.kicad_sch, R227-R234)","10k, 8.2k, 10k, 22R x5",Device:R (KiCad default),Resistor_SMD:R_0603_1608Metric (KiCad default),n/a (generic passive),"R227/R228 TCXO Vc divider -> 1.49V (Rakon tuning reference 1.5V); R229 buffer 1G pull-up (outputs always enabled); R230 TCXO->buffer and R231-R234 Yn series source terminations, 22R starting value, tune at bring-up; R231-R234 must stay equal."
-"UWB/clock test pads (TP400-TP430)",Test pad,Connector:TestPoint (KiCad default),TestPoint:TestPoint_Pad_D1.0mm (KiCad default),n/a,"Local nets only: per anchor +3V3_An, EXTON, GPIO0-4 (TP400-TP427); +3V3_TCXO, +3V3_CLKBUF, TCXO_VC (TP428-TP430). Refs are outside the agent block table -- renumber if preferred."
+"UWB/clock test pads (TP500-TP530)",Test pad,Connector:TestPoint (KiCad default),TestPoint:TestPoint_Pad_D1.0mm (KiCad default),n/a,"Local nets only: per anchor +3V3_An, EXTON, GPIO0-4 (TP500-TP527); +3V3_TCXO, +3V3_CLKBUF, TCXO_VC (TP528-TP530). Refs are outside the agent block table -- renumber if preferred."
 ```
 
 Unchanged but note: FB1-FB4 (BLM03PG330SN1D) still have no footprint; the
@@ -115,7 +115,7 @@ Update Open:
 - **Shared RSTn contention.** Four O-H RSTn pins tied (via 0R) to one net;
   check on first boards that a chip still in POR does not fight the others.
 - **XTI drive amplitude** with a 3.3V buffer is >=2.6Vpp, near the top of
-  0.8V..VDD2. Bench test at 2.5V buffer supply (via TP429) before deciding
+  0.8V..VDD2. Bench test at 2.5V buffer supply (via TP529) before deciding
   whether a 2.5V LDO is needed.
 ```
 
@@ -137,7 +137,7 @@ Update Open:
 - **testpoints (io):** existing TP5 = `TCXO_OUT`, TP6-TP9 = `UWB_CLK0..3`
   (XTI side of the AC caps), TP10-12 = UWB_SCK/MOSI/MISO, TP14 =
   `UWB_RST_N`, TP13/19-21 = `UWB_IRQ0..3`, TP15-18 = `UWB_CS0..3_N`. Also
-  wanted: `UWB_WAKEUP`, `UWB_SYNC`. I used TP400-TP430 for local pads on my
+  wanted: `UWB_WAKEUP`, `UWB_SYNC`. I used TP500-TP530 for local pads on my
   sheets (outside every block) -- renumber at merge if desired.
 - **regulation/power:** the array + clock tree load on `+3V3`: four DW3210
   (DS Table 5: 18 mA IDLE CH5 each, TX/RX peaks higher) + TCXO 15 mA max +
