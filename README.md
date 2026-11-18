@@ -287,7 +287,8 @@ silent corruption from hand-resolving `.kicad_sch` conflicts still stands.
    above).
 7. PCB layout. The bay station's `.kicad_pcb` has its **4-layer
    controlled-impedance stackup** set from DW3000 Section 7.3.2 Figure 35
-   (1.048mm finished) but is otherwise empty: 0 footprints, no outline.
+   (1.048mm finished); since 2026-11-18 it also has the board outline and all 428 footprints placed (unrouted;
+   `docs/layout-notes.md`).
    **The wristband's `.kicad_pcb` is not an empty stub** -- it already carries
    36 footprints, a routed board outline, and real DRC findings from the
    DWM3001C migration (PR #5); U3 (the DWM3001C) now has a footprint in the library (2026-11-18) but the PCB
