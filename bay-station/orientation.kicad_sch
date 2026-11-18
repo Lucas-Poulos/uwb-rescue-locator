@@ -9,6 +9,129 @@
 		(comment 1 "Bay station -- LIS3MDL heading + LIS2DH tilt on the shared I2C bus")
 	)
 	(lib_symbols
+		(symbol "Connector:TestPoint"
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 0.762)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "TP"
+				(at 0 6.858 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "TestPoint"
+				(at 0 5.08 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 5.08 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 5.08 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "test point"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "test point tp"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "Pin* Test*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "TestPoint_0_1"
+				(circle
+					(center 0 3.302)
+					(radius 0.762)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "TestPoint_1_1"
+				(pin passive line
+					(at 0 0 90)
+					(length 2.54)
+					(name "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "Device:C"
 			(pin_numbers
 				(hide yes)
@@ -978,129 +1101,6 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "Connector:TestPoint"
-			(pin_numbers
-				(hide yes)
-			)
-			(pin_names
-				(offset 0.762)
-				(hide yes)
-			)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(in_pos_files yes)
-			(duplicate_pin_numbers_are_jumpers no)
-			(property "Reference" "TP"
-				(at 0 6.858 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Value" "TestPoint"
-				(at 0 5.08 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Footprint" ""
-				(at 5.08 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Datasheet" ""
-				(at 5.08 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Description" "test point"
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "ki_keywords" "test point tp"
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "ki_fp_filters" "Pin* Test*"
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(symbol "TestPoint_0_1"
-				(circle
-					(center 0 3.302)
-					(radius 0.762)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-			)
-			(symbol "TestPoint_1_1"
-				(pin passive line
-					(at 0 0 90)
-					(length 2.54)
-					(name "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-			(embedded_fonts no)
-		)
 		(symbol "power:PWR_FLAG"
 			(power global)
 			(pin_numbers
@@ -1217,6 +1217,2283 @@
 			(embedded_fonts no)
 		)
 	)
+	(text "I2C BUS (shared with MAX17048 on power_bms; pull-ups R37/R38 2.2k on connectivity):\n  MAX17048  0x36  fixed       (19-6171 Rev 7, \"Slave Address\": 0110110b)\n  LIS3MDL   0x1C  SA1 = GND   (DocID024204 Rev 4 sec 5.1.1; 0x1E with SA1 high)\n  LIS2DH    0x19  SA0 = VddIO (Doc ID 022516 Rev 1 sec 5.1.1; 0x18 with SA0 low)\nNo collisions in either strap position. Both CS pins tied to Vdd_IO = I2C mode, as both\ndatasheets require (LIS3MDL sec 5.1 \"CS line must be tied high\"; LIS2DH sec 3).\nREWORK: R407-R410 isolate each sensor from SCL/SDA; R412-R415 re-strap addresses;\nR411 is the sensor-rail current break (TP121 on +3V3_SNS).\nINT/DRDY outputs are push-pull by default (no pull-ups placed); both sensors run\nVdd = Vdd_IO = 3.3V (LIS3MDL Vdd 1.9-3.6V, LIS2DH 1.71-3.6V, Vdd_IO <= Vdd+0.1V,\nTable 5 of each datasheet)."
+		(exclude_from_sim no)
+		(at 20.32 50.8 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left top)
+		)
+		(uuid "19a11961-11df-4c4a-aa4a-dcf521c80e7c")
+	)
+	(text "Address straps (fitted / DNP alternate)"
+		(exclude_from_sim no)
+		(at 271.78 149.86 0)
+		(effects
+			(font
+				(size 1.5 1.5)
+				(bold yes)
+			)
+			(justify left top)
+		)
+		(uuid "223ae0ff-1edf-49f6-ad42-2c435c76ce8a")
+	)
+	(text "Sensor rail break + test pad"
+		(exclude_from_sim no)
+		(at 40.64 149.86 0)
+		(effects
+			(font
+				(size 1.5 1.5)
+				(bold yes)
+			)
+			(justify left top)
+		)
+		(uuid "4905094c-ed56-461f-a1e5-a530a45b1cb6")
+	)
+	(text "VERIFIED vs NOT. Verified from the real PDFs (pdftotext -raw and -layout): pinouts\n(LIS3MDL Table 2, LIS2DH Table 2 -- both match the KiCad stock symbols), I2C\naddresses, CS/SDO strapping rules, C1 = 100nF, decoupling values, supply ranges.\nLIS2DH copy read: Doc ID 022516 Rev 1 (Nov 2011) via a distributor mirror -- ST's\nsite refused the download. NOT verified: LIS2DH current lifecycle status\n(one distributor lists it as no longer manufactured -- check before ordering),\nand the exact capacitor MPNs."
+		(exclude_from_sim no)
+		(at 200.66 200.66 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left top)
+		)
+		(uuid "614d53e8-9e20-4b1d-a900-953d5b48270c")
+	)
+	(text "Decoupling (values from ST)"
+		(exclude_from_sim no)
+		(at 172.72 149.86 0)
+		(effects
+			(font
+				(size 1.5 1.5)
+				(bold yes)
+			)
+			(justify left top)
+		)
+		(uuid "7b30bd1b-638a-4df7-86cd-98a532bf0da3")
+	)
+	(text "Per-device I2C isolation (0R)"
+		(exclude_from_sim no)
+		(at 109.22 149.86 0)
+		(effects
+			(font
+				(size 1.5 1.5)
+				(bold yes)
+			)
+			(justify left top)
+		)
+		(uuid "9a2695ed-1c51-4d3c-b2cb-fbf5eea4e67d")
+	)
+	(text "Orientation -- heading (LIS3MDL) + tilt (LIS2DH)"
+		(exclude_from_sim no)
+		(at 20.32 15.24 0)
+		(effects
+			(font
+				(size 2.5 2.5)
+				(bold yes)
+			)
+			(justify left top)
+		)
+		(uuid "d5294970-05c1-4c8c-9919-fc120c20f55b")
+	)
+	(text "WHY THIS SHEET EXISTS. The UWB array reports a tag RELATIVE to its own antenna frame.\nGeoreferencing needs WHERE the station is (GNSS) and WHICH WAY it faces (heading).\nGNSS now comes from the nRF9151 on the connectivity sheet (MAX-M10S U9 removed\n2026-11-17, with its C32/C33/C34, which decoupled only U9). Heading stays here:\n  U10 LIS3MDL magnetometer -> heading\n  U11 LIS2DH accelerometer -> pitch/roll for tilt-compensating U10, and INT1 knock /\n      move detect (a moved station silently invalidates both fix and heading).\nPosition without heading gives a circle of tag locations, not a point -- do not drop U10."
+		(exclude_from_sim no)
+		(at 20.32 22.86 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left top)
+		)
+		(uuid "e5307542-914b-4264-a838-4c83638ed62c")
+	)
+	(text "MAGNETOMETER LAYOUT KEEP-OUT (U10) -- this decides heading accuracy, not the part.\nST: \"Keep currents higher than 10 mA a few millimeters away from the sensor IC\"\n(DocID024204 Rev 4 sec 4.3). This board has three much bigger sources:\n  1. BUCK INDUCTOR (TPS62A02 L1, regulation sheet): switching AC field + DC bias.\n     Keep U10 >= 25 mm from L1 and its SW node loop; never on the opposite side under it.\n  2. LTE ANTENNA FEED (nRF9151, connectivity): up to ~23 dBm TX and the PA supply\n     current bursts on +VBAT_LTE. Keep U10 >= 20 mm from the LTE feed / matching network\n     and from the +VBAT_LTE trace and its bulk caps.\n  3. BATTERY CURRENT LOOPS (power_bms): cell, AO3401A Q1, MCP73871 VBAT/OUT and\n     charge paths carry 0.5-1 A. Keep U10 out of the loop area; route those\n     out-and-return pairs tightly so their fields cancel.\nAlso: no steel near U10 (screws, standoffs, SMA bodies are often nickel-plated brass,\nwhich is fine; plated steel is not), no ground-plane splits that force return\ncurrents under it. U11 sits beside U10 -- tilt compensation assumes the two share\none rigid frame, and its axes must be documented relative to U10 in firmware.\nHard/soft-iron calibration is per build and IN the enclosure (decisions.md, Open).\nDistances above are engineering guidance, not ST figures -- verify by logging\nheading with the LTE modem and charger cycling at bring-up."
+		(exclude_from_sim no)
+		(at 20.32 200.66 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left top)
+		)
+		(uuid "e750421d-ff4d-4dbe-af85-f42a3dd75419")
+	)
+	(junction
+		(at 279.4 179.07)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "991ac701-031b-4d2b-a3cb-453c46bee99f")
+	)
+	(junction
+		(at 309.88 179.07)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "da7b6d87-0ea3-43c5-94cd-5cbf37ed9c7a")
+	)
+	(wire
+		(pts
+			(xy 200.66 171.45) (xy 200.66 168.91)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "028c7945-2baf-4d0a-95aa-32efa70f6ddd")
+	)
+	(wire
+		(pts
+			(xy 128.27 165.1) (xy 130.81 165.1)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0312faf9-b078-496e-a1cf-05a00d144007")
+	)
+	(wire
+		(pts
+			(xy 226.06 179.07) (xy 226.06 181.61)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1147085f-4a0d-4434-a55a-b4a80d348219")
+	)
+	(wire
+		(pts
+			(xy 279.4 168.91) (xy 279.4 166.37)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "119c4b1e-5c7d-4e06-a9f7-3cf14f74d002")
+	)
+	(wire
+		(pts
+			(xy 120.65 175.26) (xy 118.11 175.26)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "162018eb-fffb-4c51-987e-97fccb20ceba")
+	)
+	(wire
+		(pts
+			(xy 309.88 168.91) (xy 309.88 166.37)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1ed10a8a-1e10-4270-8cd1-ccd6a77d26a7")
+	)
+	(wire
+		(pts
+			(xy 279.4 179.07) (xy 276.86 179.07)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "24e92634-91c4-4b54-ac64-40fb50e94ecd")
+	)
+	(wire
+		(pts
+			(xy 182.88 107.95) (xy 182.88 105.41)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "24eb0cb7-466d-4f4f-a2dc-a29299407d77")
+	)
+	(wire
+		(pts
+			(xy 193.04 118.11) (xy 195.58 118.11)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "268f32e4-b249-4f9f-9756-6988e1a74ddf")
+	)
+	(wire
+		(pts
+			(xy 180.34 133.35) (xy 180.34 135.89)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2a1029bc-639b-4d72-921c-dc7aaf887030")
+	)
+	(wire
+		(pts
+			(xy 180.34 105.41) (xy 182.88 105.41)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "31da9b25-1244-4687-89c2-d8136a65bb37")
+	)
+	(wire
+		(pts
+			(xy 128.27 185.42) (xy 130.81 185.42)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "32042e9b-660a-447e-b950-0d05779665e5")
+	)
+	(wire
+		(pts
+			(xy 128.27 195.58) (xy 130.81 195.58)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "362219d6-03d1-4c2d-8cb3-d11901d25772")
+	)
+	(wire
+		(pts
+			(xy 120.65 195.58) (xy 118.11 195.58)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3b3e4d25-d93c-4a7f-b292-3e0a5e14b81b")
+	)
+	(wire
+		(pts
+			(xy 281.94 118.11) (xy 284.48 118.11)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3b743fa1-4d57-4283-bbb0-0e9a31e39530")
+	)
+	(wire
+		(pts
+			(xy 213.36 171.45) (xy 213.36 168.91)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3d786bd3-bc01-4caa-8f27-4c442749caab")
+	)
+	(wire
+		(pts
+			(xy 187.96 171.45) (xy 187.96 168.91)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "477ae669-03d7-468b-912d-5bd6dc22f072")
+	)
+	(wire
+		(pts
+			(xy 279.4 186.69) (xy 279.4 189.23)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4c510d26-759e-4f29-871e-77c73cdc81a1")
+	)
+	(wire
+		(pts
+			(xy 175.26 171.45) (xy 175.26 168.91)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4ef3a4f8-20ca-4625-a8e4-2a2123e160eb")
+	)
+	(wire
+		(pts
+			(xy 187.96 179.07) (xy 187.96 181.61)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5053a538-820d-4b48-ac63-c97a0ad9592d")
+	)
+	(wire
+		(pts
+			(xy 167.64 115.57) (xy 165.1 115.57)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5c36aeec-7834-4c6c-84ad-9756c67c1ba3")
+	)
+	(wire
+		(pts
+			(xy 64.77 172.72) (xy 67.31 172.72)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "65215896-63a5-489e-a9b1-833ced65f8e8")
+	)
+	(wire
+		(pts
+			(xy 120.65 165.1) (xy 118.11 165.1)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "79d26ace-8aee-4dd7-a94b-874900b36c45")
+	)
+	(wire
+		(pts
+			(xy 200.66 179.07) (xy 200.66 181.61)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8a052f97-a461-47ee-9cc1-c0798e820688")
+	)
+	(wire
+		(pts
+			(xy 238.76 179.07) (xy 238.76 181.61)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8a3d6f3e-3771-4508-adc0-1022a9d8e0f0")
+	)
+	(wire
+		(pts
+			(xy 279.4 176.53) (xy 279.4 179.07)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8a863b5b-8cd4-4fe1-8586-214bb3853860")
+	)
+	(wire
+		(pts
+			(xy 271.78 107.95) (xy 271.78 105.41)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8bb31fc7-1eaf-46bf-85dc-4e1162b1e5ec")
+	)
+	(wire
+		(pts
+			(xy 193.04 123.19) (xy 195.58 123.19)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8c02f14a-8e53-4c0c-b81b-9ba4e695587d")
+	)
+	(wire
+		(pts
+			(xy 120.65 185.42) (xy 118.11 185.42)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8d56b52b-54f6-4cec-8f09-7e07ac110ab9")
+	)
+	(wire
+		(pts
+			(xy 269.24 107.95) (xy 269.24 105.41)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8fce8a4c-aea7-4fda-8a7a-02a2b5704c9a")
+	)
+	(wire
+		(pts
+			(xy 78.74 165.1) (xy 78.74 172.72)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "91561659-ba7c-4539-beaf-c49bbcfee928")
+	)
+	(wire
+		(pts
+			(xy 259.08 123.19) (xy 256.54 123.19)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "927bf60d-d2f7-46ff-bc0d-4d2edfe01ece")
+	)
+	(wire
+		(pts
+			(xy 180.34 107.95) (xy 180.34 105.41)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "92b7c8e9-e0a2-407e-b772-32d30339cffb")
+	)
+	(wire
+		(pts
+			(xy 281.94 120.65) (xy 284.48 120.65)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "95bc8d76-a2e9-46c2-841a-71da3c66821c")
+	)
+	(wire
+		(pts
+			(xy 259.08 120.65) (xy 256.54 120.65)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "974a09cf-527e-40bf-836d-d96b10d23c75")
+	)
+	(wire
+		(pts
+			(xy 309.88 186.69) (xy 309.88 189.23)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a264d396-3c82-47dd-90e6-8edc793fb6e4")
+	)
+	(wire
+		(pts
+			(xy 309.88 176.53) (xy 309.88 179.07)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a4917122-f57f-4400-8488-c2fe9ea63a55")
+	)
+	(wire
+		(pts
+			(xy 259.08 115.57) (xy 256.54 115.57)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a5989675-bbfd-4b5a-a601-3fc1a2c35d87")
+	)
+	(wire
+		(pts
+			(xy 238.76 171.45) (xy 238.76 168.91)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a84819fc-80f5-4729-8f95-aec228880013")
+	)
+	(wire
+		(pts
+			(xy 226.06 171.45) (xy 226.06 168.91)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a9519c8d-ea80-4830-be19-7dac5aff6909")
+	)
+	(wire
+		(pts
+			(xy 269.24 133.35) (xy 269.24 135.89)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "aef80d8a-0470-44e9-9870-35170fff3f59")
+	)
+	(wire
+		(pts
+			(xy 167.64 120.65) (xy 165.1 120.65)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "af8074d0-7f6e-4b4b-9d97-84d14f2f8cd5")
+	)
+	(wire
+		(pts
+			(xy 57.15 172.72) (xy 54.61 172.72)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b73eb1f1-2dd0-49cd-a40a-9d506621f974")
+	)
+	(wire
+		(pts
+			(xy 259.08 118.11) (xy 256.54 118.11)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b9c7b7e2-2db4-4169-82fa-60b7e8091670")
+	)
+	(wire
+		(pts
+			(xy 251.46 171.45) (xy 251.46 168.91)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ca74d73c-afcd-42f5-bd57-51ccead4f0e4")
+	)
+	(wire
+		(pts
+			(xy 167.64 118.11) (xy 165.1 118.11)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "cabcbd7f-01ba-4a06-be75-bfdbaf70a217")
+	)
+	(wire
+		(pts
+			(xy 269.24 105.41) (xy 271.78 105.41)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d2b3aeb1-a5fb-4d7f-8a3f-d2eac39385d4")
+	)
+	(wire
+		(pts
+			(xy 128.27 175.26) (xy 130.81 175.26)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d376e67a-2f05-4ef5-8b0f-a7f944c34bec")
+	)
+	(wire
+		(pts
+			(xy 193.04 115.57) (xy 195.58 115.57)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d3b8d7ee-e3ba-4f08-9b18-ffd65acacf27")
+	)
+	(wire
+		(pts
+			(xy 309.88 179.07) (xy 307.34 179.07)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d4786326-a16b-4af1-bb15-0362c60acab9")
+	)
+	(wire
+		(pts
+			(xy 251.46 179.07) (xy 251.46 181.61)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d669da9a-6a19-498c-b439-1e9c2fb5e5d6")
+	)
+	(wire
+		(pts
+			(xy 175.26 179.07) (xy 175.26 181.61)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "df2d8d6d-a661-4f3a-8d29-c474d9f8c15d")
+	)
+	(wire
+		(pts
+			(xy 167.64 123.19) (xy 165.1 123.19)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e271dffb-3b62-43d9-953c-386389eb2448")
+	)
+	(wire
+		(pts
+			(xy 213.36 179.07) (xy 213.36 181.61)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e6184687-eeab-4255-aef8-1009e14c81a5")
+	)
+	(wire
+		(pts
+			(xy 91.44 165.1) (xy 91.44 172.72)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ff4238da-0a01-43e0-8f1e-c601314dcc31")
+	)
+	(label "+3V3_SNS"
+		(at 256.54 115.57 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "027cc21d-dfd5-4d5d-a930-8978bba0fce1")
+	)
+	(label "U11_SCL"
+		(at 130.81 185.42 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "0dae6597-84e9-4f25-a98d-0af7349d97f0")
+	)
+	(label "U11_SDA"
+		(at 256.54 118.11 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "10d9d0de-9f14-45e1-a13e-232d162e1d87")
+	)
+	(label "+3V3_SNS"
+		(at 200.66 168.91 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "13092eb7-92c2-4f14-b6f0-723dd7f43276")
+	)
+	(label "+3V3_SNS"
+		(at 180.34 105.41 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "1becb6e2-fc79-4545-a2c1-9fe907204398")
+	)
+	(label "U10_C1"
+		(at 195.58 123.19 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "240291ae-2059-4ee5-84dd-ef757dabe7bc")
+	)
+	(label "U10_SDA"
+		(at 130.81 175.26 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "320cc25a-19d5-4874-9f86-dce955b4c50e")
+	)
+	(label "+3V3_SNS"
+		(at 67.31 172.72 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "433df969-acb3-466a-8a94-c70c7ca2d3c4")
+	)
+	(label "U10_SA1"
+		(at 165.1 123.19 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "54dc4cef-1d09-424e-8281-313af331ba25")
+	)
+	(label "+3V3_SNS"
+		(at 175.26 168.91 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "5673ab15-93e2-4ca9-aa21-c26a05801b46")
+	)
+	(label "U10_SDA"
+		(at 165.1 120.65 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "638241ca-7784-45ce-97e7-c871db886852")
+	)
+	(label "+3V3_SNS"
+		(at 78.74 172.72 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "6c68881a-1203-49e8-aa31-823a65f47e21")
+	)
+	(label "U10_C1"
+		(at 213.36 168.91 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "756e339a-45ab-402a-8647-4372f3657197")
+	)
+	(label "U10_SA1"
+		(at 276.86 179.07 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "77effe6b-36f2-4988-9bf2-6a5ecefe0922")
+	)
+	(label "U10_SCL"
+		(at 165.1 118.11 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "94642e8d-26bd-47c5-bf5e-2e873387dfd6")
+	)
+	(label "+3V3_SNS"
+		(at 165.1 115.57 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "9b0a88f3-4842-430c-afc0-0b5adfef0292")
+	)
+	(label "+3V3_SNS"
+		(at 91.44 172.72 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "9de4ee38-0c4f-48c3-bd76-3e170d68f5c5")
+	)
+	(label "U10_SCL"
+		(at 130.81 165.1 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "ae0e44cb-32ad-4cff-bf0e-0b033c3abb05")
+	)
+	(label "+3V3_SNS"
+		(at 309.88 166.37 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "af76aa44-dde9-4ed4-9a0f-d483147d95d1")
+	)
+	(label "+3V3_SNS"
+		(at 226.06 168.91 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "c86b959e-940a-46e6-90d9-ffeadb38cbb6")
+	)
+	(label "U11_SA0"
+		(at 256.54 120.65 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "c91583f0-3cf8-4b87-999b-a2e0eb2239ba")
+	)
+	(label "+3V3_SNS"
+		(at 238.76 168.91 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "ccfb4ff1-8ed3-4537-9969-84a417dbc882")
+	)
+	(label "+3V3_SNS"
+		(at 279.4 166.37 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "e2d10c84-d486-4baf-8e20-4898af536cb5")
+	)
+	(label "+3V3_SNS"
+		(at 187.96 168.91 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "e817e475-aa77-4092-a0bf-8d7c32791e03")
+	)
+	(label "U11_SDA"
+		(at 130.81 195.58 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "ea962ec3-d681-4a09-a869-607e697981a5")
+	)
+	(label "U11_SA0"
+		(at 307.34 179.07 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "f37d86fe-c701-41fd-a8c3-d6e78af10a2f")
+	)
+	(label "+3V3_SNS"
+		(at 251.46 168.91 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "f3926232-f75d-48b5-94b8-ada808020679")
+	)
+	(label "U11_SCL"
+		(at 256.54 123.19 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "f4f78711-4138-4fc4-934f-a0e75d8794e0")
+	)
+	(label "+3V3_SNS"
+		(at 269.24 105.41 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "fceb7b89-3e1e-4fc5-8e72-ce2d3b2360d2")
+	)
+	(global_label "I2C_SCL"
+		(shape passive)
+		(at 118.11 185.42 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "106feaf6-8f7e-4d18-8fde-49f36e045bd8")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 118.11 185.42 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "MAG_INT"
+		(shape passive)
+		(at 195.58 118.11 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "1cf20928-0440-4f5c-bccb-9ef742003bf0")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 195.58 118.11 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 269.24 135.89 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "27d9d97a-7ba2-4f48-9d60-0a9a1b6e201d")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 269.24 135.89 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 226.06 181.61 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "4ea4f580-9c56-4983-98d2-7e45d3c3d4c5")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 226.06 181.61 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 180.34 135.89 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "58df9c8c-5145-4b8b-bf17-867737ceffe7")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 180.34 135.89 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 213.36 181.61 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "5a332798-9ad7-44d4-b9fd-04b26f826489")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 213.36 181.61 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "I2C_SDA"
+		(shape passive)
+		(at 118.11 175.26 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "69d4bcee-0c3b-416f-a260-3f24539a18ef")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 118.11 175.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "ACC_INT2"
+		(shape passive)
+		(at 284.48 120.65 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "76092975-4f05-4972-ba8b-c0fb5711416b")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 284.48 120.65 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 279.4 189.23 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "77bac986-c201-4aa2-826c-e138b7140569")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 279.4 189.23 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 175.26 181.61 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "7847a444-6b2f-4b0f-b1db-9cbb75930e24")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 175.26 181.61 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "ACC_INT1"
+		(shape passive)
+		(at 284.48 118.11 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "7b0f278d-5e20-4c09-9445-e2208627cf72")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 284.48 118.11 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "I2C_SCL"
+		(shape passive)
+		(at 118.11 165.1 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "8100d0d8-f21b-47a2-a76a-68ba3076526c")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 118.11 165.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "I2C_SDA"
+		(shape passive)
+		(at 118.11 195.58 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "89ae0e83-dc84-408f-9403-28d367dbad2d")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 118.11 195.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 238.76 181.61 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "9846405c-8d1a-48e9-9b4d-f9fc3fbb24c4")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 238.76 181.61 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 309.88 189.23 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "c28c05e9-15e1-455f-99e8-3a05a4bc2dd0")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 309.88 189.23 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "+3V3"
+		(shape passive)
+		(at 54.61 172.72 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "d01cda4b-a803-4021-9c6b-ceed2860079f")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 54.61 172.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 200.66 181.61 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "dc73aba0-1257-4df0-9790-c6d9e055b9e6")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 200.66 181.61 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "MAG_DRDY"
+		(shape passive)
+		(at 195.58 115.57 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "e0f10d39-04c9-4328-bdf1-854035668929")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 195.58 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 187.96 181.61 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "e0f57da0-dab3-44b9-83b7-b1c4297e2d41")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 187.96 181.61 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 251.46 181.61 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "f835b4cb-42be-437b-b647-fe51c45319bf")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 251.46 181.61 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 279.4 172.72 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp yes)
+		(uuid "0d7b584e-c952-4114-948a-694916c9dcc9")
+		(property "Reference" "R413"
+			(at 281.94 171.45 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "DNP"
+			(at 281.94 173.99 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 279.4 172.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 279.4 172.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "DNP alternate: U10 SA1 to Vdd_IO -> LIS3MDL address 0x1E (DocID024204 sec 5.1.1). Fit only with R412 removed."
+			(at 279.4 172.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "3fb6a4fa-885a-4e2f-9fdd-453218269289")
+		)
+		(pin "2"
+			(uuid "8e2b24a1-2995-417f-9ea8-f588d3ff8a41")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/a1c2e3f4-5b6d-4708-9a1b-2c3d4e5f6071"
+					(reference "R413")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:PWR_FLAG")
+		(at 91.44 165.1 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "1761d6e0-f086-4993-ba6e-a1f00a9114a7")
+		(property "Reference" "#FLG400"
+			(at 93.98 161.29 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "PWR_FLAG"
+			(at 93.98 158.75 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" ""
+			(at 91.44 165.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 91.44 165.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "ERC only: +3V3_SNS is driven from +3V3 through R411 (passive), so ERC needs to be told it is a supplied rail."
+			(at 91.44 165.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "f4ba874b-1295-4a20-a58b-05a5b5e1c20f")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/a1c2e3f4-5b6d-4708-9a1b-2c3d4e5f6071"
+					(reference "#FLG400")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 124.46 185.42 90)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "1dfa12c6-35e7-4aee-b98e-9af4c2c67633")
+		(property "Reference" "R409"
+			(at 124.46 182.88 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "0R"
+			(at 124.46 187.96 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 124.46 185.42 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 124.46 185.42 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "I2C isolation link for U11 LIS2DH SCL: lift to take this device off the shared bus (MAX17048 + LIS3MDL + LIS2DH) when a stuck/NAKing part needs to be found. Pull-ups are NOT here -- R37/R38 on connectivity."
+			(at 124.46 185.42 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "47fbe61f-38fc-418c-b989-5d1268d1c897")
+		)
+		(pin "2"
+			(uuid "23577436-ea5c-4dce-9ec9-0839f5528f7f")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/a1c2e3f4-5b6d-4708-9a1b-2c3d4e5f6071"
+					(reference "R409")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 124.46 175.26 90)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "2147d475-24ee-4d93-894b-b140c7b17560")
+		(property "Reference" "R408"
+			(at 124.46 172.72 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "0R"
+			(at 124.46 177.8 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 124.46 175.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 124.46 175.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "I2C isolation link for U10 LIS3MDL SDA: lift to take this device off the shared bus (MAX17048 + LIS3MDL + LIS2DH) when a stuck/NAKing part needs to be found. Pull-ups are NOT here -- R37/R38 on connectivity."
+			(at 124.46 175.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "cb721dc5-c681-4677-875a-1c1dbf5bfbca")
+		)
+		(pin "2"
+			(uuid "97735880-a0ef-4671-8a72-116f1bf439ee")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/a1c2e3f4-5b6d-4708-9a1b-2c3d4e5f6071"
+					(reference "R408")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 213.36 175.26 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "23cde137-82ad-4317-9873-34c0e20bc60e")
+		(property "Reference" "C400"
+			(at 215.9 173.99 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "100nF"
+			(at 215.9 176.53 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+			(at 213.36 175.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 213.36 175.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "U10 LIS3MDL C1 (pin 4) to GND -- REQUIRED by the part, value fixed by ST: C1 = 100nF (DocID024204 Rev 4 Table 2 and sec 4.1)."
+			(at 213.36 175.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "5bb0dfc2-26ed-4256-a224-a560d09ab7fa")
+		)
+		(pin "2"
+			(uuid "9cf8f37c-a2f4-4238-8d3d-6f595664f9fd")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/a1c2e3f4-5b6d-4708-9a1b-2c3d4e5f6071"
+					(reference "C400")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 200.66 175.26 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "288ef448-7907-4c6e-81db-d848dd606e60")
+		(property "Reference" "C402"
+			(at 203.2 173.99 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "100nF"
+			(at 203.2 176.53 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+			(at 200.66 175.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 200.66 175.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "U10 Vdd_IO (pin 6). NOT in ST Figure 5 (Vdd_IO shares the Vdd node there); added as cheap insurance since pins 5/6 sit on opposite package edges. DNP-able."
+			(at 200.66 175.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "b156ae78-c873-4a6b-adf7-e0243f39470d")
+		)
+		(pin "2"
+			(uuid "d6c694cb-1e94-4549-9488-0a47bedc7c1d")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/a1c2e3f4-5b6d-4708-9a1b-2c3d4e5f6071"
+					(reference "C402")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 78.74 165.1 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "456692aa-88ed-4df0-ba76-d330432ee7a0")
+		(property "Reference" "TP121"
+			(at 81.28 161.29 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "+3V3_SNS"
+			(at 81.28 158.75 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
+			(at 78.74 165.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 78.74 165.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Local sensor rail after the R411 break. Expect = +3V3 (TP1) with R411 fitted; 0V with R411 lifted."
+			(at 78.74 165.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "27a4657a-2990-4621-ba23-f3ce3bfa16b7")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/a1c2e3f4-5b6d-4708-9a1b-2c3d4e5f6071"
+					(reference "TP121")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 279.4 182.88 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "50f5cfb4-f214-4f9c-9d51-ac2a74d33277")
+		(property "Reference" "R412"
+			(at 281.94 181.61 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "0R"
+			(at 281.94 184.15 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 279.4 182.88 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 279.4 182.88 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "U10 LIS3MDL SDO/SA1 to GND -> address 0x1C. SA1 must be tied to Vdd_IO or GND in I2C mode (sec 4.1), never left floating."
+			(at 279.4 182.88 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "99242c65-f12c-47a5-897b-e0f6d31ab33d")
+		)
+		(pin "2"
+			(uuid "4c4dd7ff-6874-4e03-a473-54d528a68bb0")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/a1c2e3f4-5b6d-4708-9a1b-2c3d4e5f6071"
+					(reference "R412")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 124.46 165.1 90)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "5afa4619-19cf-4320-9afc-199578327bf2")
+		(property "Reference" "R407"
+			(at 124.46 162.56 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "0R"
+			(at 124.46 167.64 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 124.46 165.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 124.46 165.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "I2C isolation link for U10 LIS3MDL SCL: lift to take this device off the shared bus (MAX17048 + LIS3MDL + LIS2DH) when a stuck/NAKing part needs to be found. Pull-ups are NOT here -- R37/R38 on connectivity."
+			(at 124.46 165.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "9da2f505-b9b7-4312-bc34-943e879d1111")
+		)
+		(pin "2"
+			(uuid "31c1dde2-9a9a-47b9-a34a-61251af7a8a0")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/a1c2e3f4-5b6d-4708-9a1b-2c3d4e5f6071"
+					(reference "R407")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 187.96 175.26 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "69e8480a-3b45-4c96-ae5c-d802363364fa")
+		(property "Reference" "C401"
+			(at 190.5 173.99 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "1uF"
+			(at 190.5 176.53 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+			(at 187.96 175.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 187.96 175.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "U10 LIS3MDL Vdd low-frequency cap = ST C2 1uF (sec 4.1 says electrolytic; X5R/X7R ceramic 0603 is the practical equivalent here)."
+			(at 187.96 175.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "c0ab4f21-3fd5-4969-9c48-02166102e4b8")
+		)
+		(pin "2"
+			(uuid "358b091e-9b42-4c56-8336-56b49fe130e3")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/a1c2e3f4-5b6d-4708-9a1b-2c3d4e5f6071"
+					(reference "C401")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 309.88 182.88 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp yes)
+		(uuid "8a04f822-9ed4-4f8f-9be2-30931f2f64dc")
+		(property "Reference" "R415"
+			(at 312.42 181.61 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "DNP"
+			(at 312.42 184.15 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 309.88 182.88 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 309.88 182.88 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "DNP alternate: U11 SA0 to GND -> LIS2DH address 0x18. Fit only with R414 removed."
+			(at 309.88 182.88 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "6e7ac66c-d43f-4434-8b0e-05ae804c1fb1")
+		)
+		(pin "2"
+			(uuid "a7e44179-4db7-4ddb-a3ad-5cae5c7212c3")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/a1c2e3f4-5b6d-4708-9a1b-2c3d4e5f6071"
+					(reference "R415")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "Sensor_Magnetic:LIS3MDL")
 		(at 180.34 120.65 0)
@@ -1322,242 +3599,6 @@
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/a1c2e3f4-5b6d-4708-9a1b-2c3d4e5f6071"
 					(reference "U10")
 					(unit 1)
-				)
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 167.64 118.11) (xy 165.1 118.11)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "cabcbd7f-01ba-4a06-be75-bfdbaf70a217")
-	)
-	(label "U10_SCL"
-		(at 165.1 118.11 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "94642e8d-26bd-47c5-bf5e-2e873387dfd6")
-	)
-	(wire
-		(pts
-			(xy 167.64 120.65) (xy 165.1 120.65)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "af8074d0-7f6e-4b4b-9d97-84d14f2f8cd5")
-	)
-	(label "U10_SDA"
-		(at 165.1 120.65 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "638241ca-7784-45ce-97e7-c871db886852")
-	)
-	(wire
-		(pts
-			(xy 167.64 123.19) (xy 165.1 123.19)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "e271dffb-3b62-43d9-953c-386389eb2448")
-	)
-	(label "U10_SA1"
-		(at 165.1 123.19 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "54dc4cef-1d09-424e-8281-313af331ba25")
-	)
-	(wire
-		(pts
-			(xy 167.64 115.57) (xy 165.1 115.57)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "5c36aeec-7834-4c6c-84ad-9756c67c1ba3")
-	)
-	(label "+3V3_SNS"
-		(at 165.1 115.57 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "9b0a88f3-4842-430c-afc0-0b5adfef0292")
-	)
-	(wire
-		(pts
-			(xy 193.04 118.11) (xy 195.58 118.11)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "268f32e4-b249-4f9f-9756-6988e1a74ddf")
-	)
-	(global_label "MAG_INT"
-		(shape passive)
-		(at 195.58 118.11 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "1cf20928-0440-4f5c-bccb-9ef742003bf0")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 195.58 118.11 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 193.04 115.57) (xy 195.58 115.57)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "d3b8d7ee-e3ba-4f08-9b18-ffd65acacf27")
-	)
-	(global_label "MAG_DRDY"
-		(shape passive)
-		(at 195.58 115.57 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "e0f10d39-04c9-4328-bdf1-854035668929")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 195.58 115.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 193.04 123.19) (xy 195.58 123.19)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "8c02f14a-8e53-4c0c-b81b-9ba4e695587d")
-	)
-	(label "U10_C1"
-		(at 195.58 123.19 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "240291ae-2059-4ee5-84dd-ef757dabe7bc")
-	)
-	(wire
-		(pts
-			(xy 180.34 107.95) (xy 180.34 105.41)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "92b7c8e9-e0a2-407e-b772-32d30339cffb")
-	)
-	(wire
-		(pts
-			(xy 182.88 107.95) (xy 182.88 105.41)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "24eb0cb7-466d-4f4f-a2dc-a29299407d77")
-	)
-	(wire
-		(pts
-			(xy 180.34 105.41) (xy 182.88 105.41)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "31da9b25-1244-4687-89c2-d8136a65bb37")
-	)
-	(label "+3V3_SNS"
-		(at 180.34 105.41 90)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "1becb6e2-fc79-4545-a2c1-9fe907204398")
-	)
-	(wire
-		(pts
-			(xy 180.34 133.35) (xy 180.34 135.89)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "2a1029bc-639b-4d72-921c-dc7aaf887030")
-	)
-	(global_label "GND"
-		(shape passive)
-		(at 180.34 135.89 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "58df9c8c-5145-4b8b-bf17-867737ceffe7")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 180.34 135.89 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
 				)
 			)
 		)
@@ -1677,1075 +3718,6 @@
 			)
 		)
 	)
-	(wire
-		(pts
-			(xy 259.08 123.19) (xy 256.54 123.19)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "927bf60d-d2f7-46ff-bc0d-4d2edfe01ece")
-	)
-	(label "U11_SCL"
-		(at 256.54 123.19 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "f4f78711-4138-4fc4-934f-a0e75d8794e0")
-	)
-	(wire
-		(pts
-			(xy 259.08 118.11) (xy 256.54 118.11)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "b9c7b7e2-2db4-4169-82fa-60b7e8091670")
-	)
-	(label "U11_SDA"
-		(at 256.54 118.11 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "10d9d0de-9f14-45e1-a13e-232d162e1d87")
-	)
-	(wire
-		(pts
-			(xy 259.08 120.65) (xy 256.54 120.65)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "974a09cf-527e-40bf-836d-d96b10d23c75")
-	)
-	(label "U11_SA0"
-		(at 256.54 120.65 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "c91583f0-3cf8-4b87-999b-a2e0eb2239ba")
-	)
-	(wire
-		(pts
-			(xy 259.08 115.57) (xy 256.54 115.57)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a5989675-bbfd-4b5a-a601-3fc1a2c35d87")
-	)
-	(label "+3V3_SNS"
-		(at 256.54 115.57 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "027cc21d-dfd5-4d5d-a930-8978bba0fce1")
-	)
-	(wire
-		(pts
-			(xy 281.94 118.11) (xy 284.48 118.11)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "3b743fa1-4d57-4283-bbb0-0e9a31e39530")
-	)
-	(global_label "ACC_INT1"
-		(shape passive)
-		(at 284.48 118.11 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "7b0f278d-5e20-4c09-9445-e2208627cf72")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 284.48 118.11 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 281.94 120.65) (xy 284.48 120.65)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "95bc8d76-a2e9-46c2-841a-71da3c66821c")
-	)
-	(global_label "ACC_INT2"
-		(shape passive)
-		(at 284.48 120.65 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "76092975-4f05-4972-ba8b-c0fb5711416b")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 284.48 120.65 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 269.24 107.95) (xy 269.24 105.41)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "8fce8a4c-aea7-4fda-8a7a-02a2b5704c9a")
-	)
-	(wire
-		(pts
-			(xy 271.78 107.95) (xy 271.78 105.41)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "8bb31fc7-1eaf-46bf-85dc-4e1162b1e5ec")
-	)
-	(wire
-		(pts
-			(xy 269.24 105.41) (xy 271.78 105.41)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "d2b3aeb1-a5fb-4d7f-8a3f-d2eac39385d4")
-	)
-	(label "+3V3_SNS"
-		(at 269.24 105.41 90)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "fceb7b89-3e1e-4fc5-8e72-ce2d3b2360d2")
-	)
-	(wire
-		(pts
-			(xy 269.24 133.35) (xy 269.24 135.89)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "aef80d8a-0470-44e9-9870-35170fff3f59")
-	)
-	(global_label "GND"
-		(shape passive)
-		(at 269.24 135.89 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "27d9d97a-7ba2-4f48-9d60-0a9a1b6e201d")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 269.24 135.89 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 60.96 172.72 90)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "ad765280-255b-4b79-b805-ed23550e4a2c")
-		(property "Reference" "R411"
-			(at 60.96 170.18 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "0R"
-			(at 60.96 175.26 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 60.96 172.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 60.96 172.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Sensor-rail current-measure break point: lift to put an ammeter between +3V3 and +3V3_SNS (U10+U11 together, ~0.3 mA LIS3MDL ultra-high-res @20Hz per DocID024204 Table 5), or to isolate both sensors from the rail during rework."
-			(at 60.96 172.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "4f52f1e4-a78b-4f8e-a3f8-e7008023103c")
-		)
-		(pin "2"
-			(uuid "bf0fd1d7-57ab-4115-9e0f-6670bab6782c")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/a1c2e3f4-5b6d-4708-9a1b-2c3d4e5f6071"
-					(reference "R411")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 57.15 172.72) (xy 54.61 172.72)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "b73eb1f1-2dd0-49cd-a40a-9d506621f974")
-	)
-	(global_label "+3V3"
-		(shape passive)
-		(at 54.61 172.72 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "d01cda4b-a803-4021-9c6b-ceed2860079f")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 54.61 172.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 64.77 172.72) (xy 67.31 172.72)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "65215896-63a5-489e-a9b1-833ced65f8e8")
-	)
-	(label "+3V3_SNS"
-		(at 67.31 172.72 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "433df969-acb3-466a-8a94-c70c7ca2d3c4")
-	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 78.74 165.1 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "456692aa-88ed-4df0-ba76-d330432ee7a0")
-		(property "Reference" "TP121"
-			(at 81.28 161.29 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "+3V3_SNS"
-			(at 81.28 158.75 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 78.74 165.1 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 78.74 165.1 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Local sensor rail after the R411 break. Expect = +3V3 (TP1) with R411 fitted; 0V with R411 lifted."
-			(at 78.74 165.1 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "27a4657a-2990-4621-ba23-f3ce3bfa16b7")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/a1c2e3f4-5b6d-4708-9a1b-2c3d4e5f6071"
-					(reference "TP121")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 78.74 165.1) (xy 78.74 172.72)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "91561659-ba7c-4539-beaf-c49bbcfee928")
-	)
-	(label "+3V3_SNS"
-		(at 78.74 172.72 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "6c68881a-1203-49e8-aa31-823a65f47e21")
-	)
-	(symbol
-		(lib_id "power:PWR_FLAG")
-		(at 91.44 165.1 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom no)
-		(on_board no)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "1761d6e0-f086-4993-ba6e-a1f00a9114a7")
-		(property "Reference" "#FLG400"
-			(at 93.98 161.29 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "PWR_FLAG"
-			(at 93.98 158.75 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" ""
-			(at 91.44 165.1 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 91.44 165.1 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "ERC only: +3V3_SNS is driven from +3V3 through R411 (passive), so ERC needs to be told it is a supplied rail."
-			(at 91.44 165.1 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "f4ba874b-1295-4a20-a58b-05a5b5e1c20f")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/a1c2e3f4-5b6d-4708-9a1b-2c3d4e5f6071"
-					(reference "#FLG400")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 91.44 165.1) (xy 91.44 172.72)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "ff4238da-0a01-43e0-8f1e-c601314dcc31")
-	)
-	(label "+3V3_SNS"
-		(at 91.44 172.72 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "9de4ee38-0c4f-48c3-bd76-3e170d68f5c5")
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 124.46 165.1 90)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "5afa4619-19cf-4320-9afc-199578327bf2")
-		(property "Reference" "R407"
-			(at 124.46 162.56 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "0R"
-			(at 124.46 167.64 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 124.46 165.1 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 124.46 165.1 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "I2C isolation link for U10 LIS3MDL SCL: lift to take this device off the shared bus (MAX17048 + LIS3MDL + LIS2DH) when a stuck/NAKing part needs to be found. Pull-ups are NOT here -- R37/R38 on connectivity."
-			(at 124.46 165.1 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "9da2f505-b9b7-4312-bc34-943e879d1111")
-		)
-		(pin "2"
-			(uuid "31c1dde2-9a9a-47b9-a34a-61251af7a8a0")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/a1c2e3f4-5b6d-4708-9a1b-2c3d4e5f6071"
-					(reference "R407")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 120.65 165.1) (xy 118.11 165.1)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "79d26ace-8aee-4dd7-a94b-874900b36c45")
-	)
-	(global_label "I2C_SCL"
-		(shape passive)
-		(at 118.11 165.1 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "8100d0d8-f21b-47a2-a76a-68ba3076526c")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 118.11 165.1 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 128.27 165.1) (xy 130.81 165.1)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "0312faf9-b078-496e-a1cf-05a00d144007")
-	)
-	(label "U10_SCL"
-		(at 130.81 165.1 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "ae0e44cb-32ad-4cff-bf0e-0b033c3abb05")
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 124.46 175.26 90)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "2147d475-24ee-4d93-894b-b140c7b17560")
-		(property "Reference" "R408"
-			(at 124.46 172.72 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "0R"
-			(at 124.46 177.8 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 124.46 175.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 124.46 175.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "I2C isolation link for U10 LIS3MDL SDA: lift to take this device off the shared bus (MAX17048 + LIS3MDL + LIS2DH) when a stuck/NAKing part needs to be found. Pull-ups are NOT here -- R37/R38 on connectivity."
-			(at 124.46 175.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "cb721dc5-c681-4677-875a-1c1dbf5bfbca")
-		)
-		(pin "2"
-			(uuid "97735880-a0ef-4671-8a72-116f1bf439ee")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/a1c2e3f4-5b6d-4708-9a1b-2c3d4e5f6071"
-					(reference "R408")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 120.65 175.26) (xy 118.11 175.26)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "162018eb-fffb-4c51-987e-97fccb20ceba")
-	)
-	(global_label "I2C_SDA"
-		(shape passive)
-		(at 118.11 175.26 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "69d4bcee-0c3b-416f-a260-3f24539a18ef")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 118.11 175.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 128.27 175.26) (xy 130.81 175.26)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "d376e67a-2f05-4ef5-8b0f-a7f944c34bec")
-	)
-	(label "U10_SDA"
-		(at 130.81 175.26 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "320cc25a-19d5-4874-9f86-dce955b4c50e")
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 124.46 185.42 90)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "1dfa12c6-35e7-4aee-b98e-9af4c2c67633")
-		(property "Reference" "R409"
-			(at 124.46 182.88 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "0R"
-			(at 124.46 187.96 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 124.46 185.42 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 124.46 185.42 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "I2C isolation link for U11 LIS2DH SCL: lift to take this device off the shared bus (MAX17048 + LIS3MDL + LIS2DH) when a stuck/NAKing part needs to be found. Pull-ups are NOT here -- R37/R38 on connectivity."
-			(at 124.46 185.42 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "47fbe61f-38fc-418c-b989-5d1268d1c897")
-		)
-		(pin "2"
-			(uuid "23577436-ea5c-4dce-9ec9-0839f5528f7f")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/a1c2e3f4-5b6d-4708-9a1b-2c3d4e5f6071"
-					(reference "R409")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 120.65 185.42) (xy 118.11 185.42)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "8d56b52b-54f6-4cec-8f09-7e07ac110ab9")
-	)
-	(global_label "I2C_SCL"
-		(shape passive)
-		(at 118.11 185.42 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "106feaf6-8f7e-4d18-8fde-49f36e045bd8")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 118.11 185.42 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 128.27 185.42) (xy 130.81 185.42)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "32042e9b-660a-447e-b950-0d05779665e5")
-	)
-	(label "U11_SCL"
-		(at 130.81 185.42 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "0dae6597-84e9-4f25-a98d-0af7349d97f0")
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 124.46 195.58 90)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "da96613c-8360-4314-af11-f2e960b9abff")
-		(property "Reference" "R410"
-			(at 124.46 193.04 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "0R"
-			(at 124.46 198.12 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 124.46 195.58 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 124.46 195.58 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "I2C isolation link for U11 LIS2DH SDA: lift to take this device off the shared bus (MAX17048 + LIS3MDL + LIS2DH) when a stuck/NAKing part needs to be found. Pull-ups are NOT here -- R37/R38 on connectivity."
-			(at 124.46 195.58 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "e5adda4b-102c-4a0a-b13f-5d04c292ddcc")
-		)
-		(pin "2"
-			(uuid "15fb8ec1-5563-4b93-b528-a0f95c9aa7d4")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/a1c2e3f4-5b6d-4708-9a1b-2c3d4e5f6071"
-					(reference "R410")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 120.65 195.58) (xy 118.11 195.58)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "3b3e4d25-d93c-4a7f-b292-3e0a5e14b81b")
-	)
-	(global_label "I2C_SDA"
-		(shape passive)
-		(at 118.11 195.58 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "89ae0e83-dc84-408f-9403-28d367dbad2d")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 118.11 195.58 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 128.27 195.58) (xy 130.81 195.58)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "362219d6-03d1-4c2d-8cb3-d11901d25772")
-	)
-	(label "U11_SDA"
-		(at 130.81 195.58 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "ea962ec3-d681-4a09-a869-607e697981a5")
-	)
 	(symbol
 		(lib_id "Device:C")
 		(at 175.26 175.26 0)
@@ -2823,457 +3795,6 @@
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/a1c2e3f4-5b6d-4708-9a1b-2c3d4e5f6071"
 					(reference "C35")
 					(unit 1)
-				)
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 175.26 171.45) (xy 175.26 168.91)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "4ef3a4f8-20ca-4625-a8e4-2a2123e160eb")
-	)
-	(label "+3V3_SNS"
-		(at 175.26 168.91 90)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "5673ab15-93e2-4ca9-aa21-c26a05801b46")
-	)
-	(wire
-		(pts
-			(xy 175.26 179.07) (xy 175.26 181.61)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "df2d8d6d-a661-4f3a-8d29-c474d9f8c15d")
-	)
-	(global_label "GND"
-		(shape passive)
-		(at 175.26 181.61 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "7847a444-6b2f-4b0f-b1db-9cbb75930e24")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 175.26 181.61 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:C")
-		(at 187.96 175.26 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "69e8480a-3b45-4c96-ae5c-d802363364fa")
-		(property "Reference" "C401"
-			(at 190.5 173.99 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "1uF"
-			(at 190.5 176.53 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 187.96 175.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 187.96 175.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "U10 LIS3MDL Vdd low-frequency cap = ST C2 1uF (sec 4.1 says electrolytic; X5R/X7R ceramic 0603 is the practical equivalent here)."
-			(at 187.96 175.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "c0ab4f21-3fd5-4969-9c48-02166102e4b8")
-		)
-		(pin "2"
-			(uuid "358b091e-9b42-4c56-8336-56b49fe130e3")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/a1c2e3f4-5b6d-4708-9a1b-2c3d4e5f6071"
-					(reference "C401")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 187.96 171.45) (xy 187.96 168.91)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "477ae669-03d7-468b-912d-5bd6dc22f072")
-	)
-	(label "+3V3_SNS"
-		(at 187.96 168.91 90)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "e817e475-aa77-4092-a0bf-8d7c32791e03")
-	)
-	(wire
-		(pts
-			(xy 187.96 179.07) (xy 187.96 181.61)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "5053a538-820d-4b48-ac63-c97a0ad9592d")
-	)
-	(global_label "GND"
-		(shape passive)
-		(at 187.96 181.61 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "e0f57da0-dab3-44b9-83b7-b1c4297e2d41")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 187.96 181.61 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:C")
-		(at 200.66 175.26 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "288ef448-7907-4c6e-81db-d848dd606e60")
-		(property "Reference" "C402"
-			(at 203.2 173.99 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "100nF"
-			(at 203.2 176.53 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 200.66 175.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 200.66 175.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "U10 Vdd_IO (pin 6). NOT in ST Figure 5 (Vdd_IO shares the Vdd node there); added as cheap insurance since pins 5/6 sit on opposite package edges. DNP-able."
-			(at 200.66 175.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "b156ae78-c873-4a6b-adf7-e0243f39470d")
-		)
-		(pin "2"
-			(uuid "d6c694cb-1e94-4549-9488-0a47bedc7c1d")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/a1c2e3f4-5b6d-4708-9a1b-2c3d4e5f6071"
-					(reference "C402")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 200.66 171.45) (xy 200.66 168.91)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "028c7945-2baf-4d0a-95aa-32efa70f6ddd")
-	)
-	(label "+3V3_SNS"
-		(at 200.66 168.91 90)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "13092eb7-92c2-4f14-b6f0-723dd7f43276")
-	)
-	(wire
-		(pts
-			(xy 200.66 179.07) (xy 200.66 181.61)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "8a052f97-a461-47ee-9cc1-c0798e820688")
-	)
-	(global_label "GND"
-		(shape passive)
-		(at 200.66 181.61 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "dc73aba0-1257-4df0-9790-c6d9e055b9e6")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 200.66 181.61 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:C")
-		(at 213.36 175.26 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "23cde137-82ad-4317-9873-34c0e20bc60e")
-		(property "Reference" "C400"
-			(at 215.9 173.99 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "100nF"
-			(at 215.9 176.53 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 213.36 175.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 213.36 175.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "U10 LIS3MDL C1 (pin 4) to GND -- REQUIRED by the part, value fixed by ST: C1 = 100nF (DocID024204 Rev 4 Table 2 and sec 4.1)."
-			(at 213.36 175.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "5bb0dfc2-26ed-4256-a224-a560d09ab7fa")
-		)
-		(pin "2"
-			(uuid "9cf8f37c-a2f4-4238-8d3d-6f595664f9fd")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/a1c2e3f4-5b6d-4708-9a1b-2c3d4e5f6071"
-					(reference "C400")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 213.36 171.45) (xy 213.36 168.91)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "3d786bd3-bc01-4caa-8f27-4c442749caab")
-	)
-	(label "U10_C1"
-		(at 213.36 168.91 90)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "756e339a-45ab-402a-8647-4372f3657197")
-	)
-	(wire
-		(pts
-			(xy 213.36 179.07) (xy 213.36 181.61)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "e6184687-eeab-4255-aef8-1009e14c81a5")
-	)
-	(global_label "GND"
-		(shape passive)
-		(at 213.36 181.61 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "5a332798-9ad7-44d4-b9fd-04b26f826489")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 213.36 181.61 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
 				)
 			)
 		)
@@ -3359,61 +3880,9 @@
 			)
 		)
 	)
-	(wire
-		(pts
-			(xy 226.06 171.45) (xy 226.06 168.91)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a9519c8d-ea80-4830-be19-7dac5aff6909")
-	)
-	(label "+3V3_SNS"
-		(at 226.06 168.91 90)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "c86b959e-940a-46e6-90d9-ffeadb38cbb6")
-	)
-	(wire
-		(pts
-			(xy 226.06 179.07) (xy 226.06 181.61)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "1147085f-4a0d-4434-a55a-b4a80d348219")
-	)
-	(global_label "GND"
-		(shape passive)
-		(at 226.06 181.61 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "4ea4f580-9c56-4983-98d2-7e45d3c3d4c5")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 226.06 181.61 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
 	(symbol
-		(lib_id "Device:C")
-		(at 238.76 175.26 0)
+		(lib_id "Device:R")
+		(at 60.96 172.72 90)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -3421,31 +3890,29 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "fe45df05-f85a-4c79-a48d-891fdb525c40")
-		(property "Reference" "C403"
-			(at 241.3 173.99 0)
+		(uuid "ad765280-255b-4b79-b805-ed23550e4a2c")
+		(property "Reference" "R411"
+			(at 60.96 170.18 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
 			)
 		)
-		(property "Value" "10uF"
-			(at 241.3 176.53 0)
+		(property "Value" "0R"
+			(at 60.96 175.26 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 238.76 175.26 0)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 60.96 172.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3456,7 +3923,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 238.76 175.26 0)
+			(at 60.96 172.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3466,8 +3933,8 @@
 				)
 			)
 		)
-		(property "Description" "U11 LIS2DH Vdd bulk: ST asks for 10uF aluminium near pin 8 (sec 3); X5R ceramic 0603 used (check DC-bias derating at 3.3V when picking the MPN)."
-			(at 238.76 175.26 0)
+		(property "Description" "Sensor-rail current-measure break point: lift to put an ammeter between +3V3 and +3V3_SNS (U10+U11 together, ~0.3 mA LIS3MDL ultra-high-res @20Hz per DocID024204 Table 5), or to isolate both sensors from the rail during rework."
+			(at 60.96 172.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3478,68 +3945,16 @@
 			)
 		)
 		(pin "1"
-			(uuid "4a39888e-c957-47a9-be08-67e39c3b2c40")
+			(uuid "4f52f1e4-a78b-4f8e-a3f8-e7008023103c")
 		)
 		(pin "2"
-			(uuid "a282db51-e066-495f-8c36-80fbad02e8be")
+			(uuid "bf0fd1d7-57ab-4115-9e0f-6670bab6782c")
 		)
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/a1c2e3f4-5b6d-4708-9a1b-2c3d4e5f6071"
-					(reference "C403")
+					(reference "R411")
 					(unit 1)
-				)
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 238.76 171.45) (xy 238.76 168.91)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a84819fc-80f5-4729-8f95-aec228880013")
-	)
-	(label "+3V3_SNS"
-		(at 238.76 168.91 90)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "ccfb4ff1-8ed3-4537-9969-84a417dbc882")
-	)
-	(wire
-		(pts
-			(xy 238.76 179.07) (xy 238.76 181.61)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "8a3d6f3e-3771-4508-adc0-1022a9d8e0f0")
-	)
-	(global_label "GND"
-		(shape passive)
-		(at 238.76 181.61 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "9846405c-8d1a-48e9-9b4d-f9fc3fbb24c4")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 238.76 181.61 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
 				)
 			)
 		)
@@ -3625,162 +4040,9 @@
 			)
 		)
 	)
-	(wire
-		(pts
-			(xy 251.46 171.45) (xy 251.46 168.91)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "ca74d73c-afcd-42f5-bd57-51ccead4f0e4")
-	)
-	(label "+3V3_SNS"
-		(at 251.46 168.91 90)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "f3926232-f75d-48b5-94b8-ada808020679")
-	)
-	(wire
-		(pts
-			(xy 251.46 179.07) (xy 251.46 181.61)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "d669da9a-6a19-498c-b439-1e9c2fb5e5d6")
-	)
-	(global_label "GND"
-		(shape passive)
-		(at 251.46 181.61 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "f835b4cb-42be-437b-b647-fe51c45319bf")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 251.46 181.61 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
 	(symbol
 		(lib_id "Device:R")
-		(at 279.4 172.72 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp yes)
-		(uuid "0d7b584e-c952-4114-948a-694916c9dcc9")
-		(property "Reference" "R413"
-			(at 281.94 171.45 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "DNP"
-			(at 281.94 173.99 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 279.4 172.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 279.4 172.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "DNP alternate: U10 SA1 to Vdd_IO -> LIS3MDL address 0x1E (DocID024204 sec 5.1.1). Fit only with R412 removed."
-			(at 279.4 172.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "3fb6a4fa-885a-4e2f-9fdd-453218269289")
-		)
-		(pin "2"
-			(uuid "8e2b24a1-2995-417f-9ea8-f588d3ff8a41")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/a1c2e3f4-5b6d-4708-9a1b-2c3d4e5f6071"
-					(reference "R413")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 279.4 168.91) (xy 279.4 166.37)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "119c4b1e-5c7d-4e06-a9f7-3cf14f74d002")
-	)
-	(label "+3V3_SNS"
-		(at 279.4 166.37 90)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "e2d10c84-d486-4baf-8e20-4898af536cb5")
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 279.4 182.88 0)
+		(at 124.46 195.58 90)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -3788,31 +4050,29 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "50f5cfb4-f214-4f9c-9d51-ac2a74d33277")
-		(property "Reference" "R412"
-			(at 281.94 181.61 0)
+		(uuid "da96613c-8360-4314-af11-f2e960b9abff")
+		(property "Reference" "R410"
+			(at 124.46 193.04 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
 			)
 		)
 		(property "Value" "0R"
-			(at 281.94 184.15 0)
+			(at 124.46 198.12 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 279.4 182.88 0)
+			(at 124.46 195.58 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3823,7 +4083,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 279.4 182.88 0)
+			(at 124.46 195.58 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3833,8 +4093,8 @@
 				)
 			)
 		)
-		(property "Description" "U10 LIS3MDL SDO/SA1 to GND -> address 0x1C. SA1 must be tied to Vdd_IO or GND in I2C mode (sec 4.1), never left floating."
-			(at 279.4 182.88 0)
+		(property "Description" "I2C isolation link for U11 LIS2DH SDA: lift to take this device off the shared bus (MAX17048 + LIS3MDL + LIS2DH) when a stuck/NAKing part needs to be found. Pull-ups are NOT here -- R37/R38 on connectivity."
+			(at 124.46 195.58 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3845,87 +4105,19 @@
 			)
 		)
 		(pin "1"
-			(uuid "99242c65-f12c-47a5-897b-e0f6d31ab33d")
+			(uuid "e5adda4b-102c-4a0a-b13f-5d04c292ddcc")
 		)
 		(pin "2"
-			(uuid "4c4dd7ff-6874-4e03-a473-54d528a68bb0")
+			(uuid "15fb8ec1-5563-4b93-b528-a0f95c9aa7d4")
 		)
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/a1c2e3f4-5b6d-4708-9a1b-2c3d4e5f6071"
-					(reference "R412")
+					(reference "R410")
 					(unit 1)
 				)
 			)
 		)
-	)
-	(wire
-		(pts
-			(xy 279.4 186.69) (xy 279.4 189.23)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "4c510d26-759e-4f29-871e-77c73cdc81a1")
-	)
-	(global_label "GND"
-		(shape passive)
-		(at 279.4 189.23 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "77bac986-c201-4aa2-826c-e138b7140569")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 279.4 189.23 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 279.4 176.53) (xy 279.4 179.07)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "8a863b5b-8cd4-4fe1-8586-214bb3853860")
-	)
-	(wire
-		(pts
-			(xy 279.4 179.07) (xy 276.86 179.07)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "24e92634-91c4-4b54-ac64-40fb50e94ecd")
-	)
-	(junction
-		(at 279.4 179.07)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "991ac701-031b-4d2b-a3cb-453c46bee99f")
-	)
-	(label "U10_SA1"
-		(at 276.86 179.07 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "77effe6b-36f2-4988-9bf2-6a5ecefe0922")
 	)
 	(symbol
 		(lib_id "Device:R")
@@ -4008,39 +4200,19 @@
 			)
 		)
 	)
-	(wire
-		(pts
-			(xy 309.88 168.91) (xy 309.88 166.37)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "1ed10a8a-1e10-4270-8cd1-ccd6a77d26a7")
-	)
-	(label "+3V3_SNS"
-		(at 309.88 166.37 90)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "af76aa44-dde9-4ed4-9a0f-d483147d95d1")
-	)
 	(symbol
-		(lib_id "Device:R")
-		(at 309.88 182.88 0)
+		(lib_id "Device:C")
+		(at 238.76 175.26 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(in_pos_files yes)
-		(dnp yes)
-		(uuid "8a04f822-9ed4-4f8f-9be2-30931f2f64dc")
-		(property "Reference" "R415"
-			(at 312.42 181.61 0)
+		(dnp no)
+		(uuid "fe45df05-f85a-4c79-a48d-891fdb525c40")
+		(property "Reference" "C403"
+			(at 241.3 173.99 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -4050,8 +4222,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "DNP"
-			(at 312.42 184.15 0)
+		(property "Value" "10uF"
+			(at 241.3 176.53 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -4061,8 +4233,8 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 309.88 182.88 0)
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+			(at 238.76 175.26 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4073,7 +4245,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 309.88 182.88 0)
+			(at 238.76 175.26 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4083,8 +4255,8 @@
 				)
 			)
 		)
-		(property "Description" "DNP alternate: U11 SA0 to GND -> LIS2DH address 0x18. Fit only with R414 removed."
-			(at 309.88 182.88 0)
+		(property "Description" "U11 LIS2DH Vdd bulk: ST asks for 10uF aluminium near pin 8 (sec 3); X5R ceramic 0603 used (check DC-bias derating at 3.3V when picking the MPN)."
+			(at 238.76 175.26 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4095,196 +4267,23 @@
 			)
 		)
 		(pin "1"
-			(uuid "6e7ac66c-d43f-4434-8b0e-05ae804c1fb1")
+			(uuid "4a39888e-c957-47a9-be08-67e39c3b2c40")
 		)
 		(pin "2"
-			(uuid "a7e44179-4db7-4ddb-a3ad-5cae5c7212c3")
+			(uuid "a282db51-e066-495f-8c36-80fbad02e8be")
 		)
 		(instances
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/a1c2e3f4-5b6d-4708-9a1b-2c3d4e5f6071"
-					(reference "R415")
+					(reference "C403")
 					(unit 1)
 				)
 			)
 		)
-	)
-	(wire
-		(pts
-			(xy 309.88 186.69) (xy 309.88 189.23)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a264d396-3c82-47dd-90e6-8edc793fb6e4")
-	)
-	(global_label "GND"
-		(shape passive)
-		(at 309.88 189.23 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "c28c05e9-15e1-455f-99e8-3a05a4bc2dd0")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 309.88 189.23 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 309.88 176.53) (xy 309.88 179.07)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a4917122-f57f-4400-8488-c2fe9ea63a55")
-	)
-	(wire
-		(pts
-			(xy 309.88 179.07) (xy 307.34 179.07)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "d4786326-a16b-4af1-bb15-0362c60acab9")
-	)
-	(junction
-		(at 309.88 179.07)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "da7b6d87-0ea3-43c5-94cd-5cbf37ed9c7a")
-	)
-	(label "U11_SA0"
-		(at 307.34 179.07 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "f37d86fe-c701-41fd-a8c3-d6e78af10a2f")
-	)
-	(text "Orientation -- heading (LIS3MDL) + tilt (LIS2DH)"
-		(exclude_from_sim no)
-		(at 20.32 15.24 0)
-		(effects
-			(font
-				(size 2.5 2.5)
-				(bold yes)
-			)
-			(justify left top)
-		)
-		(uuid "d5294970-05c1-4c8c-9919-fc120c20f55b")
-	)
-	(text "WHY THIS SHEET EXISTS. The UWB array reports a tag RELATIVE to its own antenna frame.\nGeoreferencing needs WHERE the station is (GNSS) and WHICH WAY it faces (heading).\nGNSS now comes from the nRF9151 on the connectivity sheet (MAX-M10S U9 removed\n2026-11-17, with its C32/C33/C34, which decoupled only U9). Heading stays here:\n  U10 LIS3MDL magnetometer -> heading\n  U11 LIS2DH accelerometer -> pitch/roll for tilt-compensating U10, and INT1 knock /\n      move detect (a moved station silently invalidates both fix and heading).\nPosition without heading gives a circle of tag locations, not a point -- do not drop U10."
-		(exclude_from_sim no)
-		(at 20.32 22.86 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left top)
-		)
-		(uuid "e5307542-914b-4264-a838-4c83638ed62c")
-	)
-	(text "I2C BUS (shared with MAX17048 on power_bms; pull-ups R37/R38 2.2k on connectivity):\n  MAX17048  0x36  fixed       (19-6171 Rev 7, \"Slave Address\": 0110110b)\n  LIS3MDL   0x1C  SA1 = GND   (DocID024204 Rev 4 sec 5.1.1; 0x1E with SA1 high)\n  LIS2DH    0x19  SA0 = VddIO (Doc ID 022516 Rev 1 sec 5.1.1; 0x18 with SA0 low)\nNo collisions in either strap position. Both CS pins tied to Vdd_IO = I2C mode, as both\ndatasheets require (LIS3MDL sec 5.1 \"CS line must be tied high\"; LIS2DH sec 3).\nREWORK: R407-R410 isolate each sensor from SCL/SDA; R412-R415 re-strap addresses;\nR411 is the sensor-rail current break (TP121 on +3V3_SNS).\nINT/DRDY outputs are push-pull by default (no pull-ups placed); both sensors run\nVdd = Vdd_IO = 3.3V (LIS3MDL Vdd 1.9-3.6V, LIS2DH 1.71-3.6V, Vdd_IO <= Vdd+0.1V,\nTable 5 of each datasheet)."
-		(exclude_from_sim no)
-		(at 20.32 50.8 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left top)
-		)
-		(uuid "19a11961-11df-4c4a-aa4a-dcf521c80e7c")
-	)
-	(text "MAGNETOMETER LAYOUT KEEP-OUT (U10) -- this decides heading accuracy, not the part.\nST: \"Keep currents higher than 10 mA a few millimeters away from the sensor IC\"\n(DocID024204 Rev 4 sec 4.3). This board has three much bigger sources:\n  1. BUCK INDUCTOR (TPS62A02 L1, regulation sheet): switching AC field + DC bias.\n     Keep U10 >= 25 mm from L1 and its SW node loop; never on the opposite side under it.\n  2. LTE ANTENNA FEED (nRF9151, connectivity): up to ~23 dBm TX and the PA supply\n     current bursts on +VBAT_LTE. Keep U10 >= 20 mm from the LTE feed / matching network\n     and from the +VBAT_LTE trace and its bulk caps.\n  3. BATTERY CURRENT LOOPS (power_bms): cell, AO3401A Q1, MCP73871 VBAT/OUT and\n     charge paths carry 0.5-1 A. Keep U10 out of the loop area; route those\n     out-and-return pairs tightly so their fields cancel.\nAlso: no steel near U10 (screws, standoffs, SMA bodies are often nickel-plated brass,\nwhich is fine; plated steel is not), no ground-plane splits that force return\ncurrents under it. U11 sits beside U10 -- tilt compensation assumes the two share\none rigid frame, and its axes must be documented relative to U10 in firmware.\nHard/soft-iron calibration is per build and IN the enclosure (decisions.md, Open).\nDistances above are engineering guidance, not ST figures -- verify by logging\nheading with the LTE modem and charger cycling at bring-up."
-		(exclude_from_sim no)
-		(at 20.32 200.66 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left top)
-		)
-		(uuid "e750421d-ff4d-4dbe-af85-f42a3dd75419")
-	)
-	(text "VERIFIED vs NOT. Verified from the real PDFs (pdftotext -raw and -layout): pinouts\n(LIS3MDL Table 2, LIS2DH Table 2 -- both match the KiCad stock symbols), I2C\naddresses, CS/SDO strapping rules, C1 = 100nF, decoupling values, supply ranges.\nLIS2DH copy read: Doc ID 022516 Rev 1 (Nov 2011) via a distributor mirror -- ST's\nsite refused the download. NOT verified: LIS2DH current lifecycle status\n(one distributor lists it as no longer manufactured -- check before ordering),\nand the exact capacitor MPNs."
-		(exclude_from_sim no)
-		(at 200.66 200.66 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left top)
-		)
-		(uuid "614d53e8-9e20-4b1d-a900-953d5b48270c")
-	)
-	(text "Sensor rail break + test pad"
-		(exclude_from_sim no)
-		(at 40.64 149.86 0)
-		(effects
-			(font
-				(size 1.5 1.5)
-				(bold yes)
-			)
-			(justify left top)
-		)
-		(uuid "4905094c-ed56-461f-a1e5-a530a45b1cb6")
-	)
-	(text "Per-device I2C isolation (0R)"
-		(exclude_from_sim no)
-		(at 109.22 149.86 0)
-		(effects
-			(font
-				(size 1.5 1.5)
-				(bold yes)
-			)
-			(justify left top)
-		)
-		(uuid "9a2695ed-1c51-4d3c-b2cb-fbf5eea4e67d")
-	)
-	(text "Decoupling (values from ST)"
-		(exclude_from_sim no)
-		(at 172.72 149.86 0)
-		(effects
-			(font
-				(size 1.5 1.5)
-				(bold yes)
-			)
-			(justify left top)
-		)
-		(uuid "7b30bd1b-638a-4df7-86cd-98a532bf0da3")
-	)
-	(text "Address straps (fitted / DNP alternate)"
-		(exclude_from_sim no)
-		(at 271.78 149.86 0)
-		(effects
-			(font
-				(size 1.5 1.5)
-				(bold yes)
-			)
-			(justify left top)
-		)
-		(uuid "223ae0ff-1edf-49f6-ad42-2c435c76ce8a")
 	)
 	(sheet_instances
 		(path "/"
 			(page "1")
 		)
 	)
-	(embedded_fonts no)
 )

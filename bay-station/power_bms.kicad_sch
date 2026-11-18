@@ -690,6 +690,129 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "Connector:TestPoint"
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 0.762)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "TP"
+				(at 0 6.858 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "TestPoint"
+				(at 0 5.08 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 5.08 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 5.08 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "test point"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "test point tp"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "Pin* Test*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "TestPoint_0_1"
+				(circle
+					(center 0 3.302)
+					(radius 0.762)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "TestPoint_1_1"
+				(pin passive line
+					(at 0 0 90)
+					(length 2.54)
+					(name "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "Connector:USB_C_Receptacle_PowerOnly_6P"
 			(pin_names
 				(offset 1.016)
@@ -2951,129 +3074,17 @@
 			)
 			(embedded_fonts no)
 		)
-	(symbol "Connector:TestPoint"
-			(pin_numbers
-				(hide yes)
+	)
+	(text "Test pads TP414-TP417 and the THERM window (2026-11-17, power agent)\n\nTH1 sizing, MCP73871 DS20002090E Sec 1.0: ITHERM 47/50/53 uA,\nVT1 1.20/1.24/1.26 V, VT2 0.23/0.25/0.27 V. Charging is suspended when\nR_NTC > VT1/ITHERM = 22.6-26.8k (cold) or < VT2/ITHERM = 4.3-5.7k (hot).\n10k NTC, B25/50 = 3380 K (e.g. Murata NCP18XH103F03RB): cold cut-off\n+1.1 to +5.0 C, hot cut-off +40 to +49 C. Cold limit is always above 0 C,\nso NO trim resistor is needed (B = 3435 K shifts both by < 0.5 C).\nThe NTC must be thermally bonded to the CELL (use a 3-wire pack's own\n10k NTC), not left on the PCB.\n\nI2C: FG_SCL/FG_SDA renamed I2C_SCL/I2C_SDA per docs/net-contract.md."
+		(exclude_from_sim no)
+		(at 279.4 223.52 0)
+		(effects
+			(font
+				(size 1.27 1.27)
 			)
-			(pin_names
-				(offset 0.762)
-				(hide yes)
-			)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(in_pos_files yes)
-			(duplicate_pin_numbers_are_jumpers no)
-			(property "Reference" "TP"
-				(at 0 6.858 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Value" "TestPoint"
-				(at 0 5.08 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Footprint" ""
-				(at 5.08 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Datasheet" ""
-				(at 5.08 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Description" "test point"
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "ki_keywords" "test point tp"
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "ki_fp_filters" "Pin* Test*"
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(symbol "TestPoint_0_1"
-				(circle
-					(center 0 3.302)
-					(radius 0.762)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-			)
-			(symbol "TestPoint_1_1"
-				(pin passive line
-					(at 0 0 90)
-					(length 2.54)
-					(name "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-			(embedded_fonts no)
+			(justify left top)
 		)
+		(uuid "a9508d75-e42c-432f-ae93-9465da90ee19")
 	)
 	(wire
 		(pts
@@ -3347,6 +3358,16 @@
 	)
 	(wire
 		(pts
+			(xy 279.4 208.28) (xy 279.4 210.82)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "867c2484-a7ba-42e9-a20e-71a17a03ef6b")
+	)
+	(wire
+		(pts
 			(xy 289.56 81.28) (xy 290.83 81.28)
 		)
 		(stroke
@@ -3424,6 +3445,26 @@
 			(type default)
 		)
 		(uuid "9250c3cf-772f-413d-943e-c40aac594e1b")
+	)
+	(wire
+		(pts
+			(xy 292.1 208.28) (xy 292.1 210.82)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "975e86ca-ce2a-4db9-8561-b545ac551d1e")
+	)
+	(wire
+		(pts
+			(xy 317.5 208.28) (xy 317.5 210.82)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9e4eda9f-6aaf-4f9d-b7a2-ff7e85b76b31")
 	)
 	(wire
 		(pts
@@ -3614,6 +3655,16 @@
 			(type default)
 		)
 		(uuid "e421ac66-537d-4844-b173-de38e03c9a89")
+	)
+	(wire
+		(pts
+			(xy 304.8 208.28) (xy 304.8 210.82)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e5565da4-3959-461f-b31b-f561ecd81e5c")
 	)
 	(wire
 		(pts
@@ -4333,6 +4384,28 @@
 			)
 		)
 	)
+	(global_label "BATT_RAW"
+		(shape passive)
+		(at 317.5 210.82 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "4d335d3d-5a01-4a49-bf89-4e01762dcffa")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 317.5 210.82 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
 	(global_label "GND"
 		(shape passive)
 		(at 320.04 83.82 180)
@@ -4412,6 +4485,28 @@
 		(uuid "6480cb8c-a3c0-4e98-9574-f50dcc4149be")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 360.68 76.2 180)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "+5V_IN"
+		(shape passive)
+		(at 279.4 210.82 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "64dd40e0-fbaa-4bdd-ad2e-345b61a648a0")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 279.4 210.82 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4906,6 +5001,28 @@
 			)
 		)
 	)
+	(global_label "THERM"
+		(shape passive)
+		(at 304.8 210.82 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "bc5d7885-e2db-4f04-9d6a-3473d3469e62")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 304.8 210.82 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
 	(global_label "GND"
 		(shape passive)
 		(at 293.37 181.61 0)
@@ -5140,6 +5257,28 @@
 		(uuid "f6e4a26f-d215-4836-9487-56c8cbbbdfd2")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 62.23 250.19 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "VBATT_PROT"
+		(shape passive)
+		(at 292.1 210.82 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "faabe6e0-bb2c-481d-9365-dda19d53ff76")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 292.1 210.82 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6128,6 +6267,82 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 304.8 208.28 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "685d0a78-03c7-4274-a0a1-998fef35f3d1")
+		(property "Reference" "TP416"
+			(at 304.8 201.93 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "THERM"
+			(at 304.8 203.71 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 304.8 208.28 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 304.8 208.28 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "MCP73871 THERM (pin 5) across TH1. 50 uA bias (DS20002090E Sec 1.0: ITHERM 47/50/53 uA): ~0.50 V at 25 C with a 10k NTC; charging suspends above 1.24 V (cold) or below 0.25 V (hot)."
+			(at 304.8 208.28 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "813409cc-19d3-4416-a020-3951c04e6fd2")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/b2362bec-be69-491d-a07e-a9d16de4ad17"
+					(reference "TP416")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Connector:Barrel_Jack")
 		(at 27.94 77.47 0)
 		(unit 1)
@@ -6362,6 +6577,82 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 292.1 208.28 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "85761d31-38ce-491b-abf4-384257088ff5")
+		(property "Reference" "TP415"
+			(at 292.1 201.93 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "VBATT_PROT"
+			(at 292.1 203.71 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 292.1 208.28 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 292.1 208.28 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Battery after Q1 reverse-protection = MCP73871 VBAT/VBAT_SENSE and MAX17048 VDD. Read cell voltage and charge termination (VREG option not yet chosen, see power_bms_notes.md) here."
+			(at 292.1 208.28 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "042e0f67-31bb-4b45-9c3e-d9e291b00cda")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/b2362bec-be69-491d-a07e-a9d16de4ad17"
+					(reference "TP415")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:R")
 		(at 204.47 139.7 90)
 		(unit 1)
@@ -6512,6 +6803,82 @@
 			(project "bay-station"
 				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/b2362bec-be69-491d-a07e-a9d16de4ad17"
 					(reference "R4")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 279.4 208.28 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "a0d1afff-4467-4835-a407-155cd509d1a4")
+		(property "Reference" "TP414"
+			(at 279.4 201.93 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "+5V_IN"
+			(at 279.4 203.71 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 279.4 208.28 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 279.4 208.28 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "External input after D1/D2 (barrel or USB-C VBUS), MCP73871 IN. Expect 4.75-5.25 V; must stay below MCP73871 IN 6 V recommended / 7 V abs max."
+			(at 279.4 208.28 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "4e49544a-f65c-4b7e-b902-62a352f5e8c9")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/b2362bec-be69-491d-a07e-a9d16de4ad17"
+					(reference "TP414")
 					(unit 1)
 				)
 			)
@@ -6830,6 +7197,82 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 317.5 208.28 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "e0e0c51f-1c4f-4b0e-9f2a-bce7cbc4c223")
+		(property "Reference" "TP417"
+			(at 317.5 201.93 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "BATT_RAW"
+			(at 317.5 203.71 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 317.5 208.28 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 317.5 208.28 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Battery + before Q1. BATT_RAW - VBATT_PROT = Q1 drop (Rds(on) x battery current)."
+			(at 317.5 208.28 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "725a2c1d-bacf-4613-a18c-b7eddd0e52f3")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/b2362bec-be69-491d-a07e-a9d16de4ad17"
+					(reference "TP417")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Connector:USB_C_Receptacle_PowerOnly_6P")
 		(at 110.49 80.01 0)
 		(unit 1)
@@ -7077,449 +7520,6 @@
 				)
 			)
 		)
-	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 279.4 208.28 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "a0d1afff-4467-4835-a407-155cd509d1a4")
-		(property "Reference" "TP414"
-			(at 279.4 201.93 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "+5V_IN"
-			(at 279.4 203.71 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 279.4 208.28 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 279.4 208.28 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "External input after D1/D2 (barrel or USB-C VBUS), MCP73871 IN. Expect 4.75-5.25 V; must stay below MCP73871 IN 6 V recommended / 7 V abs max."
-			(at 279.4 208.28 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "4e49544a-f65c-4b7e-b902-62a352f5e8c9")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/b2362bec-be69-491d-a07e-a9d16de4ad17"
-					(reference "TP414")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 279.4 208.28) (xy 279.4 210.82)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "867c2484-a7ba-42e9-a20e-71a17a03ef6b")
-	)
-	(global_label "+5V_IN"
-		(shape passive)
-		(at 279.4 210.82 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "64dd40e0-fbaa-4bdd-ad2e-345b61a648a0")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 279.4 210.82 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 292.1 208.28 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "85761d31-38ce-491b-abf4-384257088ff5")
-		(property "Reference" "TP415"
-			(at 292.1 201.93 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "VBATT_PROT"
-			(at 292.1 203.71 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 292.1 208.28 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 292.1 208.28 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Battery after Q1 reverse-protection = MCP73871 VBAT/VBAT_SENSE and MAX17048 VDD. Read cell voltage and charge termination (VREG option not yet chosen, see power_bms_notes.md) here."
-			(at 292.1 208.28 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "042e0f67-31bb-4b45-9c3e-d9e291b00cda")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/b2362bec-be69-491d-a07e-a9d16de4ad17"
-					(reference "TP415")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 292.1 208.28) (xy 292.1 210.82)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "975e86ca-ce2a-4db9-8561-b545ac551d1e")
-	)
-	(global_label "VBATT_PROT"
-		(shape passive)
-		(at 292.1 210.82 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "faabe6e0-bb2c-481d-9365-dda19d53ff76")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 292.1 210.82 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 304.8 208.28 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "685d0a78-03c7-4274-a0a1-998fef35f3d1")
-		(property "Reference" "TP416"
-			(at 304.8 201.93 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "THERM"
-			(at 304.8 203.71 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 304.8 208.28 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 304.8 208.28 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "MCP73871 THERM (pin 5) across TH1. 50 uA bias (DS20002090E Sec 1.0: ITHERM 47/50/53 uA): ~0.50 V at 25 C with a 10k NTC; charging suspends above 1.24 V (cold) or below 0.25 V (hot)."
-			(at 304.8 208.28 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "813409cc-19d3-4416-a020-3951c04e6fd2")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/b2362bec-be69-491d-a07e-a9d16de4ad17"
-					(reference "TP416")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 304.8 208.28) (xy 304.8 210.82)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "e5565da4-3959-461f-b31b-f561ecd81e5c")
-	)
-	(global_label "THERM"
-		(shape passive)
-		(at 304.8 210.82 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "bc5d7885-e2db-4f04-9d6a-3473d3469e62")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 304.8 210.82 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 317.5 208.28 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "e0e0c51f-1c4f-4b0e-9f2a-bce7cbc4c223")
-		(property "Reference" "TP417"
-			(at 317.5 201.93 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "BATT_RAW"
-			(at 317.5 203.71 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 317.5 208.28 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 317.5 208.28 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Battery + before Q1. BATT_RAW - VBATT_PROT = Q1 drop (Rds(on) x battery current)."
-			(at 317.5 208.28 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "725a2c1d-bacf-4613-a18c-b7eddd0e52f3")
-		)
-		(instances
-			(project "bay-station"
-				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/b2362bec-be69-491d-a07e-a9d16de4ad17"
-					(reference "TP417")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 317.5 208.28) (xy 317.5 210.82)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "9e4eda9f-6aaf-4f9d-b7a2-ff7e85b76b31")
-	)
-	(global_label "BATT_RAW"
-		(shape passive)
-		(at 317.5 210.82 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "4d335d3d-5a01-4a49-bf89-4e01762dcffa")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 317.5 210.82 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(text "Test pads TP414-TP417 and the THERM window (2026-11-17, power agent)\n\nTH1 sizing, MCP73871 DS20002090E Sec 1.0: ITHERM 47/50/53 uA,\nVT1 1.20/1.24/1.26 V, VT2 0.23/0.25/0.27 V. Charging is suspended when\nR_NTC > VT1/ITHERM = 22.6-26.8k (cold) or < VT2/ITHERM = 4.3-5.7k (hot).\n10k NTC, B25/50 = 3380 K (e.g. Murata NCP18XH103F03RB): cold cut-off\n+1.1 to +5.0 C, hot cut-off +40 to +49 C. Cold limit is always above 0 C,\nso NO trim resistor is needed (B = 3435 K shifts both by < 0.5 C).\nThe NTC must be thermally bonded to the CELL (use a 3-wire pack's own\n10k NTC), not left on the PCB.\n\nI2C: FG_SCL/FG_SDA renamed I2C_SCL/I2C_SDA per docs/net-contract.md."
-		(exclude_from_sim no)
-		(at 279.4 223.52 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left top)
-		)
-		(uuid "a9508d75-e42c-432f-ae93-9465da90ee19")
 	)
 	(sheet_instances
 		(path "/"
