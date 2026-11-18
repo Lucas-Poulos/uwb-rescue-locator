@@ -1,0 +1,186 @@
+(footprint "eSIM_MFF2_PLACEHOLDER"
+	(version 20240108)
+	(generator "uwb_rescue_locator_lib_builder")
+	(layer "F.Cu")
+	(descr "PLACEHOLDER -- eSIM MFF2 (ETSI TS 102 671) 6 x 5 mm 8-contact package, DNP option as on the nRF9151 DK. Pads are named by ISO 7816 contact (C1-C8) but their positions and the pad size are NOT from the ETSI drawing or an eSIM vendor datasheet. Verify the MFF2 pin-to-contact map and land pattern against the chosen eSIM part before fitting.")
+	(tags "eSIM MFF2 UICC PLACEHOLDER")
+	(property "Reference" "REF**"
+		(at 0 -3.7 0)
+		(layer "F.SilkS")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "eSIM_MFF2_PLACEHOLDER"
+		(at 0 3.7 0)
+		(layer "F.Fab")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr smd)
+	(fp_line
+		(start -3 -2.5)
+		(end 3 -2.5)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+	)
+	(fp_line
+		(start 3 -2.5)
+		(end 3 2.5)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+	)
+	(fp_line
+		(start 3 2.5)
+		(end -3 2.5)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+	)
+	(fp_line
+		(start -3 2.5)
+		(end -3 -2.5)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+	)
+	(fp_line
+		(start -3.1 -2.6)
+		(end 3.1 -2.6)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+	)
+	(fp_line
+		(start 3.1 -2.6)
+		(end 3.1 2.6)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+	)
+	(fp_line
+		(start 3.1 2.6)
+		(end -3.1 2.6)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+	)
+	(fp_line
+		(start -3.1 2.6)
+		(end -3.1 -2.6)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+	)
+	(fp_line
+		(start -3.25 -2.75)
+		(end 3.25 -2.75)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+	)
+	(fp_line
+		(start 3.25 -2.75)
+		(end 3.25 2.75)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+	)
+	(fp_line
+		(start 3.25 2.75)
+		(end -3.25 2.75)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+	)
+	(fp_line
+		(start -3.25 2.75)
+		(end -3.25 -2.75)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+	)
+	(fp_text user "MFF2 PLACEHOLDER"
+		(at 0 0)
+		(layer "F.Fab")
+		(effects
+			(font
+				(size 0.5 0.5)
+				(thickness 0.075)
+			)
+		)
+	)
+	(pad "C1" smd rect
+		(at -1.905 -2.4)
+		(size 0.6 1)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "C2" smd rect
+		(at -0.635 -2.4)
+		(size 0.6 1)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "C3" smd rect
+		(at 0.635 -2.4)
+		(size 0.6 1)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "C4" smd rect
+		(at 1.905 -2.4)
+		(size 0.6 1)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "C8" smd rect
+		(at 1.905 2.4)
+		(size 0.6 1)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "C7" smd rect
+		(at 0.635 2.4)
+		(size 0.6 1)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "C6" smd rect
+		(at -0.635 2.4)
+		(size 0.6 1)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "C5" smd rect
+		(at -1.905 2.4)
+		(size 0.6 1)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+)
