@@ -136,8 +136,15 @@ collisions) -- see each `libs/components.csv` for the full part-by-part BOM.
 | Test Points | **Wired** | 65 pads covering every net-contract net (+ local pads on each sheet); index in `docs/verification-plan.md` |
 | Mechanical | Placement only | 4x M3 mounting holes, 3 fiducials |
 
-ERC was run per sheet by each agent during the redesign (`bay-station/handoff/`);
-a whole-project count after the merge has not been recorded yet.
+Whole-project ERC after the merge (2026-11-17, `kicad-cli` 10.0.5,
+`--severity-all`): **7 warnings, 0 errors**, down from 596, with 432
+components loaded (so not the silent `extends` failure). All 7 are
+library-copy warnings, none connectivity: six `lib_symbol_mismatch` on
+flattened stock symbols (BT1, Q1, J2, TH1, J3, J32) and the known U8
+`TPS62A02PDDCR` lib_id (see `docs/decisions.md`). The 97 `unconnected-*` nets
+in the netlist are deliberate no-connect flags (spare BT840 GPIOs, nRF9151
+reserved/MAGPIO pins, unused header pins). Per-sheet before/after counts are
+in `bay-station/handoff/`.
 
 ### Confirmed chips/ICs (all sourced against real datasheets, not guessed)
 
