@@ -1,0 +1,170 @@
+(footprint "SMA_Linx_CONSMA020.042-G_EdgeMount_PLACEHOLDER"
+	(version 20240108)
+	(generator "uwb_rescue_locator_lib_builder")
+	(layer "F.Cu")
+	(descr "PLACEHOLDER footprint for Linx (TE) CONSMA020.042-G SMA jack, PCB edge mount, for 0.042in (1.07mm) boards -- this board is 1.048mm. Pads from Linx datasheet DS21264 Figure 2 \"Recommended PCB Dimensions\": top 3 pads at 4.24mm spacing, bottom 2 ground pads 8.48mm apart, 1.52 x 5.08mm, starting at the board edge (y = 0 here). The centre-pad width is read as the same 1.52mm as the ground pads from the drawing; that is much wider than a 50 ohm line on the 254um prepreg and needs a tapered transition / ground cut-back sized by EM simulation for 6.5GHz. Verify against Linx/TE drawing before fab.")
+	(tags "SMA edge launch Linx CONSMA020.042-G PLACEHOLDER")
+	(property "Reference" "REF**"
+		(at 0 -9.5 0)
+		(layer "F.SilkS")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "SMA_Linx_CONSMA020.042-G_EdgeMount_PLACEHOLDER"
+		(at 0 7 0)
+		(layer "F.Fab")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr smd)
+	(fp_line
+		(start -4.75 0)
+		(end 4.75 0)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "Dwgs.User")
+	)
+	(fp_line
+		(start -4.75 -7.9)
+		(end 4.75 -7.9)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+	)
+	(fp_line
+		(start 4.75 -7.9)
+		(end 4.75 0)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+	)
+	(fp_line
+		(start 4.75 0)
+		(end -4.75 0)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+	)
+	(fp_line
+		(start -4.75 0)
+		(end -4.75 -7.9)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+	)
+	(fp_line
+		(start -5.25 -8.4)
+		(end 5.25 -8.4)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+	)
+	(fp_line
+		(start 5.25 -8.4)
+		(end 5.25 5.6)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+	)
+	(fp_line
+		(start 5.25 5.6)
+		(end -5.25 5.6)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+	)
+	(fp_line
+		(start -5.25 5.6)
+		(end -5.25 -8.4)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+	)
+	(fp_line
+		(start -5.25 -8.4)
+		(end 5.25 -8.4)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "B.CrtYd")
+	)
+	(fp_line
+		(start 5.25 -8.4)
+		(end 5.25 5.6)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "B.CrtYd")
+	)
+	(fp_line
+		(start 5.25 5.6)
+		(end -5.25 5.6)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "B.CrtYd")
+	)
+	(fp_line
+		(start -5.25 5.6)
+		(end -5.25 -8.4)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "B.CrtYd")
+	)
+	(pad "1" smd rect
+		(at 0 2.54)
+		(size 1.52 5.08)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "2" smd rect
+		(at -4.24 2.54)
+		(size 1.52 5.08)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "2" smd rect
+		(at -4.24 2.54)
+		(size 1.52 5.08)
+		(layers "B.Cu" "B.Paste" "B.Mask")
+	)
+	(pad "2" smd rect
+		(at 4.24 2.54)
+		(size 1.52 5.08)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+	)
+	(pad "2" smd rect
+		(at 4.24 2.54)
+		(size 1.52 5.08)
+		(layers "B.Cu" "B.Paste" "B.Mask")
+	)
+)
