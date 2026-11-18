@@ -3,10 +3,10 @@
 	(generator "eeschema")
 	(generator_version "10.0")
 	(uuid "89299b9c-aaab-4f37-a902-914d3bbb6688")
-	(paper "A4")
+	(paper "A3")
 	(title_block
 		(title "Programming / Debug")
-		(comment 1 "SWD header + reset button for the nRF52840 host")
+		(comment 1 "SWD for nRF9151 (J3) and BT840 (J32), Tag-Connect alternates, debug UART, reset and user buttons")
 	)
 	(lib_symbols
 		(symbol "Connector:Conn_ARM_JTAG_SWD_10"
@@ -661,36 +661,736 @@
 			)
 			(embedded_fonts no)
 		)
+	(symbol "Connector:Conn_ARM_SWD_TagConnect_TC2030"
+			(exclude_from_sim no)
+			(in_bom no)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "J"
+				(at 2.54 11.43 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "Conn_ARM_SWD_TagConnect_TC2030"
+				(at 5.08 8.89 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" "Connector:Tag-Connect_TC2030-IDC-FP_2x03_P1.27mm_Vertical"
+				(at 0 -17.78 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" "https://www.tag-connect.com/wp-content/uploads/bsk-pdf-manager/TC2030-CTX_1.pdf"
+				(at 0 -15.24 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Tag-Connect ARM Cortex SWD JTAG connector, 6 pin"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "Cortex Debug Connector ARM SWD JTAG"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "*TC2030*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "Conn_ARM_SWD_TagConnect_TC2030_0_0"
+				(pin power_in line
+					(at -2.54 10.16 270)
+					(length 2.54)
+					(name "VCC"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 7.62 -2.54 180)
+					(length 2.54)
+					(name "SWDIO"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(alternate "TMS" bidirectional line)
+				)
+				(pin open_collector line
+					(at 7.62 5.08 180)
+					(length 2.54)
+					(name "~{RESET}"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 7.62 0 180)
+					(length 2.54)
+					(name "SWCLK"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(alternate "TCK" output line)
+				)
+				(pin power_in line
+					(at -2.54 -10.16 90)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at 7.62 -5.08 180)
+					(length 2.54)
+					(name "SWO"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "6"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(alternate "TDO" input line)
+				)
+			)
+			(symbol "Conn_ARM_SWD_TagConnect_TC2030_0_1"
+				(rectangle
+					(start -5.08 7.62)
+					(end 5.08 -7.62)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+	(symbol "Device:R"
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 0)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "R"
+				(at 2.032 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "R"
+				(at 0 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at -1.778 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "R res resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "R_*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "R_0_1"
+				(rectangle
+					(start -1.016 -2.54)
+					(end 1.016 2.54)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "R_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+	(symbol "Device:C"
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 0.254)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "C"
+				(at 0.635 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Value" "C"
+				(at 0.635 -2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Footprint" ""
+				(at 0.9652 -3.81 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Unpolarized capacitor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "cap capacitor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "C_*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "C_0_1"
+				(polyline
+					(pts
+						(xy -2.032 0.762) (xy 2.032 0.762)
+					)
+					(stroke
+						(width 0.508)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -2.032 -0.762) (xy 2.032 -0.762)
+					)
+					(stroke
+						(width 0.508)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "C_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 2.794)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 2.794)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+	(symbol "Connector_Generic:Conn_01x04"
+			(pin_names
+				(offset 1.016)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "J"
+				(at 0 5.08 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "Conn_01x04"
+				(at 0 -7.62 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Generic connector, single row, 01x04, script generated (kicad-library-utils/schlib/autogen/connector/)"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "connector"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "Connector*:*_1x??_*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "Conn_01x04_1_1"
+				(rectangle
+					(start -1.27 3.81)
+					(end 1.27 -6.35)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+				(rectangle
+					(start -1.27 2.667)
+					(end 0 2.413)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(rectangle
+					(start -1.27 0.127)
+					(end 0 -0.127)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(rectangle
+					(start -1.27 -2.413)
+					(end 0 -2.667)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(rectangle
+					(start -1.27 -4.953)
+					(end 0 -5.207)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin passive line
+					(at -5.08 2.54 0)
+					(length 3.81)
+					(name "Pin_1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 0 0)
+					(length 3.81)
+					(name "Pin_2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 -2.54 0)
+					(length 3.81)
+					(name "Pin_3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 -5.08 0)
+					(length 3.81)
+					(name "Pin_4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 	)
-	(text "Programming / Debug -- SWD"
+	(text "Programming / Debug -- nRF9151 + BT840 SWD, debug UART, buttons"
 		(exclude_from_sim no)
-		(at 30.48 25.4 0)
+		(at 120.65 25.4 0)
 		(effects
 			(font
 				(size 2.5 2.5)
 			)
 		)
 		(uuid "77777777-0000-4000-8000-000000000001")
-	)
-	(text "This sheet collapsed when the host moved from ESP32-S3 to the Nordic\nBT840. Nordic parts program over SWD, so nearly all of the previous\ncontents were ESP32-specific and have been deleted:\n\n- R18-R21, the GPIO0/GPIO3/GPIO45/GPIO46 boot-strapping pulls. Nordic has\n  no equivalent boot-strap pins.\n- R22 + C23, the EN reset RC delay. The nRF52840 has an internal power-on\n  reset; no external RC is needed.\n- SW1, the BOOT button. There is no boot-mode pin to hold.\n- J3 + R23/R24, the data-capable USB-C and its CC pull-downs, which existed\n  ONLY so the ESP32-S3 could be flashed over native USB.\n\nThat last deletion RESOLVES the long-standing 'two USB-C connectors' open\nitem, by removal rather than by choosing between them. The board is back to\none USB-C, the power-only J2 on power_bms.kicad_sch.\n\nWhat remains is what a Nordic part actually needs: an SWD header and a\nreset button.\n\nJ3 (reference reused, the old one is gone) is the same 2x5 1.27mm ARM\nCortex Debug connector already used on the wristband -- deliberately the\nsame part on both boards so one debug probe and one cable serve the whole\nproject. SWDIO and SWCLK go to the BT840; VTref to +3V3_SYS so the probe's\nlevel shifters reference the right rail; nRESET to the BT840's reset pin,\nthe same node SW2 pulls down.\n\nSW2 keeps its reference from the previous revision. Its function is\nunchanged -- it was the RESET button then and it is the RESET button now."
-		(exclude_from_sim no)
-		(at 30.48 33.02 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-		)
-		(uuid "77777777-0000-4000-8000-000000000002")
-	)
-	(text "Exact BT840 pin numbers for SWDIO/SWCLK/RESET are NOT yet filled in: the\nBT840 symbol is not authored, because its pin assignments are in datasheet\nfigures that do not extract as text. See connectivity.kicad_sch."
-		(exclude_from_sim no)
-		(at 30.48 118.11 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-		)
-		(uuid "77777777-0000-4000-8000-000000000003")
 	)
 	(junction
 		(at 57.15 160.02)
@@ -739,7 +1439,7 @@
 				)
 			)
 		)
-		(property "Value" "Conn_ARM_JTAG_SWD_10"
+		(property "Value" "SWD_nRF9151"
 			(at 44.45 144.526 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -771,7 +1471,7 @@
 				)
 			)
 		)
-		(property "Description" "ARM Cortex Debug SWD header for the BT840 (nRF52840). Same part as the wristband's J3 so one probe and cable serve both boards."
+		(property "Description" "nRF9151 SWD: standard ARM Cortex 10-pin 1.27 mm header (Samtec FTSH-105-01-x-DV-K style). Pinout per Tag-Connect TC2030-CTX datasheet's Cortex column: 1 VTref, 2 SWDIO, 3 GND, 4 SWCLK, 5 GND, 6 SWO, 7 key/NC, 8 NC/TDI, 9 GNDDetect, 10 nRESET. VTref from +3V3 (= nRF9151 VDD_GPIO). nRESET reaches RESET_MCU_N through R313 1k (Nordic nRF9151 HDG nRESET: series ~1 kOhm, no external pull-up)."
 			(at 59.69 144.78 0)
 			(hide yes)
 			(show_name no)
@@ -842,7 +1542,7 @@
 				)
 			)
 		)
-		(property "Value" "RESET"
+		(property "Value" "RESET_MCU"
 			(at 119.38 148.59 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -852,7 +1552,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Button_Switch_SMD:SW_SPST_B3U-1000P"
 			(at 119.38 144.78 0)
 			(hide yes)
 			(show_name no)
@@ -874,7 +1574,18 @@
 				)
 			)
 		)
-		(property "Description" "Reset button, pulling the BT840's active-low reset to ground. Footprint to be chosen at BOM time, same as the previous revision."
+		(property "Description" "nRF9151 reset button. Omron B3U-1000P (top-actuated, no ground terminal, Omron B3U catalogue). Pulls RST_MCU_DBG to GND, i.e. nRESET through R313 1k: the pin then sees 2.2 V x 1k/(13k+1k) = 0.16 V, below the 0.66 V (0.3 x 2.2 V) threshold (nRF9151 HDG nRESET circuit example). Nordic: hold low >= 5 us."
+			(at 119.38 144.78 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "B3U-1000P"
 			(at 119.38 144.78 0)
 			(hide yes)
 			(show_name no)
@@ -977,5 +1688,2058 @@
 				)
 			)
 		)
+	)
+	(wire
+		(pts
+			(xy 59.69 129.54) (xy 59.69 127)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "542e4cd9-7940-488b-98c4-6d4d1e88d98a")
+	)
+	(global_label "+3V3"
+		(shape passive)
+		(at 59.69 127 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "56e8b9d1-2e3f-437b-8680-e1a758e0154d")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 59.69 127 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 72.39 144.78) (xy 74.93 144.78)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1261fa36-b029-48b3-88d2-95bebce6c96c")
+	)
+	(global_label "SWDIO_MCU"
+		(shape passive)
+		(at 74.93 144.78 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "442054fb-148e-4857-abee-119da7d628e7")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 74.93 144.78 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 72.39 142.24) (xy 74.93 142.24)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5e6b8249-bbd7-425a-af10-2d238ff85320")
+	)
+	(global_label "SWDCLK_MCU"
+		(shape passive)
+		(at 74.93 142.24 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "c14087d7-7ad1-4326-877b-787f2d30b959")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 74.93 142.24 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 72.39 137.16) (xy 74.93 137.16)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b282935e-10e6-4d40-b516-7fd906c238ac")
+	)
+	(label "RST_MCU_DBG"
+		(at 74.93 137.16 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "bf21d973-c881-42ef-96f9-5eff9671390c")
+	)
+	(no_connect
+		(at 72.39 147.32)
+		(uuid "5036de2d-ef41-4496-8797-40f367cd80ac")
+	)
+	(no_connect
+		(at 72.39 149.86)
+		(uuid "67206a61-192f-40be-97f1-3d57ccc4c526")
+	)
+	(no_connect
+		(at 49.53 144.78)
+		(uuid "a4a36d87-f8ea-48ca-80fd-54de15160514")
+	)
+	(wire
+		(pts
+			(xy 114.3 144.78) (xy 111.76 144.78)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1fb3ecd0-a498-4aad-aa95-f6db48fc1a13")
+	)
+	(label "RST_MCU_DBG"
+		(at 111.76 144.78 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "30cb018a-c7ac-47ac-90fe-e563a828c0e8")
+	)
+	(wire
+		(pts
+			(xy 124.46 144.78) (xy 127 144.78)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a555488e-7fee-4ef0-adf8-94c184244026")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 127 144.78 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "60ce7e37-c7d8-4099-841e-6387761d2a5e")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 127 144.78 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 114.3 129.54 90)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "a7e2e23e-58e2-47bd-8b6c-8fcfb89ff19b")
+		(property "Reference" "R313"
+			(at 114.3 127 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "1k"
+			(at 114.3 132.08 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 114.3 129.54 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 114.3 129.54 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Series resistor between every reset source (J3 pin 10, J34 pin 3, SW2) and the nRF9151 nRESET. Nordic nRF9151 HDG 'nRESET': 13 kOhm internal pull-up to an internal 2.2 V, 'External pull-up is not allowed', and 'It is recommended to add a bypass capacitor and series resistor in the range of 1 kOhm'. The nRESET circuit example adds that the resistor limits leakage from a 3.3 V tool into the 2.2 V domain (ESD diode conducts from ~2.8 V) and the pin must still fall below 0.66 V: 2.2 V x 1k/14k = 0.16 V. The bypass capacitor belongs AT the nRF9151 pin (connectivity.kicad_sch), not here."
+			(at 114.3 129.54 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "1b29ec4d-3fba-413e-9234-412c299f9b78")
+		)
+		(pin "2"
+			(uuid "a0b86f25-ac8f-4ae9-840f-ae547f925cb0")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/883ff08c-ad9f-4863-b9db-49772b53748e"
+					(reference "R313")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 110.49 129.54) (xy 107.95 129.54)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "131b49a7-acd0-427f-b69a-4327262839d1")
+	)
+	(label "RST_MCU_DBG"
+		(at 107.95 129.54 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "bde7eeb3-5f78-4433-abe6-a21f83cdce94")
+	)
+	(wire
+		(pts
+			(xy 118.11 129.54) (xy 120.65 129.54)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "09e1cf75-c86e-44f6-b434-dd196f8f5db1")
+	)
+	(global_label "RESET_MCU_N"
+		(shape passive)
+		(at 120.65 129.54 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "a9153946-3446-4323-b8de-c444e4fd9ae7")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 120.65 129.54 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector:Conn_ARM_SWD_TagConnect_TC2030")
+		(at 101.6 170.18 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp yes)
+		(uuid "d7b9f603-caac-4e3c-80d7-1013294453c1")
+		(property "Reference" "J34"
+			(at 104.14 158.75 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "TC2030_nRF9151"
+			(at 106.68 161.29 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Connector:Tag-Connect_TC2030-IDC-NL_2x03_P1.27mm_Vertical"
+			(at 101.6 170.18 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "https://www.tag-connect.com/wp-content/uploads/bsk-pdf-manager/TC2030-CTX_1.pdf"
+			(at 101.6 170.18 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "DNP Tag-Connect TC2030-IDC-NL (no-legs) footprint, alternate nRF9151 SWD access for a TC2030-CTX(-NL) cable. Pinout verified from the Tag-Connect TC2030-CTX datasheet: 1 VCC, 2 SWDIO, 3 nRESET, 4 SWCLK, 5 GND, 6 SWO, matching KiCad's Conn_ARM_SWD_TagConnect_TC2030 symbol. NL = no retaining-leg holes; hold the plug by hand or use the TC2030-CLIP."
+			(at 101.6 170.18 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "2e75cc2c-fce9-4c76-901d-d39d01d26f86")
+		)
+		(pin "2"
+			(uuid "d20753b2-cbb2-4c6e-b2b9-670411c34340")
+		)
+		(pin "3"
+			(uuid "2edfafac-67d7-459c-af5c-5bd65bc8bf36")
+		)
+		(pin "4"
+			(uuid "e17ca031-b74c-4afa-9ed1-c73ce082997a")
+		)
+		(pin "5"
+			(uuid "0568e74f-bf2f-4d1b-9dac-8a7e03e57345")
+		)
+		(pin "6"
+			(uuid "5b5c4b01-2ca0-4a5e-8a4b-f111a1098485")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/883ff08c-ad9f-4863-b9db-49772b53748e"
+					(reference "J34")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 99.06 160.02) (xy 99.06 157.48)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "fc163270-a247-4509-8ac0-cd61e809845d")
+	)
+	(global_label "+3V3"
+		(shape passive)
+		(at 99.06 157.48 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "980e09b7-124b-45d2-af97-2b73b2320292")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 99.06 157.48 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 109.22 172.72) (xy 111.76 172.72)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "444fc9a2-9c21-4d0e-a04b-6d6b42a407a4")
+	)
+	(global_label "SWDIO_MCU"
+		(shape passive)
+		(at 111.76 172.72 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "676ef0f0-e43d-4d8f-aaef-8e078f47c2a3")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 111.76 172.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 109.22 165.1) (xy 111.76 165.1)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "345cfdfa-c0be-42e0-b670-f6687d24577d")
+	)
+	(label "RST_MCU_DBG"
+		(at 111.76 165.1 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "19cb50de-d2dd-4c7a-a9a1-b924abe393a6")
+	)
+	(wire
+		(pts
+			(xy 109.22 170.18) (xy 111.76 170.18)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "45293dee-d96c-471a-888b-046b23e7f173")
+	)
+	(global_label "SWDCLK_MCU"
+		(shape passive)
+		(at 111.76 170.18 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "43b70513-5a50-4f54-bdc7-10bfa1b65fa5")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 111.76 170.18 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 99.06 180.34) (xy 99.06 182.88)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "be36896b-a79f-4444-88e5-ba23618a44e0")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 99.06 182.88 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "ac9fa4e9-1352-4b03-a311-0e7fb2851322")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 99.06 182.88 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(no_connect
+		(at 109.22 175.26)
+		(uuid "27210c22-b258-43e2-995e-e3976cdd3dab")
+	)
+	(symbol
+		(lib_id "Connector:Conn_ARM_JTAG_SWD_10")
+		(at 190.5 144.78 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "20c7b078-386e-4a13-9c5f-eb61e1ca6a3e")
+		(property "Reference" "J32"
+			(at 187.96 128.27 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "SWD_BT840"
+			(at 187.96 130.81 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Connector_PinHeader_1.27mm:PinHeader_2x05_P1.27mm_Vertical"
+			(at 190.5 144.78 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 190.5 144.78 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "BT840 (nRF52840) SWD: standard ARM Cortex 10-pin 1.27 mm header, same pinout as J3 (Tag-Connect TC2030-CTX datasheet Cortex column). VTref = +3V3 (BT840 VDD). nRESET -> RESET_BLE_N directly: the nRF52840 reset pin is P0.18 with an on-chip pull-up and needs no series part, BUT it only acts as reset once UICR.PSELRESET is programmed (Zephyr CONFIG_GPIO_AS_PINRESET) -- not re-verified against the nRF52840 PS here (Nordic PDF blocked)."
+			(at 190.5 144.78 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "5f92330e-6bfb-4672-a236-db09f765254b")
+		)
+		(pin "2"
+			(uuid "6534427d-d1f2-48f1-975c-7c43691efbb8")
+		)
+		(pin "3"
+			(uuid "c1cab804-105b-414e-90cb-f84551af7842")
+		)
+		(pin "4"
+			(uuid "71fe5c1f-13b3-4bd3-820e-73d6c8a3cede")
+		)
+		(pin "5"
+			(uuid "c4cad7f6-b2b3-454b-9c83-25c7177963eb")
+		)
+		(pin "6"
+			(uuid "bb6958c4-d277-47cf-9b4d-3bfb30c532e2")
+		)
+		(pin "7"
+			(uuid "67bbd4b4-b6b4-4fc6-a08d-b61390c808d0")
+		)
+		(pin "8"
+			(uuid "c0a68ba3-4b7b-48d7-ae8a-c5db2ca1dea6")
+		)
+		(pin "9"
+			(uuid "7bb2b024-0335-449c-a1db-57bde57744b1")
+		)
+		(pin "10"
+			(uuid "21909bc0-3dbf-4982-a522-74ad98fb34b3")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/883ff08c-ad9f-4863-b9db-49772b53748e"
+					(reference "J32")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 190.5 129.54) (xy 190.5 127)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0f2a51bd-a260-46b9-b484-090dfad22bc4")
+	)
+	(global_label "+3V3"
+		(shape passive)
+		(at 190.5 127 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "85553b9d-3dc1-492e-a5cf-76b8243a004e")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 190.5 127 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 203.2 144.78) (xy 205.74 144.78)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "bd81ee29-1522-4e75-8356-fb3f388b39b2")
+	)
+	(global_label "SWDIO_BLE"
+		(shape passive)
+		(at 205.74 144.78 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "88629855-eae7-4635-90d3-6aad27e9f3f8")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 205.74 144.78 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 190.5 160.02) (xy 190.5 162.56)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "526c9d00-4e92-49e5-9717-2a57a547b492")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 190.5 162.56 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "89667f78-9432-410a-933b-9e860c41b11f")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 190.5 162.56 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 203.2 142.24) (xy 205.74 142.24)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ec7f3c68-2921-4009-9f47-6510efdb1abc")
+	)
+	(global_label "SWDCLK_BLE"
+		(shape passive)
+		(at 205.74 142.24 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "894d4be1-674b-49a3-be84-7a678cc3ef62")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 205.74 142.24 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(no_connect
+		(at 203.2 147.32)
+		(uuid "d9de54ef-71fd-41dd-8c53-cf7ba76293f2")
+	)
+	(no_connect
+		(at 180.34 144.78)
+		(uuid "9be1f1fc-8a09-416a-bd08-bf16abd7511b")
+	)
+	(no_connect
+		(at 203.2 149.86)
+		(uuid "c441f905-f13e-41ee-9334-8049ad22117b")
+	)
+	(wire
+		(pts
+			(xy 187.96 160.02) (xy 187.96 162.56)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b071a038-189c-4907-a365-26b5f96fd838")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 187.96 162.56 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "3549e566-b6ae-4769-9f31-75fe997481d0")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 187.96 162.56 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 203.2 137.16) (xy 205.74 137.16)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4503a280-ef51-4924-9e41-79789ceaeab7")
+	)
+	(global_label "RESET_BLE_N"
+		(shape passive)
+		(at 205.74 137.16 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "6d96b7b0-093b-4b6d-87f0-3130a233a4e6")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 205.74 137.16 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Switch:SW_Push")
+		(at 250.19 144.78 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "15f1ec7d-2b49-495c-b861-59fbf0e1cba0")
+		(property "Reference" "SW11"
+			(at 251.46 142.24 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "RESET_BLE"
+			(at 250.19 146.304 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Button_Switch_SMD:SW_SPST_B3U-1000P"
+			(at 250.19 144.78 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 250.19 144.78 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "BT840 reset button, Omron B3U-1000P. Pulls RESET_BLE_N (nRF52840 P0.18/nRESET) low. RESET_BLE_N is also driven open-drain by the nRF9151 (net contract) -- that GPIO must be configured open-drain, never push-pull high."
+			(at 250.19 144.78 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "B3U-1000P"
+			(at 250.19 144.78 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "bf69da65-21bb-4bfe-a9e0-30be2acd04fc")
+		)
+		(pin "2"
+			(uuid "8456d8c9-3f01-4f5b-a2fe-61f2642ecfda")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/883ff08c-ad9f-4863-b9db-49772b53748e"
+					(reference "SW11")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 245.11 144.78) (xy 242.57 144.78)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "879af5c7-02fa-4a2c-916a-672a8e72c876")
+	)
+	(global_label "RESET_BLE_N"
+		(shape passive)
+		(at 242.57 144.78 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "0431d824-2f94-4fdf-a454-0bcc2ee41076")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 242.57 144.78 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 255.27 144.78) (xy 257.81 144.78)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b91986ac-5c79-45d0-a44c-45a09af1d321")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 257.81 144.78 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "89cb8111-5428-4a0e-ac3d-382eed4f064f")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 257.81 144.78 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector:Conn_ARM_SWD_TagConnect_TC2030")
+		(at 232.41 170.18 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp yes)
+		(uuid "a963f639-e5f7-47f9-b021-50d8ef3c89b9")
+		(property "Reference" "J35"
+			(at 234.95 158.75 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "TC2030_BT840"
+			(at 237.49 161.29 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Connector:Tag-Connect_TC2030-IDC-NL_2x03_P1.27mm_Vertical"
+			(at 232.41 170.18 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "https://www.tag-connect.com/wp-content/uploads/bsk-pdf-manager/TC2030-CTX_1.pdf"
+			(at 232.41 170.18 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "DNP Tag-Connect TC2030-IDC-NL footprint, alternate BT840 SWD access (pinout as J34)."
+			(at 232.41 170.18 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "7a0423fe-9748-4df6-b689-77ca8108d858")
+		)
+		(pin "2"
+			(uuid "da9fab87-e2e7-42fb-bde6-e63734430d81")
+		)
+		(pin "3"
+			(uuid "82f6ad73-63a9-4dab-ae45-9e0e45e0221c")
+		)
+		(pin "4"
+			(uuid "bbb93a9a-8e3e-4386-8b5f-aa503e8baba5")
+		)
+		(pin "5"
+			(uuid "d64e27f8-bdd4-4569-86e5-0981ca5c525a")
+		)
+		(pin "6"
+			(uuid "8b3e1f44-5310-47ff-b5f2-82739b761934")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/883ff08c-ad9f-4863-b9db-49772b53748e"
+					(reference "J35")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 229.87 160.02) (xy 229.87 157.48)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "676df37d-2c39-46cc-aad5-567b4df7fa4d")
+	)
+	(global_label "+3V3"
+		(shape passive)
+		(at 229.87 157.48 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "bf4a282b-1e59-4a80-ad2e-4f6c62c92b3c")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 229.87 157.48 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 240.03 172.72) (xy 242.57 172.72)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "22c4d859-a8cf-4e24-bdbf-e4ba833d5db7")
+	)
+	(global_label "SWDIO_BLE"
+		(shape passive)
+		(at 242.57 172.72 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "b31223cd-1ce2-45cd-ac9d-131356217f61")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 242.57 172.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 240.03 165.1) (xy 242.57 165.1)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c688db9c-42fe-49a1-be41-30c923fd9173")
+	)
+	(global_label "RESET_BLE_N"
+		(shape passive)
+		(at 242.57 165.1 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "2466031b-63c2-4595-a8ff-717f71fa36c4")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 242.57 165.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 240.03 170.18) (xy 242.57 170.18)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "82bd381f-8c2a-4e9a-a266-2de4e1520457")
+	)
+	(global_label "SWDCLK_BLE"
+		(shape passive)
+		(at 242.57 170.18 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "ec87f2df-5d0b-450c-bc58-350a731c1bfa")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 242.57 170.18 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 229.87 180.34) (xy 229.87 182.88)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "32e36422-8d6b-4703-8daa-e5901d809968")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 229.87 182.88 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "f2b20c04-e011-4d1d-8001-badd7c59d799")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 229.87 182.88 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(no_connect
+		(at 240.03 175.26)
+		(uuid "52126c4b-0024-4e5c-bbec-89448df10fdf")
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x04")
+		(at 63.5 213.36 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "ecd8f705-ce53-45b0-885d-87fa6101ad92")
+		(property "Reference" "J33"
+			(at 63.5 208.28 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "DBG_UART"
+			(at 63.5 220.98 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical"
+			(at 63.5 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 63.5 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "nRF9151 debug/log UART, 4-pin 2.54 mm: 1 GND, 2 DBG_UART_TX (nRF9151 TX -> cable RXD), 3 DBG_UART_RX (cable TXD -> nRF9151 RX), 4 DBG_VREF. Logic levels are +3V3 (nRF9151 VDD_GPIO): use a 3.3 V-logic USB-UART cable (e.g. FTDI TTL-232R-3V3, wire cable GND/RXD/TXD only). Pin 4 is NOT tied to +3V3 unless R314 is fitted, so a cable's VCC (5 V on TTL-232R-3V3) cannot back-feed the board."
+			(at 63.5 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "2fce8a55-3634-492e-847b-e0d1586e80c5")
+		)
+		(pin "2"
+			(uuid "c77813ad-3b22-4462-89a4-03546517387e")
+		)
+		(pin "3"
+			(uuid "a6bab075-4944-4371-8ed6-d746e0e1536b")
+		)
+		(pin "4"
+			(uuid "2ed9e4b5-aea8-4b9e-959d-f7d857600007")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/883ff08c-ad9f-4863-b9db-49772b53748e"
+					(reference "J33")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 58.42 210.82) (xy 55.88 210.82)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4fa10101-d80d-43ea-b1ce-ff8ce2db20b2")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 55.88 210.82 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "b35a9d04-8689-437c-bc75-e325220c88d6")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 55.88 210.82 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 58.42 213.36) (xy 55.88 213.36)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f02923c2-22dd-4f21-87c2-d3b98c92f0f5")
+	)
+	(global_label "DBG_UART_TX"
+		(shape passive)
+		(at 55.88 213.36 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "51fef58a-f911-4f65-856d-d8d58368350f")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 55.88 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 58.42 215.9) (xy 55.88 215.9)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9d78d8a5-940b-4d5e-91fb-d26a2c66df99")
+	)
+	(global_label "DBG_UART_RX"
+		(shape passive)
+		(at 55.88 215.9 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "1e57ceef-e493-40bd-ac29-aaba50f5e54c")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 55.88 215.9 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 58.42 218.44) (xy 55.88 218.44)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "08ed1520-7545-477b-a471-079a450e72e8")
+	)
+	(label "DBG_VREF"
+		(at 55.88 218.44 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "0f1696e5-e53b-4d39-b06e-5b9940bf7f38")
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 83.82 213.36 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp yes)
+		(uuid "e765835d-7cf6-4566-ac7c-f9e0cc64711a")
+		(property "Reference" "R314"
+			(at 86.36 212.09 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "0R"
+			(at 86.36 214.63 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 83.82 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 83.82 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "DNP: ties J33 pin 4 to +3V3 so an adapter that needs a VCCIO reference (or a 3.3 V-only adapter that powers the target) can use it. Never fit with a 5 V-VCC cable."
+			(at 83.82 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "a7cd34ab-4e76-4433-a4af-775e4d397931")
+		)
+		(pin "2"
+			(uuid "9fd7718d-c85d-4e28-95ac-334a25b37869")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/883ff08c-ad9f-4863-b9db-49772b53748e"
+					(reference "R314")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 83.82 209.55) (xy 83.82 207.01)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b05b2d58-dd28-4bb6-a696-98ce16bef421")
+	)
+	(global_label "+3V3"
+		(shape passive)
+		(at 83.82 207.01 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "df3f83d9-b4a3-4f90-9822-de305e2f356e")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 83.82 207.01 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 83.82 217.17) (xy 83.82 219.71)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "40ce08bf-5a22-422f-8233-c5ab9eefb308")
+	)
+	(label "DBG_VREF"
+		(at 83.82 219.71 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "733afde5-3ac5-4e1b-9442-7b163a059a06")
+	)
+	(symbol
+		(lib_id "Switch:SW_Push")
+		(at 190.5 213.36 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "372e12ce-997b-4c77-b46f-bc297477496e")
+		(property "Reference" "SW12"
+			(at 191.77 210.82 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "BTN_USER"
+			(at 190.5 214.884 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Button_Switch_SMD:SW_SPST_B3U-1000P"
+			(at 190.5 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 190.5 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "User button, active low (net contract BTN_USER). Omron B3U-1000P. Relies on the nRF9151 GPIO internal pull-up; R315 is a DNP external pull-up and C304 a DNP debounce cap."
+			(at 190.5 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "B3U-1000P"
+			(at 190.5 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "d76a0eea-a1a1-43eb-9a21-258ee9c38f03")
+		)
+		(pin "2"
+			(uuid "a8e342be-aa50-4d69-adef-48a2bf8f2578")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/883ff08c-ad9f-4863-b9db-49772b53748e"
+					(reference "SW12")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 185.42 213.36) (xy 182.88 213.36)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3a77f451-bb05-4687-ad55-ca9b8523239c")
+	)
+	(global_label "BTN_USER"
+		(shape passive)
+		(at 182.88 213.36 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "6fe5b4a7-b62c-4156-ba93-6db6ed522911")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 182.88 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 195.58 213.36) (xy 198.12 213.36)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ce54d7f3-3065-4309-9129-27616f8e9a58")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 198.12 213.36 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "9614e6f8-1389-43c8-9f22-54da1213bd0c")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 198.12 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 210.82 213.36 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp yes)
+		(uuid "e5a5354a-5ea4-416d-bf4e-87bcfa9f1f3e")
+		(property "Reference" "R315"
+			(at 213.36 212.09 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10k"
+			(at 213.36 214.63 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 210.82 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 210.82 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "DNP external pull-up for BTN_USER (to +3V3 = nRF9151 VDD_GPIO). Fit if the internal pull-up is not enabled in firmware or the line picks up noise."
+			(at 210.82 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "339e165e-a59e-4e62-8759-d1f29277491b")
+		)
+		(pin "2"
+			(uuid "267130f9-36b4-4e8f-8e20-9189922906c6")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/883ff08c-ad9f-4863-b9db-49772b53748e"
+					(reference "R315")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 210.82 209.55) (xy 210.82 207.01)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a2826b71-4ae2-46f5-ae64-69348790b5c3")
+	)
+	(global_label "+3V3"
+		(shape passive)
+		(at 210.82 207.01 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "1020685d-6920-4c6b-9e6b-0e2179cce8fe")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 210.82 207.01 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 210.82 217.17) (xy 210.82 219.71)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "38a43329-4e0c-47d6-a8c4-b3e310e924ad")
+	)
+	(global_label "BTN_USER"
+		(shape passive)
+		(at 210.82 219.71 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "72dc0a4e-04bd-4059-82f8-edffc9a1bffc")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 210.82 219.71 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 223.52 213.36 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp yes)
+		(uuid "1752c30e-9fcd-4f1e-9a61-f65e25cb768c")
+		(property "Reference" "C304"
+			(at 226.06 212.09 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "100nF"
+			(at 226.06 214.63 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+			(at 223.52 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 223.52 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "DNP hardware debounce cap for BTN_USER (with R315 10k: tau 1 ms). Firmware debounce is the default."
+			(at 223.52 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "c61f55ec-508e-48f1-b353-03d0d56a5772")
+		)
+		(pin "2"
+			(uuid "e06d6e5f-b3b0-4ce0-a892-ab915e5986c9")
+		)
+		(instances
+			(project "bay-station"
+				(path "/543ba435-6cf4-448c-821e-3c5778b02e9c/883ff08c-ad9f-4863-b9db-49772b53748e"
+					(reference "C304")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 223.52 209.55) (xy 223.52 207.01)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "af60cfb2-8c50-42b7-b583-16508c27e9dd")
+	)
+	(global_label "BTN_USER"
+		(shape passive)
+		(at 223.52 207.01 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "9a7a041f-f523-4d2b-9536-476e80e8da13")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 223.52 207.01 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 223.52 217.17) (xy 223.52 219.71)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3e8cae04-4eec-496d-a8a3-9fb3fa5b06a2")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 223.52 219.71 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "495dd984-4c3b-472b-9273-e5ed14c3db4a")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 223.52 219.71 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(text "Verified vs not (2026-11-17, power agent)\n\nTwo SWD targets, each on a standard 10-pin 1.27 mm Cortex header with a DNP Tag-Connect TC2030-NL alternate:\n  J3 + J34 -> nRF9151 (SWDIO_MCU / SWDCLK_MCU / RESET_MCU_N), J32 + J35 -> BT840 (SWDIO_BLE / SWDCLK_BLE / RESET_BLE_N).\n  Cortex pinout and TC2030 pinout both verified from the Tag-Connect TC2030-CTX datasheet. SWO (pin 6) unused on both.\nnRF9151 reset (nRF9151 HDG, nRESET + nRESET circuit example): 13k internal pull-up to 2.2 V, NO external pull-up allowed,\n  about 1k series (R313) + bypass cap at the pin (connectivity sheet). Nothing on RESET_MCU_N may drive it to 3.3 V.\n  SWD is available 100-500 ms after ENABLE goes high (HDG ENABLE) -- give the debugger a connect delay.\nBT840 reset: P0.18 needs UICR.PSELRESET set by BT840 firmware before SW11/J32 pin 10 reset works (NOT re-verified: nRF52840 PS blocked).\nDebug UART J33: 3.3 V logic, pin 4 isolated unless R314 fitted. No USB-UART bridge footprint (not trivial without a data USB-C).\nButtons SW2/SW11/SW12: Omron B3U-1000P (Omron B3U catalogue), footprint Button_Switch_SMD:SW_SPST_B3U-1000P."
+		(exclude_from_sim no)
+		(at 30.48 33.02 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left top)
+		)
+		(uuid "03a9eec9-1d06-4afa-9c19-3e445ff66452")
 	)
 )
