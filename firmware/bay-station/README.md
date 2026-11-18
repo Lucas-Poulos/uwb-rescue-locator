@@ -103,13 +103,14 @@ disables `uart1` "because it is used by default in TF-M"), so the `/ns`
 build silences TF-M logging (`nrf9151-app/boards/*_ns.conf`). PSEL lets any
 instance use any GPIO, so this table does not constrain the pin map.
 
-**SPI clock: unverified ceiling.** The DW3000 runs SPI to 36 MHz, but only
-7 MHz in INIT_RC (DW3000 Datasheet v1.1 Table 21, "SPI comms @ 7MHz"). We
-believe the nRF91 SPIM tops out at 8 Mbps, unlike the nRF52840's 32 MHz
-SPIM3 that the old README relied on -- but the nRF9151 PS SPIM page did not
-load past the 500 kbps rows, so **verify before relying on it**. It costs
-readout time (update rate, A0 reply delay), not precision: timestamps are
-latched in silicon.
+**SPI clock: 8 MHz ceiling.** The DW3000 runs SPI to 36 MHz, but only
+7 MHz in INIT_RC (DW3000 Datasheet v1.1 Table 21, "SPI comms @ 7MHz"). The
+nRF9151 caps every SPIM instance at 8 MHz -- unlike the nRF52840's 32 MHz
+SPIM3 that the old README relied on. Source: the nrfx MDK
+(`SPIMn_MAX_DATARATE 8`, `bay-station/connectivity_notes.md` section 2); the
+PS SPIM table itself is still to be read from the PDF. It costs readout time
+(update rate, A0 reply delay), not precision: timestamps are latched in
+silicon.
 
 ## Inter-chip protocol (nRF9151 <-> BT840 <-> laptop)
 

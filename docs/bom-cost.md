@@ -1,7 +1,8 @@
 # BOM cost estimate
 
 Rough build cost for **one prototype pair** (one wristband + one bay station),
-at quantity-one hobbyist pricing. Compiled 2026-09-19.
+at quantity-one hobbyist pricing. Compiled 2026-09-19; bay station revised
+2026-11-17 for the nRF9151 host.
 
 ## How to read this
 
@@ -14,6 +15,7 @@ Prices are marked:
 
 - **[V]** verified against a distributor listing, with the date
 - **[E]** estimate -- order of magnitude, for planning only
+- **[--]** not priced yet -- no estimate made; excluded from the total
 
 Nobody should order from this table. It exists so the team knows whether this
 is a $100 project or a $1000 one before committing, and so the expensive
@@ -47,23 +49,28 @@ lines are visible early.
 | Rigid antenna frame (fabrication) | 1 | $30 | $30 | [E] |
 | SMA board connectors | 4 | $2.50 | $10 | [E] |
 | Li-Ion cell | 1 | $10 | $10 | [E] |
-| Fanstel BT840 (nRF52840) | 1 | $6.88 | $6.88 | **[V]** Fanstel, Sept 2026 -- replaced ESP32-S3-WROOM-1 (~$3.50) |
+| Nordic nRF9151 SiP (host, LTE-M + GNSS) | 1 | -- | -- | [--] |
+| Fanstel BT840 (nRF52840), now the BLE bridge | 1 | $6.88 | $6.88 | **[V]** Fanstel, Sept 2026 -- replaced ESP32-S3-WROOM-1 (~$3.50) |
 | MAX17048 fuel gauge | 1 | $3 | $3 | [E] |
-| 38.4 MHz TCXO | 1 | $3 | $3 | [E] |
-| 1:4 low-skew clock buffer | 1 | $2.50 | $2.50 | [E] |
+| 38.4 MHz TCXO, Rakon RPT1490LN (proposed) | 1 | -- | -- | [--] -- looks quote-only; likely far above the old $3 guess |
+| 1:4 clock buffer, TI LMK1C1104 (proposed) | 1 | $2.50 | $2.50 | [E] |
 | MCP73871 power-path charger | 1 | $2 | $2 | [E] |
-| TPS62A02PDDCR + XGL3520 inductor | 2 | $1.20 | $2.40 | [E] |
-| Barrel jack, 2x USB-C | 3 | $1 | $3 | [E] |
+| TPS62A02PDDCR + XFL4020 inductor | 2 | $1.20 | $2.40 | [E] |
+| TPS63802 buck-boost + XFL4020 inductor | 2 | -- | -- | [--] |
+| Barrel jack, USB-C | 2 | $1 | $2 | [E] |
 | AO3401A, 2x ESD5B5.0ST1G | 3 | $0.35 | $1.05 | [E] |
-| Tactile buttons | 2 | $0.30 | $0.60 | [E] |
-| Status LEDs 0805 (D4-D7) | 4 | $0.15 | $0.60 | [E] |
-| u-blox MAX-M10S GNSS | 1 | $12 | $12 | [E] |
-| Active GNSS antenna, SMA | 1 | $10 | $10 | [E] -- not yet selected |
+| Tactile buttons (SW2, SW11, SW12) | 3 | $0.30 | $0.90 | [E] |
+| Status LEDs 0805 (D4-D7, D400, D401) | 6 | $0.15 | $0.90 | [E] |
+| GNSS antenna, u.FL pigtail | 1 | $10 | $10 | [E] -- not yet selected |
+| LTE-M antenna, u.FL pigtail | 1 | -- | -- | [--] -- not yet selected |
+| GNSS LNA + LDO, SIM holder + ESD filter, 2x U.FL | 6 | -- | -- | [--] |
 | LIS3MDL magnetometer + LIS2DH accelerometer | 2 | $2 | $4 | [E] |
-| Passives, ~55x 0603/0805 | 55 | $0.05 | $2.75 | [E] |
-| | | | **~$278** | |
+| Passives, ~55x 0603/0805 | 55 | $0.05 | $2.75 | [E] -- now well over 55; recount from `components.csv` |
+| | | | **~$263 + [--] rows** | |
 
-**System total: roughly $345 for one prototype pair.**
+**System total: roughly $330 for one prototype pair, before the unpriced
+rows** -- the nRF9151 and the Rakon TCXO are the two that could move it
+materially. The MAX-M10S (~$12) is gone.
 
 ## Wristband consolidation (2026-09-19)
 
@@ -79,14 +86,13 @@ firmware for the exact module.
 **The $38 is an estimate and the weakest number in this document** -- I could
 not find qty-1 pricing. Get a real quote before planning around it.
 
-## Georeferencing (2026-09-23)
+## Georeferencing (2026-09-23, revised 2026-11-17)
 
-GNSS, magnetometer, accelerometer and an antenna add about **$26**. Worth
-noting all three ICs are KiCad stock symbols AND footprints, so they add no
-footprint-import work -- unlike the BT840 and DWM3001C. u-blox SAM-M10Q with
-its integrated patch antenna would have deleted the $10 antenna line, but
-KiCad has neither symbol nor footprint for it, so it would have traded $10
-of BOM for a third outstanding vendor import.
+Originally a MAX-M10S GNSS, magnetometer, accelerometer and an antenna, about
+**$26**. Since 2026-11-17 the GNSS receiver is inside the nRF9151, so the
+georeferencing-only cost is the two ST sensors, the GNSS antenna and the
+small LNA chain in front of the nRF9151's GPS pin -- about $14 plus the
+unpriced LNA parts.
 
 ## Two things the table makes obvious
 
@@ -118,10 +124,10 @@ not a line item.
 
 ## Not costed here
 
-- **Dev kits.** Strongly recommended and not in the table above. Both boards
-  are now Nordic, so an nRF52840 DK plus a DWM3001CDK would cover tag and
-  station firmware before any custom board exists -- and Qorvo's reference
-  stack targets exactly that combination.
+- **Dev kits.** Strongly recommended and not in the table above. An nRF9151
+  DK (host, modem, GNSS -- also the reference for the GNSS C/N0 test in
+  `verification-plan.md`), an nRF52840 DK (BLE bridge) and a DWM3001CDK would
+  cover tag and station firmware before any custom board exists.
 - **Assembly.** Assumes hand assembly. The DW3210 is QFN40 at 0.4 mm pitch --
   doable with a stencil and hot plate, but it is the hardest part on either
   board, and a reflow failure on a $10.45 part that then needs rework is a
@@ -132,8 +138,9 @@ not a line item.
   Depending on how that is done it could be free or could dominate everything
   above.
 - **Enclosure.** Decided 2026-09-23 but neither selected nor costed. It has
-  to be RF-transparent or it blocks the BT840 on-module BLE antenna, which
-  rules out the cheap metal-box option. Plus the antenna frame beyond it, and
+  to be RF-transparent or it blocks the BT840 on-module BLE antenna (and the
+  LTE-M/GNSS antennas, unless those mount outside), which rules out the cheap
+  metal-box option. Plus the antenna frame beyond it, and
   cabling/PSU odds and ends.
 
 ## Before ordering

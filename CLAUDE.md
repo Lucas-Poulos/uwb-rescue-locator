@@ -40,16 +40,21 @@ Consequences an agent must not "simplify" away:
   still -- **1 cm of differential path error ≈ 10 cm of position error at 10 m
   range**. Anything touching the clock path, the coax, the connectors, or
   timestamp handling is precision-critical, not incidental.
-- **Both boards are Nordic.** Bay station: Fanstel **BT840** (nRF52840).
-  Wristband: nRF52833 inside the DWM3001C. One toolchain for the project.
-  The station links to a **laptop over BLE** -- there is no WiFi and no
-  internet uplink, and that is deliberate (it is what allowed the move off
-  the ESP32-S3). Both parts are now placed on the bay-station schematic with
-  hand-authored, datasheet-verified symbols; their footprints are still
-  outstanding.
+- **Both boards are Nordic.** Bay station host: **nRF9151** SiP (LTE-M /
+  NB-IoT modem + GNSS + application core), with a Fanstel **BT840**
+  (nRF52840) kept as a UART **BLE bridge** -- the nRF91 has no Bluetooth.
+  Wristband: nRF52833 inside the DWM3001C. One toolchain (nRF Connect SDK)
+  for the project. The station links to a **laptop over BLE** as its primary
+  path and adds an **LTE-M uplink** on top; it must still work fully with no
+  SIM. There is no WiFi. Pin assignments live in one place,
+  `bay-station/connectivity_notes.md` section 2. The nRF9151 footprint is a
+  PLACEHOLDER with invented pads and the BT840 footprint is still missing --
+  neither board is fab-ready (`docs/decisions.md`).
 - **The bay station is deployed OUTDOORS and moved between sites**, and
-  georeferences itself: MAX-M10S GNSS for position, LIS3MDL magnetometer for
-  heading, LIS2DH accelerometer for tilt compensation (`gnss.kicad_sch`).
+  georeferences itself: the nRF9151's built-in GNSS for position (time-shared
+  with LTE, which is fine for a stationary survey-in), LIS3MDL magnetometer
+  for heading, LIS2DH accelerometer for tilt compensation
+  (`orientation.kicad_sch`).
   **Position and heading are both required** -- the array reports bearing
   relative to its own frame, so a GNSS fix without heading gives a circle of
   possible tag locations, not a point. Do not drop the magnetometer as
@@ -57,12 +62,14 @@ Consequences an agent must not "simplify" away:
   averaging, deliberately coarser than the 10-30 cm relative fix.
 
   The station sits in an **enclosure**, which settles ingress and
-  weatherproofing -- don't reopen those. Two things a box does not fix, both
-  still open: the enclosure **must pass RF**, because the BT840's BLE antenna
-  is printed on the module and therefore inside it (a metal box kills the
-  laptop link); and **most Li-Ion cells must not be charged below 0 degC**,
-  which an unheated enclosure does nothing about -- the MCP73871 has a THERM
-  NTC but it has not been sized for a cold-charge cutoff.
+  weatherproofing -- don't reopen those. Two things a box does not fix: the
+  enclosure **must pass RF** (still open), because the BT840's BLE antenna is
+  printed on the module and therefore inside it (a metal box kills the
+  laptop link), and the LTE-M and GNSS antennas need the same unless they are
+  mounted outside on their u.FL pigtails; and **most Li-Ion cells must not be
+  charged below 0 degC**, which an unheated enclosure does nothing about --
+  the MCP73871 THERM window is now sized to stop charging at +1..+5 degC,
+  but only if the NTC actually sits on the cell.
 - **Channel 5 (6489.6 MHz) is chosen.** It sets antenna selection, cable-loss
   budget, and connector rating. Connectors on the UWB path must be SMA --
   U.FL/MMCX are rated only to 6 GHz and CH5 is above that. The wristband has

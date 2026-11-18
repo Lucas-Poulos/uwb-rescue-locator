@@ -3,15 +3,17 @@
 ## Concept
 
 A worn **wristband** tag is located in 3D space by a fixed **bay station**
-with four UWB anchors. The bay station reports position **over Bluetooth LE
-to a nearby laptop**, and georeferences itself with GNSS plus a magnetometer
-so those positions can be given as world coordinates. Intended use: an
-outdoor safety/rescue tracking system.
+with four UWB anchors. The bay station reports **over Bluetooth LE to a
+nearby laptop** (the primary path) and can also send reports over **LTE-M**,
+and it georeferences itself with GNSS plus a magnetometer so those positions
+can be given as world coordinates. Intended use: an outdoor safety/rescue
+tracking system.
 
-Note this is narrower than the original concept, which had the station
-uploading to the internet. That was dropped deliberately on 2026-09-19 once
-the team confirmed a laptop will always be present -- and it is what allowed
-the host MCU to move to Nordic. See `decisions.md`.
+History: the original concept uploaded to the internet over WiFi; that was
+dropped on 2026-09-19 for a BLE-only laptop link, which is what moved the
+host to Nordic. On 2026-11-17 the host became the **nRF9151** SiP, which adds
+LTE-M and built-in GNSS but has no Bluetooth, so the BT840 stays on as a BLE
+bridge. The station must still run fully with no SIM. See `decisions.md`.
 
 Positioning is a **hybrid of two-way ranging and TDoA**: a center anchor
 ranges to the tag for distance, and three outer anchors measure arrival-time
@@ -24,14 +26,15 @@ connectors.
 ```
                          A1 ← antenna on coax
                             \
-   ┌─────────────┐           \      ┌───────────────────────────┐
+   ┌─────────────┐           \      ┌────────────────────────────┐
    │  Wristband   │  UWB       ○────│  Bay Station (ONE PCB)     │
    │  (worn tag)  │ ═════════▶ A0   │  4x DW3210, one TCXO       │
-   └─────────────┘  one TX    / \   │  BT840 (nRF52840) host     │
-                             /   \  └───────────┬────────────────┘
-                           A2     A3            │ Bluetooth LE
-                      antennas on ~1-2 m        ▼
-                      coax, rigid frame       Laptop
+   └─────────────┘  one TX    / \   │  nRF9151 host (LTE-M+GNSS) │
+                             /   \  │  BT840 BLE bridge (UART)   │
+                           A2     A3└──────┬──────────────┬──────┘
+                      antennas on ~1-2 m   │ Bluetooth LE │ LTE-M
+                      coax, rigid frame    ▼              ▼ (optional)
+                                         Laptop        network
 
    A0     two-way ranging  -> range to tag
    A1-A3  TDoA vs. A0      -> direction to tag
@@ -46,22 +49,21 @@ connectors.
 |---|---|---|
 | Role | Worn tag | Fixed reference station |
 | UWB | 1x DWM3001C module (UWB + MCU + antennas in one part) | 4x DW3210 IC, all on one PCB; 1 center + 3 outer roles, antennas remote on coax |
-| MCU/radio | Nordic nRF52833, inside the DWM3001C (resolved) | Nordic nRF52840, in a Fanstel BT840 module (resolved) |
+| MCU/radio | Nordic nRF52833, inside the DWM3001C (resolved) | Nordic nRF9151 SiP host (LTE-M + GNSS); Fanstel BT840 (nRF52840) as BLE bridge (resolved 2026-11-17) |
 | Power | Single-cell battery + BMS, sized for just enough runtime -- core function takes priority over battery life | Battery + BMS optimized for longevity, not size |
-| Link to the outside | None (talks only to the bay station over UWB) | BLE to a nearby laptop. No internet uplink -- see note above |
-| Georeferencing | n/a | MAX-M10S GNSS + LIS3MDL magnetometer + LIS2DH accelerometer. Position AND heading are both needed to place a frame-relative bearing on a map |
+| Link to the outside | None (talks only to the bay station over UWB) | BLE to a nearby laptop (primary); LTE-M reports when a SIM is fitted |
+| Georeferencing | n/a | nRF9151 GNSS (time-shared with LTE) + LIS3MDL magnetometer + LIS2DH accelerometer. Position AND heading are both needed to place a frame-relative bearing on a map |
 
 ## UWB part status
 
-**The bay station's schematic is out of date.** It currently shows four
-**DWM3000** modules; the resolved design is four discrete **DW3210** ICs
-(QFN40) on the one PCB sharing a single 38.4 MHz TCXO, with the antennas
-remote on coax. The module exposes no clock pin, so four of them cannot share
-a time base, and TDoA needs one. See `decisions.md` and `positioning.md` for
-the datasheet evidence and the full cost of the change.
+The bay station uses four discrete **DW3210** ICs (QFN40) on the one PCB,
+sharing a single 38.4 MHz TCXO, with the antennas remote on coax -- wired on
+`uwb_array.kicad_sch`. The DWM3000 module was dropped because it exposes no
+clock pin, so four of them cannot share a time base, and TDoA needs one. See
+`decisions.md` and `positioning.md` for the datasheet evidence.
 
 The wristband is unaffected -- a single transceiver has nothing to
-synchronize against, so the DWM3000 module stays the right fit there.
+synchronize against, and it uses the DWM3001C module.
 
 ## Interface between the boards
 
@@ -78,11 +80,13 @@ station -- the only link is the UWB radio. Still to be specified:
 
 All on-board, and part of the bay station's own design:
 
-- **4x DW3210 -> BT840**: one shared SPI bus (MOSI/MISO/SCLK) with four chip
-  selects, plus per-chip IRQ. DW3000 runs to 36 MHz; note **SPIM3 is the only
-  high-speed SPI instance on the nRF52840** (32 MHz; the others cap at 8 MHz),
-  so the anchor bus must use it -- and check the silicon revision against
-  Nordic's erratum on SPIM rates above 8 MHz.
+- **4x DW3210 -> nRF9151**: one shared SPI bus (MOSI/MISO/SCLK, mode 0) with
+  four chip selects, plus per-chip IRQ and a shared open-drain reset. The
+  DW3000 runs to 36 MHz, but **every nRF9151 SPIM instance caps at 8 MHz**, so
+  the host sets the rate. Pins and instance: `bay-station/connectivity_notes.md`
+  section 2.
+- **nRF9151 <-> BT840**: UART at 1 Mbaud with RTS/CTS plus an attention line,
+  carrying our own framed relay protocol (`decisions.md`).
 - **Clock**: one 38.4 MHz TCXO -> 1:4 low-skew fan-out buffer -> each chip's
   XTI via 2200 pF AC coupling, with 1 pF from each XTO to ground.
 - **Antennas**: four SMA coax runs, ~1-2 m, to a rigid frame. CH5 is above
@@ -90,15 +94,15 @@ All on-board, and part of the bay station's own design:
   unverified number, though it does not gate baseline length -- the size of
   the rigid antenna frame does. See `positioning.md`.
 
-## Bay station -> laptop
+## Bay station -> laptop / network
 
-Bluetooth LE from the BT840. Nordic parts are BLE-only -- no Bluetooth
-Classic, so no SPP -- which means a GATT service rather than a virtual COM
-port. USB-CDC over a cable is the simpler alternative and worth considering,
-since the station is wired for power anyway.
+Bluetooth LE from the BT840, which relays frames from the nRF9151 to a NUS
+GATT service (Nordic parts are BLE-only -- no Classic, so no SPP). The
+station sends **raw timestamps** and the laptop solve is authoritative; the
+station's own quick-look solve is only for LTE reports (`decisions.md`).
 
-Still open: the protocol itself, and whether the station sends raw timestamps
-for a host-side solve or a position it computed itself.
+Still open: BLE link security level, and the LTE-M side -- endpoint,
+SIM/operator and data budget.
 
 ## Open decisions
 

@@ -14,7 +14,8 @@ Decided 2026-11-17 (see `decisions.md`):
 - **The Fanstel BT840 (nRF52840) stays, demoted to a BLE bridge** to the
   laptop over UART, the same split as Nordic's Thingy:91 X (nRF9151 +
   nRF5340). The laptop link survives; LTE-M is added on top.
-- **MAX-M10S removed** (its sheet is now `orientation.kicad_sch`). The nRF9151's built-in GNSS replaces it. GNSS is
+- **MAX-M10S removed** (its sheet is now `orientation.kicad_sch`). The
+  nRF9151's built-in GNSS replaces it. GNSS is
   time-shared with LTE (fixes only while LTE is idle / PSM / eDRX), which is
   acceptable for a stationary station doing survey-in averaging. The
   LIS3MDL magnetometer and LIS2DH accelerometer stay -- heading is still

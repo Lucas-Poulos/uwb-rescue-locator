@@ -80,17 +80,16 @@ A few things differ from the hardware side:
   fetched, not vendored. A PR that adds thousands of files is a mistake, not
   a big contribution.
 
-Two open items gate most firmware work, and both are hardware calls rather
-than coding ones:
+Two things to know before writing firmware, both hardware-side calls:
 
-1. **Toolchain** -- nRF5 SDK vs. Zephyr / nRF Connect SDK, one choice for
-   both boards. Open in `docs/decisions.md`.
-2. **Pin assignments don't exist yet.** No GPIO on either MCU is wired to a
-   function in the schematic -- a netlist export shows every BT840 and
-   DW3210 pin unconnected, and on the wristband only power, SWD, `RESET_N`,
-   `VBAT_SENSE` and one button are tied. Don't guess them into firmware;
-   raise them as decisions. `firmware/CLAUDE.md` explains why this
-   particular shortcut is expensive.
+1. **Toolchain** -- nRF Connect SDK v3.4.x for every image (resolved
+   2026-11-17, `docs/decisions.md`).
+2. **Pin assignments come from one place.** The bay station's nRF9151 pins
+   are fixed in `bay-station/connectivity_notes.md` section 2 and copied into
+   one `*_pins.h` per MCU under `firmware/boards/`; the wristband still has
+   only power, SWD, `RESET_N`, `VBAT_SENSE` and one button tied. Don't guess
+   pins into firmware; raise them as decisions. `firmware/CLAUDE.md` explains
+   why this particular shortcut is expensive.
 
 ## Working with an agent
 

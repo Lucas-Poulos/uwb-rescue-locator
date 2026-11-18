@@ -5,7 +5,7 @@ Repo: https://github.com/Lucas-Poulos/uwb-rescue-locator
 A two-board UWB positioning system for a rescue/safety use case: a
 **wristband** worn by a person, and a fixed **bay station** that locates it
 in 3D from four anchor points and reports it over Bluetooth LE to a nearby
-laptop.
+laptop (with an optional LTE-M uplink from the station).
 
 Positioning is a **hybrid of two-way ranging and TDoA**, not symmetric
 multilateration. A center anchor ranges to the tag for distance; three outer
@@ -78,59 +78,37 @@ Before pushing anything, also read `CONTRIBUTING.md` -- branch off `main`,
 don't edit a sheet someone else is actively working on, and PRs need review
 (branch protection is on).
 
-## Status (last updated 2026-11-06)
+## Status (last updated 2026-11-17)
 
-**Schematic capture is in progress on both boards.** Each board's Power/BMS
-sheet is wired. The bay station's Regulation and Programming/Debug sheets
-are now partially wired (grounds tied, some signal paths still open as of
-2026-09-29) -- see the per-sheet table below. Everything else is still
-placement-only. If you're an agent or a new teammate picking this up cold,
-read this whole section before touching anything -- it's written to be a
-complete handoff.
+**Schematic capture is well along on the bay station and early on the
+wristband.** On branch `redesign/nrf9151-host` every bay-station sheet has
+been wired against one net contract (`docs/net-contract.md`). Neither board
+is fab-ready: the bay station still has placeholder footprints on its two
+biggest new parts (below). If you're an agent or a new teammate picking this
+up cold, read this whole section before touching anything -- it's written to
+be a complete handoff.
 
-> ### Architecture change in flight: the bay station's anchors
+> ### Architecture change 2026-11-17: nRF9151 host
 >
-> The positioning scheme was specified properly for the first time on
-> 2026-09-19 (`docs/positioning.md`), and it invalidates how the bay
-> station's UWB anchors are currently drawn. **Target: 10-30 cm accuracy at
-> ~10 m, on Channel 5 (6489.6 MHz).**
+> The bay station's host moved from the Fanstel BT840 (nRF52840) to the
+> **Nordic nRF9151** SiP -- LTE-M/NB-IoT modem, built-in GNSS and an
+> application core. The nRF91 has no Bluetooth, so the **BT840 stays as a
+> UART BLE bridge** to the laptop, and the **MAX-M10S GNSS is gone** (its
+> sheet is now `orientation.kicad_sch`). Reasons and the full set of
+> consequent calls are in `docs/decisions.md` ("nRF9151 host redesign").
 >
-> What the schematic gets wrong today:
->
-> 1. **The four anchors are drawn as interchangeable peers.** They aren't --
->    one is a center anchor doing two-way ranging, three are outer anchors
->    doing TDoA against it.
-> 2. **The antennas are on the board.** TDoA bearing accuracy scales with
->    baseline; a board-sized baseline gives ~17 degrees of bearing error.
->    The four antennas move onto ~1-2 m coax runs to a rigid frame.
-> 3. **The DWM3000 module can't do TDoA in a multi-anchor array at all.** It
->    exposes no clock pin, so four of them cannot share a time base -- and
->    1 ns of clock error is 30 cm of position error.
->
-> **The resolved architecture:** four discrete **DW3210** ICs on the one PCB,
-> sharing a single 38.4 MHz TCXO through a 1:4 low-skew buffer, with the four
-> antennas remote on coax. This makes synchronization *structurally absent*
-> rather than solved -- no drift model, no sync firmware -- and moves the cost
-> into the RF path, where CH5's ~17 dB of link margin absorbs it.
->
-> Going discrete adds an RF front-end and a controlled-impedance stackup. It
-> also loses the module's pre-certified status -- which **does not matter
-> here**: this is a university prototype, not marketed or sold, so it doesn't
-> go through FCC/CE testing. That was the single largest cost of going
-> discrete, and it's now off the table. See `docs/decisions.md`.
->
-> The remaining critical-path item is **array calibration**, which the design
-> genuinely does not close without.
->
-> **The wristband is unaffected by the clock problem** -- a single transceiver
-> has nothing to synchronize against. It has separately consolidated onto a
-> single DWM3001C; see its own README.
+> Unchanged, and still the core of the design: four discrete **DW3210**s on
+> the one PCB sharing one 38.4 MHz TCXO through a 1:4 buffer, antennas remote
+> on coax, A0 doing two-way ranging and A1-A3 TDoA against it
+> (`docs/positioning.md`). **Target: 10-30 cm at ~10 m, Channel 5.** No FCC/CE
+> work -- university prototype. The critical path is still **array
+> calibration**, plus the multi-instance DW3000 driver.
 
 ### What exists, per board
 
 The wristband has 7 hierarchical sheets, the bay station 10. Reference designators are
-project-wide unique per board (checked, no collisions) -- see each
-`libs/components.csv` for the full part-by-part BOM.
+project-wide unique per board (checked 2026-11-17 on the bay station, no
+collisions) -- see each `libs/components.csv` for the full part-by-part BOM.
 
 **Wristband** (`wristband/`):
 | Sheet | Status | Contents |
@@ -138,27 +116,28 @@ project-wide unique per board (checked, no collisions) -- see each
 | Power BMS | **Wired** (global labels, no drawn wires), ERC clean (0 errors, 1 cosmetic warning) | JST-PH battery -> AO3401A reverse-polarity FET -> TVS -> DW01A+FS8205A protection -> MCP73831 charger (USB-C in) |
 | Radio MCU | Placement only, not wired | DWM3001C (U3) + decoupling. One module: DW3110 UWB + nRF52833 MCU + accelerometer + both antennas |
 | Mechanical | Placement only | 4x M2 mounting holes |
-| Regulation | Placement only, not wired | MCP1700T-3302E/TT LDO (3.3V) -- battery hits 4.2V, DWM3001C tops out at 3.6V |
+| Regulation | Placement only, not wired | TPS7A0233PDBVR LDO (3.3V) -- battery hits 4.2V, DWM3001C tops out at 3.6V |
 | Programming/Debug | Placement only, not wired | ARM Cortex Debug SWD header, targeting the nRF52833 inside U3 |
 | Indicators | Placement only | Status LEDs: D2 charge (MCP73831 STAT) + D3 system (nRF52833 GPIO) |
 | Test Points | Placement only, **new** | TP1-TP5: both rails, 2x GND, firmware timing marker |
 
-**Bay Station** (`bay-station/`):
+**Bay Station** (`bay-station/`) -- per-sheet detail in each
+`bay-station/*_notes.md`; sheet-by-sheet summary in `bay-station/README.md`:
 | Sheet | Status | Contents |
 |---|---|---|
-| Power BMS | **Wired** (global labels), ERC has 8 known/expected items (see `power_bms_notes.md`) | Barrel jack + USB-C power-only input -> MCP73871 power-path charger -> MAX17048 fuel gauge; separate backup-battery input with its own AO3401A reverse-polarity FET + TVS |
-| Connectivity | Placement only, not wired | Fanstel BT840 (U3, nRF52840) + decoupling. Symbol authored from the real datasheet |
-| UWB Array | Placement only, not wired | 4x DW3210 (U4=A0 center, U5-U7=A1-A3 outer) + GPIO5/6 straps (R10-R17) + IRQ pulldowns (R25-R28) + full per-anchor decoupling from Qorvo Figure 32 (C40-C74, FB1-FB4 beads, R33-R36 RF2 terminations) |
-| Mechanical | Placement only | 4x M3 mounting holes |
-| Regulation | **Partially wired** (11 wires, 3 junctions, 5 GND symbols added 2026-09-29); U8's VIN, EN, and PG still unconnected (ERC) | TPS62A02PDDCR buck converter -- steps the unregulated `+VSYS` rail down to a safe ~3.3V for the BT840 host and the DW3210 anchors |
-| Clock Distribution | Placement only, **new** | Shared 38.4MHz reference for the 4x DW3210 array: AC-coupling + XTO caps placed, TCXO/buffer TBD |
-| Indicators | Placement only | Status LEDs: D4 charging, D5 charge-done, D6 power-good (all MCP73871), D7 system (host GPIO) |
-| Test Points | Placement only | TP1-TP21: rails, 2x GND, TCXO + 4x anchor clock, SPI bus, reset, per-anchor CS x4 + IRQ x4 |
-| GNSS / Orientation | Placement only, **new** | MAX-M10S GNSS (U9) + LIS3MDL magnetometer (U10) + LIS2DH accelerometer (U11) -- georeferences the array |
-| Programming/Debug | Placement only in practice (1 wire, 1 junction, 1 GND symbol added 2026-09-29 -- just the ground tie) | **Rebuilt for Nordic**: SWD header (J3) + RESET button (SW2), both still fully unwired per ERC. ESP32 circuitry and the second USB-C deleted |
+| Power BMS | **Wired** | Barrel jack + USB-C -> MCP73871 power-path charger -> MAX17048 fuel gauge; backup cell with AO3401A + TVS. THERM window sized for cold-charge cutoff |
+| Regulation | **Wired** | U8 TPS62A02 -> `+3V3`; **U40 TPS63802 buck-boost -> `+VBAT_LTE`** (nRF9151 VDD, 3.59 V); `+3V3` sequenced >= 6 ms after it; PPK2 break links on both rails |
+| Connectivity | **Wired** | **nRF9151 (U20)** host with Nordic's HDG decoupling, LTE + GNSS (BGA524N6 LNA) on u.FL, nano-SIM (+ DNP eSIM); **BT840 (U3)** as UART BLE bridge |
+| UWB Array | **Wired** | 4x DW3210 (U4=A0 center, U5-U7=A1-A3 outer), Qorvo Fig 32 decoupling, per-anchor 0R rework links, pi-match pads, SMA J20-J23 (proposed CONSMA020.042-G) |
+| Clock Distribution | **Wired** | Proposed Rakon RPT1490LN TCXO -> TI LMK1C1104 1:4 buffer -> 2200 pF -> each XTI |
+| Orientation (was GNSS / Orientation) | **Wired** | LIS3MDL magnetometer (U10, 0x1C) + LIS2DH accelerometer (U11, 0x19) |
+| Indicators | **Wired** | D4-D6 charger status, D7 `LED_SYS`, D400 `LED_LTE`, D401 `LED_LINK`, resistors computed per rail |
+| Programming/Debug | **Wired** | J3 nRF9151 SWD, J32 BT840 SWD, DNP Tag-Connect pads, J33 debug UART, SW2/SW11 resets, SW12 user button |
+| Test Points | **Wired** | 65 pads covering every net-contract net (+ local pads on each sheet); index in `docs/verification-plan.md` |
+| Mechanical | Placement only | 4x M3 mounting holes, 3 fiducials |
 
-"Placement only" sheets deliberately show a lot of ERC "not connected"/"not
-driven" warnings -- that's expected, not a bug, until they get wired.
+ERC was run per sheet by each agent during the redesign (`bay-station/handoff/`);
+a whole-project count after the merge has not been recorded yet.
 
 ### Confirmed chips/ICs (all sourced against real datasheets, not guessed)
 
@@ -172,22 +151,32 @@ driven" warnings -- that's expected, not a bug, until they get wired.
 | Fortune Semiconductor **FS8205** (commonly sold as "FS8205A" -- see `wristband/libs/README.md`) | Protection dual MOSFET, DW01A's partner IC | Wristband | 1 |
 | AOS **AO3401A** | Reverse-battery-polarity protection P-MOSFET ("ideal diode") | Wristband + Bay Station | 2 |
 | onsemi **ESD5B5.0ST1G** | TVS diode, battery/power-input protection | Wristband (1) + Bay Station (2) | 3 |
-| Fanstel **BT840** (Nordic nRF52840) | Host MCU + BLE link to a laptop. Replaced ESP32-S3-WROOM-1 once the WiFi/internet requirement was dropped | Bay Station | 1 |
+| Nordic **nRF9151** (nRF9151-LACA-R7) | Host SiP: LTE-M/NB-IoT modem + GNSS + Cortex-M33. Replaced the BT840 as host 2026-11-17. **Footprint is a PLACEHOLDER with invented pads** | Bay Station | 1 |
+| Fanstel **BT840** (Nordic nRF52840) | UART BLE bridge to the laptop (host until 2026-11-17; replaced ESP32-S3-WROOM-1 before that) | Bay Station | 1 |
 | Microchip **MCP73871** | Charge management + power-path IC | Bay Station | 1 |
 | Maxim/Analog Devices **MAX17048** | Battery fuel gauge (SOC monitor) | Bay Station | 1 |
-| Microchip **MCP1700T-3302E/TT** | LDO regulator (3.3V) -- battery rail can hit 4.2V, which exceeds the DWM3001C's 3.6V operating max without this | Wristband | 1 |
-| TI **TPS62A02PDDCR** | Buck (switching) regulator -- same voltage-safety role as the wristband's LDO, sized for the bay station's higher combined load current | Bay Station | 1 |
+| TI **TPS7A0233PDBVR** | LDO regulator (3.3V) -- battery rail can hit 4.2V, which exceeds the DWM3001C's 3.6V operating max without this. Replaced the MCP1700 on 2026-09-23 | Wristband | 1 |
+| TI **TPS62A02PDDCR** | Buck regulator, `+VSYS` -> `+3V3` | Bay Station | 1 |
+| TI **TPS63802DLAR** | Buck-boost, `+VSYS` -> `+VBAT_LTE` (nRF9151 VDD). Footprint PLACEHOLDER | Bay Station | 1 |
+| ST **LIS3MDL** / **LIS2DH** | Magnetometer (heading) / accelerometer (tilt, knock). LIS2DH may be EOL -- check | Bay Station | 1 + 1 |
+| Infineon **BGA524N6** + TI **TPS7A0228** | GNSS LNA and its COEX0-switched 2.8 V LDO, as on the nRF9151 DK | Bay Station | 1 + 1 |
+| TI **TPD3F303** | SIM ESD/EMI filter | Bay Station | 1 |
+| Rakon **RPT1490LN** / TI **LMK1C1104** | 38.4 MHz CMOS TCXO / 1:4 clock buffer -- **PROPOSED**; the TCXO looks quote-only | Bay Station | 1 + 1 |
 
 Footprint caveats: MAX17048 is flagged `_PLACEHOLDER` in its footprint file
 -- pin/electrical data is fully verified, but one land-pattern dimension
 needs re-checking against the real datasheet figure before fab (see
 `bay-station/libs/README.md`). The same caveat applies to the DWM3000
-footprint retained in `shared/`, though nothing uses it now.
+footprint retained in `shared/`, though nothing uses it now. On the bay
+station, **the nRF9151 (U20) and TPS63802 (U40) footprints are
+placeholders** -- the nRF9151 one has made-up pad positions and must not go
+to fab -- and so are the Rakon TCXO, the SMA edge launch (needs EM
+simulation) and the DNP eSIM.
 
 **No footprint assigned yet**: `U3` on both boards (BT840, 65 pins; and
-DWM3001C, 48 pins), plus bay-station `L1` (1uH inductor -- no exact KiCad
-default matches the XGL3520, pick at BOM time) and `SW2`. Not blocking
-while both `.kicad_pcb` files are still empty, but it blocks layout.
+DWM3001C, 48 pins), and bay-station FB1-FB4 (Murata BLM03 case size
+unresolved). L1 and SW2 were closed on 2026-11-17. Not blocking while both
+`.kicad_pcb` files are still empty, but it blocks layout.
 
 Standard passive size for this whole project: **0603** for R/C/L (0-ohm
 0603 link/jumper resistors are documented as a standard available option in
@@ -256,62 +245,48 @@ reopens part of the 2026-09-19 "no WiFi" call (see `docs/decisions.md`,
 
 ### Not done yet (in rough next-up order)
 
-1. **Bay station: rework the anchor design** for four discrete DW3210s on
-   one board sharing a TCXO, with the antennas on coax. Blocked behind the
-   open items in `docs/decisions.md` (cable loss, TCXO/buffer selection,
-   array calibration) -- this is the project's critical path.
-2. Wire all placement-only sheets (net labels between MCU/radio pins, their
-   decoupling, the new regulator outputs, and power-rail connections in
-   from Power BMS). The wristband can proceed independently of item 1.
-3. ~~**Bay station: resolve the two-USB-C-connector situation**~~ -- resolved
-   by the move to Nordic. The second connector existed only for ESP32-S3
-   native-USB flashing; the BT840 programs over SWD, so it goes away with the
-   rest of the ESP32-specific circuitry.
-4. **Bay station: source a real footprint for L1** (the buck converter's
-   inductor, Coilcraft XGL3520-102MEC) -- no KiCad-default match exists yet.
-5. ~~Confirm/re-verify decoupling cap values against each part's exact
-   datasheet application circuit~~ -- done, see `docs/passives-reference.md`.
-   One passive was found missing (100k IRQ/GPIO8 pulldowns, now added to all
-   5 DWM3000 instances); DWM3000's own decoupling was confirmed to exceed
-   what Qorvo's minimal example circuit actually calls for (kept anyway, not
-   wrong, just more conservative than strictly required).
-6. ~~Antenna matching-network values~~ -- gone. The DWM3001C carries both
-   antennas on-module, so `antenna.kicad_sch` was deleted along with the
-   tuning task.
-7. ~~Anchor placement/enclosure geometry~~ -- topology resolved (all four
-   transceivers on-board, antennas remote on coax to a rigid frame, see
-   `docs/positioning.md`); the remaining piece is the frame's mechanical
-   design, including A0's out-of-plane offset.
-8. Bay station uplink protocol -- what the laptop actually receives over BLE
-   (open decision). "Backend" no longer applies: there is no server, see
-   `docs/system-overview.md`.
-9. PCB layout. The bay station's `.kicad_pcb` has its **4-layer
+1. **Replace the nRF9151 placeholder footprint** with Nordic's real land
+   pattern, and re-verify every Nordic fact against the PDFs -- so far they
+   were read only from Nordic's HTML pages (`docs/decisions.md`, Open).
+2. **Import the BT840 and DWM3001C footprints** from vendor libraries
+   (check pad naming), and resolve the U40, FB1-FB4, TCXO and SMA
+   footprint items.
+3. **Close the redesign's open risks** in `docs/decisions.md`: TCXO
+   availability, GNSS LNA pre-filter, DW3210 exposed-pad net, LIS2DH
+   lifecycle, the 8 MHz SPI budget, zero spare GPIOs.
+4. **Array calibration procedure and fixture** -- the project's critical
+   path; drafted in `docs/verification-plan.md`.
+5. **Firmware**: the NCS skeletons exist but have never been built; the
+   multi-instance DW3000 driver is the gating task (`firmware/README.md`).
+6. Wire the wristband's placement-only sheets (independent of everything
+   above).
+7. PCB layout. The bay station's `.kicad_pcb` has its **4-layer
    controlled-impedance stackup** set from DW3000 Section 7.3.2 Figure 35
-   (1.048mm finished) but is otherwise still genuinely empty: 0 footprints,
-   no outline. Blocked upstream, same as before -- the schematic is mostly
-   placement-only, so there's nothing to import yet.
+   (1.048mm finished) but is otherwise empty: 0 footprints, no outline.
+   **The wristband's `.kicad_pcb` is not an empty stub** -- it already carries
+   36 footprints, a routed board outline, and real DRC findings from the
+   DWM3001C migration (PR #5); U3 (the DWM3001C) still has no footprint.
 
-   **Correction, 2026-11-06: the wristband's `.kicad_pcb` is not an empty
-   stub.** It already carries 36 footprints, a routed board outline, and
-   real DRC findings (100 unrouted ratsnest items, plus silkscreen/clearance
-   violations) from the DWM3001C migration (PR #5, merged). U3 (the
-   DWM3001C itself) has no footprint assigned yet, so it isn't among those
-   36 and can't be placed until one is imported -- see the footprint-caveats
-   note above.
+Done since the last update, for the record: the anchor rework onto four
+discrete DW3210s, the decoupling audit (`docs/passives-reference.md`), the
+two-USB-C item (deleted with the ESP32), the antenna-matching task (deleted
+with the wristband's antenna sheet), the L1 and SW2 footprints, the
+cold-charge THERM sizing, and the bay station's GPIO allocation.
 
 ## System overview
 
 ```
                          A1 ← antenna on coax
                             \
-   ┌─────────────┐           \      ┌───────────────────────────┐
+   ┌─────────────┐           \      ┌────────────────────────────┐
    │  Wristband   │  UWB       ○────│  Bay Station (ONE PCB)     │
    │  (worn tag)  │ ═════════▶ A0   │  4x DW3210, one TCXO       │
-   └─────────────┘  one TX    / \   │  BT840 (nRF52840) host     │
-                             /   \  └───────────┬────────────────┘
-                           A2     A3            │ Bluetooth LE
-                      antennas on ~1-2 m        ▼
-                      coax, rigid frame       Laptop
+   └─────────────┘  one TX    / \   │  nRF9151 host (LTE-M+GNSS) │
+                             /   \  │  BT840 BLE bridge (UART)   │
+                           A2     A3└──────┬──────────────┬──────┘
+                      antennas on ~1-2 m   │ Bluetooth LE │ LTE-M
+                      coax, rigid frame    ▼              ▼ (optional)
+                                         Laptop        network
 
    A0     two-way ranging  -> range to tag
    A1-A3  TDoA vs. A0      -> direction to tag
@@ -328,10 +303,10 @@ reopens part of the 2026-09-19 "no WiFi" call (see `docs/decisions.md`,
   yields all four measurements, deliberately, because the tag is the
   power-constrained side.
 - **Bay station**: four UWB receivers in two roles (one center, three outer)
-  on a single PCB sharing one TCXO + a Fanstel BT840 (nRF52840) host, linking
-  to a laptop over BLE + a BMS designed for long runtime rather than small size
-  (MCP73871 power-path charger + MAX17048 fuel gauge), since the bay station
-  isn't worn. The four antennas sit on ~1-2 m coax runs to a rigid frame --
+  on a single PCB sharing one TCXO, an nRF9151 host (LTE-M + GNSS) with a
+  Fanstel BT840 bridging to a laptop over BLE, and a BMS designed for long
+  runtime rather than small size (MCP73871 power-path charger + MAX17048 fuel
+  gauge), since the bay station isn't worn. The four antennas sit on ~1-2 m coax runs to a rigid frame --
   that's what buys the baseline the bearing measurement needs.
 
 There's no physical connector between the wristband and the bay station --
@@ -370,7 +345,7 @@ number is final.
 | Reference | One 38.4 MHz TCXO -> 1:4 low-skew fan-out buffer -> all 4 DW3210 XTI pins |
 | Coupling | 2200 pF AC-coupled into each XTI; 1 pF from each XTO to ground |
 | TCXO spec | 0.8 V-VDD2 Vpp, -132 dBc/Hz @ 1 kHz, -145 dBc/Hz @ 10 kHz, 40-60% duty (DW3000 Datasheet Table 10) |
-| TCXO + buffer part numbers | Open |
+| TCXO + buffer part numbers | Rakon RPT1490LN + TI LMK1C1104 -- PROPOSED, TCXO availability open |
 
 **Positioning architecture**
 Hybrid two-way-ranging + TDoA, not symmetric multilateration -- see
@@ -386,23 +361,24 @@ Hybrid two-way-ranging + TDoA, not symmetric multilateration -- see
 **Power**
 | | Wristband | Bay station |
 |---|---|---|
-| Regulator | TI TPS7A0233PDBVR LDO, 3.3V | TI TPS62A02PDDCR buck, 2A |
-| Load vs. rating | ~43 mA (4.6x headroom) | ~347-682 mA depending on estimate (3-6x headroom; recheck once clock parts are chosen) |
+| Regulator | TI TPS7A0233PDBVR LDO, 3.3V | TI TPS62A02PDDCR buck -> `+3V3`, 2A; TI TPS63802 buck-boost -> `+VBAT_LTE` 3.59 V, 2A |
+| Load vs. rating | ~43 mA (4.6x headroom) | `+3V3` ~356 mA peak (~446 mA worst case); `+VBAT_LTE` 505 mA LTE TX subframe -- >= 4x headroom on both (`docs/decisions.md`) |
 | Standby | ~2.7 uA | n/a -- BMS optimized for runtime, not size |
 
 **Connectivity**
 | | |
 |---|---|
 | Wristband <-> bay station | UWB only -- one tag transmission per exchange, no other radio link |
-| Bay station -> laptop | Bluetooth LE (GATT service) -- no WiFi, no internet uplink |
-| Georeferencing | u-blox MAX-M10S GNSS + ST LIS3MDL magnetometer + ST LIS2DH accelerometer (bay station only; position + heading both required) |
+| Bay station -> laptop | Bluetooth LE via the BT840 bridge (NUS, framed relay, raw timestamps) -- primary path, no WiFi |
+| Bay station -> network | LTE-M from the nRF9151, optional (station must work with no SIM); service still open |
+| Georeferencing | nRF9151 GNSS (time-shared with LTE) + ST LIS3MDL magnetometer + ST LIS2DH accelerometer (bay station only; position + heading both required) |
 
 **Cost** (one prototype pair, hobbyist qty-1 pricing -- see `docs/bom-cost.md`)
 | | |
 |---|---|
 | Wristband | ~$67 |
-| Bay station | ~$278 |
-| Total | ~$345 |
+| Bay station | ~$263 + unpriced rows (nRF9151, TCXO, ...) |
+| Total | ~$330 + unpriced rows |
 
 **Regulatory**
 No FCC/CE certification -- university prototype, not sold or deployed as a
@@ -412,8 +388,8 @@ product. Revisit as a first-class schedule item if that ever changes.
 | | |
 |---|---|
 | KiCad | 10.0.5 (files on disk still in 8.0 format) |
-| MCUs | Both Nordic -- nRF52833 (wristband, inside DWM3001C) / nRF52840 (bay station, inside the Fanstel BT840) |
-| Firmware SDK | Open -- nRF5 SDK vs. Zephyr / nRF Connect SDK |
+| MCUs | All Nordic -- nRF52833 (wristband, inside DWM3001C) / nRF9151 host + nRF52840 BLE bridge (bay station, the latter inside the Fanstel BT840) |
+| Firmware SDK | nRF Connect SDK v3.4.x (LTS), all images; nRF9151 modem FW 2.0.4 |
 
 ## Repo layout
 
@@ -434,7 +410,9 @@ docs/
   decisions.md               # open + resolved component/architecture decisions log
   passives-reference.md      # every chip's reference-design passives, compiled per-chip
   bom-cost.md                # build cost estimate for one prototype pair
-firmware/                    # nRF52840 / nRF52833 firmware -- skeleton only, nothing written
+  net-contract.md            # bay-station cross-sheet net names
+  verification-plan.md       # bay-station bring-up/test plan + test-point index
+firmware/                    # NCS firmware (nRF9151 / BT840 / nRF52833) -- skeletons, never built
 CLAUDE.md                    # working rules for Claude Code / other coding agents
 CONTRIBUTING.md              # git workflow, sheet conventions, pre-push checks
 ```

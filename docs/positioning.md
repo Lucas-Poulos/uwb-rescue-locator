@@ -327,22 +327,25 @@ budget.
 
 ## Host interface
 
-Fanstel **BT840** (Nordic nRF52840). Four DW3210s share MOSI/MISO/SCLK with
-four chip-select lines -- the DW3000 is a standard non-daisy-chain SPI
-peripheral running to **36 MHz** (20 MHz in CRC mode).
+Nordic **nRF9151** SiP (host since 2026-11-17; the BT840 is now only a BLE
+bridge). Four DW3210s share MOSI/MISO/SCLK with four chip-select lines -- the
+DW3000 is a standard non-daisy-chain SPI peripheral running to **36 MHz**
+(20 MHz in CRC mode).
 
-**Use SPIM3 for the anchor bus.** It is the only high-speed SPI instance on
-the nRF52840 (32 MHz; the others cap at 8 MHz), and 32 MHz is comfortably
-inside the DW3000's 36 MHz ceiling. Check the silicon revision against
-Nordic's erratum on SPIM rates above 8 MHz.
+**The host, not the DW3000, sets the SPI rate: 8 MHz.** Every nRF9151 SPIM
+instance tops out at 8 MHz and none is faster (SPIM3 carries the bus; pins
+and the source in `../bay-station/connectivity_notes.md` section 2). The
+earlier 32 MHz SPIM3 figure was nRF52840-specific. This costs readout time
+-- update rate and A0's reply delay -- not precision; the reply-delay budget
+at 8 MHz is still to be re-derived (`decisions.md`).
 
 **MCU timing jitter does not affect accuracy.** Timestamps are latched in
 hardware at packet reception and read over SPI afterwards, and delayed-TX
-schedules transmissions in the chip rather than the MCU. FreeRTOS and WiFi
+schedules transmissions in the chip rather than the MCU. RTOS and modem
 latency affect update rate, not precision.
 
-Driver: Qorvo's own reference stack targets nRF52840, so start there rather
-than from the community ESP-IDF port. **Caveat either way:** the widely used
+Driver: Qorvo's reference stack targets the nRF52840, not the nRF9151, and
+Qorvo publishes no Zephyr/NCS support. **Caveat either way:** the widely used
 community driver ([br101/dw3000-decadriver-source](https://github.com/br101/dw3000-decadriver-source))
 was trimmed to support only one DW3000 per board. Multi-instance support
 exists upstream and needs restoring -- a bounded integration task.
@@ -354,9 +357,11 @@ place.
 
 - Cable loss per metre at 6.5 GHz for the chosen coax -- affects SNR and so
   timestamp precision. Does NOT gate the baseline; the frame size does.
-- TCXO and 1:4 buffer part selection against the Table 10 spec above.
+- TCXO and 1:4 buffer: Rakon RPT1490LN + TI LMK1C1104 proposed against the
+  Table 10 spec above (`../bay-station/clock_dist_notes.md`); the TCXO looks
+  quote-only.
 - Whether SYNC/OSTR is needed at all now that the clock is genuinely shared.
   The DW3000 **User Manual** (not the datasheet) is the source.
 - Array calibration procedure and fixture.
-- Update rate, multi-tag scheduling, and where the solve happens (on the
-  BT840 or host-side from raw timestamps).
+- Update rate and multi-tag scheduling. (Where the solve happens is
+  resolved: raw timestamps to the laptop, `decisions.md`.)

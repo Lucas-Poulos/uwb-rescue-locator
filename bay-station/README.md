@@ -11,22 +11,25 @@ The fixed reference station. Open `bay-station.kicad_pro` in KiCad.
   **antennas** are remote, on ~1-2 m SMA coax runs to a rigid frame. Read
   `../docs/positioning.md` before touching anything in the anchor, clock,
   coax, or connector path.
-- **Host MCU + link**: Fanstel **BT840** (Nordic nRF52840, resolved
-  2026-09-19) -- drives the four DW3210s and reports position over **BLE to a
-  nearby laptop**. There is no internet uplink; that was dropped deliberately,
-  and dropping it is what allowed the move off the ESP32-S3 to Nordic. See
-  `../docs/decisions.md`.
+- **Host MCU + links**: Nordic **nRF9151** SiP (U20, resolved 2026-11-17)
+  -- drives the four DW3210s, reads the sensors, and has an LTE-M modem and
+  GNSS built in. It has no Bluetooth, so the Fanstel **BT840** (U3,
+  nRF52840) stays as a **UART BLE bridge** to a nearby laptop, which remains
+  the primary link; LTE-M is optional (the station must work with no SIM).
+  See `../docs/decisions.md`, "nRF9151 host redesign".
+- **Georeferencing**: nRF9151 GNSS for position, LIS3MDL + LIS2DH for heading
+  and tilt (`orientation.kicad_sch`).
 - **BMS**: optimized for longevity rather than size, since this board isn't
   worn (contrast with the wristband's compromise-heavy BMS).
 
 Target performance: **10-30 cm at ~10 m, on Channel 5 (6489.6 MHz)**.
 
-> **Schematic capture is done for the anchor array; layout is not.** Four
-> discrete DW3210s share one TCXO through a 1:4 low-skew buffer, with the
-> antennas on ~1-2 m coax. What remains before layout: footprints for the
-> BT840 and the DW3210 exposed pad, TCXO and buffer part selection, and the
-> anchor decoupling, which must be re-derived for a bare IC rather than
-> reused from the module.
+> **Every sheet is wired against `../docs/net-contract.md`; layout has not
+> started, and the board is not fab-ready.** Blocking fab: the nRF9151
+> footprint is a PLACEHOLDER with invented pad positions, the BT840 footprint
+> is still missing, and the TPS63802, TCXO and SMA-launch footprints are
+> placeholders. All Nordic facts were read from Nordic's HTML pages, not the
+> PDFs. Full list: `../docs/decisions.md`, Open.
 >
 > **Array calibration is a deliverable, not a bring-up nicety** -- the design
 > does not meet its accuracy target without it. See `../docs/decisions.md`.
@@ -34,47 +37,31 @@ Target performance: **10-30 cm at ~10 m, on Channel 5 (6489.6 MHz)**.
 ## Status
 
 Ten hierarchical sheets, all registered in `bay-station.kicad_pro`'s
-`sheets` list and wired into `bay-station.kicad_sch` as sheet symbols.
+`sheets` list and wired into `bay-station.kicad_sch` as sheet symbols. Each
+sheet's detail, citations and bring-up tests live in its `*_notes.md`; this
+table is the summary. Pins are assigned in one place:
+`connectivity_notes.md` section 2.
 
-| Sheet | Status | Contents |
-|---|---|---|
-| `power_bms` | **Wired** (62 explicit wires added 2026-09-29 over the existing global-label connectivity; same nets, now drawn), 1 ERC item left (U2 SCL has no I2C pull-up -- its fix, R37-R39 below, landed via PR #9) | Barrel jack + USB-C in -> MCP73871 power-path -> MAX17048 gauge |
-| `connectivity` | Placement only | **BT840 (U3) placed** + C5/C6/C7 decoupling + **R37-R39 I2C pull-ups (2.2k to +3V3, placed not wired)**. Symbol authored; footprint still needed |
-| `uwb_array` | Placement only | **4x DW3210 placed** (U4=A0 center, U5-U7=A1-A3 outer) + R10-R17 straps + R25-R28 IRQ pulldowns + **full per-anchor decoupling from Qorvo Figure 32** (C40-C74, FB1-FB4 beads, R33-R36 RF2 terminations, placed not wired) |
-| `regulation` | **Partially wired** (11 wires, 3 junctions, 5 GND symbols added 2026-09-29); U8's VIN, EN, and PG still unconnected per ERC | TPS62A02PDDCR buck -> +3V3_SYS |
-| `programming_debug` | Placement only in practice (1 wire, 1 junction, 1 GND symbol added 2026-09-29 -- just the ground tie; J3 and SW2 still fully unwired) | **Rebuilt for Nordic**: SWD header (J3) + RESET button (SW2). ESP32 circuitry and the second USB-C deleted |
-| `clock_dist` | Placement only, **new** | Shared 38.4MHz reference: AC-coupling + XTO caps placed, TCXO/buffer TBD |
-| `indicators` | Placement only, **new** | Status LEDs D4-D7 (charge, charge-done, power-good, system) |
-| `testpoints` | Placement only, **new** | TP1-TP21: rails, 2x GND, TCXO + 4x anchor clock, SPI bus, reset, per-anchor CS x4 + IRQ x4 |
-| `gnss` | Placement only, **new** | MAX-M10S GNSS (U9) + LIS3MDL magnetometer (U10) + LIS2DH accelerometer (U11) |
-| `mechanical` | Placement only | 4x M3 mounting holes |
+| Sheet | Status | Contents | Notes |
+|---|---|---|---|
+| `power_bms` | **Wired** | Barrel jack + USB-C in (`+5V_IN`) -> MCP73871 power-path -> `+VSYS`; MAX17048 gauge on `I2C_SCL/SDA`; backup cell with AO3401A + TVS; THERM window sized (+1..+5 degC cold cutoff) | `power_bms_notes.md` |
+| `regulation` | **Wired** | U8 TPS62A02 -> `+3V3`; U40 TPS63802 buck-boost -> `+VBAT_LTE` 3.59 V (nRF9151 VDD); `+3V3` sequenced >= 6 ms after it; UVLO 2.91 V; R300/R302 PPK2 break links | `regulation_notes.md` |
+| `connectivity` | **Wired** | U20 nRF9151 + HDG decoupling; LTE (J10) and GNSS (J11, BGA524N6 LNA) on u.FL; nano-SIM + DNP eSIM; U3 BT840 bridge; I2C pull-ups R37/R38 3.3k, R39 2.2k | `connectivity_notes.md` |
+| `uwb_array` | **Wired** | 4x DW3210 (U4 = A0 center, U5-U7 = A1-A3 outer), Fig 32 decoupling, per-anchor 0R links, SPI-mode-0 straps, pi-match pads, SMA J20-J23, XTO caps C28-C31, DNP A0 fallback crystal | `uwb_array_notes.md` |
+| `clock_dist` | **Wired** | Proposed RPT1490LN TCXO -> LMK1C1104 -> 22R -> 2200 pF -> `UWB_CLK0..3`; no `TCXO_EN` | `clock_dist_notes.md` |
+| `orientation` (was `gnss`) | **Wired** | LIS3MDL (U10, 0x1C) + LIS2DH (U11, 0x19) on `+3V3_SNS`; MAX-M10S removed | sheet notes; `components.csv` |
+| `indicators` | **Wired** | D4/D5 (STAT1/STAT2, from `+VSYS`), D6 (PG, from `+5V_IN`), D7 `LED_SYS`, D400 `LED_LTE`, D401 `LED_LINK` | `../docs/decisions.md`, LED drive rails |
+| `programming_debug` | **Wired** | J3 nRF9151 SWD, J32 BT840 SWD, DNP Tag-Connect J34/J35, J33 debug UART, SW2/SW11 resets, SW12 `BTN_USER` | `programming_debug_notes.md` |
+| `testpoints` | **Wired** | 65 pads on every net-contract net, GND spring pairs; clock pads behind DNP 0R | `../docs/verification-plan.md`, Test-point index |
+| `mechanical` | Placement only | H1-H4 (M3, NPTH), FID1-FID3 | grounding the holes is Open |
 
-**"Placement only" means components are instantiated but nothing is wired**
--- no wires, no global labels.
-
-**ERC, re-run 2026-11-06 with kicad-cli 10.0.5: 596 violations.** 441
-pin_not_connected, 96 power_pin_not_driven, 35 pin_not_driven, 9
-lib_symbol_mismatch, 8 ground_pin_not_ground (the DW3210 VSS pins, still
-unresolved), 6 isolated_pin_label (the MCP73871 status outputs, which
-`indicators` will terminate), and 1 lib_symbol_issues on U8 -- investigated
-and deliberately left alone, see `../docs/decisions.md`. Chain of how this
-number moved: 518 originally -> 497 after the 2026-09-29
-power/regulation/programming-debug wiring pass (pin_not_connected
-360->342, power_pin_not_driven 98->96, pin_not_driven 36->35 -- wiring
-landing, nothing regressed) -> 503 after PR #9's 3 I2C pull-ups (+6, two
-unconnected pins each, placed not wired) -> 589 after PR #8's 43-component
-DW3210 decoupling set (+86, same reason, all landing in pin_not_connected)
--> 596 after adding 7 per-anchor CS/IRQ test points (+7, one unconnected pin
-each, placed not wired -- same as every other test point on this sheet).
-
-**Correction: this was never "ZERO errors."** The previous version of this
-line said so; it wasn't true then either. KiCad's default ERC ruleset marks
-most unconnected-input and unconnected-power-pin findings as `error`
-severity, not `warning` -- 473 of the 497 violations above are `error`
-severity. "Expected, documented, and left for a sheet that isn't wired yet"
-is not the same claim as "warning-level," and conflating them here was a
-real documentation bug, not a wiring one. DRC reports one `invalid_outline`,
-because no board outline is drawn yet.
+**ERC.** Each sheet owner ran `kicad-cli` ERC on the whole project during
+the 2026-11-17 redesign and recorded before/after counts in
+`handoff/*.md` (596 before; 0-10 per redesigned sheet afterwards, the rest
+cross-sheet items waiting on the other branches). A
+whole-project count for the merged branch has not been recorded here yet --
+re-run it before quoting a number. The U8 `lib_symbol_issues` warning is
+deliberate (`../docs/decisions.md`).
 
 ### The PCB
 
@@ -91,173 +78,42 @@ The dielectric numbers (er 4.5, tan d 0.02) are KiCad's FR4 defaults, not
 datasheet values. Controlled impedance means the fab's stackup wins.
 
 **Nothing else is on the board.** No footprints are placed and no outline is
-drawn, and neither is worth doing yet. `power_bms`, `regulation` and
-`programming_debug` now have some real wiring (see Status above), but most
-sheets are still placement-only -- as of 2026-11-06,
-`kicad-cli sch export netlist` reports 372 nets, of which 341 are still
-single-pin `unconnected-(...)` placeholders, leaving ~31 real nets, mostly
-grounds and rail handoffs. Importing footprints now would still give a
-mostly-unconnected pile with little ratsnest to place against. Wire the
-remaining sheets first.
+drawn. With the sheets now wired there is a real netlist to import, so the
+blocker has moved from wiring to the footprints below.
 
-Three parts also could not be placed even if it were wired, because they
-have no footprint assigned: **L1** (no exact KiCad match for the Coilcraft
-XGL3520), **U3** (BT840, awaiting a vendor import) and **SW2** (RESET button,
-never assigned one -- newly found). See `../docs/decisions.md`.
+Parts that cannot be placed as things stand: **U3** (BT840, no footprint --
+import a vendor one, do not hand-author; check pad naming) and **FB1-FB4**
+(no footprint, case size unresolved). Placeholders that must be replaced
+before fab: **U20** (nRF9151), **U40** (TPS63802), **U30** (Rakon TCXO),
+**J20-J23** (SMA launch, needs EM simulation), **U23** (DNP eSIM). L1 and SW2
+were closed on 2026-11-17. See `../docs/decisions.md`.
 
 ### Sheet detail
 
-- **`power_bms.kicad_sch`** -- external power input via DC barrel jack
-  (`Connector:Barrel_Jack`, series Schottky reverse-polarity diode) and a
-  power-only USB-C receptacle (`Connector:USB_C_Receptacle_PowerOnly_6P`,
-  CC1/CC2 5.1k pulldowns), both feeding a shared `+5V_IN` net with its own
-  TVS. Backup Li-Ion cell gets an AO3401A P-MOSFET reverse-polarity "ideal
-  diode" plus its own TVS. MCP73871 charge-management/power-path IC wired per
-  Microchip's typical application circuit (DS20002090E) in
-  AC-DC-adapter/power-path mode (SEL=high), PROG1/PROG3 set for a 500mA
-  fast-charge / 50mA termination profile, plus the VPCC power-path-priority
-  divider, THERM NTC, and IN/OUT/VBAT decoupling. MAX17048 fuel gauge
-  (`bay_station:MAX17048G+T10`) with VDD decoupling, CTG/QSTRT tied per
-  datasheet, ALRT/SCL/SDA brought out via global labels.
+Moved into the per-sheet notes files listed in the Status table, which are
+kept current with each change; the earlier prose summaries here had gone
+stale (they still described the BT840 as host). Two pieces of history worth
+keeping in view:
 
-  ERC-clean except one deliberately-deferred finding (MAX17048 SCL has no
-  driver until the I2C host on `connectivity` is wired). See
-  `power_bms_notes.md`.
-
-- **`connectivity.kicad_sch`** -- Fanstel **BT840** (`U3`, nRF52840) plus
-  `C5`/`C6`/`C7` supply decoupling. Symbol hand-authored: all 65 pins (16
-  castellated, 49 LGA) from the real Fanstel datasheet Ver 1.15 Pin Function
-  table. GND verified on 10/A0/B0/C0/D0/F0-F3, VDD on 9.
-
-  The sheet notes carry what the wiring pass needs: use **SPIM3** for the
-  anchor bus (the only high-speed SPI instance on the nRF52840), and avoid
-  B4/B5/C3/D2 if the design might ever move to a BT840X/XE, where those are
-  PA-control pins.
-
-  Footprint still outstanding, and the datasheet contradicts itself on LGA
-  count (summary says 45, its own table lists 49) -- reconcile both against
-  the mechanical drawing.
-
-- **`uwb_array.kicad_sch`** -- **four DW3210s**, `U4`-`U7`, labelled A0-A3 on the sheet. `U4` is
-  the **center anchor** and does the two-way ranging; `U5`-`U7` are the outer
-  anchors that timestamp the same transmission for TDoA. Symbol hand-authored
-  from the real DW3000 Datasheet v1.3 Table 2.
-
-  Kept from the module revision, because both survive the module-to-IC move
-  unchanged (same DW3000 core) and both were datasheet-verified findings:
-  - `R10`-`R17`, the 10k GPIO5/GPIO6 SPI-mode straps (two per anchor).
-  - `R25`-`R28`, the 100k IRQ pull-downs from Qorvo Figure 11 -- a real gap
-    the passives audit originally caught. Not losing it twice.
-
-  Deleted with the modules: `C8`-`C19`. Those were sized for a single VDD3V3
-  module rail and do not map onto a bare DW3210, which has VDD1 (pin 29, main
-  + I/O), VDD2a/VDD2b (28/23) and VDD3 (26), **plus two decoupling-only pins**
-  -- VTX_D (27) and VIO_D (38) -- that each need their own cap to ground and
-  must not be tied to a rail. Decoupling is deliberately not yet placed;
-  re-derive it from the IC datasheet at wiring time.
-
-- **`regulation.kicad_sch`** -- TI `TPS62A02PDDCR` synchronous buck (`U8`,
-  2.5-5.5V in / 2A, datasheet SLUSEG9E) stepping `+VSYS` down to `+3V3_SYS`.
-  Chosen over the TPS563201/TPS563200 family specifically because its
-  2.5-5.5V input range covers the single-cell-Li-Ion-only `+VSYS` condition
-  that the 4.5V-minimum TPS563201 cannot. Includes the datasheet-recommended
-  1uH inductor (`L1`), input/output caps (`C20`/`C21`), feedforward cap
-  (`C22`), and feedback divider (`R8`=453k/`R9`=100k, targeting 3.318V).
-  Budget re-run twice on 2026-09-19 and now ~347mA against the 2A rating
-  (~5.8x) -- dropping WiFi removed the largest single load. Deliberately
-  oversized and staying that way; see `regulation_notes.md`.
-
-- **`programming_debug.kicad_sch`** *(rebuilt)* -- collapsed to what a Nordic
-  part actually needs: `J3`, a 2x5 1.27mm ARM Cortex Debug SWD header, and
-  `SW2`, the RESET button. Deliberately the **same debug connector as the
-  wristband**, so one probe and one cable serve the whole project.
-
-  Deleted as ESP32-specific: `R18`-`R21` (GPIO0/3/45/46 boot straps -- Nordic
-  has no equivalent), `R22`+`C23` (EN reset RC -- the nRF52840 has internal
-  POR), `SW1` (BOOT button -- no boot-mode pin), and `J3`+`R23`/`R24` (the
-  data-capable USB-C, which existed only for ESP32-S3 native-USB flashing).
-
-  **That last deletion resolves the two-USB-C open item** -- by removal
-  rather than by choosing between connectors. The board is back to one USB-C:
-  the power-only `J2` on `power_bms.kicad_sch`.
-
-  Exact BT840 pin numbers for SWDIO/SWCLK/RESET are not filled in yet, for
-  the same reason as `connectivity`.
-
-- **`clock_dist.kicad_sch`** *(new)* -- the defining block of this board's
-  architecture. Holds the shared 38.4 MHz reference network that makes TDoA
-  across four receivers possible at all. Topology is TCXO -> 1:4 low-skew
-  fan-out buffer -> 2200 pF AC coupling -> each DW3210's XTI, with 1 pF from
-  each XTO to ground.
-
-  Placed: `C24`-`C27` (2200 pF AC coupling) and `C28`-`C31` (1 pF XTO-to-GND)
-  -- the passives whose values the DW3000 datasheet actually specifies. The
-  **TCXO and buffer parts are not yet selected** (open item); the sheet
-  carries the full Table 10 selection spec as an in-schematic note so
-  whoever picks them has it to hand.
-
-- **`indicators.kicad_sch`** *(new)* -- status LEDs. Before this sheet the
-  bay station had no user-visible indication of any kind, which is a poor
-  property for a device whose job is locating someone in trouble.
-  `D4`/`R29` from MCP73871 `STAT1` (charging), `D5`/`R30` from `STAT2`
-  (charge complete), `D6`/`R31` from `~PG` (external power good) -- all
-  three charger outputs were previously unconnected -- plus `D7`/`R32` on an
-  BT840 GPIO for firmware-driven system status. 0805 LEDs, 0603 series
-  resistors at an indicative 1k.
-
-- **`testpoints.kicad_sch`** *(new)* -- 21 probe points, chosen against this
-  board's real risks rather than sprinkled evenly. `TP5` on the TCXO and
-  `TP6`-`TP9` on each DW3210 XTI cover the shared clock, which is the signal
-  that silently produces nonsense rather than failing loudly if it is missing
-  at one anchor. `TP10`-`TP12` (shared SPI bus: SCLK/MOSI/MISO) plus `TP14`
-  (shared anchor reset) serve the multi-instance driver bring-up. `TP1`/`TP2`
-  are the rails.
-
-  **Per-anchor CS and IRQ, added 2026-11-06.** The shared SPI bus alone
-  doesn't tell you which anchor is actually being addressed, and only A0's
-  IRQ was probed -- added `TP15`-`TP18` (`CS_A0`-`CS_A3`) and `TP19`-`TP21`
-  (`IRQ_A1`-`IRQ_A3`; `IRQ_A0` was already `TP13`), so every anchor's
-  chip-select and interrupt line has its own point rather than one anchor
-  standing in for all four.
-
-  **Two grounds, deliberately.** `TP3` is sited next to the clock points so a
-  scope can use a short ground spring -- at 38.4 MHz a flying clip lead's
-  inductance distorts what you are trying to measure. `TP4` is general
-  purpose, elsewhere on the board.
-
-  **Layout caveat on the sheet:** a test point on the clock network is a stub,
-  and stubs degrade exactly the signal integrity this design depends on. Keep
-  `TP5`-`TP9` minimal and on the existing routing; if layout cannot take all
-  four anchor clock points, keep `TP6`/`TP7` and drop the rest -- two is
-  enough to compare skew.
-
-- **`mechanical.kicad_sch`** -- four `Mechanical:MountingHole` instances
-  (`H1`-`H4`, M3 clearance, no electrical connection) at placeholder
-  positions. Final positions depend on the enclosure and on the anchor
-  topology, neither finalized.
+- `programming_debug` was rebuilt for Nordic on 2026-09-19, deleting the
+  ESP32-S3 boot straps, EN RC, BOOT button and the data USB-C -- which is why
+  the board has a single, power-only USB-C (`J2`).
+- `uwb_array` kept R10-R17 (GPIO5/6 SPI-mode straps) and R25-R28 (IRQ
+  pull-downs, Qorvo Figure 11) through the module-to-IC move, because both
+  are DW3000-core requirements; the module-era C8-C19 were deleted.
 
 ### Next up
 
-1. **Wire the remaining sheets.** `power_bms`, `regulation`, and
-   `programming_debug` have a start (see Status above); `connectivity`,
-   `uwb_array`, `clock_dist`, `gnss`, `indicators`, and `testpoints` are
-   still placement-only, so the PCB has little to import yet. This is now
-   the real blocker, ahead of the footprint work: power rails from
-   `power_bms`, SPI/GPIO between U3 and the anchors, the clock fan-out, and
-   the I2C bus U10/U11 share with U2.
-2. **Resolve the three unassigned footprints:** U3 (BT840 -- import a vendor
-   one, do not hand-author; check pad naming), L1 (pick the exact inductor
-   PN) and SW2 (RESET button, no part chosen). DW3210 already has one --
-   `Package_DFN_QFN:QFN-40-1EP_5x5mm_P0.4mm_EP3.6x3.6mm`, still to be
-   verified against the datasheet package drawing.
-3. **Draw the board outline.** Edge.Cuts is empty, which is the single open
-   DRC violation. No dimensions have been decided anywhere, so this is a
-   decision to make rather than a task to do.
-4. Select the TCXO and 1:4 fan-out buffer, and place them on `clock_dist`.
-   Add the four SMA antenna connectors to `uwb_array`.
-5. Work through the open items in `../docs/decisions.md` -- cable loss,
-   TCXO/buffer selection, and array calibration all gate layout. (No FCC/CE
-   work: university prototype, not certified.)
+1. **Replace the nRF9151 footprint** with Nordic's real land pattern and
+   re-verify the Nordic facts against the PDFs.
+2. **Import the BT840 footprint**; resolve U40, FB1-FB4, TCXO and SMA
+   footprints; design the SMA launch.
+3. **Re-run whole-project ERC** on the merged branch and record it above.
+4. **Draw the board outline** -- no dimensions have been decided anywhere,
+   so this is a decision to make rather than a task to do.
+5. Work through the Open items in `../docs/decisions.md` -- TCXO
+   availability, GNSS pre-filter, DW3210 exposed pad, cable loss, array
+   calibration. (No FCC/CE work: university prototype, not certified.)
 
 ## Libraries
 

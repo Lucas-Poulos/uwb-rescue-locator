@@ -12,14 +12,18 @@ footprint -> datasheet URL -> verification notes).
 ## What's in here
 
 ```
-bay_station.kicad_sym   # 3 hand-authored symbols: DW3210, BT840, MAX17048G+T10
-bay_station.pretty/     # 1 hand-authored footprint: MAX17048_TDFN8-EP_PLACEHOLDER
+bay_station.kicad_sym   # 10 hand-authored symbols: DW3210, BT840, MAX17048G+T10, nRF9151,
+                        #   BGA524N6, TPS7A0228PDBVR, eSIM_MFF2, TPS63802, LMK1C1104PW, RPT1490LN
+bay_station.pretty/     # 7 hand-authored footprints -- 6 of them *_PLACEHOLDER (MAX17048 TDFN8,
+                        #   nRF9151 LGA-113 [invented pads, do NOT fab], TPS63802 DLA0010A,
+                        #   Rakon RPT1490LN, Linx SMA edge launch, eSIM MFF2); only
+                        #   Infineon_TSNP-6-2 (BGA524N6) is verified
 sym-lib-table           # project-local library registration (symbols) -- not touched here
 fp-lib-table            # project-local library registration (footprints) -- not touched here
 components.csv          # BOM -> symbol/footprint mapping + verification notes
 ```
 
-Everything else this board needs -- the BT840 host (now in this library), the
+Everything else this board needs -- the
 MCP73871 charge-management IC, the DC barrel jack, USB-C receptacle, battery
 connector/holder, protection diodes, LEDs, and passives -- matched something
 already in KiCad's own bundled default libraries (after checking pin-by-pin

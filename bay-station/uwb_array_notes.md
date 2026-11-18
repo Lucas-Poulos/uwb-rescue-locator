@@ -60,10 +60,9 @@ needs a pull-up of at most 10k to VIO_D. R10-R17 are 10k **pull-downs**, so
 they select **mode 0** and only make it deterministic.
 
 **Firmware must run the anchor bus in SPI mode 0 (CPOL=0, CPHA=0).** Limit:
-36 MHz in mode 0, 20 MHz in CRC mode (Table 19). The old note in
-positioning.md about nRF52840 SPIM3 at 32 MHz no longer applies with the
-nRF9151 host -- connectivity needs to check what the nRF9151 SPIM tops out at.
-(I believe the nRF91 family's SPIM is 8 Mbps max, but I did not verify it.)
+36 MHz in mode 0, 20 MHz in CRC mode (Table 19). The host is the limit
+instead: every nRF9151 SPIM instance caps at 8 MHz (`connectivity_notes.md`
+section 2, from the nrfx MDK).
 
 ## Power
 
