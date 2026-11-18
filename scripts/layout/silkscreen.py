@@ -1052,6 +1052,37 @@ def check(c, verbose=True):
     return res
 
 
+def trim_native(c):
+    """Delete native footprint F.SilkS graphics that sit within the pad clearance of any pad or inside the
+    edge margin.  Vendor and placeholder outlines (TCXO U30, eSIM U23, fuel gauge U2) run along the pads and
+    BT1's outline touches the board edge; KiCad clips mask-opening silk at plot time but DRC still flags it.
+    The segments move to F.Fab, so the outline stays as documentation but is not printed."""
+    pads = []
+    for f in c.b.GetFootprints():
+        for pd in f.Pads():
+            pads.append((pd.GetEffectiveShape(F_Cu), box_of(pd.GetBoundingBox())))
+    doomed = []
+    for f in c.b.GetFootprints():
+        shapes = []
+        for g in f.GraphicalItems():
+            shapes.append(g)
+        for sh in shapes:
+            if sh.GetLayer() != F_SilkS or sh.GetClass() != 'PCB_SHAPE':
+                continue
+            bb = box_of(sh.GetBoundingBox())
+            es = sh.GetEffectiveShape()
+            hit = any(overlap(bb, pb) and es.Collide(ps, 0) for ps, pb in pads)
+            if not hit and c.outline is not None:
+                hit = not inside(bb, infl(c.outline, -EDGE_CLR_CHECK))
+            if hit:
+                doomed.append((f, sh))
+    for f, sh in doomed:
+        sh.SetLayer(F_Fab)          # Remove() on a footprint-owned item segfaults pcbnew; F.Fab keeps the outline
+    n = len(doomed)
+    c.say("trimmed %d native silk graphics touching pads or the board edge" % n)
+    c.stats["native_trimmed"] = n
+
+
 def enforce(c):
     """Remove generated items that violate the checker; refs go to F.Fab."""
     for rnd in range(4):
@@ -1143,6 +1174,7 @@ def main():
     for it in c.gen:
         g.AddItem(it)
 
+    trim_native(c)
     res = enforce(c)
     n = summarize(c, res)
     print("stats:", dict(sorted(c.stats.items())))
