@@ -282,7 +282,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_DFN_QFN:QFN-40-1EP_5x5mm_P0.4mm_EP3.6x3.6mm"
+		(property "Footprint" "bay_station:Qorvo_DW3210_QFN-40_5x5mm_P0.4mm_NoEP_PLACEHOLDER"
 			(at 0 0 0)
 			(effects
 				(font

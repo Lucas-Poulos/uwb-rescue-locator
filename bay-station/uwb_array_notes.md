@@ -155,9 +155,11 @@ was given to uwb) -- renumber at merge if wanted. Contract nets
 
 ## Open / not verified
 
-- **DW3210 exposed pad.** The footprint has an EP; the symbol has 40 pins and
-  Table 2 does not name it. Almost certainly GND, **not verified** -- check
-  Fig 38 / a Qorvo reference layout before layout.
+- **DW3210 has no exposed pad** (DW3000 DS v1.1 Fig. 38, Table 2; resolved
+  2026-11-18, `docs/decisions.md`). The footprint is now the 40-pad no-EP
+  `Qorvo_DW3210_QFN-40_5x5mm_P0.4mm_NoEP_PLACEHOLDER`. At layout, follow Fig. 35:
+  no copper under the body on Top and Inner Layer 1, first solid ground on Inner
+  Layer 2. The terminal land length is still unverified.
 - **Shared RSTn contention.** RSTn is "O-H" (driven high after reset) on
   every chip and they are tied together. If one chip is still in POR (holding
   RSTn low) while another drives it high, they fight. On one rail they should

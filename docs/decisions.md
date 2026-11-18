@@ -5,57 +5,6 @@ relitigate them. Keep this updated as the team decides things.
 
 ## Open
 
-- **U8 `lib_symbol_issues` warning -- tested 2026-11-18; recommendation is to
-  rename the lib_id, NOT yet applied.**
-  ERC reports `Symbol 'TPS62A02PDDCR' not found in symbol library
-  'Regulator_Switching'`. The library's symbol is `TPS62A02PDDC` (the trailing
-  R is TI's tape-and-reel suffix on the orderable part number, not part of the
-  KiCad symbol name), and KiCad 10.0.5's copy is `(extends "TPS62A01PDDC")`.
-
-  **The earlier worry (an `extends` lib symbol silently zeroes the file) does
-  not apply here, and was tested.** The `extends` problem is about an
-  `extends` symbol embedded in the schematic's own `lib_symbols` cache.
-  `regulation.kicad_sch` embeds a flattened 6-pin copy, and renaming only
-  changes the name that copy is filed under. Experiment, run from a scratch
-  directory on a copy of `bay-station/` (the repo untouched): renamed the
-  cache entry, its two unit sub-symbols and the U8 instance `lib_id` to
-  `TPS62A02PDDC`, then ran `kicad-cli sch erc` / `sch export bom` (KiCad
-  10.0.5).
-
-  | Run | Violations | BOM lines |
-  |---|---|---|
-  | `regulation.kicad_sch`, as committed | `lib_symbol_issues` 2 (the U8 one + `bay_station` lib not in the standalone config), `power_pin_not_driven` 2, `footprint_link_issues` 1 | 43, U8 present |
-  | same, renamed | `lib_symbol_issues` 1, **`lib_symbol_mismatch` 1 (U8)**, others unchanged | 43, U8 present |
-  | `bay-station.kicad_sch` (whole project), as committed | `lib_symbol_mismatch` 6, `lib_symbol_issues` 1 (U8) | 425 |
-  | same, renamed | `lib_symbol_mismatch` 7, `lib_symbol_issues` 0 | 425 |
-
-  Component count stays non-zero in both runs, so the rename does not trip
-  the silent-empty-file failure. It does **not** remove the warning, it
-  converts it: "not found" becomes "doesn't match copy in library", which is
-  the same state AO3401A, Battery_Cell and four other parts are already in
-  (the project's accepted pattern for flattened copies).
-
-  **Recommendation: rename.** A lib_id that resolves is the honest state (the
-  symbol *is* KiCad's `TPS62A02PDDC`; only the cache is flattened), and it
-  stops the warning from hiding a real missing-library problem. Keep `Value`
-  = `TPS62A02PDDCR` (orderable MPN). Exact change, in
-  `bay-station/regulation.kicad_sch` only (4 places plus prose):
-  1. `(symbol "Regulator_Switching:TPS62A02PDDCR"` (cache, ~line 766) ->
-     `(symbol "Regulator_Switching:TPS62A02PDDC"`
-  2. `(symbol "TPS62A02PDDCR_0_1"` and `(symbol "TPS62A02PDDCR_1_1"` (~851,
-     ~864) -> `TPS62A02PDDC_0_1` / `TPS62A02PDDC_1_1`
-  3. `(lib_id "Regulator_Switching:TPS62A02PDDCR")` (U8 instance, ~5195) ->
-     `...:TPS62A02PDDC`
-  4. In the cache `Description` (~818) change "KiCad's real
-     Regulator_Switching:TPS62A02PDDCR" to `...:TPS62A02PDDC`.
-  Do **not** touch the `Value` properties. Re-run ERC from a scratch dir and
-  expect exactly +1 `lib_symbol_mismatch`, -1 `lib_symbol_issues`, BOM still
-  425. If instead ERC reports 0 components, revert (a stale GUI save or an
-  `extends` symbol crept into the cache).
-
-  (The missing BOM rows and SW2 footprint that used to sit in this item were
-  closed on 2026-11-17 -- see Resolved.)
-
 ### nRF9151 redesign -- open risks (2026-11-17)
 
 Raised by the five sheet/firmware handoffs (`bay-station/handoff/*.md`,
@@ -85,7 +34,7 @@ Raised by the five sheet/firmware handoffs (`bay-station/handoff/*.md`,
   the taper / ground cut-back at 6.5 GHz has to be designed, not guessed. The
   connector is rated for 1.07 mm boards and this one is 1.048 mm.
   `uwb_array_notes.md`, RF front end.
-- **DW3210 has NO exposed pad -- the footprint is wrong (found 2026-11-18).**
+- **DW3210 has NO exposed pad (found 2026-11-18; footprint fixed, land pattern still a placeholder).**
   The EP net question is closed by there being nothing to connect. Qorvo
   DW3000 Datasheet v1.1 (two byte-identical copies in `~/Downloads`),
   **Figure 38 "Package Dimensions QFN" (s9.2.1, p49)**, rendered at 300 dpi:
@@ -105,15 +54,11 @@ Raised by the five sheet/firmware handoffs (`bay-station/handoff/*.md`,
   the body and solid ground with stitching vias under the other half. So **a
   3.6 x 3.6 mm copper pad under the chip, as the current footprint has,
   contradicts Qorvo's own layout.**
-  Action (footprint owner, not done here): replace
-  `QFN-40-1EP_5x5mm_P0.4mm_EP3.6x3.6mm` with a 40-pad, no-EP, 5x5 mm,
-  0.4 mm pitch footprint (KiCad 10.0.5 ships no such QFN: every QFN-40 5x5
-  0.4 mm there has an EP). Hand-author it from Figure 38, name it
-  `_PLACEHOLDER` until terminal length and pad extension are confirmed
-  against a Qorvo CAD model, and copy the keep-out from Figure 35. The symbol
-  (40 pins, no EP pin) is already right. Residual uncertainty: Figure 38 is
-  a package drawing, not a land pattern, and the Figure 35 photo was read by
-  eye at 250 dpi, not measured.
+  Footprint replaced 2026-11-18 (see Resolved): `bay_station:Qorvo_DW3210_QFN-40_5x5mm_P0.4mm_NoEP_PLACEHOLDER`.
+  Still open: terminal length and pad extension against a Qorvo CAD model
+  (Figure 38 is a package drawing, not a land pattern), and the Figure 35
+  copper keep-out under the body, which is a layout rule, not part of the
+  footprint. The Figure 35 photo was read by eye at 250 dpi, not measured.
 - **FB1-FB4 (BLM03PG330SN1D): footprint assigned, land pattern unverified.**
   Case size is 0201 inch / 0603 metric (0.6 x 0.3 x 0.3 mm), assigned the
   stock `Inductor_SMD:L_0201_0603Metric` on 2026-11-18, but the Murata PDF
@@ -569,6 +514,15 @@ not settle:
 
 ## Resolved
 
+- **U8 lib_id renamed to `TPS62A02PDDC` (2026-11-18).** Applied in
+  `regulation.kicad_sch` only (cache symbol name, its two unit sub-symbols, the
+  U8 instance `lib_id`, and the description text); both `Value` properties stay
+  `TPS62A02PDDCR`, the orderable part. Whole-project ERC before -> after:
+  `lib_symbol_issues` 1 -> 0 and `lib_symbol_mismatch` 6 -> 7 (U8 now in the same
+  "doesn't match copy in library" state as AO3401A and the other flattened
+  parts); BOM stayed at 425 lines with U8 present, so the `extends` silent-empty
+  failure did not occur. The earlier test and edit list were removed from Open.
+
 ### Process (2026-11-18)
 
 - **PR #7 / `feat/bay-station-wifi` (ESP32-C5 Wi-Fi co-processor) is
@@ -1008,14 +962,18 @@ from SnapEDA / SnapMagic / Ultra Librarian / Flux was used.
   take all four anchor clock points, keep TP6/TP7 and drop TP8/TP9 -- two is
   enough to compare skew.
 
-- **DW3210 footprint: KiCad stock `QFN-40-1EP_5x5mm_P0.4mm_EP3.6x3.6mm` --
-  WRONG, the part has no exposed pad (2026-11-18; see Open, "DW3210 has NO
-  exposed pad").** Chosen 2026-09 because it is the only QFN-40 5x5 mm,
-  0.4 mm-pitch family KiCad ships with 40 signal pads and the right 3.6 mm
-  row span (pad 1 at y = -1.8 mm); the 3.6 x 3.6 mm EP was an unverified
-  guess from a generic Microchip spec, which Qorvo DW3000 DS v1.1 Figure 38
-  and s7.3 / Figure 35 contradict. The 40 signal pads of that footprint stay
-  correct as a starting point; the centre pad has to go.
+- **DW3210 footprint: no-EP QFN-40, `Qorvo_DW3210_QFN-40_5x5mm_P0.4mm_NoEP_PLACEHOLDER`
+  (2026-11-18).** Supersedes the 2026-09 choice of KiCad stock
+  `QFN-40-1EP_5x5mm_P0.4mm_EP3.6x3.6mm`, whose 3.6 x 3.6 mm centre pad was an
+  unverified guess from a generic Microchip spec; Qorvo DW3000 DS v1.1
+  Figure 38 and s7.3 / Figure 35 show no exposed pad (Open entry above has the
+  evidence). KiCad ships no no-EP 5x5 mm 0.4 mm QFN-40, so the new file is the
+  stock one with the centre pad, its nine paste pads and the 3D model (which
+  draws the EP) removed: 40 pads, numbered 1-40 as in the symbol, so the
+  netlist is unchanged. The terminal pads are still 0.25 mm on 0.4 mm pitch, so
+  the 0.15 mm default clearance above is unaffected. Kept `_PLACEHOLDER`
+  because the terminal length / pad extension is KiCad's generic IPC value, not
+  Qorvo's.
 
 - **Superseded parts are removed from schematics, not left in place.**
   Convention set 2026-09-19 after the bay station ended up with three sheets

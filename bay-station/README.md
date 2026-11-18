@@ -61,8 +61,9 @@ the 2026-11-17 redesign and recorded before/after counts in
 `handoff/*.md` (596 before; 0-10 per redesigned sheet afterwards, the rest
 cross-sheet items waiting on the other branches). A
 whole-project count for the merged branch has not been recorded here yet --
-re-run it before quoting a number. The U8 `lib_symbol_issues` warning is
-deliberate (`../docs/decisions.md`).
+re-run it before quoting a number. U8's lib_id was renamed to `TPS62A02PDDC`
+on 2026-11-18, so its warning is now a `lib_symbol_mismatch`
+(`../docs/decisions.md`).
 
 ### The PCB
 
@@ -112,7 +113,7 @@ keeping in view:
 4. **Draw the board outline** -- no dimensions have been decided anywhere,
    so this is a decision to make rather than a task to do.
 5. Work through the Open items in `../docs/decisions.md` -- TCXO
-   availability, GNSS pre-filter, DW3210 exposed pad, cable loss, array
+   availability, GNSS pre-filter, cable loss, array
    calibration. (No FCC/CE work: university prototype, not certified.)
 
 ## Libraries

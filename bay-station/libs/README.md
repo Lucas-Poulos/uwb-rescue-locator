@@ -80,7 +80,7 @@ footprint, if one is published -- before sending this board to fab.
 | **Reused unmodified from KiCad's own default libraries (generic parts, not IC-pinout-sensitive)** | `Barrel_Jack` + CUI PJ-063AH footprint, `USB_C_Receptacle_PowerOnly_6P` + GCT USB4125 footprint, `D_Schottky` + SMA, `D_TVS` + SOD-523, `Battery_Cell` + JST-PH or 18650 holder, `LED` + 0805, `R`/`C`/`Thermistor_NTC` |
 | **Hand-authored 2026-09-19, all pins from the real datasheet via `pdftotext -raw`** | `DW3210` (40 pins, DW3000 Datasheet v1.3 Table 2 -- NOTE `-layout` mangles that table), `BT840` (65 pins, Fanstel Ver 1.15 Pin Function table) |
 | **Footprints built from vendor files, 2026-11-18** | `Fanstel_BT840_Module_14x16mm_16Cast_49LGA`, `Nordic_nRF9151_LGA-113_12.1x11.1mm_P0.5mm`, `TI_DLA0010A_VSON-HR-10_2x3mm_P0.5mm` -- see the next section |
-| **Footprints still open** | `DW3210` uses KiCad stock `QFN-40-1EP_5x5mm_P0.4mm_EP3.6x3.6mm`, which is **wrong**: the DW3210 has no exposed pad (DW3000 DS v1.1 Fig. 38, Table 2, Fig. 35), so it needs a hand-authored no-EP `_PLACEHOLDER` (`docs/decisions.md`, Open). FB1-FB4 use stock `Inductor_SMD:L_0201_0603Metric`; Murata's BLM03PG land table was not obtainable |
+| **Footprints still open** | `DW3210` uses `Qorvo_DW3210_QFN-40_5x5mm_P0.4mm_NoEP_PLACEHOLDER` (no exposed pad, DW3000 DS v1.1 Fig. 38; terminal pads are KiCad's generic QFN-40 values, not Qorvo's). FB1-FB4 use stock `Inductor_SMD:L_0201_0603Metric`; Murata's BLM03PG land table was not obtainable |
 
 ## Footprints built from vendor files (2026-11-18)
 
