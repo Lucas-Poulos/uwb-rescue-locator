@@ -55,7 +55,8 @@ CLASS_RANK = {"POWER_HI": 0, "POWER_MID": 1, "FASTDIG": 2, "POWER_LO": 3, "CLK":
 
 class Router:
     def __init__(self, model, seconds=900.0, skip_classes=("RF50", "CLK"), do_gnd=True, verbose=True, only=None,
-                 prio=None, max_rips=MAX_RIPS, passes=0):
+                 prio=None, max_rips=MAX_RIPS, passes=0, jobs=1, skip_nets=()):
+        self.skip_nets = set(skip_nets)
         self.passes = passes
         self.min_via = min(v["via_dia"] for v in model.nets.values())
         self.post_floor = True
@@ -84,7 +85,10 @@ class Router:
         self.hist = [array('H', bytes(2 * n)), array('H', bytes(2 * n))]
         self.fail_info = {}
         self.plan = None
-        self.jobs = 1
+        self.jobs = jobs
+        self.base_iid = 0
+        self.syncops = []
+        self.bbox_cache = {}
 
     # ------------------------------------------------------------------ helpers
     def log(self, *a):
@@ -576,10 +580,10 @@ class Router:
                     l1 = self.dec(path[-1])[2]
                     # pad stubs were cached against older copper: re-verify exactly
                     bad = False
-                    if not self.stub_ok(net, LAYER_OF[l0], sp):
+                    if not self.stub_ok(net, l0, sp):
                         comp["nodes"].pop(path[0], None)
                         bad = True
-                    if not self.stub_ok(net, LAYER_OF[l1], gp):
+                    if not self.stub_ok(net, l1, gp):
                         tree_nodes.pop(path[-1], None)
                         bad = True
                     if bad:
@@ -668,7 +672,7 @@ class Router:
         for idx, info in self.m.nets.items():
             if info["name"] == "GND" or info["name"].startswith("unconnected-"):
                 continue
-            if info["cls"] in self.skip or len(info["pads"]) < 2:
+            if info["cls"] in self.skip or len(info["pads"]) < 2 or info["name"] in self.skip_nets:
                 continue
             if self.only is not None and info["name"] not in self.only:
                 continue
@@ -680,6 +684,255 @@ class Router:
             return (max(xs) - min(xs)) + (max(ys) - min(ys))
         out.sort(key=lambda i: (-self.prio.get(self.m.nets[i]["name"], 0), CLASS_RANK.get(self.m.nets[i]["cls"], 9), hpwl(i)))
         return out
+
+    # ------------------------------------------------------------------ queue processing
+    def bump_hist(self, cells):
+        for (cl, ci) in cells:
+            self.hist[cl][ci] = min(HIST_MAX, self.hist[cl][ci] + HIST_INC)
+
+    def apply_ops(self, ops):
+        """Replicated state changes (identical on the master and on every worker)."""
+        for op in ops:
+            k = op[0]
+            if k == "seg":
+                _, net, l, x0, y0, x1, y1, w, stub, iid = op
+                self._seg_rec(net, l, x0, y0, x1, y1, w, stub, iid)
+                self.base_iid = max(self.base_iid, iid)
+            elif k == "via":
+                _, net, x, y, dia, drill, iid = op
+                self._via_rec(net, x, y, dia, drill, iid)
+                self.base_iid = max(self.base_iid, iid)
+            elif k == "rip":
+                self.rip(op[1])
+            elif k == "ripc":
+                self.rips[op[1]] = self.rips.get(op[1], 0) + 1
+            elif k == "hist":
+                self.bump_hist(op[1])
+
+    def net_bbox(self, net, margin=4.0):
+        bb = self.bbox_cache.get(net)
+        if bb is None:
+            ps = self.m.nets[net]["pads"]
+            xs = [p["c"][0] for p in ps]
+            ys = [p["c"][1] for p in ps]
+            bb = (min(xs) - margin, min(ys) - margin, max(xs) + margin, max(ys) + margin)
+            self.bbox_cache[net] = bb
+        return bb
+
+    @staticmethod
+    def overlap(a, b):
+        return not (a[2] < b[0] or b[2] < a[0] or a[3] < b[1] or b[3] < a[1])
+
+    def process(self, q, own_rip):
+        """Route the nets in list q (victims are appended); returns the nets left when time ran out."""
+        if self.jobs <= 1:
+            done = 0
+            while q and time.time() < self.deadline:
+                net = q.pop(0)
+                if own_rip and self.rec.get(net):
+                    self.rip(net)
+                requeue, left = self.route_net(net)
+                for c in requeue:
+                    if c not in q:
+                        q.append(c)
+                done += 1
+                if done % 25 == 0:
+                    self.log("  %d nets processed, queue %d, %.0fs, failed so far %d" %
+                             (done, len(q), time.time() - self.t0, len(self.failed)))
+            return q
+        return self.process_parallel(q, own_rip)
+
+    def plan_begin(self):
+        self.plan = dict(ops=[], victims={}, ripc=[])
+        self.iid = 10 ** 9
+
+    def plan_end(self, net):
+        pl = self.plan
+        self.plan = None
+        self.rip(net)
+        for c, recs in pl["victims"].items():
+            self.restore(c, recs)
+        for c in pl["ripc"]:
+            self.rips[c] -= 1
+        self.iid = self.base_iid
+        return pl["ops"]
+
+    def worker_main(self, conn):
+        try:
+            while True:
+                msg = conn.recv()
+                if msg is None:
+                    break
+                ops, net = msg
+                self.apply_ops(ops)
+                e0, s0 = self.stats["expanded"], self.stats["searches"]
+                l0, v0 = self.stats.get("limit_hits", 0), self.stats.get("verify_rejects", 0)
+                self.necked.pop(net, None)
+                nstart = (len(self.obst.items), sum(len(v) for v in self.rec.values()))
+                self.plan_begin()
+                requeue, left = self.route_net(net)
+                nm = self.m.nets[net]["name"]
+                res = dict(net=net, left=left, requeue=list(requeue), necked=self.necked.get(net),
+                           fail=self.fail_info.get(nm), exp=self.stats["expanded"] - e0,
+                           srch=self.stats["searches"] - s0, lim=self.stats.get("limit_hits", 0) - l0,
+                           vr=self.stats.get("verify_rejects", 0) - v0)
+                res["nobst"] = nstart
+                res["ops"] = self.plan_end(net)
+                conn.send(res)
+        except (EOFError, KeyboardInterrupt):
+            pass
+        except Exception:
+            import traceback
+            try:
+                conn.send(dict(error=traceback.format_exc()))
+            except Exception:
+                pass
+
+    def apply_plan(self, net, ops):
+        """Master: exact re-check of a worker's plan against the current copper, then replicate it.
+        Returns the list of nets ripped, or None if the plan went stale."""
+        victims = {op[1] for op in ops if op[0] == "rip"}
+        for op in ops:
+            if op[0] == "seg":
+                _, n, l, x0, y0, x1, y1, w, stub, iid = op
+                if not self.obst.seg_ok(n, l, x0, y0, x1, y1, w / 2, ignore=victims):
+                    self.stale_why = op
+                    return None
+            elif op[0] == "via":
+                _, n, x, y, dia, drill, iid = op
+                for ll in (F, B):
+                    if not self.obst.seg_ok(n, ll, x, y, x, y, dia / 2, ignore=victims):
+                        self.stale_why = op
+                        return None
+        mops, ripped = [], []
+        for op in ops:
+            k = op[0]
+            if k == "seg":
+                self.iid += 1
+                mops.append(op[:9] + (self.iid,))
+            elif k == "via":
+                self.iid += 1
+                mops.append(op[:6] + (self.iid,))
+            elif k == "rip":
+                if self.rec.get(op[1]):
+                    mops.append(op)
+                    mops.append(("ripc", op[1]))
+                    ripped.append(op[1])
+            else:
+                mops.append(op)
+        self.apply_ops(mops)
+        self.syncops.extend(mops)
+        return ripped
+
+    def process_parallel(self, q, own_rip):
+        import multiprocessing as mp
+        from multiprocessing.connection import wait
+        ctx = mp.get_context("fork")
+        n = self.jobs
+        conns, procs = [], []
+        for _ in range(n):
+            pc, cc = ctx.Pipe()
+            p = ctx.Process(target=self.worker_main, args=(cc,), daemon=True)
+            p.start()
+            cc.close()
+            conns.append(pc)
+            procs.append(p)
+        synced = [len(self.syncops)] * n
+        busy = {}                 # worker -> (net, bbox)
+        idle = list(range(n))
+        stale, age, solo = {}, {}, set()
+        done = 0
+        lastlog = time.time()
+        try:
+            while True:
+                while idle and q and time.time() < self.deadline:
+                    if any(b[0] in solo for b in busy.values()):
+                        break
+                    pick = None
+                    for qi in range(min(len(q), 40)):
+                        net = q[qi]
+                        bb = self.net_bbox(net)
+                        if net in solo:
+                            if not busy:
+                                pick = qi
+                            break
+                        if all(not self.overlap(bb, b[1]) for b in busy.values()):
+                            pick = qi
+                            break
+                        if qi == 0 and age.get(net, 0) > 6:
+                            break              # head of line is starving: let the workers drain
+                    if pick is None:
+                        age[q[0]] = age.get(q[0], 0) + 1
+                        break
+                    net = q.pop(pick)
+                    if self.rec.get(net):
+                        ops = [("rip", net)]
+                        self.apply_ops(ops)
+                        self.syncops.extend(ops)
+                    k = idle.pop()
+                    conns[k].send((self.syncops[synced[k]:], net))
+                    synced[k] = len(self.syncops)
+                    busy[k] = (net, self.net_bbox(net))
+                if not busy:
+                    break
+                for c in wait([conns[k] for k in busy], timeout=2.0):
+                    k = conns.index(c)
+                    res = c.recv()
+                    if "error" in res:
+                        raise RuntimeError(res["error"])
+                    net = res["net"]
+                    del busy[k]
+                    idle.append(k)
+                    if self.stats.get('dbgn', 0) < 40 and not busy:
+                        self.stats['dbgn'] = self.stats.get('dbgn', 0) + 1
+                        self.log('DBG net %s worker start %s master %s' % (self.m.nets[net]['name'], res['nobst'], (len(self.obst.items), sum(len(v) for v in self.rec.values()))))
+                    ripped = self.apply_plan(net, res["ops"])
+                    self.stats["expanded"] += res["exp"]
+                    self.stats["searches"] += res["srch"]
+                    self.stats["limit_hits"] = self.stats.get("limit_hits", 0) + res["lim"]
+                    self.stats["verify_rejects"] = self.stats.get("verify_rejects", 0) + res["vr"]
+                    if ripped is None:
+                        stale[net] = stale.get(net, 0) + 1
+                        self.stats["stale"] = self.stats.get("stale", 0) + 1
+                        if self.stats["stale"] < 4:
+                            self.log("stale plan net %s: %s" % (self.m.nets[net]["name"], getattr(self, "stale_why", None)))
+                            op = self.stale_why
+                            if op[0] == "seg":
+                                for p in self.obst.near((min(op[3], op[5]) - 1, min(op[4], op[6]) - 1, max(op[3], op[5]) + 1, max(op[4], op[6]) + 1)):
+                                    if p.net != op[1] and op[2] in p.layers and p.dist_seg(*op[3:7]) < 0.1 + p.clr:
+                                        self.log("   blocked by net %s kind %s g %s clr %s static %s owner %s" % (p.net, p.kind, p.g, p.clr, p.static, p.owner_item))
+                        if stale[net] >= 2:
+                            solo.add(net)
+                        q.insert(0, net)
+                        continue
+                    solo.discard(net)
+                    nm = self.m.nets[net]["name"]
+                    if res["left"]:
+                        self.failed[net] = res["left"]
+                        self.fail_info[nm] = res["fail"]
+                    else:
+                        self.failed.pop(net, None)
+                    if res["necked"] is not None:
+                        self.necked[net] = min(self.necked.get(net, 9), res["necked"])
+                    for cnet in set(ripped) | set(res["requeue"]):
+                        if cnet not in q and self.rec.get(cnet) is None and cnet not in [b[0] for b in busy.values()]:
+                            q.append(cnet)
+                    done += 1
+                if time.time() - lastlog > 20:
+                    lastlog = time.time()
+                    self.log("  %d nets done, queue %d, busy %d, %.0fs, failed so far %d, stale %d" %
+                             (done, len(q), len(busy), time.time() - self.t0, len(self.failed), self.stats.get("stale", 0)))
+        finally:
+            for c in conns:
+                try:
+                    c.send(None)
+                except Exception:
+                    pass
+            for p in procs:
+                p.join(timeout=2)
+                if p.is_alive():
+                    p.terminate()
+        return q
 
     def run(self):
         order = self.routable_nets()
@@ -695,33 +948,18 @@ class Router:
                 if k > 0:
                     self.skipped_open[info["name"]] = k
         self.log("nets to route: %d, connections: %d, grid %dx%d" % (len(order), total_conn, self.g.W, self.g.H))
-        q = deque(order)
-        done = 0
         t0 = time.time()
-        while q and time.time() < self.deadline:
-            net = q.popleft()
-            requeue, left = self.route_net(net)
-            for c in requeue:
-                if c not in q:
-                    q.append(c)
-            done += 1
-            if done % 25 == 0:
-                self.log("  %d/%d nets processed, queue %d, %.0fs, failed so far %d" %
-                         (done, len(order), len(q), time.time() - t0, len(self.failed)))
+        self.t0 = t0
+        q = self.process(list(order), own_rip=False)
         # negotiation passes: failed nets try again with a fresh rip budget; history costs persist,
         # so the contested cells are more expensive each time
         for ps in range(self.passes):
             if not self.failed or time.time() > self.deadline:
                 break
-            q = deque(sorted(self.failed, key=lambda n: (CLASS_RANK.get(self.m.nets[n]["cls"], 9), n)))
+            q = sorted(self.failed, key=lambda n: (CLASS_RANK.get(self.m.nets[n]["cls"], 9), n))
             self.rips = {}
             self.log("  negotiation pass %d: %d nets to retry, %.0fs" % (ps + 1, len(q), time.time() - t0))
-            while q and time.time() < self.deadline:
-                net = q.popleft()
-                requeue, left = self.route_net(net)
-                for c in requeue:
-                    if c not in q:
-                        q.append(c)
+            q = self.process(q, own_rip=True)
         # unrouted leftovers after timeout
         for net in q:
             self.failed.setdefault(net, 1)
@@ -832,7 +1070,7 @@ class Router:
             cost, nd, poly = best
             ix, iy, l = self.dec(nd)
             x, y = self.g.xy(ix, iy)
-            if not (self.stub_ok(net, LAYER_OF[l], poly) and
+            if not (self.stub_ok(net, l, poly) and
                     self.obst.seg_ok(net, F, x, y, x, y, info["via_dia"] / 2) and
                     self.obst.seg_ok(net, B, x, y, x, y, info["via_dia"] / 2)):
                 failed += 1
@@ -909,6 +1147,8 @@ def main():
     ap.add_argument("--stub-max", type=float, default=STUB_MAX, help="policy exception: longest pad escape stub, mm (policy default 2.0)")
     ap.add_argument("--no-width-floor", action="store_true", help="allow power nets to be necked down to 0.2 mm (default: POWER_HI >= 0.5, POWER_MID >= 0.3, else left unrouted)")
     ap.add_argument("--max-rips", type=int, default=MAX_RIPS)
+    ap.add_argument("--skip-nets-json", action="append", help="JSON listing nets already routed elsewhere (default: power_nets.json beside this script if present)")
+    ap.add_argument("--jobs", type=int, default=min(6, os.cpu_count() or 1), help="worker processes (fork); 1 = serial")
     ap.add_argument("--passes", type=int, default=0, help="negotiation passes over the failed nets after the main queue")
     ap.add_argument("--only", action="append", help="route only this net (repeatable); for debugging")
     a = ap.parse_args()
@@ -916,6 +1156,28 @@ def main():
     if a.no_width_floor:
         Router.WIDTH_FLOOR = {}
         Router.post_floor_default = False
+    skip_nets = set()
+    for pth in (a.skip_nets_json if a.skip_nets_json else [os.path.join(os.path.dirname(os.path.abspath(__file__)), "power_nets.json")]):
+        if not os.path.exists(pth):
+            continue
+        try:
+            d = json.load(open(pth))
+        except Exception as e:
+            print("cannot read %s: %s" % (pth, e)); continue
+        def names(x):
+            if isinstance(x, str):
+                yield x
+            elif isinstance(x, list):
+                for y in x:
+                    yield from names(y)
+            elif isinstance(x, dict):
+                for k, v in x.items():
+                    if isinstance(v, (list, dict, str)) and k in ("nets", "routed", "routed_nets", "power_nets"):
+                        yield from names(v)
+                    elif not isinstance(v, (list, dict, str)):
+                        yield k
+        skip_nets |= set(names(d))
+        print("skipping %d nets listed in %s" % (len(skip_nets), pth))
     board = U.load_board(a.board)
     t0 = time.time()
     skip = tuple(a.skip_class or ["RF50", "CLK"])
@@ -924,7 +1186,7 @@ def main():
         model = Model(board, a.pitch, skip_classes=skip, via_override=tuple(float(v) for v in a.via.split('/')) if a.via else None)
         print("round %d: model built, %.0fs elapsed" % (rnd + 1, time.time() - t0), flush=True)
         r = Router(model, seconds=a.seconds, skip_classes=skip, do_gnd=not a.no_gnd, only=a.only,
-                   prio=prio, max_rips=a.max_rips, passes=a.passes)
+                   prio=prio, max_rips=a.max_rips, passes=a.passes, jobs=a.jobs, skip_nets=skip_nets)
         r.run()
         left = sum(r.failed.values())
         print("round %d: %d connections unrouted" % (rnd + 1, left), flush=True)
