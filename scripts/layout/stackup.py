@@ -142,6 +142,172 @@ def fence_pitch_mm(er=ER_FILE, h=H_F_IN1, w=None, f=F_CH5, divisor=10):
     return lg, lg / divisor
 
 
+# ---- solder mask over the line (bare vs masked) ------------------------------
+# ASSUMPTIONS (not fab data): JLCPCB-class LPI mask, er 3.7 (range 3.3-4.2 quoted for
+# epoxy LPI at 1-10 GHz), tan d ~0.025, 0.020 mm thick on the laminate AND on the
+# copper (real mask is thinner on top of copper, 10-15 um, and thicker in the gaps;
+# a uniform 20 um coat is the simple, slightly pessimistic case).
+ER_MASK = 3.7
+TAND_MASK = 0.025
+T_MASK = 0.020
+
+
+def _fd_solve(w, h, er, t, tm, erm, step=1.0, xmax=3.0, ymax=3.0):
+    """2-D quasi-static finite-element solve (bilinear rectangles, graded mesh, Jacobi-CG)
+    of the strip of width w and thickness t at height h over a ground plane, in a grounded
+    box xmax x ymax (half domain, symmetry at x = 0).  Substrate er below y = h; a CONFORMAL
+    mask layer of thickness tm (relative permittivity erm) on the laminate, the strip top and
+    the strip sides when tm > 0.  Returns (C / eps0 per metre for the FULL strip).  Pure
+    stdlib: slow (tens of seconds), used to calibrate and cross-check the closed-form
+    mask correction, not inside loops."""
+    def graded(points, lo_n, xend, growth=1.25, hmax=0.4):
+        # insert refinement between the fixed lines `points` (sorted) and grow out to xend
+        out = [points[0]]
+        for a, b in zip(points, points[1:]):
+            n = max(1, int(round((b - a) / (0.0125 / step))))
+            out += [a + (b - a) * k / n for k in range(1, n + 1)]
+        d = (out[-1] - out[-2])
+        x = out[-1]
+        while x < xend - 1e-9:
+            d = min(d * growth, hmax)
+            x = min(x + d, xend)
+            out.append(x)
+        return out
+    hw = w / 2
+    tmm = tm if tm > 0 else 0.0
+    xs_fixed = sorted({0.0, hw - 0.0, hw + (tmm if tmm else 0.0)})
+    xs = graded(xs_fixed, 0, xmax)
+    ys_fixed = [0.0, h * 0.5, h]
+    lines = [0.0]
+    ys = [0.0]
+    # fixed y lines above the substrate: h, h+tm, h+t, h+t+tm
+    top = sorted({h, h + t} | ({h + tmm, h + t + tmm} if tmm else set()))
+    # lower part, refined toward the strip
+    n_low = 14
+    for k in range(1, n_low + 1):
+        f = k / n_low
+        ys.append(h * (1 - (1 - f) ** 1.6))
+    ys[-1] = h
+    prev = h
+    for yv in top[1:]:
+        n = max(1, int(round((yv - prev) / (0.0125 / step))))
+        ys += [prev + (yv - prev) * k / n for k in range(1, n + 1)]
+        prev = yv
+    d = ys[-1] - ys[-2]
+    y = ys[-1]
+    while y < ymax - 1e-9:
+        d = min(d * 1.25, 0.4)
+        y = min(y + d, ymax)
+        ys.append(y)
+    nx, ny = len(xs), len(ys)
+    eps_cell = [[1.0] * (ny - 1) for _ in range(nx - 1)]
+    cu = [[False] * ny for _ in range(nx)]
+    ymid = lambda j: 0.5 * (ys[j] + ys[j + 1])
+    xmid = lambda i: 0.5 * (xs[i] + xs[i + 1])
+    for i in range(nx - 1):
+        for j in range(ny - 1):
+            x_, y_ = xmid(i), ymid(j)
+            e = 1.0
+            if y_ < h:
+                e = er
+            else:
+                in_cu = x_ < hw and y_ < h + t
+                if in_cu:
+                    e = er          # inside the conductor (irrelevant: potential fixed)
+                elif tmm:
+                    a_ = y_ < h + tmm
+                    b_ = x_ < hw + tmm and h + t <= y_ < h + t + tmm
+                    c_ = hw <= x_ < hw + tmm and h <= y_ < h + t + tmm
+                    if a_ or b_ or c_:
+                        e = erm
+            eps_cell[i][j] = e
+    for i in range(nx):
+        for j in range(ny):
+            if xs[i] <= hw + 1e-9 and h - 1e-9 <= ys[j] <= h + t + 1e-9:
+                cu[i][j] = True
+    # stencil assembly: nodes (i, j); neighbours (di, dj) in -1..1
+    idx = lambda i, j: i * ny + j
+    N = nx * ny
+    sten = [dict() for _ in range(N)]
+    for i in range(nx - 1):
+        a = xs[i + 1] - xs[i]
+        for j in range(ny - 1):
+            b = ys[j + 1] - ys[j]
+            e = eps_cell[i][j]
+            k1 = b / (6 * a)
+            k2 = a / (6 * b)
+            X = ((2, -2, -1, 1), (-2, 2, 1, -1), (-1, 1, 2, -2), (1, -1, -2, 2))
+            Y = ((2, 1, -1, -2), (1, 2, -2, -1), (-1, -2, 2, 1), (-2, -1, 1, 2))
+            nodes = (idx(i, j), idx(i + 1, j), idx(i + 1, j + 1), idx(i, j + 1))
+            for p in range(4):
+                for q in range(4):
+                    v = e * (k1 * X[p][q] + k2 * Y[p][q])
+                    sd = sten[nodes[p]]
+                    sd[nodes[q]] = sd.get(nodes[q], 0.0) + v
+    # symmetry plane x = 0: natural (Neumann) boundary comes for free (half-domain mesh)
+    fixed = [None] * N
+    for i in range(nx):
+        for j in range(ny):
+            n_ = idx(i, j)
+            if cu[i][j]:
+                fixed[n_] = 1.0
+            elif j == 0 or j == ny - 1 or i == nx - 1:
+                fixed[n_] = 0.0
+    free = [n for n in range(N) if fixed[n] is None]
+    pos = {n: k for k, n in enumerate(free)}
+    rows = []
+    for n in free:
+        r = [(pos[m], v) for m, v in sten[n].items() if fixed[m] is None]
+        rows.append(r)
+    rhs = [-sum(v * fixed[m] for m, v in sten[n].items() if fixed[m] is not None) for n in free]
+    diag = [sum(v for (m, v) in r if m == k) for k, r in enumerate(rows)]
+    xk = [0.0] * len(free)
+    # warm start: 1 near strip decaying, just zeros is fine for CG
+    def matvec(v):
+        return [sum(c * v[m] for m, c in r) for r in rows]
+    r_ = rhs[:]
+    z = [r_[k] / diag[k] for k in range(len(free))]
+    p_ = z[:]
+    rz = sum(a * b for a, b in zip(r_, z))
+    tol = 1e-10 * math.sqrt(sum(a * a for a in rhs))
+    for it in range(4000):
+        Ap = matvec(p_)
+        pAp = sum(a * b for a, b in zip(p_, Ap))
+        al = rz / pAp
+        xk = [a + al * b for a, b in zip(xk, p_)]
+        r_ = [a - al * b for a, b in zip(r_, Ap)]
+        if math.sqrt(sum(a * a for a in r_)) < tol:
+            break
+        z = [r_[k] / diag[k] for k in range(len(free))]
+        rz2 = sum(a * b for a, b in zip(r_, z))
+        be = rz2 / rz
+        rz = rz2
+        p_ = [a + be * b for a, b in zip(z, p_)]
+    phi = [0.0] * N
+    for n in range(N):
+        phi[n] = fixed[n] if fixed[n] is not None else 0.0
+    for n, k in pos.items():
+        phi[n] = xk[k]
+    # energy: C = sum phi_i K_ij phi_j  (V = 1), x2 for the full strip; the mesh cells
+    # inside the conductor carry zero gradient (all nodes at 1)
+    W = 0.0
+    for n in range(N):
+        pn = phi[n]
+        if pn == 0.0:
+            continue
+        W += pn * sum(v * phi[m] for m, v in sten[n].items())
+    return 2.0 * W      # C/eps0 for the full structure (V = 1, W = C/2 -> C = 2W, halved domain x2)
+
+
+def fd_z0(w, h, er, t=T_CU, tm=0.0, erm=ER_MASK, **kw):
+    """(Z0, er_eff) of the strip from the finite-element solve (quasi-static, lossless)."""
+    c_d = _fd_solve(w, h, er, t, tm, erm, **kw) if tm > 0 else _fd_solve(w, h, er, t, 0.0, 1.0, **kw)
+    c_a = _fd_solve(w, h, 1.0, t, 0.0, 1.0, **kw)
+    ee = c_d / c_a
+    z0 = 1.0 / (C0 * 8.8541878128e-12 * math.sqrt(c_d * c_a)) * 1.0
+    return z0, ee
+
+
 def table():
     o = []
     o.append("stackup: h(F->In1)=%.3f  h(F->In2)=%.3f mm, t=%.3f, er=%.2f (file)" %
