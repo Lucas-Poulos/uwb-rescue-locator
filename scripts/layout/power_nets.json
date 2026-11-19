@@ -1,0 +1,356 @@
+{
+ "_comment": "Nets routed by scripts/layout/route_power.py (stage 5). route_manhattan.py must skip every net in routed_nets. left_unconnected lists pads of those nets that the script could not reach.",
+ "corridor_clearance_mm": 0.55,
+ "gnd_vias_added": true,
+ "left_unconnected": {
+  "+3V3": [
+   "C212.1",
+   "R104.1",
+   "R202.1",
+   "R203.1",
+   "R411.1"
+  ],
+  "+5V_IN": [
+   "C1.1",
+   "D2.1",
+   "J2.A9",
+   "J2.B9",
+   "R31.1",
+   "R4.1",
+   "TP104.1",
+   "U1.17",
+   "U1.18",
+   "U1.19",
+   "U1.3",
+   "U1.9"
+  ],
+  "/Clock Distribution/+3V3_TCXO": [
+   "C211.1"
+  ],
+  "/Connectivity/GNSS_LNA_VCC": [
+   "C128.1",
+   "U24.2",
+   "U24.6"
+  ],
+  "/Orientation/+3V3_SNS": [
+   "C36.1",
+   "C401.1",
+   "C402.1",
+   "C403.1",
+   "C404.1",
+   "R411.2",
+   "R414.1",
+   "TP121.1",
+   "U10.3",
+   "U11.10",
+   "U11.2",
+   "U11.9"
+  ],
+  "/UWB Array/+3V3_A0": [
+   "FB1.1",
+   "U4.26",
+   "U4.29"
+  ],
+  "/UWB Array/+3V3_A1": [
+   "C48.1",
+   "C51.1",
+   "C52.1",
+   "FB2.1",
+   "U5.26",
+   "U5.29"
+  ],
+  "/UWB Array/+3V3_A2": [
+   "U6.26"
+  ],
+  "/UWB Array/+3V3_A3": [
+   "C66.1",
+   "U7.26"
+  ]
+ },
+ "other_nets_with_copper": [
+  "GND"
+ ],
+ "routed_nets": {
+  "+3V3": {
+   "cls": "POWER_MID",
+   "pads_connected": [
+    "C127.1",
+    "C5.1",
+    "C6.1",
+    "C7.1",
+    "C72.1",
+    "C73.1",
+    "C74.1",
+    "J3.1",
+    "J30.2",
+    "J32.1",
+    "J34.1",
+    "J35.1",
+    "R200.1",
+    "R201.1",
+    "R225.1",
+    "R226.1",
+    "R300.2",
+    "R314.1",
+    "R315.1",
+    "R37.1",
+    "R38.1",
+    "R39.1",
+    "TP1.1",
+    "TP101.1",
+    "TP102.1",
+    "U25.1",
+    "U3.9",
+    "U3.F4"
+   ]
+  },
+  "+VBAT_LTE": {
+   "cls": "POWER_MID",
+   "pads_connected": [
+    "C100.1",
+    "C101.1",
+    "FB10.1",
+    "J31.2",
+    "R302.2",
+    "TP100.1"
+   ]
+  },
+  "+VSYS": {
+   "cls": "POWER_HI",
+   "pads_connected": [
+    "C2.1",
+    "C20.1",
+    "C300.1",
+    "R29.1",
+    "R30.1",
+    "R305.1",
+    "R308.1",
+    "R310.1",
+    "R312.2",
+    "TP103.1",
+    "TP2.1",
+    "U1.1",
+    "U1.20",
+    "U40.10",
+    "U8.4"
+   ]
+  },
+  "/Clock Distribution/+3V3_CLKBUF": {
+   "cls": "POWER_LO",
+   "pads_connected": [
+    "C213.1",
+    "C214.1",
+    "R226.2",
+    "R229.1",
+    "TP529.1",
+    "U31.6"
+   ]
+  },
+  "/Clock Distribution/+3V3_TCXO": {
+   "cls": "POWER_LO",
+   "pads_connected": [
+    "C210.1",
+    "R225.2",
+    "R227.1",
+    "TP528.1",
+    "U30.6"
+   ]
+  },
+  "/Connectivity/ESIM_VCC": {
+   "cls": "POWER_LO",
+   "pads_connected": [
+    "C112.1",
+    "R110.2",
+    "U23.C1"
+   ]
+  },
+  "/Connectivity/GNSS_LNA_VCC": {
+   "cls": "POWER_LO",
+   "pads_connected": [
+    "C129.1",
+    "R122.1",
+    "TP47.1",
+    "U25.5"
+   ]
+  },
+  "/Connectivity/NRF_VDD": {
+   "cls": "POWER_MID",
+   "pads_connected": [
+    "C102.1",
+    "C103.1",
+    "FB10.2",
+    "R101.1",
+    "R102.1",
+    "TP48.1",
+    "U20.14"
+   ]
+  },
+  "/Connectivity/NRF_VDD_GPIO": {
+   "cls": "POWER_LO",
+   "pads_connected": [
+    "C107.1",
+    "C108.1",
+    "R103.2",
+    "R155.2",
+    "TP49.1",
+    "U20.65",
+    "U21.6"
+   ]
+  },
+  "/Connectivity/SIM_CARD_VCC": {
+   "cls": "POWER_LO",
+   "pads_connected": [
+    "J12.1",
+    "R106.2"
+   ]
+  },
+  "/Orientation/+3V3_SNS": {
+   "cls": "POWER_LO",
+   "pads_connected": [
+    "C35.1",
+    "U10.10",
+    "U10.9"
+   ]
+  },
+  "/Regulation/+3V3_REG": {
+   "cls": "POWER_MID",
+   "pads_connected": [
+    "C21.1",
+    "C22.1",
+    "J30.1",
+    "L1.2",
+    "R300.1",
+    "R301.1",
+    "R8.1",
+    "TP400.1"
+   ]
+  },
+  "/Regulation/+VBAT_LTE_REG": {
+   "cls": "POWER_MID",
+   "pads_connected": [
+    "C301.1",
+    "C302.1",
+    "J31.1",
+    "R302.1",
+    "R303.1",
+    "R306.1",
+    "TP406.1",
+    "U40.6"
+   ]
+  },
+  "/Regulation/FB_3V3": {
+   "cls": "Default",
+   "pads_connected": [
+    "C22.2",
+    "R8.2",
+    "R9.1",
+    "TP403.1",
+    "U8.6"
+   ]
+  },
+  "/Regulation/FB_LTE": {
+   "cls": "Default",
+   "pads_connected": [
+    "R306.2",
+    "R307.1",
+    "TP410.1",
+    "U40.4"
+   ]
+  },
+  "/Regulation/L1_LTE": {
+   "cls": "POWER_HI",
+   "pads_connected": [
+    "L300.1",
+    "U40.9"
+   ]
+  },
+  "/Regulation/L2_LTE": {
+   "cls": "POWER_HI",
+   "pads_connected": [
+    "L300.2",
+    "U40.7"
+   ]
+  },
+  "/Regulation/SW_3V3": {
+   "cls": "POWER_HI",
+   "pads_connected": [
+    "L1.1",
+    "U8.3"
+   ]
+  },
+  "/UWB Array/+3V3_A0": {
+   "cls": "POWER_LO",
+   "pads_connected": [
+    "C40.1",
+    "C42.1",
+    "C43.1",
+    "C44.1",
+    "R200.2",
+    "U4.23"
+   ]
+  },
+  "/UWB Array/+3V3_A1": {
+   "cls": "POWER_LO",
+   "pads_connected": [
+    "C50.1",
+    "R201.2",
+    "U5.23"
+   ]
+  },
+  "/UWB Array/+3V3_A2": {
+   "cls": "POWER_LO",
+   "pads_connected": [
+    "C56.1",
+    "C58.1",
+    "C59.1",
+    "C60.1",
+    "FB3.1",
+    "R202.2",
+    "U6.23",
+    "U6.29"
+   ]
+  },
+  "/UWB Array/+3V3_A3": {
+   "cls": "POWER_LO",
+   "pads_connected": [
+    "C64.1",
+    "C67.1",
+    "C68.1",
+    "FB4.1",
+    "R203.2",
+    "U7.23",
+    "U7.29"
+   ]
+  },
+  "BARREL_VIN": {
+   "cls": "POWER_HI",
+   "pads_connected": [
+    "D1.2",
+    "J1.1"
+   ]
+  },
+  "BATT_RAW": {
+   "cls": "POWER_HI",
+   "pads_connected": [
+    "BT1.1",
+    "Q1.2",
+    "TP417.1"
+   ]
+  },
+  "VBATT_PROT": {
+   "cls": "POWER_HI",
+   "pads_connected": [
+    "C3.1",
+    "C4.1",
+    "D3.1",
+    "Q1.3",
+    "TP415.1",
+    "U1.14",
+    "U1.15",
+    "U1.16",
+    "U2.3"
+   ]
+  }
+ },
+ "schema": 1
+}
