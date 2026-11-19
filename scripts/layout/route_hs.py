@@ -153,6 +153,29 @@ def _pads(board):
     return _PAD_CACHE[key]
 
 
+_TIE_CACHE = {}
+_KO_CACHE = {}
+
+
+def _ko_cache(board, layer):
+    key = (id(board), layer)
+    if key not in _KO_CACHE:
+        _KO_CACHE[key] = _keepout_rects(board, layer)
+    return _KO_CACHE[key]
+
+
+def _in_tie_area(board, ax, ay, bx, by):
+    """Does a GND track touch a DW3210_TIE_n area (cut-out + 2 mm)?  Same scope as the .kicad_dru exception."""
+    key = id(board)
+    if key not in _TIE_CACHE:
+        from stitch import tie_areas
+        _TIE_CACHE[key] = tie_areas(board)
+    for (cx, cy, w, h) in _TIE_CACHE[key]:
+        if (min(ax, bx) <= cx + w / 2 and max(ax, bx) >= cx - w / 2 and min(ay, by) <= cy + h / 2 and max(ay, by) >= cy - h / 2):
+            return True
+    return False
+
+
 def seg_clearance_ok(board, net, layer, a, b, width, clearance=CLEAR_DEFAULT, ignore_pads=(),
                      clearance_trk=None):
     """True if a straight track a-b (mm) keeps `clearance` to every foreign-net pad
@@ -168,6 +191,12 @@ def seg_clearance_ok(board, net, layer, a, b, width, clearance=CLEAR_DEFAULT, ig
     steps = max(2, int(L / 0.05))
     pts = [(a[0] + (b[0] - a[0]) * i / steps, a[1] + (b[1] - a[1]) * i / steps) for i in range(steps + 1)]
     m = hw + clearance
+    for (kx0, ky0, kx1, ky1) in _ko_cache(board, layer):          # track-forbidding rule areas
+        if kx1 < lo_x - hw or kx0 > hi_x + hw or ky1 < lo_y - hw or ky0 > hi_y + hw:
+            continue
+        for (x, y) in pts:
+            if U.dist_pt_rect(x, y, kx0, ky0, kx1, ky1) < hw - 1e-6:
+                return False
     for (x0, y0, x1, y1, pnet, layers, key) in _pads(board):
         if pnet == nid or layer not in layers or key in ignore_pads:
             continue
@@ -190,6 +219,8 @@ def seg_clearance_ok(board, net, layer, a, b, width, clearance=CLEAR_DEFAULT, ig
             s, e = t.GetStart(), t.GetEnd()
             sx, sy, ex, ey = U.mm(s.x), U.mm(s.y), U.mm(e.x), U.mm(e.y)
             r = U.mm(t.GetWidth()) / 2
+            if ct > clearance and str(t.GetNetname()) == "GND" and _in_tie_area(board, sx, sy, ex, ey):
+                ct = clearance          # .kicad_dru "GND pad tie stub next to an RF50 neck": 0.15 mm inside DW3210_TIE_n
             mt = hw + r + ct
             if max(sx, ex) < lo_x - mt or min(sx, ex) > hi_x + mt or max(sy, ey) < lo_y - mt or min(sy, ey) > hi_y + mt:
                 continue
@@ -622,9 +653,31 @@ def via_fence(board, items, gnd="GND", pitch=FENCE_PITCH, offset=FENCE_OFFSET,
     return placed
 
 
+_VKO_CACHE = {}
+
+
+def _via_ko_rects(board):
+    """Bounding boxes of rule areas (board + footprint level) that forbid vias."""
+    key = id(board)
+    if key not in _VKO_CACHE:
+        zs = list(board.Zones())
+        for f in board.GetFootprints():
+            zs += list(f.Zones())
+        out = []
+        for z in zs:
+            if z.GetIsRuleArea() and z.GetDoNotAllowVias():
+                bb = z.GetBoundingBox()
+                out.append((U.mm(bb.GetLeft()), U.mm(bb.GetTop()), U.mm(bb.GetRight()), U.mm(bb.GetBottom())))
+        _VKO_CACHE[key] = out
+    return _VKO_CACHE[key]
+
+
 def _via_site_ok(board, net, x, y, via, clr):
     r = via[0] / 2
     nid = net.GetNetCode()
+    for (kx0, ky0, kx1, ky1) in _via_ko_rects(board):
+        if U.dist_pt_rect(x, y, kx0, ky0, kx1, ky1) < r:
+            return False
     for f in board.GetFootprints():
         for p in f.Pads():
             bb = p.GetBoundingBox()

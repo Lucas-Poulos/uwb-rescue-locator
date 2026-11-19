@@ -32,6 +32,12 @@
     "POWER_LO": {"track": 0.3, "clearance": 0.15, "via_dia": 0.6, "via_drill": 0.3, "priority": 5}
   },
   "stitch_via": {"dia": 0.45, "drill": 0.2, "net": "GND"},
+  "gnd_tie_exception": {
+    "_comment": "The ONE relaxed RF keep-off: a GND pad-tie stub (track, never via/pour) may sit clearance_mm from an RF50/CLK track inside a tie rule area. Written to .kicad_dru by apply_rules.py (last rule); stitch.py makes the areas (DW3210_TIE_n = cut-out + 2 mm, HS_TIE_k = 3 mm square round an RF/CLK pad of a fine-pitch non-DW3210 chip); check_gates.py verifies the rule is in the .kicad_dru.",
+    "classes": ["RF50", "CLK"],
+    "areas": ["DW3210_TIE_*", "HS_TIE_*"],
+    "clearance_mm": 0.15
+  },
   "groups": [
     {
       "id": "RF_UWB",

@@ -98,8 +98,31 @@ def dw3210_cutouts(board):
     return out
 
 
+PIN_TIE = 3.0             # HS_TIE_k: square around an RF50/CLK pin of a fine-pitch chip (not a DW3210)
+FINE_PAD = 0.5            # a pad whose short side is <= this is "fine pitch" for HS_TIE
+
+
+def hs_pin_rects(board):
+    """[(cx, cy, w, h)] around each RF50 / CLK pad of a non-DW3210 footprint whose pad short side is
+    <= FINE_PAD (nRF9151 LGA RF pins, BGA524N6 pins): the same pad-pitch situation as a DW3210 RF pin,
+    a GND pin 0.2-0.4 mm from the RF pin.  Deterministic order (ref, pad number)."""
+    out = []
+    for f in sorted(board.GetFootprints(), key=lambda f: str(f.GetReference())):
+        if "DW3210" in str(f.GetFPIDAsString()):
+            continue
+        for p in sorted(f.Pads(), key=lambda p: str(p.GetNumber())):
+            if str(p.GetNetClassName()) in ("RF50", "CLK") and p.IsOnLayer(U.F_CU):
+                bb = p.GetBoundingBox()
+                if min(U.mm(bb.GetWidth()), U.mm(bb.GetHeight())) <= FINE_PAD:
+                    q = p.GetPosition()
+                    out.append((U.mm(q.x), U.mm(q.y), PIN_TIE, PIN_TIE))
+    return out
+
+
 def tie_areas(board):
-    return [(cx, cy, w + 2 * TIE_MARGIN, h + 2 * TIE_MARGIN) for (cx, cy, w, h) in dw3210_cutouts(board)]
+    """Scope of the .kicad_dru GND-tie exception: DW3210_TIE_n (cut-out + 2 mm per side) followed by
+    HS_TIE_k (see hs_pin_rects)."""
+    return [(cx, cy, w + 2 * TIE_MARGIN, h + 2 * TIE_MARGIN) for (cx, cy, w, h) in dw3210_cutouts(board)] + hs_pin_rects(board)
 
 
 class Hash:
@@ -174,6 +197,7 @@ class Stitcher:
                 for pd in p["pads"]:
                     self.rfpts.append(pd["c"])
         self._mark_rf_prims()
+        self.added = []        # pcbnew items added by tie_pad (the caller may lock them)
         self.stubs = []        # (x0, y0, x1, y1, layer) of GND tie stubs placed in this run
 
     # ------------------------------------------------------------- bookkeeping
@@ -416,7 +440,17 @@ class Stitcher:
         out.append(pts[-1])
         return out
 
-    def tie_pad(self, ref, num, reach, relax=None):
+    def _via_in_pad_ok(self, pad, cx, cy):
+        """A via ON a big pad: copper clear of foreign copper, drill clear of other holes."""
+        for (vx, vy, dr, vr, _g) in self.viah.near(cx, cy, 1.5):
+            if math.hypot(cx - vx, cy - vy) < VIA_DRILL / 2 + dr + self.h2h:
+                return False
+        for l in (F, B):
+            if not self.m.obst.seg_ok(self.gnd, l, cx, cy, cx, cy, R, slack=-0.02):
+                return False
+        return True
+
+    def tie_pad(self, ref, num, reach, relax=None, via_in_pad=False):
         """Tie one GND pad.  Returns ('tied', info) or ('fail', reason)."""
         pad = None
         for f in self.b.GetFootprints():
@@ -440,6 +474,14 @@ class Stitcher:
             finally:
                 self.relax_pad = None
             tier = "relaxed-pad-margin"
+        if got is None and via_in_pad:
+            bb = pad.GetBoundingBox()
+            if min(U.mm(bb.GetWidth()), U.mm(bb.GetHeight())) >= VIA_D + 0.2 and self._via_in_pad_ok(pad, cx, cy):
+                v = U.add_via(self.b, U.get_net(self.b, "GND"), cx, cy, VIA_D, VIA_DRILL)
+                self.added.append(v)
+                self._add_via_rec(cx, cy, VIA_DRILL / 2, R, True)
+                self.placed.append((cx, cy))
+                return "tied", dict(kind="via-in-pad", length=0.0, tier="via-in-pad", via=(round(cx, 3), round(cy, 3)))
         if got is None:
             return "fail", "no stub + via site within %.1f mm" % reach
         pts, kind = got
@@ -447,13 +489,13 @@ class Stitcher:
         gnd = U.get_net(self.b, "GND")
         length = 0.0
         for a, c2 in zip(pts, pts[1:]):
-            U.add_track(self.b, gnd, layer, a[0], a[1], c2[0], c2[1], STUB_W)
+            self.added.append(U.add_track(self.b, gnd, layer, a[0], a[1], c2[0], c2[1], STUB_W))
             self.m.obst.add(Prim("seg", (a[0], a[1], c2[0], c2[1], STUB_W / 2), (lidx,), self.gnd, 0.15, static=True))
             self.stubs.append((a[0], a[1], c2[0], c2[1], lidx))
             length += math.hypot(c2[0] - a[0], c2[1] - a[1])
         if kind == "new":
             x, y = pts[-1]
-            U.add_via(self.b, gnd, x, y, VIA_D, VIA_DRILL)
+            self.added.append(U.add_via(self.b, gnd, x, y, VIA_D, VIA_DRILL))
             self._add_via_rec(x, y, VIA_DRILL / 2, R, True)
             self.placed.append((x, y))
         return "tied", dict(kind=kind, length=round(length, 3), tier=tier, via=(round(pts[-1][0], 3), round(pts[-1][1], 3)))
@@ -532,9 +574,11 @@ def add_dw3210_cutouts(board):
 def add_tie_areas(board):
     have = {str(z.GetZoneName()) for z in board.Zones()}
     n = 0
+    nd = len(dw3210_cutouts(board))
     for i, rect in enumerate(tie_areas(board)):
-        if "DW3210_TIE_%d" % i not in have:
-            _rule_area(board, "DW3210_TIE_%d" % i, (pcbnew.F_Cu,), rect, False, False)
+        name = "DW3210_TIE_%d" % i if i < nd else "HS_TIE_%d" % (i - nd)
+        if name not in have:
+            _rule_area(board, name, (pcbnew.F_Cu,), rect, False, False)
             n += 1
     return n
 
@@ -585,12 +629,12 @@ def outer_pours_drop_islands(board):
     return n
 
 
-def rescue(st, board, pads, reach=2.0, relax=RELAX_PAD):
+def rescue(st, board, pads, reach=2.0, relax=None, via_in_pad=False):
     """Tie the given [(ref, pad)] GND pads.  Returns (tied {pad: info}, failed {pad: reason})."""
     tied, failed = {}, {}
     order = sorted(pads, key=lambda rp: _nearest_gnd(st, board, rp))
     for ref, num in order:
-        res, info = st.tie_pad(ref, num, reach, relax)
+        res, info = st.tie_pad(ref, num, reach, relax, via_in_pad)
         (tied if res == "tied" else failed)["%s.%s" % (ref, num)] = info
     return tied, failed
 
@@ -616,6 +660,8 @@ def main():
     ap.add_argument("--rescue", help="'auto' (find isolated GND pads with a kicad-cli fill of a scratch copy) or a JSON list of [ref, pad]")
     ap.add_argument("--rescue-only", action="store_true", help="with --rescue: do only the pad ties (no lattice, no zones)")
     ap.add_argument("--reach", type=float, default=2.0, help="max stub length pad centre -> via, mm (check_gates stub limit)")
+    ap.add_argument("--tented", action="store_true", help="vias are tented/masked: allow a tie via 0.15 mm (not 0.25 mm) from a foreign pad as a second tier")
+    ap.add_argument("--via-in-pad", action="store_true", help="last tier: a via ON a pad whose short side >= 0.65 mm (needs filled/capped vias at the fab; the gate flags it)")
     ap.add_argument("--pitch", type=float, default=GEN_PITCH)
     ap.add_argument("--report", help="write a JSON report here")
     ap.add_argument("--workdir", help="scratch dir for the --rescue auto fill (outside the repo)")
@@ -655,14 +701,14 @@ def main():
                 if not tgt:
                     passes.append(dict(pads=len(pads), tied={}, failed={}, gnd_items=n_gnd))
                     break
-                tied, failed = rescue(st, b, tgt, a.reach)
+                tied, failed = rescue(st, b, tgt, a.reach, RELAX_PAD if a.tented else None, a.via_in_pad)
                 passes.append(dict(pads=len(pads), tied=tied, failed=failed, gnd_items=n_gnd))
                 print("  tied %d, no route %d: %s" % (len(tied), len(failed), sorted(failed)))
             pads, n_gnd, n_all = isolated_gnd_pads(b, board_dir, work)
             print("after: %d isolated GND pads, %d unconnected GND items, %d unconnected total" % (len(pads), n_gnd, n_all))
             report["rescue_final"] = dict(isolated_pads=["%s.%s" % p for p in pads], gnd_items=n_gnd, unconnected_total=n_all)
         else:
-            tied, failed = rescue(st, b, json.load(open(a.rescue)), a.reach)
+            tied, failed = rescue(st, b, json.load(open(a.rescue)), a.reach, RELAX_PAD if a.tented else None, a.via_in_pad)
             passes.append(dict(tied=tied, failed=failed))
             print("GND pad rescue: %d tied, %d without a site: %s" % (len(tied), len(failed), sorted(failed)))
         report["rescue_passes"] = passes

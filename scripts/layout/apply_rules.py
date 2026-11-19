@@ -110,6 +110,21 @@ def dru_text(spec):
     rule("CLK keep-off from other tracks/vias/zones",
          "A.NetClass == 'CLK' && A.Type == 'Track' && B.NetClass != 'CLK' && (B.Type == 'Track' || B.Type == 'Via' || B.Type == 'Zone')",
          "(constraint clearance (min %.2fmm))" % clk["dru_clearance_mm"])
+    ex = spec.get("gnd_tie_exception")
+    if ex:
+        L.extend(["# GND pad tie stub next to an RF50/CLK pad neck (scripts/layout/stitch.py --rescue, route_hs_uwb.py ties).",
+                  "# The RF-side VSS pins of a DW3210 (and the GND pins beside an RF pin of a fine-pitch LGA/TSNP) sit",
+                  "# 0.15-0.4 mm from the RF pad, and the 0.24 mm pad neck runs straight out between them, so a GND stub",
+                  "# leaving such a pad is inside the 0.5 mm keep-off by construction.  Relaxed to the netclass %.2f mm ONLY" % ex["clearance_mm"],
+                  "# for a GND TRACK (never a via, never a pour) that touches a tie rule area: DW3210_TIE_n (cut-out + 2 mm",
+                  "# per side) or HS_TIE_k (3 mm square around the RF pin).  Both areas forbid nothing.  Must stay LAST:",
+                  "# KiCad lets the later matching rule win.",
+                  ""])
+        areas = " || ".join("B.intersectsArea('%s')" % a for a in ex["areas"])
+        classes = " || ".join("A.NetClass == '%s'" % c for c in ex["classes"])
+        rule("GND pad tie stub next to an RF50 neck (tie areas only)",
+             "(%s) && A.Type == 'Track' && B.NetName == 'GND' && B.Type == 'Track' && (%s)" % (classes, areas),
+             "(constraint clearance (min %.2fmm))" % ex["clearance_mm"])
     # no POWER_* minimum-width rule: KiCad ignores (severity warning) on custom rules here (10.0.5),
     # and the router's 0.2 mm pad-escape stubs on power pads are deliberate; check_gates.py audits
     # power-class track widths instead.
