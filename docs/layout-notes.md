@@ -316,3 +316,51 @@ polarity convention will have to flip pad 2/pad 1 explicitly, which the placemen
 Images (`docs/images/`): `bay-station-placement.png` (whole board with the non-GND ratsnest),
 `bay-station-uwb-clock-ratsnest.png` (array, RF/clock/SPI nets only), `bay-station-host-power.png`.
 Colours: red clock, magenta RF, blue UWB bus, orange power, green other.
+
+## Bottom-side test pads (`scripts/layout/place_testpads_bottom.py`)
+
+All 62 pads of `testpoint_labels.json` go to B.Cu in function-group rows; the bottom carries no other component. Run on a PLACED board
+(any outline; the Edge.Cuts bbox and polygon are read from the board):
+
+```
+/Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/Current/bin/python3 \
+    scripts/layout/place_testpads_bottom.py [--board IN] [--out OUT] [--sidecar testpads_bottom.json] [--no-save]
+python3 scripts/layout/render_bottom.py BOARD.kicad_pcb docs/images/bay-station-testpads-bottom.png   # kicad-cli PDF --mirror + pdftoppm
+```
+
+* **Footprint.** `TestPoint_Pad_D1.0mm` (47) / `D1.5mm` (15): one SMD circular pad, no drill, F.Cu + F.Mask. pcbnew `Flip` turns it into B.Cu + B.Mask
+  (checked per pad by the script's `verify`; no paste layer exists), and the reference/value fields land on B.Fab (not silk), as `silkscreen.py` does for top pads.
+* **Rules.** Pitch 2.54 mm inside a row (rows longer than 9 are split: power = 2 x 9); rows sit on common band lines 13.3 mm apart (>= 3.5 mm pad to pad is
+  met with a margin: the label box of a row occupies the band) and keep a 4.0 mm lateral routing channel to the next row in the same band (a GND pad may sit 2.5 mm beside its row).
+  Pads in a row are sorted by the x of their target, so the vertical stubs do not cross. Each pad has a **vertical, mirrored 1.0 mm B.SilkS label**
+  directly below it (reads top to bottom when the board is turned over about its vertical axis; verified on the render), a 2.2 mm via/escape strip above it,
+  and nothing else: no row has labels over pads, vias, holes or the edge. Label length is estimated at 0.88 mm per character (the render shows about 10 % less, so it is conservative).
+* **Where a row goes.** The legal slot (band x 0.635 mm grid) nearest the centroid of the top-side pins of the pad nets (rails with dozens of pins use the part that makes or
+  uses them, `RAIL_AT`); rows are placed in the fixed order power, clock, spi, a0..a3, sensors, host, modem, then each GND pad beside the row of the area it is named after (`GND_AREA`).
+  Targets come from non-TP geometry only, so re-running reproduces the board byte for byte (md5 checked; `.kicad_pro` restored; KIIDs seeded; existing labels reused).
+* **Keep-outs.** 3.5 mm from the edge of H1-H4, 2 mm from the board edge (also on the corner arcs), 6 mm around each SMA, the RF corridor (5 mm each side) from each DW3210
+  centre to its SMA, the BT840 antenna rule area + 3 mm, and 1 mm around every through hole, B.Cu pad, via or B.Cu track already on the board.
+* **Vertical routing.** Pads and labels are in columns, each pad has free copper above it; the lateral channels between rows and the 2.54 mm pitch (>= 1.04 mm between D1.5 pads) let vertical
+  B.Cu tracks pass; silk is not copper, so tracks may run under labels, vias may not (they go in the strip above the pad).
+
+Test on the repo board at HEAD with its routing removed (the committed board is routed: 1524 vias, 4 B.Cu-heavy channels would otherwise fill the bottom), old 128 x 68 outline, 360 footprints:
+
+| Row | pads | y (board-local, mm) | x range (board-local, mm) |
+|---|---|---|---|
+| host | 6 | 14.2 | 55.9..68.6 (GND HOST at 51.6) |
+| spi | 5 | 27.5 | 28.6..38.8 (GND SPI at 24.3) |
+| a1 / a3 | 2 + 2 | 27.5 | 44.5..47.0 / 52.8..55.3 |
+| sensors | 7 | 27.5 | 61.2..76.4 |
+| power A | 9 | 40.8 | 72.0..92.3 (GND UWB at 66.9) |
+| clock | 5 | 40.8 | 21.0..31.2 (GND CLK1 16.7, GND CLK2 35.1) |
+| a2 / a0 | 2 + 2 | 40.8 | 41.3..43.9 / 52.1..54.7 |
+| power B | 9 | 54.1 | 97.4..117.7 (GND REG at 92.9) |
+| modem | 6 | 54.1 | 72.4..85.2 |
+| GND PWR | 1 | 40.8 | 108.2 |
+
+62 of 62 on B.Cu, minimum pitch 2.54 mm, 9.8 mm minimum to the edge, 10 mm minimum to a hole edge, mean distance pad to target 12.4 mm (worst 46 mm: two-ended nets such as the
+per-anchor CS/IRQ lines). DRC with `--all-track-errors`: 424 violations before and after, identical per type (all pre-existing top-side silk/SMA edge items): no courtyard, shorting, hole or edge error from the bottom pads.
+Image: `docs/images/bay-station-testpads-bottom.png` (mirrored; grey boxes are top-side courtyards seen through the board).
+
+Open points: the label width is an estimate; `silkscreen.py` `do_testpoints` still writes a top-side net label for these pads and should skip flipped TPs; the 128 x 68 outline is tight (4 bands, 11 rows),
+the planned 150 x 80 board gives room for one more band or wider channels; the pad-to-via escape and any bottom GND pour clearance around labels are not yet designed.
