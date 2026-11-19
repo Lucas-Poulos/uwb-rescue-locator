@@ -24,6 +24,7 @@ Order of work (earlier = higher priority for space):
      is removed (reference -> moved to F.Fab) and logged.
 """
 import argparse
+import json
 import math
 import os
 import re
@@ -31,6 +32,7 @@ import sys
 
 import pcbnew
 from pcbnew import (FromMM, ToMM, VECTOR2I, F_SilkS, F_Fab, F_Cu, F_Mask, F_CrtYd,
+                    B_SilkS, B_Fab, B_Cu, B_Mask, B_CrtYd,
                     Edge_Cuts, PCB_TEXT, PCB_SHAPE, PCB_GROUP, SHAPE_T_SEGMENT,
                     SHAPE_T_CIRCLE, SHAPE_T_RECT, SHAPE_T_POLY, SHAPE_T_ARC)
 
@@ -52,6 +54,12 @@ SILK_GAP = 0.05         # half of the minimum gap between two silk items (box in
 DOT_D = 0.5
 GROUP_NAME = "SILK_AUTO"
 MARK_PREFIX = "OrientationMark_"
+TP_JSON = os.path.join(HERE, "testpoint_labels.json")
+BOT_SIZES = [(1.0, 0.15)]       # bottom labels never go below JLC's 1.0 mm / 0.15 mm
+BOT_LEGEND_SIZES = [(1.5, 0.2), (1.0, 0.15)]
+GROUP_LEGEND = {"power": "POWER", "gnd": "GND", "clock": "CLOCK", "spi": "SPI", "a0": "A0 TDoA",
+                "a1": "A1 TDoA", "a2": "A2 TDoA", "a3": "A3 TDoA", "host": "HOST", "sensors": "SENSORS",
+                "modem": "MODEM"}
 REPO_URL = "Lucas-Poulos/uwb-rescue-locator"   # git remote origin
 
 PASSIVE_RE = re.compile(r"^(R|C|L|FB|TH)\d+")
@@ -183,12 +191,17 @@ class Ctx:
         self.args = args
         self.log = []
         self.hash = Hash()
+        self.hashB = Hash()      # bottom-side obstacles (B.SilkS placement)
         self.gen = []            # generated board-level items
         self.tpl = {}
         self.scratch = PCB_TEXT(b)
         self.scratch.SetLayer(F_SilkS)
         self.scratch.SetHorizJustify(pcbnew.GR_TEXT_H_ALIGN_CENTER)
         self.scratch.SetVertJustify(pcbnew.GR_TEXT_V_ALIGN_CENTER)
+        self.tp_json = {}
+        self.tp_group_boxes = {}
+        if os.path.exists(TP_JSON):
+            self.tp_json = json.load(open(TP_JSON)).get("pads", {})
         self.board_box = None
         self.fps = {}
         self.stats = {}
@@ -201,10 +214,12 @@ class Ctx:
         self.stats[k] = self.stats.get(k, 0) + 1
 
     # text template: (offx, offy, w, h) of the stroked glyph bbox relative to the text position
-    def text_tpl(self, s, size, th, ang):
-        key = (s, size, th, ang)
+    def text_tpl(self, s, size, th, ang, side="F"):
+        key = (s, size, th, ang, side)
         if key not in self.tpl:
             t = self.scratch
+            t.SetLayer(B_SilkS if side == "B" else F_SilkS)
+            t.SetMirrored(side == "B")
             t.SetText(s)
             t.SetTextSize(VECTOR2I(FromMM(size), FromMM(size)))
             t.SetTextThickness(FromMM(th))
@@ -216,11 +231,11 @@ class Ctx:
             self.tpl[key] = ((x0 + x1) / 2.0, (y0 + y1) / 2.0, x1 - x0 + 2 * pad, y1 - y0 + 2 * pad)
         return self.tpl[key]
 
-    def free(self, box, owner, strict=True, margin=SILK_GAP, own_silk_ok=False):
+    def free(self, box, owner, strict=True, margin=SILK_GAP, own_silk_ok=False, side="F"):
         bb = infl(box, margin)
         if self.board_box and not inside(bb, self.board_box):
             return False
-        for (_b, o, kind) in self.hash.query(bb):
+        for (_b, o, kind) in (self.hashB if side == "B" else self.hash).query(bb):
             if kind == "crtyd":
                 if o == owner or not strict:
                     continue
@@ -230,8 +245,8 @@ class Ctx:
             return False
         return True
 
-    def commit(self, box, owner, kind="gen"):
-        self.hash.add(infl(box, SILK_GAP), owner, kind)
+    def commit(self, box, owner, kind="gen", side="F"):
+        (self.hashB if side == "B" else self.hash).add(infl(box, SILK_GAP), owner, kind)
 
 
 # ------------------------------------------------------ board scanning -----
@@ -253,49 +268,62 @@ def load_obstacles(c):
     for f in b.GetFootprints():
         ref = f.GetReference()
         c.fps[ref] = f
-        if f.IsFlipped():
-            c.say("WARNING: %s is on the back side; skipped (front-side silkscreen only)." % ref)
+        flipped = f.IsFlipped()
+        if flipped and not re.match(r"TP\d+$", ref):
+            c.say("WARNING: %s is on the back side; only test points are handled on the bottom." % ref)
         for p in f.Pads():
-            sme = 0.0
-            try:
-                sme = ToMM(p.GetSolderMaskExpansion(F_Mask))
-            except Exception:
-                pass
-            pb = infl(box_of(p.GetBoundingBox()), max(PAD_CLR_PLAN, sme + 0.05))
-            c.hash.add(pb, ref, "pad")
+            on_f, on_b = pad_sides(p)
+            for side, on, ml in (("F", on_f, F_Mask), ("B", on_b, B_Mask)):
+                if not on:
+                    continue
+                sme = 0.0
+                try:
+                    sme = ToMM(p.GetSolderMaskExpansion(ml))
+                except Exception:
+                    pass
+                pb = infl(box_of(p.GetBoundingBox()), max(PAD_CLR_PLAN, sme + 0.05))
+                (c.hashB if side == "B" else c.hash).add(pb, ref, "pad")
             pads_all.append(box_of(p.GetBoundingBox()))
-        cy = f.GetCourtyard(F_CrtYd)
+        cy = f.GetCourtyard(B_CrtYd if flipped else F_CrtYd)
         if cy.OutlineCount():
             cb = box_of(cy.BBox())
         else:
             pb = [box_of(p.GetBoundingBox()) for p in f.Pads()]
             cb = infl(union(pb), 0.25) if pb else box_of(f.GetBoundingBox(False))
-        c.hash.add(cb, ref, "crtyd")
+        (c.hashB if flipped else c.hash).add(cb, ref, "crtyd")
         c.fp_box = getattr(c, "fp_box", {})
         c.fp_box[ref] = cb
         for g in f.GraphicalItems():
-            if g.GetLayer() != F_SilkS:
+            if g.GetLayer() not in (F_SilkS, B_SilkS):
                 continue
+            h = c.hashB if g.GetLayer() == B_SilkS else c.hash
             if isinstance(g, PCB_SHAPE) or g.GetClass() == "PCB_SHAPE":
                 for sb in shape_boxes(g):
-                    c.hash.add(infl(sb, 0.1), ref, "silk")
+                    h.add(infl(sb, 0.1), ref, "silk")
             else:
                 try:
-                    c.hash.add(infl(box_of(g.GetEffectiveTextShape().BBox()), 0.1), ref, "silk")
+                    h.add(infl(box_of(g.GetEffectiveTextShape().BBox()), 0.1), ref, "silk")
                 except Exception:
-                    c.hash.add(infl(box_of(g.GetBoundingBox()), 0.1), ref, "silk")
+                    h.add(infl(box_of(g.GetBoundingBox()), 0.1), ref, "silk")
     for t in b.GetTracks():
         if t.GetClass() == "PCB_VIA":
             r = ToMM(t.GetWidth(F_Cu)) / 2.0 + 0.2
             x, y = ToMM(t.GetPosition().x), ToMM(t.GetPosition().y)
             c.hash.add((x - r, y - r, x + r, y + r), "via", "via")
+            c.hashB.add((x - r, y - r, x + r, y + r), "via", "via")
     for d in b.GetDrawings():
-        if d.GetLayer() == F_SilkS:      # pre-existing board-level silk (not ours; ours are cleared first)
-            c.hash.add(infl(box_of(d.GetBoundingBox()), 0.1), "board", "silk")
+        if d.GetLayer() in (F_SilkS, B_SilkS):   # pre-existing board-level silk (not ours; ours are cleared first)
+            (c.hashB if d.GetLayer() == B_SilkS else c.hash).add(infl(box_of(d.GetBoundingBox()), 0.1), "board", "silk")
     if c.board_box is None:
         allb = list(c.fp_box.values())
         u = union(allb)
         c.board_box = (u[0] - 3, u[1] - 3, u[2] + 3, u[3] + 3)
+
+
+def pad_sides(p):
+    """(on_front, on_back): copper presence; any drilled pad (PTH/NPTH) counts as both (hole through the board)."""
+    drilled = p.GetDrillSize().x > 0 or p.GetDrillSize().y > 0
+    return (drilled or p.IsOnLayer(F_Cu), drilled or p.IsOnLayer(B_Cu))
 
 
 def clear_generated(c):
@@ -315,10 +343,11 @@ def clear_generated(c):
 
 
 # ------------------------------------------------------- item creation ----
-def add_text(c, s, cx, cy, size, th, ang, owner):
-    tpl = c.text_tpl(s, size, th, ang)
+def add_text(c, s, cx, cy, size, th, ang, owner, side="F"):
+    tpl = c.text_tpl(s, size, th, ang, side)
     t = PCB_TEXT(c.b)
-    t.SetLayer(F_SilkS)
+    t.SetLayer(B_SilkS if side == "B" else F_SilkS)
+    t.SetMirrored(side == "B")     # B.SilkS reads correctly when the board is flipped over
     t.SetText(s)
     t.SetTextSize(VECTOR2I(FromMM(size), FromMM(size)))
     t.SetTextThickness(FromMM(th))
@@ -395,13 +424,13 @@ def interior_candidates(w, h, anchor, step=0.75):
 
 
 def place_text(c, owner, lines_alts, anchor, sizes=TEXT_SIZES, angles=(0, 90), rings=(0.05, 0.5, 1.0, 2.0),
-               interior=False, strict=True, what="text"):
+               interior=False, strict=True, what="text", side="F"):
     """Find a conflict-free spot for the first alternative/size that fits; commit and return spec."""
     for alt in lines_alts:
         s = "\n".join(alt)
         for si, (size, th) in enumerate(sizes):
             for ang in angles:
-                tpl = c.text_tpl(s, size, th, ang)
+                tpl = c.text_tpl(s, size, th, ang, side)
                 w, h = tpl[2], tpl[3]
                 cands = []
                 if interior:
@@ -409,10 +438,10 @@ def place_text(c, owner, lines_alts, anchor, sizes=TEXT_SIZES, angles=(0, 90), r
                 cands += candidates(w, h, anchor, rings)
                 for (cx, cy) in cands:
                     box = (cx - w / 2.0, cy - h / 2.0, cx + w / 2.0, cy + h / 2.0)
-                    if c.free(box, owner, strict):
-                        c.commit(box, owner)
+                    if c.free(box, owner, strict, side=side):
+                        c.commit(box, owner, side=side)
                         return dict(text=s, cx=cx, cy=cy, size=size, th=th, ang=ang, box=box, small=(si > 0),
-                                    alt=alt)
+                                    alt=alt, side=side)
     return None
 
 
@@ -659,13 +688,27 @@ def do_frame_arrow(c):
     c.say("station-frame arrow at (%.1f, %.1f), forward = %g deg (placeholder direction)" % (cx, cy, c.args.fwd))
 
 
+def block_sizes(c, name):
+    """Board-text size ladder scaled to the outline (1.0 mm on a small board, up to 1.6 / 2.2 mm title on a
+    large one), always ending with the fixed fallbacks.  Nothing here depends on one particular outline."""
+    bb = c.board_box
+    k = min(bb[2] - bb[0], bb[3] - bb[1]) / 45.0
+    h = round(min(1.6, max(1.0, k)) * 10) / 10.0
+    if name == "title":
+        h = round(min(2.2, max(1.0, k * 1.4)) * 10) / 10.0
+    out = []
+    if h > 1.0:
+        out.append((h, round(max(0.15, min(0.3, h * 0.13)), 2)))
+    return out + TEXT_SIZES
+
+
 def do_board_text(c):
     bb = c.board_box
     corners = [(bb[0], bb[3]), (bb[2], bb[3]), (bb[0], bb[1])]
     for i, (name, alts) in enumerate(BOARD_BLOCKS):
         done = False
         for alt in alts:
-            for (size, th) in TEXT_SIZES:
+            for (size, th) in block_sizes(c, name):
                 s = "\n".join(alt)
                 tpl = c.text_tpl(s, size, th, 0)
                 w, h = tpl[2], tpl[3]
@@ -687,7 +730,8 @@ def do_board_text(c):
 
 # ---------------------------------------------------------- labels ---------
 def add_spec(c, spec, owner):
-    add_text(c, spec["text"], spec["cx"], spec["cy"], spec["size"], spec["th"], spec["ang"], owner)
+    add_text(c, spec["text"], spec["cx"], spec["cy"], spec["size"], spec["th"], spec["ang"], owner,
+             spec.get("side", "F"))
 
 
 def do_labels(c):
@@ -809,28 +853,64 @@ def short_net(s):
     return s
 
 
+def tp_label(c, ref, f):
+    """Label text for a test point: testpoint_labels.json first, else the (shortened) net name."""
+    ent = c.tp_json.get(ref)
+    if ent:
+        return ent["label"]
+    pads = list(f.Pads())
+    name = pads[0].GetShortNetname() if pads else ""
+    if not name or name.startswith("unconnected") or name.startswith("Net-("):
+        name = f.GetValue()
+    name = short_net(name)
+    if len(name) > 12:
+        c.say("TP label %s truncated '%s' -> '%s'" % (ref, name, name[:12]))
+        name = name[:12]
+    return name
+
+
 def do_testpoints(c):
     tps = [r for r in c.fps if re.match(r"TP\d+$", r)]
     for ref in sorted(tps, key=natural):
         f = c.fps[ref]
         pads = list(f.Pads())
-        name = pads[0].GetShortNetname() if pads else ""
-        if not name or name.startswith("unconnected") or name.startswith("Net-("):
-            name = f.GetValue()
-        name = short_net(name)
-        if len(name) > 12:
-            c.say("TP label %s truncated '%s' -> '%s'" % (ref, name, name[:12]))
-            name = name[:12]
+        if not pads:
+            continue
+        name = tp_label(c, ref, f)
         anchor = box_of(pads[0].GetBoundingBox())
-        spec = place_text(c, ref, [[name]], anchor, rings=(0.1, 0.5, 1.0, 1.8))
+        side = "B" if f.IsFlipped() else "F"
+        if side == "B":
+            # bottom: 1.0 mm / 0.15 only, reads correctly after flipping the board, angle 0
+            spec = place_text(c, ref, [[name]], anchor, sizes=BOT_SIZES, angles=(0,),
+                              rings=(0.1, 0.5, 1.0, 1.8, 3.0), side="B")
+        else:
+            spec = place_text(c, ref, [[name]], anchor, rings=(0.1, 0.5, 1.0, 1.8))
         if spec:
             add_spec(c, spec, ref)
-            c.count("tp_label")
+            c.count("tp_label_bottom" if side == "B" else "tp_label")
             if spec["small"]:
                 c.count("tp_label_small")
+            grp = c.tp_json.get(ref, {}).get("group")
+            if side == "B" and grp:
+                c.tp_group_boxes.setdefault(grp, []).extend([anchor, spec["box"]])
         else:
-            c.say("DROPPED test-point net label %s (%s)" % (ref, name))
+            c.say("DROPPED test-point label %s (%s) on %s" % (ref, name, side))
             c.tp_dropped.add(ref)
+            c.count("tp_label_dropped")
+
+
+def do_tp_legends(c):
+    """One legend per bottom function row (JSON group), at the row's extent."""
+    for grp, boxes in sorted(c.tp_group_boxes.items()):
+        text = GROUP_LEGEND.get(grp, grp.upper())
+        anchor = union(boxes)
+        spec = place_text(c, "legend_" + grp, [[text]], anchor, sizes=BOT_LEGEND_SIZES, angles=(0,),
+                          rings=(0.3, 1.0, 2.0, 3.0, 5.0), side="B")
+        if spec:
+            add_spec(c, spec, "legend_" + grp)
+            c.count("tp_legend")
+        else:
+            c.say("DROPPED bottom row legend '%s'" % text)
 
 
 # ------------------------------------------------ refs and values ----------
@@ -847,8 +927,9 @@ def c_area(f):
     return 0.0
 
 
-def set_field(fld, layer, text_size, th, cx, cy, ang, visible=True):
+def set_field(fld, layer, text_size, th, cx, cy, ang, visible=True, mirrored=False):
     fld.SetLayer(layer)
+    fld.SetMirrored(mirrored)
     fld.SetVisible(visible)
     fld.SetTextSize(VECTOR2I(FromMM(text_size), FromMM(text_size)))
     fld.SetTextThickness(FromMM(th))
@@ -872,7 +953,8 @@ def to_fab(c, f, which):
     cb = c.fp_box.get(f.GetReference())
     cx, cy = (cb[0] + cb[2]) / 2, (cb[1] + cb[3]) / 2
     off = 0.0 if which == "ref" else 0.7
-    set_field(fld, F_Fab, 0.6, 0.09, cx, cy + off, 0)
+    bottom = f.IsFlipped()
+    set_field(fld, B_Fab if bottom else F_Fab, 0.6, 0.09, cx, cy + off, 0, mirrored=bottom)
 
 
 def do_refs(c):
@@ -881,6 +963,8 @@ def do_refs(c):
     for ref in order:
         f = c.fps[ref]
         if f.IsFlipped():
+            to_fab(c, f, "ref")      # bottom parts (test points): designator on B.Fab, label is on B.SilkS
+            c.count("ref_to_fab_bottom")
             continue
         if re.match(r"TP\d+$", ref) and not c.args.tp_refs and ref not in c.tp_dropped:
             to_fab(c, f, "ref")
@@ -888,10 +972,14 @@ def do_refs(c):
             continue
         anchor = c.fp_box[ref]
         interior = (anchor[2] - anchor[0]) * (anchor[3] - anchor[1]) > 60
-        spec = place_text(c, ref, [[ref]], anchor, interior=interior, rings=(0.05, 0.5, 1.0, 2.0))
-        if not spec and c.args.relax_courtyards:
-            spec = place_text(c, ref, [[ref]], anchor, interior=interior, rings=(0.05, 0.5, 1.0, 2.0),
-                              strict=False)
+        # ICs / connectors / other non-passives get a wider search (a reference can sit a few mm away on a
+        # roomy board) and may fall back into a neighbour's courtyard (never over pads / silk) before they
+        # are given up to F.Fab.  Passives stay close to their part (a distant ref is ambiguous).
+        major = not (PASSIVE_RE.match(ref) or ref.startswith("TP"))
+        rings = (0.05, 0.5, 1.0, 2.0, 3.0, 4.5) if major else (0.05, 0.5, 1.0, 2.0)
+        spec = place_text(c, ref, [[ref]], anchor, interior=interior, rings=rings)
+        if not spec and (c.args.relax_courtyards or major):
+            spec = place_text(c, ref, [[ref]], anchor, interior=interior, rings=rings, strict=False)
             if spec:
                 c.count("ref_in_neighbour_courtyard")
         if spec:
@@ -910,9 +998,9 @@ def do_values(c):
     for ref in sorted(c.fps, key=natural):
         f = c.fps[ref]
         pre = re.match(r"[A-Za-z]+", ref).group(0)
+        to_fab(c, f, "val")
         if f.IsFlipped():
             continue
-        to_fab(c, f, "val")
         if pre not in ("U", "J", "Q", "Y", "L", "D", "SW", "BT", "FB") or re.match(r"TP", ref):
             continue
         if SMALL_PASSIVE_FP.match(str(f.GetFPID().GetLibItemName())) or ref in LABELS:
@@ -922,10 +1010,10 @@ def do_values(c):
             continue
         anchor = c.fp_box[ref]
         interior = (anchor[2] - anchor[0]) * (anchor[3] - anchor[1]) > 60
-        if not interior:
-            continue            # values go on silk only when they sit inside the part's own courtyard
-        spec = place_text(c, ref, [[val]], anchor, sizes=TEXT_SIZES[:1], interior=True,
-                          rings=(), strict=True)
+        # value inside the part's own courtyard when it is big enough, else hugging the part (strict: never in a
+        # neighbour's courtyard); only after every reference has been placed, so it never costs a reference a spot
+        spec = place_text(c, ref, [[val]], anchor, sizes=TEXT_SIZES[:1], interior=interior,
+                          rings=() if interior else (0.05, 0.5, 1.0), strict=True)
         if spec:
             set_field(f.Value(), F_SilkS, spec["size"], spec["th"], spec["cx"], spec["cy"], spec["ang"])
             field_centre_fix(c, f.Value(), spec["cx"], spec["cy"])
@@ -934,11 +1022,12 @@ def do_values(c):
 
 # ------------------------------------------------------------ checker ------
 class Item:
-    __slots__ = ("obj", "label", "native", "shape", "box", "parent", "gen", "field")
+    __slots__ = ("obj", "label", "native", "shape", "box", "parent", "gen", "field", "side")
 
     def __init__(self, obj, label, native, shape, parent, gen=False, field=None):
         self.obj, self.label, self.native, self.shape, self.parent, self.gen, self.field = \
             obj, label, native, shape, parent, gen, field
+        self.side = "B" if obj.GetLayer() == B_SilkS else "F"
         bb = shape.BBox()
         self.box = (ToMM(bb.GetLeft()), ToMM(bb.GetTop()), ToMM(bb.GetRight()), ToMM(bb.GetBottom()))
 
@@ -956,7 +1045,7 @@ def collect_silk(c):
         return o.GetEffectiveShape()
 
     for d in b.GetDrawings():
-        if d.GetLayer() == F_SilkS:
+        if d.GetLayer() in (F_SilkS, B_SilkS):
             gen = str(d.m_Uuid.AsString()) in gen_uuid
             items.append(Item(d, "%s %s" % (d.GetClass(), (d.GetText() if d.GetClass() == "PCB_TEXT" else "")),
                               not gen, shape_of(d), "board", gen))
@@ -964,10 +1053,10 @@ def collect_silk(c):
         ref = f.GetReference()
         is_mark = str(f.GetFPID().GetLibItemName()).startswith(MARK_PREFIX)
         for fld, nm in ((f.Reference(), "ref"), (f.Value(), "value")):
-            if fld.IsVisible() and fld.GetLayer() == F_SilkS:
+            if fld.IsVisible() and fld.GetLayer() in (F_SilkS, B_SilkS):
                 items.append(Item(fld, "%s %s '%s'" % (ref, nm, fld.GetText()), False, shape_of(fld), ref, True, f))
         for g in f.GraphicalItems():
-            if g.GetLayer() == F_SilkS:
+            if g.GetLayer() in (F_SilkS, B_SilkS):
                 try:
                     items.append(Item(g, "%s %s" % (ref, g.GetClass()), not is_mark, shape_of(g), ref, is_mark))
                 except Exception:
@@ -979,18 +1068,18 @@ def check(c, verbose=True):
     """Return dict of violation lists. Non-native violations must be zero."""
     b = c.b
     items = collect_silk(c)
-    pads = []
+    phs = {"F": Hash(), "B": Hash()}
     for f in b.GetFootprints():
         for p in f.Pads():
-            try:
-                sh = p.GetEffectiveShape(F_Cu)
-            except Exception:
-                continue
-            bb = p.GetBoundingBox()
-            pads.append((box_of(bb), p, f.GetReference(), sh))
-    ph = Hash()
-    for pb, p, ref, sh in pads:
-        ph.add(pb, (p, ref, sh), "pad")
+            on = dict(zip("FB", pad_sides(p)))
+            for side, lay in (("F", F_Cu), ("B", B_Cu)):
+                if not on[side]:
+                    continue
+                try:
+                    sh = p.GetEffectiveShape(lay)
+                except Exception:
+                    continue
+                phs[side].add(box_of(p.GetBoundingBox()), (p, f.GetReference(), sh), "pad")
     vias = []
     for t in b.GetTracks():
         if t.GetClass() == "PCB_VIA":
@@ -998,14 +1087,14 @@ def check(c, verbose=True):
     edges = [d.GetEffectiveShape() for d in b.GetDrawings() if d.GetLayer() == Edge_Cuts]
     edge_box = c.outline
     res = {"silk_pad": [], "silk_overlap": [], "silk_edge": [], "silk_via": [], "native_silk_pad": [],
-           "native_native": 0}
-    ih = Hash()
+           "native_silk_via": [], "native_native": 0}
+    ihs = {"F": Hash(), "B": Hash()}
     for it in items:
-        ih.add(it.box, it, "silk")
+        ihs[it.side].add(it.box, it, "silk")
     seen = set()
     for it in items:
         # pads
-        for (_b, (p, ref, sh), _k) in ph.query(infl(it.box, PAD_CLR_CHECK + 0.05)):
+        for (_b, (p, ref, sh), _k) in phs[it.side].query(infl(it.box, PAD_CLR_CHECK + 0.05)):
             if it.native and ref == it.parent:
                 pass
             try:
@@ -1030,9 +1119,10 @@ def check(c, verbose=True):
             vx, vy = ToMM(vp.x), ToMM(vp.y)
             if overlap(it.box, (vx - r, vy - r, vx + r, vy + r)):
                 if it.shape.Collide(v.GetEffectiveShape(F_Cu), FromMM(PAD_CLR_CHECK)):
-                    res["silk_via"].append((it, "via"))
+                    # library silk over a (tented) via is not ours to move and is not a KiCad DRC item
+                    res["native_silk_via" if it.native else "silk_via"].append((it, "via"))
         # silk vs silk
-        for (_b, other, _k) in ih.query(infl(it.box, 0.0)):
+        for (_b, other, _k) in ihs[it.side].query(infl(it.box, 0.0)):
             if other is it:
                 continue
             key = tuple(sorted((id(it), id(other))))
@@ -1057,30 +1147,33 @@ def trim_native(c):
     edge margin.  Vendor and placeholder outlines (TCXO U30, eSIM U23, fuel gauge U2) run along the pads and
     BT1's outline touches the board edge; KiCad clips mask-opening silk at plot time but DRC still flags it.
     The segments move to F.Fab, so the outline stays as documentation but is not printed."""
-    pads = []
+    pads = {"F": [], "B": []}
     for f in c.b.GetFootprints():
         for pd in f.Pads():
-            pads.append((pd.GetEffectiveShape(F_Cu), box_of(pd.GetBoundingBox())))
+            for side, lay, on in (("F", F_Cu, pad_sides(pd)[0]), ("B", B_Cu, pad_sides(pd)[1])):
+                if on:
+                    pads[side].append((pd.GetEffectiveShape(lay), box_of(pd.GetBoundingBox())))
     doomed = []
     for f in c.b.GetFootprints():
         shapes = []
         for g in f.GraphicalItems():
             shapes.append(g)
         for sh in shapes:
-            if sh.GetLayer() != F_SilkS or sh.GetClass() != 'PCB_SHAPE':
+            if sh.GetLayer() not in (F_SilkS, B_SilkS) or sh.GetClass() != 'PCB_SHAPE':
                 continue
             bb = box_of(sh.GetBoundingBox())
             es = sh.GetEffectiveShape()
-            hit = any(overlap(bb, pb) and es.Collide(ps, 0) for ps, pb in pads)
+            side = "B" if sh.GetLayer() == B_SilkS else "F"
+            hit = any(overlap(bb, pb) and es.Collide(ps, 0) for ps, pb in pads[side])
             if not hit and c.outline is not None:
                 hit = not inside(bb, infl(c.outline, -EDGE_CLR_CHECK))
             if hit:
                 doomed.append((f, sh))
     for f, sh in doomed:
-        sh.SetLayer(F_Fab)          # Remove() on a footprint-owned item segfaults pcbnew; F.Fab keeps the outline
+        sh.SetLayer(B_Fab if sh.GetLayer() == B_SilkS else F_Fab)          # Remove() on a footprint-owned item segfaults pcbnew; F.Fab keeps the outline
     n = len(doomed)
     c.say("trimmed %d native silk graphics touching pads or the board edge" % n)
-    c.stats["native_trimmed"] = n
+    c.stats["native_trimmed"] = c.stats.get("native_trimmed", 0) + n
 
 
 def enforce(c):
@@ -1157,6 +1250,11 @@ def main():
     pcbnew.KIID.SeedGenerator(20261118)
     clear_generated(c)
     load_obstacles(c)
+    # Library silk that touches pads / the edge is moved to Fab BEFORE placement and the obstacle map rebuilt, so
+    # that a re-run on an already-processed board (where this has happened) places everything identically.
+    trim_native(c)
+    c.hash, c.hashB = Hash(), Hash()
+    load_obstacles(c)
     do_frame_arrow(c)
     do_sensor_axes(c)
     do_board_text(c)
@@ -1164,6 +1262,7 @@ def main():
     do_keepouts(c)
     do_labels(c)
     do_testpoints(c)
+    do_tp_legends(c)
     do_refs(c)
     do_values(c)
 
