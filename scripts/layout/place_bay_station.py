@@ -982,11 +982,11 @@ def apply_to_board(board, parts, strip_copper=True):
         z.SetDoNotAllowZoneFills(True)
         z.SetDoNotAllowPads(False)
         z.SetDoNotAllowFootprints(False)
-        ch = pcbnew.SHAPE_LINE_CHAIN()
+        ps = pcbnew.SHAPE_POLY_SET()
+        ps.NewOutline()
         for x, y in ((x0, y0), (x1, y0), (x1, y1), (x0, y1)):
-            ch.Append(mm(x + OX), mm(y + OY))
-        ch.SetClosed(True)
-        z.Outline().AddOutline(ch)
+            ps.Append(mm(x + OX), mm(y + OY))
+        z.SetOutline(ps)
         board.Add(z)
 
     u3 = parts["U3"]
