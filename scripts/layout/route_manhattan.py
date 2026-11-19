@@ -1,6 +1,17 @@
 #!/usr/bin/env python3
 """In-house orthogonal router for the ORDINARY nets of the bay-station board.
 
+RUN (KiCad python, on a SCRATCH copy of the board; kicad-cli/DRC from a scratch dir):
+    KP=/Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/Current/bin/python3
+    $KP scripts/layout/route_manhattan.py --board SCRATCH/bay-station.kicad_pcb --report r.json \
+        --via 0.45/0.2 --stub-max 2.0 --max-rips 20 --passes 3 --jobs 6 --seconds 900
+  --jobs N      fork N planning workers; the master re-checks every plan exactly before applying it
+                (1 = serial).  --passes N: retry failed nets with fresh rip budget, history persists.
+  --skip-nets-json  nets already routed by route_power.py (default scripts/layout/power_nets.json,
+                tolerated if absent).  RF50/CLK classes are always skipped (obstacles with 0.5 keep-off).
+  scripts/layout/route_bench.py wraps router + check_gates.py on a scratch copy.
+
+
 Policy (the user's): F.Cu carries HORIZONTAL tracks only, B.Cu VERTICAL only;
 a via appears only where the direction changes; 45 degrees is never used by
 this router.  Two listed exceptions, both short:
@@ -768,7 +779,6 @@ class Router:
                 e0, s0 = self.stats["expanded"], self.stats["searches"]
                 l0, v0 = self.stats.get("limit_hits", 0), self.stats.get("verify_rejects", 0)
                 self.necked.pop(net, None)
-                nstart = (len(self.obst.items), sum(len(v) for v in self.rec.values()))
                 self.plan_begin()
                 requeue, left = self.route_net(net)
                 nm = self.m.nets[net]["name"]
@@ -776,7 +786,6 @@ class Router:
                            fail=self.fail_info.get(nm), exp=self.stats["expanded"] - e0,
                            srch=self.stats["searches"] - s0, lim=self.stats.get("limit_hits", 0) - l0,
                            vr=self.stats.get("verify_rejects", 0) - v0)
-                res["nobst"] = nstart
                 res["ops"] = self.plan_end(net)
                 conn.send(res)
         except (EOFError, KeyboardInterrupt):
@@ -796,14 +805,12 @@ class Router:
             if op[0] == "seg":
                 _, n, l, x0, y0, x1, y1, w, stub, iid = op
                 if not self.obst.seg_ok(n, l, x0, y0, x1, y1, w / 2, ignore=victims):
-                    self.stale_why = op
                     return None
             elif op[0] == "via":
                 _, n, x, y, dia, drill, iid = op
                 for ll in (F, B):
                     if not self.obst.seg_ok(n, ll, x, y, x, y, dia / 2, ignore=victims):
-                        self.stale_why = op
-                        return None
+                            return None
         mops, ripped = [], []
         for op in ops:
             k = op[0]
@@ -883,9 +890,6 @@ class Router:
                     net = res["net"]
                     del busy[k]
                     idle.append(k)
-                    if self.stats.get('dbgn', 0) < 40 and not busy:
-                        self.stats['dbgn'] = self.stats.get('dbgn', 0) + 1
-                        self.log('DBG net %s worker start %s master %s' % (self.m.nets[net]['name'], res['nobst'], (len(self.obst.items), sum(len(v) for v in self.rec.values()))))
                     ripped = self.apply_plan(net, res["ops"])
                     self.stats["expanded"] += res["exp"]
                     self.stats["searches"] += res["srch"]
@@ -894,13 +898,6 @@ class Router:
                     if ripped is None:
                         stale[net] = stale.get(net, 0) + 1
                         self.stats["stale"] = self.stats.get("stale", 0) + 1
-                        if self.stats["stale"] < 4:
-                            self.log("stale plan net %s: %s" % (self.m.nets[net]["name"], getattr(self, "stale_why", None)))
-                            op = self.stale_why
-                            if op[0] == "seg":
-                                for p in self.obst.near((min(op[3], op[5]) - 1, min(op[4], op[6]) - 1, max(op[3], op[5]) + 1, max(op[4], op[6]) + 1)):
-                                    if p.net != op[1] and op[2] in p.layers and p.dist_seg(*op[3:7]) < 0.1 + p.clr:
-                                        self.log("   blocked by net %s kind %s g %s clr %s static %s owner %s" % (p.net, p.kind, p.g, p.clr, p.static, p.owner_item))
                         if stale[net] >= 2:
                             solo.add(net)
                         q.insert(0, net)
