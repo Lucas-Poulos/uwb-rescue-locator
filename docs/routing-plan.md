@@ -1,35 +1,43 @@
 # Bay station routing plan
 
-Routing infrastructure for `bay-station/bay-station.kicad_pcb` (written 2026-11-18,
-before the placement exists). Everything here is scripted and lives in
-`scripts/layout/`; the numbers come from `scripts/layout/stackup.py` and the
-per-net inventory from `scripts/layout/hs_nets.json`, which also generates the
-project rules (`scripts/layout/apply_rules.py`). Nothing in this file was
-verified on a real placement: the tools were exercised on a throw-away fixture
-(section 8), and the router's quality figures are for that fixture only.
+Routing infrastructure for `bay-station/bay-station.kicad_pcb` (150 x 80 mm, 4 layers, placement done).
+Everything is scripted and lives in `scripts/layout/`; the numbers come from `scripts/layout/stackup.py`
+and the per-net inventory from `scripts/layout/hs_nets.json`, which also generates the project rules
+(`scripts/layout/apply_rules.py`). Status: the hand-first high-speed stage and the stitch/rescue stage
+were run on the real placement (section 8); the ordinary router, the power stage and the final HS
+clean-up (`hs_finish.py`) are other agents' scripts and only their interfaces are described here.
 
 User routing policy, as implemented:
 
-1. Every high-speed signal that needs a solid ground reference is routed first,
-   by script, on F.Cu over solid In1 (section 2), then locked.
-2. Everything else is Manhattan: F.Cu horizontal, B.Cu vertical, vias only at
-   direction changes, no 45 degrees from the router (45 degrees or arcs only on
-   the hand-first RF/clock lines).
+1. Every high-speed signal that needs a solid ground reference is routed first, by script, on F.Cu
+   over solid In1 (section 2), then locked.  The GND pads of the chips that carry those signals are
+   tied BEFORE the clocks and host RF are laid (section 6), so those route around the ties.
+2. Everything else is Manhattan: F.Cu horizontal, B.Cu vertical, vias only at direction changes, no
+   45 degrees from the router (45 degrees or arcs only on the hand-first RF/clock lines and on pad
+   stubs of at most 2.0 mm).
 3. GND stitching vias across the whole board, a fence along RF lines (section 6).
 4. The inner layers are the reference planes (section 1).
 
-Order of work on the placed board:
+Order of work is one command, `scripts/layout/run_pipeline.py` (any python3; every stage runs in a
+subprocess with KiCad's python on a COPY of the board, logs and a board md5 per stage, stops on the
+first hard failure, `--stages`/`--skip`/`--silk`/`--keep-going`/`--in-place`):
 
 ```
-KP=/Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/Current/bin/python3
-$KP scripts/layout/apply_rules.py                         # once; rewrites .kicad_pro netclasses + .kicad_dru
-# on a SCRATCH copy (never the file under version control until the result is reviewed):
-$KP scripts/layout/stitch.py --board SCRATCH/bay-station.kicad_pcb --cutouts-only  # DW3210 keep-out rule areas FIRST
-$KP scripts/layout/route_hs_uwb.py all --board SCRATCH/bay-station.kicad_pcb     # RF x4 + fence, UWB_CLK group
-$KP scripts/layout/route_manhattan.py --board SCRATCH/bay-station.kicad_pcb --report r.json
-$KP scripts/layout/stitch.py --board SCRATCH/bay-station.kicad_pcb --zones       # stitching vias + GND pours
-$KP scripts/layout/check_gates.py --board SCRATCH/bay-station.kicad_pcb --workdir /tmp/gates
+python3 scripts/layout/run_pipeline.py --workdir /tmp/bay_pipe [--stages cutouts,fanout,...] [--seconds 900]
+  cutouts   stitch.py --cutouts-only         DW3210 cut-out + tie rule areas, before anything is routed
+  fanout    fanout.py                        stub + via for every non-HS pad
+  testpads  place_testpads_bottom.py         test pads to the bottom side
+  hs        route_hs_uwb.py all              RF x4 -> DW3210 GND ties -> host RF/TCXO -> UWB clocks -> other chips' ties
+  power     route_power.py                   (skipped until the script has a CLI)
+  hs_finish hs_finish.py                     (skipped until present: arcs, mask openings, fence)
+  manhattan route_manhattan.py --jobs 6      ordinary nets
+  stitch    stitch.py --zones --rescue auto  lattice, pours, GND pad ties
+  fill, drc kicad-cli zone fill on a scratch copy, DRC --all-track-errors
+  gates     check_gates.py --json
 ```
+
+fanout runs before the test pads (its own doc says so, and the test-pad placer then keeps clear of
+its vias).  Stages whose script is absent, or has no `__main__` yet, are skipped with a note.
 
 ## 1. Stackup, reference planes, impedance
 
@@ -188,11 +196,18 @@ Tolerances and where they come from:
   via count (0), same orientation on all four. 0.5 mm = 3.1 ps = about 10 % of the
   33 ps. That ratio is my choice, not a datasheet value. The fixed part calibrates
   out; only drift matters, which is why identical geometry matters more than the number.
-* **CLK_PATH +/-0.5 mm.** clock_dist_notes.md "Layout": equal length, same layer, same
-  via count, away from SPI and RF; the buffer's own 25/50 ps skew (TI SNAS791D) is fixed
-  and calibrates out. Measured buffer pin -> XTI pad centre, series R and C pads counting
-  as zero. A0's DNP crystal stub (Y1/C209 on UWB_CLK0 and XTO) makes A0's electrical
-  length differ by the stub; keep that stub shorter than 1 mm.
+* **CLK_PATH +/-0.5 mm.** clock_dist_notes.md "Layout": equal length, same layer, same via
+  count, away from SPI and RF; the buffer's own 25/50 ps skew (TI SNAS791D) is fixed
+  and calibrates out.  **Counting rule** (route_hs_uwb.py and check_gates.py use the same one): the
+  length of anchor n is the sum of the track lengths of its three chain nets (CLK_Yn + CLK_Tn +
+  UWB_CLKn), buffer pin centre to XTI pad centre, series R and C pads count as zero, and every
+  **dead-end spur counts 1:1**.  The spurs are the other pads on UWB_CLKn: on A0 the unfitted R403
+  link pad and the DNP crystal option Y1 / C209 (1-3 mm of copper each in the placement, routed
+  as an MST onto the chain); A1-A3 have none (R404-R406 were removed).  Lumped-capacitance
+  estimate behind the 1:1 choice: 50 ohm line = 0.123 pF/mm, so a spur seen by the 50 + 22 ohm
+  source delays the edge by about 72 ohm x 0.123 pF = 8.9 ps/mm against 6.15 ps/mm of line, i.e.
+  1:1 is within 1.5x of the physical term and errs toward a longer A0 path.  It is an estimate,
+  not a simulation; the residual is a fixed A0 offset that the calibration absorbs.
 * **SPI.** connectivity_notes.md s2: SPIM3 8 MHz is the limit; DW3000 DS v1.1 Table 19:
   t3 setup 14 ns, t4 hold 2 ns, t2 8.5 ns against a 125 ns period. The tightest skew
   limit (2 ns hold) is ~330 mm of trace, so matching is not required.
@@ -262,6 +277,10 @@ rule would override all netclasses):
 * RF50 track width window 0.2 (neck) to 0.5 mm.
 * RF50 carries no vias.
 * CLK track to foreign track/via/zone: 0.5 mm (CLK next to CLK exempt, 0.15).
+* **GND pad-tie exception (last rule):** a GND *track* may sit 0.15 mm (the netclass clearance) from an
+  RF50/CLK track when it touches a tie rule area; vias, pours and every other net keep 0.5 mm.
+  Source: `hs_nets.json` `gnd_tie_exception`, written by `apply_rules.py`, verified by `check_gates.py`.
+  Justification and scope: section 6.
 * No POWER_* minimum-width rule: KiCad 10.0.5 reported a custom rule marked `(severity warning)`
   as an error, and the router's 0.2 mm power-pad stubs are deliberate, so `check_gates.py`
   audits power-class track widths (INFO) instead.
@@ -269,20 +288,37 @@ rule would override all netclasses):
 All four rule types were exercised: a deliberate violation of the no-via and keep-off
 rules on the fixture produced exactly those `items_not_allowed` / `clearance` errors.
 
-## 4. `route_hs.py` (hand-first library)
+## 4. `route_hs.py` and `route_hs_uwb.py` (hand-first stage)
 
-`microstrip_path` (chamfer 45 degree or arc bends), `route_pads` (orthogonal candidates
-shortest first: straight, L, Z, swept U, each tested against pads/tracks/vias; automatic
-neck at pads narrower than the line), `via_fence`, `meander_points`/`match_group`
-(accordion with 3 x width gap between legs, amplitude up to 10 mm, meanders spread over
-the straight legs of a path, longest-path target), `lock`. `route_hs_uwb.py` finds the
-RF chains and clock hops from the netlist (no hard-coded references).
+`route_hs.py` is the library: `microstrip_path` (chamfer 45 degree or arc bends), `route_pads`
+(orthogonal candidates shortest first: straight, L, Z, swept U, each tested against pads, tracks,
+vias and track-forbidding rule areas, then an A* fallback; automatic neck at pads narrower than the
+line), `via_fence` (never inside a via-forbidding rule area), `meander_points`/`match_group`
+(accordion with 3 x width gap between legs, meanders spread over the straight legs, detour hop
+when the shortfall is large), `lock`.  GND tracks inside a tie area (section 6) are checked at the
+0.15 mm of the .kicad_dru exception, everything else at 0.5 mm.
 
-Greedy: it does not search for topologies. The first clean candidate wins, so
-unlucky placement (one clock path walling in another) fails with an error instead of
-finding a way round; the fixture needed the chip order chosen so the four clock lines
-nest. That is a tooling limit, and a real placement should put the buffer where the
-four runs are similar.
+`route_hs_uwb.py` is the bay-station stage.  It uses no coordinates and no board size, only the
+netlist, footprint geometry and `hs_nets.json`; every hop that cannot be routed is reported
+(exit code 2) instead of aborting:
+
+1. `rf`: the four DW3210 chains RF1 -> C -> R -> SMA (+ RF2 stub), identical geometry, no vias; then
+   every DNP pad on those nets (pi-network shunts) as a short spur; then the GND fence.
+2. `ties`: all GND pads of the DW3210s (stub + via outside the cut-out, `stitch.py` section 6).
+   Done before the clocks and host RF, which then route around them.
+3. `host`: every other RF50/CLK net (LTE, GNSS, TCXO): minimum spanning tree over the F.Cu pads,
+   phase 1 populated pads (noise-critical GNSS input first), phase 2 DNP pads as spurs so an unfitted
+   part never walls in a populated path; width ladder 0.45 -> 0.24 mm when a 0.4 mm pitch pad forces
+   it (the relaxed rows break the 0.5 mm keep-off and are printed); fence on RF50.
+4. `clocks`: UWB_CLK0-3 with `match_group`, spurs counted (section 2).
+5. `ties2`: GND pads of the other HS chips (LNA, nRF9151 RF pins) after their RF lanes exist.
+
+Greedy: no topology search; the first clean candidate wins.  GNSS_LNA_AO (R123.1 to U24.3) crossed
+GNSS_LNA_IN_DC in the earlier placement and needed a via bridge, which the `RF50 carries no vias`
+rule forbids.  In the current placement the two nets do not cross and AO routes as a 4.9 mm
+0.24 mm line; if a later placement makes them cross again the stage reports the hop and the fix is a
+placement change (put R123 on the U24 side of the IN_DC line), not a via on an RF50 net.
+
 
 ## 5. `route_manhattan.py` (ordinary nets)
 
@@ -306,114 +342,131 @@ Policy exceptions it makes, all listed in its report and accepted by
 and GND stubs (at most 3 mm). Fine-pitch pads cannot take a horizontal track from every
 side, and pad centres are off the 0.1 mm grid.
 
-## 6. Stitching and zones (`stitch.py`)
+## 6. Stitching, zones and GND pad ties (`stitch.py`)
 
-* General lattice **5.0 mm**; **2.5 mm** within 4 mm of any RF50/CLK copper (lambda/10 at
-  6.49 GHz is 2.5 mm); **2.5 mm along the board edge**, 1.0 mm inset. Plane stitching rule
-  of thumb: pitch <= lambda_g/20 at the highest frequency that matters, which would be
-  3.7 mm for LTE at 2.2 GHz and 25 mm for 1-2 ns CMOS edges, so 5 mm is lambda/15 at the
-  LTE band edge: a deliberate compromise, not a derivation that closes.
-* Skips: pads (0.25 mm edge to via edge, covers mask openings and wicking), tracks (0.15,
-  0.5 to RF50/CLK), other vias/holes (0.25 drill to drill), edge, keep-out rule areas
-  including those inside footprints (the u.FL keep-outs), local pad clearance overrides
-  (fiducials), and the 5.5 x 5.5 mm square under each DW3210 (no vias:
-  Fig 35 "keep clear of copper, tracks and vias").
-* Zones, deterministic (seeded KIIDs, fixed names, board outline inset 0.6 mm): GND on
-  In1, In2, F.Cu, B.Cu, plus rule areas under each DW3210 (no pour on F.Cu and In1.Cu, no
-  vias). **Never filled in-process**: `check_gates.py` fills a scratch copy with
-  `kicad-cli pcb drc --refill-zones` (zone fill honours the `.kicad_dru`, so the pour stays
-  0.5 mm off the RF lines).
+**Lattice** (sized from the Edge.Cuts polygon, any outline incl. arcs; verified on the 150 x 80 mm
+board): general lattice pitch <= 5.0 mm, evenly spread over the outline minus 2 mm (n = ceil(span/5),
+so no 4.9 mm leftover row); dense lattice <= 2.5 mm within 4 mm of RF50/CLK copper (lambda_g/10 at
+6.49 GHz is 2.5 mm); edge ring 2.5 mm pitch, 1.0 mm inset.  Plane-stitching rule of thumb pitch
+<= lambda_g/20 would be 3.7 mm at LTE 2.2 GHz, so 5 mm is a compromise, not a derivation that closes.
+A candidate within 0.4 x pitch of an existing GND via counts as stitched (a second run adds almost
+nothing).  Skips: pads (0.25 mm edge to via edge), TestPoint pads (0.6 mm: pogo probe tip and guide),
+tracks (0.15; 0.5 to RF50/CLK), other vias and holes (drill edge to drill edge >= the hole-to-hole
+rule, 0.25 mm, `hs_nets.json` fab block), the board edge, keep-out rule areas including footprint
+ones, and the 5.5 x 5.5 mm square under each DW3210 (no vias: DS v1.1 Fig 35).  Zones: GND on In1,
+In2, F.Cu, B.Cu (outer pours drop every island that is not connected), rule areas under each DW3210
+(no pour on F.Cu/In1, no vias).  Never filled in process: `kicad-cli pcb drc --refill-zones` on a
+scratch copy fills with the `.kicad_dru` applied.
+
+**GND pad ties** (`--rescue auto`; the same engine is called by `route_hs_uwb.py ties`).  Why they
+are needed: the 0.5 mm RF50 keep-off and the no-via cut-out leave the DW3210 RF-side VSS pins (12,
+14-17, 19, 20) and some pads beside RF pins with no route to a pour or a stitch via (70 isolated
+GND pads on the first routed board).  Method: a Dijkstra search on the pad's own layer (0.05 mm
+grid, 0.2 mm stub, orthogonal and 45 degree steps, bend penalty) to the nearest of an existing GND
+via, an earlier tie stub, or a new legal via site; chain length pad centre to via <= 2.0 mm (the
+direction-policy stub limit).  Vias are never inside the DW3210 cut-out, so a DW3210 pad reaches
+out past the 5.5 mm square, and In1 under the body stays cleared while In2 is the first solid
+ground (DW3000 DS v1.1 s7.3, Fig 35; positioning.md "Required passives and layout").  `auto`
+finds the isolated pads itself: kicad-cli fills a scratch copy, the unconnected GND items name
+them, two passes.
+
+**The one rule exception.**  A GND stub leaving such a pad is inside the 0.5 mm RF keep-off by
+construction: the DW3210 pads are 0.25 mm on 0.4 mm pitch, the GND pads sit 0.15 mm from the RF1/RF2
+pads, and the 0.24 mm neck continues straight out between them.  The `.kicad_dru` therefore relaxes
+GND *track* to RF50/CLK *track* clearance from 0.5 to the netclass 0.15 mm, only where the GND track
+touches a rule area that forbids nothing: `DW3210_TIE_n` (cut-out + 2 mm per side) or `HS_TIE_k` (3 mm
+square round an RF/CLK pad of a fine-pitch non-DW3210 chip: nRF9151 LGA RF pins, BGA524N6).  Within
+that stretch the line is a pad neck over the cleared In1 (In2 at h = 0.689 mm is the reference),
+which is not 50 ohm anyway (a 0.24 mm neck over In2 is about 100 ohm); GND copper beside it lowers
+Z0 toward 50 ohm, as the chip's own GND pads do.  Evidence: on the first routed board the same
+filled board gave 25 `clearance` errors without the rule and 0 with it.  Not simulated; the width of
+the stretch is at most ~1.5 mm (lambda_g/16 at 6.49 GHz).  Vias, pours and other nets keep 0.5 mm.
+Optional tiers, off by default and flagged: `--tented` (tie via 0.15 mm instead of 0.25 mm from a
+foreign pad, valid only if vias are tented) and `--via-in-pad` (a via ON a pad whose short side is
+>= 0.65 mm, needs filled/capped vias at the fab; check_gates flags every via-in-pad).  The
+only pads that qualified on the first board were C102.2 and C401.2; with ties first they got stubs
+instead, so neither tier is used.
+
+**BT840 U3.F0-F3 (decision needed).**  The four 1.5 x 1.5 mm GND pads sit inside `KO_BT840_antenna`,
+which forbids tracks, vias and pours on all layers (pads allowed), so no tie is possible and they are
+the one structural leftover.  Fanstel's datasheet was not re-read here (p.16 is cited by the silk
+notes).  Options: (a) read the datasheet: if those pads are NC or only mechanical, drop the net from
+them; (b) if they must be GND, shrink the rule area at its inner edge so the pads fall outside and tie
+them like any chip pad (the antenna region proper starts beyond the pad row); (c) keep the keep-out
+and tie the module GND through its other GND castellations only.  Recommendation: (a) first, then (b).
 
 ## 7. `check_gates.py`
 
-Hard gates (exit 1): netclasses present and equal to `hs_nets.json`; every net's class
-equals the intended one by KiCad's matcher; no dead pattern; classes survive
-`pcbutil.save_board()`; `.kicad_dru` parses; DRC (`--all-track-errors --refill-zones`) has
-no short/clearance/width/via/hole violations; direction policy. Info: unrouted count,
-violations by type, length spread of RF_PATH and CLK_PATH. `--require-complete`, `--strict`.
+Runs on a scratch copy of any board (`--board`, `--json out.json`, `--workdir` outside the repo).
+HARD (exit 1): netclasses present and equal to `hs_nets.json`; each net's class equals the
+intended one by KiCad's matcher; no dead pattern; classes survive `pcbutil.save_board()`;
+`.kicad_dru` parses and carries the GND-tie exception; DRC (`--all-track-errors --refill-zones`)
+has no short/clearance/width/via/hole violations; **every GND pad tied** (unconnected GND items
+after the fill = 0); direction policy, strict: F.Cu horizontal, B.Cu vertical, except RF50/CLK/locked
+copper and stub chains (same-net segments joined end to end, <= 2.0 mm in total from a pad).
+WARN: thin POWER_* copper (< 0.3 mm), via-in-pad, courtyard gap < 0.6 mm (bounding-box test).
+INFO: unrouted count, violations by type, RF_PATH / CLK_PATH spread against `hs_nets.json`, RF50
+fence coverage (share of RF50 copper with a GND via within 2.5 mm); `hs_finish.gates(board, results)`
+is called if that module provides it (mask opening over GHz copper).  `--require-complete`, `--strict`.
 
 ## 8. What was tested, and how good it is
 
-Fixture: `make_test_board.py` puts a throw-away placement on a scratch copy (118 x 151
-mm, all 428 footprints, chips and RF chains hand-placed on the bottom edge, everything
-else shelf-packed by sheet; courtyard fill ~24 %, so **sparser than a real board**).
-It is test scaffolding, not a layout proposal.
+### Real placement (150 x 80 mm, 2026-11-18), `run_pipeline.py`, router budget 150 s
 
-Flow run on a fresh fixture, in this order (cut-outs first, because everything after must
-see them): `stitch --cutouts-only`, `route_hs_uwb all`, `route_manhattan` (700 s budget),
-`stitch --zones`, `check_gates`. DRC is `kicad-cli pcb drc --all-track-errors`, zones filled
-on a scratch copy.
+Stages run: cutouts, fanout, testpads, hs, manhattan, stitch, fill, drc, gates (power and hs_finish
+skipped: no CLI yet).  Numbers:
 
-**Hand-first library.**
+* RF: four chains, 7.042-7.043 mm (RF1 pad to SMA centre), identical geometry, no vias, DNP
+  pi-network pads as spurs, fence.  DRC clean.
+* Clocks: A0 55.354, A1 55.354, A2 55.354, A3 55.832 mm, spread 0.478 mm against 0.5 (A0 counts its
+  R403 / Y1 / C209 spurs; pre-tune lengths were 55.35 / 38.61 / 48.68 / 37.16).  The meander
+  overshoot on A3 is the limit of the tuner (it stops within 0.05 mm of its target per leg, then
+  the last meander can overshoot); a tighter spread needs a finer final meander.
+* GND ties: all 56 DW3210 GND pads tied (32 when fanout has already tied the others), 0 without a
+  site; 30 pads of other HS chips tied, 2 DNP caps beside RF pins left (C124.2, C125.2).
+* Hand-first HS hops: all routed, GNSS_LNA_AO included.  LTE/GNSS hops at 0.24 mm width where the
+  0.4 mm pitch pads force it (listed in the log).
+* Stitch on the 150 x 80 outline: 772 vias (377 general, 226 near RF, 169 edge); after the fill 7
+  isolated GND pads / 11 unconnected GND items remain: U3.F3 (BT840, section 6), C124.2, C125.2,
+  C61.2, TP116.1, U1.4, U40.3, U40.8 and 2 zone fragments.  The fragments are GND_TOP pieces that
+  KiCad's island removal keeps but no via reaches (the earlier board: 5 such pieces between dense
+  pads); outer-layer pours are optional, and removing GND_TOP/GND_BOT removes them.
+* Router (not mine): 168 of 418 connections unrouted at 150 s, 59.8 % complete.
+* Remaining DRC at that point: hole_to_hole 2 (a fan-out via against J32 pin 10), track_dangling 2,
+  plus placement items (courtyards, silk, copper-to-edge).  Gates: direction policy fails with 302
+  ordinary-net segments (ESIM_VCC and others from the router/fan-out, not from the HS stage), GND
+  tied fails (above), DRC hole_to_hole fails.  Warnings: thin power copper on 22 nets (0.2 mm stubs),
+  courtyard gap < 0.6 mm on 69 pairs.
 
-* RF: all four RF1 -> C47 -> R220 -> SMA chains are 15.042 mm, identical geometry, no vias,
-  0.24 mm neck at the pad, 0.45 mm line, GND fence (0.45/0.20 vias, 1.5 mm pitch,
-  0.96 mm off-axis; sites inside the DW3210 cut-out skipped). DRC: zero violations.
-* Clock group: before meandering the four buffer-to-XTI paths were 59.2, 26.4, 42.3 and 29.3 mm
-  (the fixture is deliberately unbalanced); after `match_group` all four measure 59.222 mm
-  (chamfer bends) and 59.138 mm (arc bends, 29 arcs), measured independently by summing
-  `GetLength()` per net on the saved board; spread < 1e-9 mm against a 0.5 mm tolerance.
-  Meander legs are 3 x width apart, up to 10 mm tall. DRC clean, every item locked.
-* Negative tests: a foreign track 0.3 mm from an RF line and a via on an RF50 net each
-  raised exactly the `.kicad_dru` rule that should fire.
+### Earlier fixture and first routed board (history, router figures)
 
-**Stitching.** 1301 vias on the un-routed fixture and 1162 on the routed one (candidates:
-690 general lattice, 448 near RF/CLK, 214 edge; roughly 2-25 % are rejected by pads, tracks
-and keep-outs); DRC clean. After the kicad-cli zone fill, GND pads left unconnected fell
-from 495 to 77 on the un-routed board (pads the pours cannot reach).
+Fixture: `make_test_board.py` (118 x 151 mm, all 428 footprints, courtyard fill ~24 %, sparser than a
+real board).  On the first real board (128 x 68 mm, commits 7b940de / 68852d4) the old GND rescue
+tied 4 pads and left 70 isolated; the stitch/rescue rework above ties 42 of them after the fact (28
+boxed in by the clock and RF routing, which is why the ties now come first).  Manhattan router on the
+fixture: 197 routable nets, 480 connections, 72-74 % completed in 600 s, 944 vias, 0 shorts and 0
+direction violations; see section 5 for the method and its weaknesses (pad escape is the bottleneck,
+the H/V rule costs vias, rip-up is shallow).  Those figures are for that fixture only.
 
-**Manhattan router** (fixture: 197 routable nets, 480 connections, 118 x 151 mm; repeated
-runs of the final code differ by a point or two because the time budget is wall-clock):
+## 9. Uncertainties and things not done
 
-| Result | Value |
-|---|---|
-| connections completed | **72-74 %** (final flow run 72.1 %: 346 of 480; 134 unrouted, 100+ nets left partial) |
-| time | 600 s (budget 700 s, 15 % reserved for GND fan-out); ~180 M A* node expansions, 58 searches hit the expansion cap |
-| copper | 1845 tracks, 944 vias, 199 rip-ups |
-| GND fan-out | 234 vias to the planes, 65 SMD GND pads with no site within 3 mm |
-| shorts / clearance / crossing / hole violations (final code) | 0 of each in the flow run (one same-net hole-to-hole, 0.2 vs 0.25 mm, in an earlier run before the via-spacing fix) |
-| direction policy | 0 violations: every non-stub F.Cu track horizontal, B.Cu vertical |
-| pad-escape stubs | 1018 segments, 454 mm of copper, about half of all segments: pad centres are off the 0.1 mm grid and fine-pitch pads need a jog |
-| necked power nets | +3V3 0.3, +5V_IN 0.3, +3V3_REG 0.3, L1_LTE 0.5 mm and some at 0.2 mm; the rest at class width |
-
-That is **not good enough to finish a board.** What it gives is a DRC-clean set of ordinary
-connections that respects the direction policy, plus a list of the nets it could not do.
-Why it is weak, from watching it:
-
-* Pad escape is the bottleneck: every pad gets an exact-geometry stub to a grid node, and
-  a congested neighbourhood runs out of nodes before it runs out of copper area.
-* The H/V rule costs vias: 944 vias for 346 connections, and each needs a 0.7 mm
-  neighbourhood on both layers, so the vias become obstacles.
-* Rip-up is shallow (3 per net, no cost memory); long nets late in the queue lose to short
-  ones already placed. The fixture has 90-110 mm nets because the sheets are packed
-  apart, which a real placement should not.
-* 197 nets in about ten minutes of pure python (no numpy in KiCad's interpreter).
-
-On a real placement I expect better completion (shorter nets, sensible neighbourhoods) but
-would not assume 100 %. Plan on using it for the bulk of the 2-3 pad nets and finishing by
-hand, or try an external router and run `check_gates.py` on its output.
-
-**Gates** on the final board: 7 netclasses and 65 patterns present and proven (98 nets in
-non-Default classes, none misassigned, no dead pattern); classes survive `save_board()`; the
-`.kicad_dru` loads; RF_PATH and CLK_PATH spreads 0.000 mm; direction policy 0 violations.
-The only hard-gate failure in the flow run was 6 `items_not_allowed` GND fence vias inside
-the DW3210 cut-outs, because the fence ran before the cut-outs existed; the fence now skips
-the cut-outs and the flow creates them first (re-verified clean on a fresh fixture, without
-the router). Remaining DRC items are fixture artefacts (courtyards 6, copper-to-edge 20,
-silk) and zone notes (starved thermals, isolated copper); none come from routing.
-
-## 9. Uncertainties and things I could not do
-
-* Dk of the real laminate at 6.5 GHz and the fab stackup (above). All widths follow from it.
-* SMA launch (placeholder footprint, needs EM simulation).
-* Fab not named in the repo: JLCPCB assumed, capability numbers from the skill note,
-  not re-checked; the 1.048 mm thickness may not be orderable as is.
-* Dielectric loss: tan d 0.02 at 6.5 GHz gives roughly 0.7-0.8 dB/10 cm in a 0.45 mm
-  microstrip (estimate, not computed in the scripts; the RF runs are ~1.5 cm, so ~0.1 dB).
-* The length tolerances (0.5 mm) are my choice against the 33 ps budget.
-* `route_hs` and `route_manhattan` never saw the real placement; a real board will find
-  cases the fixture did not.
-* An external autorouter (e.g. Freerouting) would very likely complete more nets than the
-  in-house router, but cannot honour the H/V policy or the class keep-offs without
-  setup, and I was told not to fetch one. It is the obvious next step if
-  completion on the real board is poor: the decision is yours.
+* **Dk 4.5** is KiCad's FR4 default, not a datasheet or fab value; at 6.5 GHz the real laminate is
+  probably 3.9-4.6 (about +/-2.5 ohm at fixed width).  All widths follow from it: re-run `stackup.py`
+  with the fab's numbers (hs_finish.py owns that file now) and change `hs_nets.json` / `RF_W`.
+* **1.048 mm** (Fig 35 stackup) is not an orderable thickness; the fab's own stackup governs.
+* **SMA launch is unsimulated**: the CONSMA020.042-G footprint is a placeholder (1.52 mm centre pad);
+  a tapered launch needs an EM solver, none available here.
+* The GND-tie exception (0.15 mm GND stub beside an RF neck inside DW3210_TIE_n / HS_TIE_k) is
+  argued, not simulated.  The extension to the CLK class and to HS_TIE areas round fine-pitch RF pins
+  is a judgement call.
+* The 1:1 counting of clock spurs is a lumped estimate (section 2), not a simulation.
+* Tented vias are assumed only by the optional `--tented` tier; via-in-pad needs the fab's filled-via
+  option and is off by default.
+* BT840 U3.F0-F3: decision in section 6; datasheet not re-read.
+* Fab not named in the repo: JLCPCB assumed, capability numbers from the skill note, not re-checked.
+* Dielectric loss (tan d 0.02 -> about 0.7-0.8 dB/10 cm at 6.5 GHz, estimate): ~0.1 dB on the RF runs.
+* The length tolerances (0.5 mm = 3.1 ps) are my choice against the 33 ps budget.
+* Power stage and `hs_finish.py` were not run; the power-class copper is only audited (thin copper
+  warning), not designed, here.
+* An external autorouter would probably complete more ordinary nets than the in-house router, but
+  cannot honour the H/V policy or the class keep-offs without setup, and none may be downloaded.

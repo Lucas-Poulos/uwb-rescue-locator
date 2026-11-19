@@ -20,7 +20,10 @@ Gates (exit code 1 if a HARD gate fails):
         violations (courtyard/silk/edge) listed separately
   HARD  direction policy: ordinary-net F.Cu tracks horizontal, B.Cu vertical,
         except hand-routed RF50/CLK copper, locked copper and pad-escape stubs
-        (<= 2.0 mm, touching a pad of the same net)
+        (a chain of same-net stub segments, <= 2.0 mm in total from a pad)
+  HARD  every GND pad tied (kicad-cli fill: unconnected GND items = 0); .kicad_dru carries the GND-tie exception
+  WARN  thin POWER_* copper (< 0.3 mm), via-in-pad, courtyard gap < 0.6 mm
+  INFO  RF50 fence coverage (hs_finish.gates(board, results) is called if hs_finish.py provides it)
   INFO  RF_PATH / CLK_PATH length spread vs the tolerance in hs_nets.json
 --strict also makes the INFO placement-class DRC types hard; --require-complete
 makes unrouted > 0 a failure.
@@ -30,6 +33,7 @@ import fnmatch
 import json
 import math
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -154,6 +158,18 @@ def run_drc(board_path, work, results, strict):
     counts = {k: len(v) for k, v in by.items()}
     errors = {k: sum(1 for x in v if x.get("severity") == "error") for k, v in by.items()}
     warns = {k: counts[k] - errors[k] for k in counts if counts[k] - errors[k]}
+    gnd_items, gnd_pads = [], set()
+    for x in unconn:
+        txt = " | ".join(i["description"] for i in x["items"])
+        if "[GND]" in txt:
+            gnd_items.append(txt)
+            for i in x["items"]:
+                m = re.match(r"Pad (\S+) \[GND\] of (\S+)", i["description"])
+                if m:
+                    gnd_pads.add("%s.%s" % (m.group(2), m.group(1)))
+    results.append(("HARD", "all GND pads tied to the planes (unconnected GND items after fill = 0)", not gnd_items,
+                    "%d unconnected GND items, %d pads listed (a tied pad can be listed as the other end of a pair): %s"
+                    % (len(gnd_items), len(gnd_pads), sorted(gnd_pads)[:12])))
     results.append(("INFO", "unrouted (unconnected items)", True, str(len(unconn))))
     results.append(("INFO", "DRC violations by type", True, json.dumps(counts, sort_keys=True)))
     hard = {k: errors[k] for k in counts if errors[k] and (k in HARD_DRC or (strict and k in PLACEMENT_DRC))}
@@ -176,8 +192,36 @@ def pad_boxes(board):
     return out
 
 
+def _chain_dist(board, pads):
+    """{id(track): cumulative copper length (mm) from the first segment that touches a pad of its net to this
+    segment's far end}, BFS over same-net tracks joined end to end (0.01 mm).  A stub chain (pad escape,
+    tie stub: pad -> stub -> stub -> via) is exempt from the direction policy while this stays <= STUB_MAX."""
+    tr = [t for t in board.GetTracks() if t.Type() != pcbnew.PCB_VIA_T and t.GetClass() != "PCB_ARC"
+          and t.GetLayer() in (U.F_CU, U.B_CU)]
+    key = lambda q: (round(U.mm(q.x), 2), round(U.mm(q.y), 2))
+    at = {}
+    for t in tr:
+        for q in (t.GetStart(), t.GetEnd()):
+            at.setdefault((t.GetNetCode(), t.GetLayer(), key(q)), []).append(t)
+    dist, queue = {}, []
+    for t in tr:
+        for q in (t.GetStart(), t.GetEnd()):
+            x, y = U.mm(q.x), U.mm(q.y)
+            if any(x0 - 0.05 <= x <= x1 + 0.05 and y0 - 0.05 <= y <= y1 + 0.05 for (x0, y0, x1, y1) in pads.get(t.GetNetCode(), [])):
+                dist[id(t)] = U.mm(t.GetLength()); queue.append(t); break
+    while queue:
+        t = queue.pop(0)
+        for q in (t.GetStart(), t.GetEnd()):
+            for u in at.get((t.GetNetCode(), t.GetLayer(), key(q)), []):
+                nd = dist[id(t)] + U.mm(u.GetLength())
+                if id(u) not in dist or nd < dist[id(u)] - 1e-9:
+                    dist[id(u)] = nd; queue.append(u)
+    return dist
+
+
 def gate_direction(board, results, exempt_classes=("RF50", "CLK")):
     pads = pad_boxes(board)
+    dist = _chain_dist(board, pads)
     viol, stubs, checked, exempt = [], 0, 0, 0
     for t in board.GetTracks():
         if t.Type() == pcbnew.PCB_VIA_T or t.GetClass() == "PCB_ARC":
@@ -197,14 +241,11 @@ def gate_direction(board, results, exempt_classes=("RF50", "CLK")):
         if o == want:
             continue
         L = math.hypot(bx - ax, by - ay)
-        touches = any(x0 - 0.05 <= px <= x1 + 0.05 and y0 - 0.05 <= py <= y1 + 0.05
-                      for (px, py) in ((ax, ay), (bx, by)) for (x0, y0, x1, y1) in pads.get(t.GetNetCode(), []))
-        # stubs may hang off a stub: accept a short piece within 0.6 mm of a pad end too
-        if L <= STUB_MAX and (touches or L <= 0.6):
+        if dist.get(id(t), 1e9) <= STUB_MAX + 1e-6:
             stubs += 1
             continue
         viol.append((str(t.GetNetname()), U.LAYER_NAME[lay], o, round(L, 2), (round(ax, 2), round(ay, 2))))
-    results.append(("HARD", "direction policy (F.Cu H, B.Cu V; stubs <= %.1f mm exempt)" % STUB_MAX, not viol,
+    results.append(("HARD", "direction policy (F.Cu H, B.Cu V; stub chains <= %.1f mm from a pad exempt)" % STUB_MAX, not viol,
                     "%d tracks checked, %d stub segments, %d exempt (RF50/CLK/locked), %d violations %s"
                     % (checked, stubs, exempt, len(viol), viol[:4])))
     return viol
@@ -245,6 +286,110 @@ def gate_lengths(board, spec, results):
                         "spread %.3f mm, lengths %s" % (spread, {k: round(v, 3) for k, v in tot.items()})))
 
 
+def gate_thin_power(board, results, thin=0.3):
+    """WARN: copper of a POWER_* class net narrower than `thin` mm (pad escapes included)."""
+    out = {}
+    for t in board.GetTracks():
+        if t.Type() == pcbnew.PCB_VIA_T:
+            continue
+        cls = str(t.GetNetClassName())
+        w = U.mm(t.GetWidth())
+        if cls.startswith("POWER_") and w < thin - 1e-6:
+            d = out.setdefault(str(t.GetNetname()), [1e9, 0.0])
+            d[0] = min(d[0], w); d[1] += U.mm(t.GetLength())
+    results.append(("WARN", "thin power copper (< %.1f mm)" % thin, not out,
+                    "%d nets (min width, mm of thin copper): %s" % (len(out), {k: (round(v[0], 2), round(v[1], 1)) for k, v in sorted(out.items())[:10]})))
+
+
+def gate_via_in_pad(board, results):
+    """WARN: a via whose centre lies inside an SMD pad of any net (needs filled/capped vias at the fab)."""
+    boxes = []
+    for f in board.GetFootprints():
+        for p in f.Pads():
+            if not p.HasHole():
+                bb = p.GetBoundingBox()
+                boxes.append((U.mm(bb.GetLeft()), U.mm(bb.GetTop()), U.mm(bb.GetRight()), U.mm(bb.GetBottom()), str(f.GetReference()), str(p.GetNumber())))
+    hits = []
+    for t in board.GetTracks():
+        if t.Type() == pcbnew.PCB_VIA_T:
+            q = t.GetPosition(); x, y = U.mm(q.x), U.mm(q.y)
+            for (x0, y0, x1, y1, ref, num) in boxes:
+                if x0 <= x <= x1 and y0 <= y <= y1:
+                    hits.append("%s.%s" % (ref, num)); break
+    results.append(("WARN", "via-in-pad", not hits, "%d vias in SMD pads %s" % (len(hits), hits[:10])))
+
+
+def gate_courtyard_gap(board, results, gap=0.6):
+    """WARN: pairs of same-side footprints whose courtyard boxes are closer than `gap` mm (touching or
+    overlapping is the DRC's courtyards_overlap, not counted here)."""
+    rects = []
+    for f in board.GetFootprints():
+        try:
+            front = f.GetLayer() == pcbnew.F_Cu
+            cy = f.GetCourtyard(pcbnew.F_CrtYd if front else pcbnew.B_CrtYd)
+            if cy.OutlineCount() == 0:
+                continue
+            bb = cy.BBox()
+            rects.append((U.mm(bb.GetLeft()), U.mm(bb.GetTop()), U.mm(bb.GetRight()), U.mm(bb.GetBottom()), str(f.GetReference()), front))
+        except Exception:
+            continue
+    bad = []
+    rects.sort()
+    for i, a in enumerate(rects):
+        for b in rects[i + 1:]:
+            if b[0] > a[2] + gap:
+                break
+            if a[5] != b[5]:
+                continue
+            dx = max(b[0] - a[2], a[0] - b[2], 0.0)
+            dy = max(b[1] - a[3], a[1] - b[3], 0.0)
+            if (dx > 0 or dy > 0) and math.hypot(dx, dy) < gap - 1e-6:
+                bad.append((a[4], b[4], round(math.hypot(dx, dy), 2)))
+    results.append(("WARN", "courtyard gap >= %.1f mm" % gap, not bad, "%d pairs closer (bbox test) %s" % (len(bad), bad[:6])))
+
+
+def gate_tie_exception(dru_path, spec, results):
+    ex = spec.get("gnd_tie_exception")
+    if not ex:
+        return
+    txt = open(dru_path).read() if os.path.exists(dru_path) else ""
+    ok = "GND pad tie stub" in txt and all(a in txt for a in ex["areas"])
+    results.append(("HARD", ".kicad_dru carries the GND pad-tie exception (hs_nets.json gnd_tie_exception)", ok,
+                    "present" if ok else "missing: rerun apply_rules.py"))
+
+
+def gate_fence_coverage(board, results, pitch=2.5):
+    """INFO: per RF50 net the share of its copper (0.5 mm samples) with a GND via within `pitch` mm (the
+    lambda/10 fence rule).  hs_finish.py can add the mask-opening gate by providing gates(board, results)."""
+    vias = []
+    for t in board.GetTracks():
+        if t.Type() == pcbnew.PCB_VIA_T and str(t.GetNetname()) == "GND":
+            q = t.GetPosition(); vias.append((U.mm(q.x), U.mm(q.y)))
+    tot = {}
+    for t in board.GetTracks():
+        if t.Type() == pcbnew.PCB_VIA_T or str(t.GetNetClassName()) != "RF50":
+            continue
+        s, e = t.GetStart(), t.GetEnd()
+        ax, ay, bx, by = U.mm(s.x), U.mm(s.y), U.mm(e.x), U.mm(e.y)
+        n = max(1, int(math.hypot(bx - ax, by - ay) / 0.5))
+        for k in range(n + 1):
+            x, y = ax + (bx - ax) * k / n, ay + (by - ay) * k / n
+            c = tot.setdefault(str(t.GetNetname()), [0, 0])
+            c[1] += 1
+            if any(abs(vx - x) < pitch and abs(vy - y) < pitch and math.hypot(vx - x, vy - y) <= pitch for vx, vy in vias):
+                c[0] += 1
+    if tot:
+        allc = sum(v[0] for v in tot.values()) / max(1, sum(v[1] for v in tot.values()))
+        low = {k.split("/")[-1]: round(v[0] / v[1], 2) for k, v in tot.items() if v[0] / v[1] < 0.9}
+        results.append(("INFO", "RF50 fence coverage (GND via within %.1f mm)" % pitch, True, "%.0f %% overall; nets < 90 %%: %s" % (100 * allc, low)))
+    try:
+        import hs_finish
+        if hasattr(hs_finish, "gates"):
+            hs_finish.gates(board, results)
+    except ImportError:
+        results.append(("INFO", "mask opening over GHz copper", True, "not checked (hs_finish.py not present)"))
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--board", default=os.path.join(U.REPO, "bay-station", "bay-station.kicad_pcb"))
@@ -269,6 +414,11 @@ def main():
     gate_direction(board, results)
     gate_lengths(board, spec, results)
     gate_power_widths(board, spec, results)
+    gate_thin_power(board, results)
+    gate_via_in_pad(board, results)
+    gate_courtyard_gap(board, results)
+    gate_fence_coverage(board, results)
+    gate_tie_exception(os.path.splitext(board_path)[0] + ".kicad_dru", spec, results)
     unrouted = None
     if not a.skip_drc:
         _, unrouted = run_drc(board_path, work, results, a.strict)
@@ -277,7 +427,7 @@ def main():
     width = max(len(r[1]) for r in results)
     fail = 0
     for kind, name, ok, detail in results:
-        tag = "PASS" if ok else ("FAIL" if kind == "HARD" else "note")
+        tag = "PASS" if ok else ("FAIL" if kind == "HARD" else ("WARN" if kind == "WARN" else "note"))
         if kind == "HARD" and not ok:
             fail += 1
         print("%-4s %-5s %-*s  %s" % (tag, kind, width, name, detail))
