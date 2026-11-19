@@ -28,3 +28,16 @@
 	(condition "A.NetClass == 'CLK' && A.Type == 'Track' && B.NetClass != 'CLK' && (B.Type == 'Track' || B.Type == 'Via' || B.Type == 'Zone')")
 	(constraint clearance (min 0.50mm))
 )
+
+# GND pad tie stub next to an RF50 pad neck.  HAND-ADDED EXCEPTION (apply_rules.py does not
+# write it; hs_nets.json "gnd_tie_exception" is the source and check_gates.py verifies it is
+# present).  The DW3210 RF-side VSS pins (12, 14-17, 19, 20) sit 0.15 mm from the RF1/RF2 pads
+# and the 0.24 mm neck continues straight out between them, so a GND stub that leaves such a
+# pad is inside the 0.5 mm keep-off by construction.  Relaxed to the netclass 0.15 mm ONLY for
+# a GND *track* (never a via or a pour) that touches the DW3210_TIE_n rule area (cut-out + 2 mm,
+# nothing forbidden), i.e. the stretch where the line is a pad neck over the cleared In1, not
+# the 50 ohm microstrip.  Must stay LAST: KiCad lets the later matching rule win.
+(rule "GND pad tie stub next to an RF50 neck (DW3210 tie area only)"
+	(condition "(A.NetClass == 'RF50' || A.NetClass == 'CLK') && A.Type == 'Track' && B.NetName == 'GND' && B.Type == 'Track' && B.intersectsArea('DW3210_TIE_*')")
+	(constraint clearance (min 0.15mm))
+)
