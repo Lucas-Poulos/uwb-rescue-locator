@@ -8,7 +8,7 @@ Run with KiCad 10's bundled python (the only one with pcbnew):
 
 Idempotent: the result depends only on the netlist/footprints already in the
 board, never on where the footprints currently sit.  Hand-placed parts (ICs,
-connectors, mechanical, the RF chains) come from FIXED below; every passive and
+connectors, mechanical, the RF chains) come from fixed_table() below; every passive and
 test pad is then placed by a deterministic greedy search that pulls it toward
 the pin it serves, and a polish pass then re-seats every such part (all four
 rotations) to minimise the MST length of its nets.  Metrics: scripts/layout/layout_metrics.py.
@@ -39,18 +39,26 @@ PRO = os.path.join(ROOT, "bay-station", "bay-station.kicad_pro")
 # ---------------------------------------------------------------------------
 # Board geometry (board-local mm, x east, y south, origin = top-left corner)
 # ---------------------------------------------------------------------------
-W, H = 128.0, 68.0          # outline
+W, H = 150.0, 80.0         # outline (2026-11-18: was 128.1 x 68.1; see docs/layout-notes.md "History")
 
 CORNER_R = 3.0              # rounded corners
 OX, OY = 60.0, 50.0         # where the board origin sits on the KiCad sheet
-GAP = 0.20                  # courtyard inflation per part -> >= 0.6 mm between parts
+GAP = 0.30                  # courtyard inflation per part -> >= 0.6 mm between parts
 EDGE_MARGIN = 1.0           # courtyard to board edge for ordinary parts
 GRID = 0.25
+HOLE_KEEP = 4.6             # half-width of the standoff keep-out around each M3 hole centre (1.6 hole radius + 3 mm)
+
+# Host cluster offset relative to the 128 x 68 design.  The BT840 U3 and its SWD headers stay at x = 57..71 on the
+# north edge (its antenna keep-out sits clear of the SMA J23); HX < 0 pulls U20 and everything below it west,
+# which shortens the UWB bus (13 mm of ratsnest per mm of x).
+HX, HY = -8.0, 4.0
+BAND = 6.0                  # centre band (TCXO, buffer, sensors) moves down with the taller array
 
 # Anchor slots.  Chips: rot 0 = RF pins face south (SMA on the south edge),
 # rot 180 = RF pins face north (SMA on the north edge).  XC is the block centre.
+# The chain chip -> SMA is 14 mm, so the chip rows sit 14 mm from each edge: 52 mm apart on an 80 mm board.
 XC = 26.0
-CHIP_Y_S = 54.0
+CHIP_Y_S = H - 14.0
 CHIP_Y_N = 14.0
 SLOT = {  # anchor index -> (chip x, chip y, chip rot); chosen by a brute-force search over the 24
     # slot permutations x 4 buffer rotations for the shortest, most equal, non-crossing clock tree
@@ -59,42 +67,47 @@ SLOT = {  # anchor index -> (chip x, chip y, chip rot); chosen by a brute-force 
     2: (XC - 11.0, CHIP_Y_S, 0),
     3: (XC + 11.0, CHIP_Y_N, 180),
 }
+HOLES = {"H1": (4.0, 4.0), "H2": (4.0, H - 4.0), "H3": (W - 4.0, 4.0), "H4": (W - 4.0, H - 4.0)}
+U31_POSE = (22.5, 42.0, 90)   # pose search (0 ratsnest crossings, equal buffer pin -> XTI straight distances 28.3-29.6 mm)
 
-# Hand placed parts: ref -> (x, y, rot).  Everything else is greedy.
-FIXED = {
-    # --- mechanical -------------------------------------------------------
-    "H1": (XC, 3.5, 0), "H2": (XC, H - 3.5, 0),
-    "H3": (W - 4.0, 3.5, 0), "H4": (W - 4.0, H - 3.5, 0),
-    "FID1": (3.5, 3.5, 0), "FID2": (W - 3.5, 25.5, 0), "FID3": (3.5, H - 3.5, 0),
-    # --- clock tree -------------------------------------------------------
-    "U30": (13.0, 36.0, 270),
-    "U31": (24.5, 35.0, 90),    # pose from a search that equalises the four buffer pin -> XTI straight distances (23.0-23.8 mm)
-    # --- magnetometer / accelerometer (centre of the UWB block, far from power)
-    "U10": (38.0, 33.0, 0),
-    "U11": (38.0, 38.5, 0),
-    # --- host -------------------------------------------------------------
-    "U3": (57.0, 8.4, 0),            # BT840, antenna end on the north edge
-    "J32": (71.0, 12.0, 90), "J35": (71.0, 5.5, 0),   # BT840 SWD / Tag-Connect east of the module
-    "U20": (66.0, 28.0, 0),          # nRF9151: UWB pins face west, BT840 UART pins north, SIM/SWD south
-    "J11": (82.5, 14.0, 0), "J10": (79.5, 25.5, 0),    # GNSS / LTE u.FL: vertical-mating, so beside the nRF RF pins, not on an edge
-    "J3": (60.5, 40.0, 0), "J34": (67.0, 49.5, 0), "J33": (62.0, 56.0, 90),
-    "J12": (80.0, 48.0, 0),
-    # --- power ------------------------------------------------------------
-    "J1": (W - 12.25, 16.0, 90),
-    "J2": (W - 3.5, 34.0, 90),
-    "BT1": (W - 6.3, 54.0, 90),
-    "U1": (112.0, 34.0, 0),
-    "U8": (104.0, 48.0, 0),
-    "U40": (84.5, 33.0, 0),            # next to the nRF9151 so +VBAT_LTE stays short
-    # --- user interface: LEDs / buttons along the north edge east of the RF connectors -------
-    "D4": (104.0, 64.5, 0), "D5": (109.5, 64.5, 0), "D6": (115.0, 64.5, 0),
-    "D7": (96.0, 3.5, 0), "D400": (101.0, 3.5, 0), "D401": (106.0, 3.5, 0),
-    "SW12": (97.0, 9.5, 0), "SW11": (92.0, 17.0, 0),
-}
-# anchors are added to FIXED programmatically (chips, SMAs)
+# Hand placed parts: ref -> (x, y, rot).  Everything else is greedy.  Refs that are not on the board are skipped.
+ESSENTIAL = {"U3", "U20", "U10", "U11", "U30", "U31", "U1", "U8", "U40", "J1", "J2", "BT1", "J10", "J11", "J12",
+             "H1", "H2", "H3", "H4"}
 
-# test pads / parts that get explicit attractors (ref -> list of (ref, pad)) -------------
-HINT = {}
+
+def fixed_table():
+    f = {
+        # --- mechanical: M3 holes in the four corners (3 mm standoff keep-out, HOLE_KEEP) ---------
+        "H1": HOLES["H1"] + (0,), "H2": HOLES["H2"] + (0,), "H3": HOLES["H3"] + (0,), "H4": HOLES["H4"] + (0,),
+        "FID1": (3.5, 13.0, 0), "FID2": (W - 3.5, 13.0, 0), "FID3": (3.5, H - 13.0, 0),
+        # --- clock tree -------------------------------------------------------
+        "U30": (13.0, 36.0 + BAND, 270),
+        "U31": U31_POSE,
+        # --- magnetometer / accelerometer (centre of the UWB block, far from power)
+        "U10": (38.0, 33.0 + BAND, 0),
+        "U11": (38.0, 38.5 + BAND, 0),
+        # --- host -------------------------------------------------------------
+        "U3": (57.0, 8.4, 0),            # BT840, antenna end on the north edge
+        "J32": (71.0, 12.0, 90), "J35": (71.0, 5.5, 0),   # BT840 SWD / Tag-Connect east of the module
+        "U20": (66.0 + HX, 28.0 + HY, 0),     # nRF9151: UWB pins face west, BT840 UART pins north, SIM/SWD south
+        "J11": (82.5 + HX, 14.0 + HY, 0), "J10": (79.5 + HX, 25.5 + HY, 0),   # GNSS / LTE u.FL beside the nRF RF pins
+        "J3": (60.5 + HX, 40.0 + HY, 0), "J34": (67.0 + HX, 49.5 + HY, 0), "J33": (62.0 + HX, 56.0 + HY, 90),
+        "J12": (80.0 + HX, 48.0 + HY, 0),
+        # --- power: east edge ---------------------------------------------------
+        "J1": (W - 12.25, 22.0, 90),
+        "J2": (W - 3.5, 42.0, 90),
+        "BT1": (W - 6.3, 61.0, 90),
+        "U1": (W - 16.0, 42.0, 0),
+        "U8": (W - 26.0, 58.0, 0),
+        "U40": (84.5 + HX, 33.0 + HY, 0),     # next to the nRF9151 so +VBAT_LTE stays short
+        # --- user interface: LEDs / buttons along the north edge east of the RF connectors -------
+        "D4": (W - 34.0, H - 3.5, 0), "D5": (W - 28.5, H - 3.5, 0), "D6": (W - 23.0, H - 3.5, 0),
+        "D7": (100.0, 3.5, 0), "D400": (105.0, 3.5, 0), "D401": (110.0, 3.5, 0),
+        "SW12": (101.0, 9.5, 0), "SW11": (92.0 + HX, 17.0 + HY, 0),
+    }
+    return f
+# anchors are added to the fixed table programmatically (chips, SMAs)
+
 
 
 # ---------------------------------------------------------------------------
@@ -568,7 +581,7 @@ def polish(pl, parts, refs, passes=3, log=True):
 
 # ---------------------------------------------------------------------------
 def build_fixed(parts):
-    fixed = dict(FIXED)
+    fixed = fixed_table()
     for n in range(4):
         cx, cy, rot = SLOT[n]
         fixed["U%d" % (4 + n)] = (cx, cy, rot)
@@ -598,11 +611,23 @@ def chain_positions(n):
 
 
 def main():
+    global HX, HY, U31_POSE
     ap = argparse.ArgumentParser()
     ap.add_argument("--dump", help="write layout JSON (board-local mm) for the renderer")
     ap.add_argument("--no-save", action="store_true")
+    ap.add_argument("--hx", type=float, help="host cluster x offset (default %.1f)" % HX)
+    ap.add_argument("--hy", type=float, help="host cluster y offset (default %.1f)" % HY)
+    ap.add_argument("--u31", type=float, nargs=3, metavar=("X", "Y", "ROT"), help="override the buffer pose (trials)")
+    ap.add_argument("--keep-copper", action="store_true",
+                    help="keep tracks/vias/zones (they are stale once parts move; default is to strip them)")
     ap.add_argument("--out", help="write the placed board here instead of overwriting bay-station.kicad_pcb")
     args = ap.parse_args()
+    if args.u31:
+        U31_POSE = tuple(args.u31)
+    if args.hx is not None:
+        HX = args.hx
+    if args.hy is not None:
+        HY = args.hy
 
     pro_bytes = open(PRO, "rb").read()
     pcbnew.KIID.SeedGenerator(20261118)
@@ -615,27 +640,32 @@ def main():
     board_b = pcbnew.LoadBoard(PCB)
     before = {}
     for fp in board_b.GetFootprints():
-        before[fp.GetReference()] = (pcbnew.ToMM(fp.GetX()), pcbnew.ToMM(fp.GetY()), fp.GetOrientationDegrees())
-    m_before = metrics(parts, before)
+        if not fp.GetReference().startswith("TP"):
+            before[fp.GetReference()] = (pcbnew.ToMM(fp.GetX()), pcbnew.ToMM(fp.GetY()), fp.GetOrientationDegrees())
+    m_before = metrics(parts, before)    # test pads excluded (they are parked / bottom-side)
 
     pl = Placer(parts)
     fixed = build_fixed(parts)
-    for ref in fixed:
+    for ref in sorted(fixed):
         if ref not in parts:
-            raise SystemExit("unknown ref in FIXED: " + ref)
+            if ref in ESSENTIAL:
+                raise SystemExit("essential ref missing from the board: " + ref)
+            print("note: %s is not on the board, skipped" % ref)
+            del fixed[ref]
     for n in range(4):
         pl.edge_ok.add("J%d" % (20 + n))
     for ref in ("J1", "J2", "BT1", "J10", "J11", "J12", "J13"):
         pl.edge_ok.add(ref)
+    for hx, hy in HOLES.values():       # standoff keep-out around the corner M3 holes (greedy parts only)
+        pl.nogo.append((hx - HOLE_KEEP, hy - HOLE_KEEP, hx + HOLE_KEEP, hy + HOLE_KEEP))
 
     # 1. hand placed
     for ref, (x, y, rot) in fixed.items():
-        infl = 0.0 if ref.startswith("J2") and len(ref) == 3 and ref[1] in "0123" else GAP
-        pl.put(ref, x, y, rot, infl=infl)
+        pl.put(ref, x, y, rot, infl=GAP)
     # RF chains
     for n in range(4):
         for ref, (x, y, rot) in chain_positions(n).items():
-            pl.put(ref, x, y, rot, infl=0.15)
+            pl.put(ref, x, y, rot, infl=GAP)   # the chain's own 0.3-0.35 mm internal gaps are fixed by its 9 mm length
 
     # BT840 printed antenna: nothing but the module within 10 mm either side of it (Fanstel keep-out is
     # copper-free under/around the antenna end; the exact distance is NOT verified -- see docs/layout-notes.md)
@@ -644,7 +674,8 @@ def main():
     # greedy passes are added below (see place_all)
     place_all(pl, parts)
 
-    positions = {r: (p.x, p.y, p.rot) for r, p in parts.items()}
+    park_test_pads(parts)
+    positions = {r: (p.x, p.y, p.rot) for r, p in parts.items() if not r.startswith("TP")}
     m_after = metrics(parts, positions)
     print("BEFORE", summarize(m_before))
     print("AFTER ", summarize(m_after))
@@ -654,12 +685,12 @@ def main():
                 "nets_after": {k: v for k, v in m_after.items()}}
         for ref, p in parts.items():
             dump["parts"][ref] = {"x": p.x, "y": p.y, "rot": p.rot, "cy": p.cy, "value": p.value,
-                                  "pads": p.world_pads(), "fp": p.fpname}
+                                  "pads": p.world_pads(), "fp": p.fpname, "parked": p.ref.startswith("TP")}
         json.dump(dump, open(args.dump, "w"))
 
     if args.no_save:
         return
-    apply_to_board(board, parts)
+    apply_to_board(board, parts, strip_copper=not args.keep_copper)
     if args.out:
         board.Save(args.out)
         refresh_note(args.out)
@@ -676,8 +707,8 @@ for _b in (204, 208, 212, 216):
     for _n in range(4):
         OWNER["R%d" % (_b + _n)] = "1"
 
-HOME_FALLBACK = [("/Regulation/", (92, 45)), ("/Connectivity/", (70, 28)), ("/Programming", (56, 38)),
-                 ("/Orientation/", (38, 36)), ("/Clock", (27, 38)), ("/UWB", (27, 38))]
+HOME_FALLBACK = [("/Regulation/", (118, 52)), ("/Connectivity/", (70 + HX, 28 + HY)), ("/Programming", (56 + HX, 38 + HY)),
+                 ("/Orientation/", (38, 33 + BAND)), ("/Clock", (27, 38 + BAND)), ("/UWB", (27, 38 + BAND))]
 
 
 def home_of(p):
@@ -685,14 +716,18 @@ def home_of(p):
         for key, h in HOME_FALLBACK:
             if net.startswith(key):
                 return h
-    return (100, 45)
+    return (104 + HX, 45 + HY)
 
 
 def anchor_bounds(n, grow=0.0):
+    """Box the anchor's supply / strap parts must stay in.  Room beyond the old 25 x 20 mm box is given on the
+    outer (west or east) side and toward the centre band; the 22 mm column pitch is unchanged."""
     cx, cy, rot = SLOT[n]
+    ox = 3.0 if cx < XC else 0.0          # extra room west of the west column
+    ex = 3.0 if cx > XC else 0.0          # extra room east of the east column
     if rot == 0:
-        return (cx - 13 - grow, cy - 10 - grow, cx + 12 + grow, min(H - 1.0, cy + 8.5 + grow))
-    return (cx - 12 - grow, max(1.0, cy - 8.5 - grow), cx + 13 + grow, cy + 10 + grow)
+        return (cx - 13 - ox - grow, cy - 13 - grow, cx + 12 + ex + grow, min(H - 1.0, cy + 8.5 + grow))
+    return (cx - 12 - ox - grow, max(1.0, cy - 8.5 - grow), cx + 13 + ex + grow, cy + 13 + grow)
 
 
 def pad_xy(part, num):
@@ -712,6 +747,8 @@ def place_all(pl, parts):
         return w
 
     def G(ref, hint=None, home=None, w=None, **kw):
+        if ref not in P:
+            return                       # absent from the board (e.g. removed in stage 1): nothing to place
         if P[ref].placed:
             return
         home = home or home_of(P[ref])
@@ -728,7 +765,7 @@ def place_all(pl, parts):
         c = "U%d" % (4 + n)
         ypin = [(x, y) for num, x, y, net in P["U31"].world_pads() if net.endswith("CLK_Y%d" % n)][0]
         xpin = pad_xy(P[c], "21")
-        G("R%d" % (231 + n), hint={"1": [("pt", ypin[0], ypin[1])], "2": [("pt", xpin[0], xpin[1])]}, w={"1": 8, "2": 1},
+        G("R%d" % (231 + n), hint={"1": [("pt", ypin[0], ypin[1])], "2": [("pt", xpin[0], xpin[1])]}, w={"1": 8, "2": 3},
           home=ypin, radius=4.0,
           rots=(0, 90, 180, 270), center=ypin)
         G("C%d" % (24 + n), hint={"2": [(c, "21")]}, w={"2": 8, "1": 1}, home=SLOT[n][:2], radius=5.0,
@@ -762,7 +799,6 @@ def place_all(pl, parts):
         bnd = anchor_bounds(n)
         for ref, hint, w in seq[:10]:
             G(ref, hint=hint, home=home, w=w, radius=7.0, bounds=bnd)
-        place_tp_list(pl, parts, ["TP%d" % (500 + 7 * n + k) for k in range(7)])   # claim pad space before straps
         for ref, hint, w in seq[10:]:
             G(ref, hint=hint, home=home, w=w, radius=7.0, bounds=bnd)
     # A0 fallback crystal (DNP): tight to XTI/XTO of U4
@@ -771,7 +807,7 @@ def place_all(pl, parts):
     G("C209", hint={"1": [("U4", "21")]}, home=(SLOT[0][0], SLOT[0][1]))
 
     # ---- 2. clock tree --------------------------------------------------------------------
-    ck = (24.5, 35)
+    ck = (U31_POSE[0], U31_POSE[1])
     G("R230", home=ck)
     for ref, h in (("C213", ("U31", "6")), ("C214", ("U31", "6")), ("C210", ("U30", "6")), ("C211", ("U30", "6"))):
         G(ref, hint={"1": [h]}, w={"1": 3}, home=ck)
@@ -787,16 +823,16 @@ def place_all(pl, parts):
     # ---- 3. orientation sensors -----------------------------------------------------------
     for ref, h in (("C400", None), ("C401", ("U10", "3")), ("C402", ("U10", "9")), ("C35", ("U10", "10")),
                    ("C403", ("U11", "2")), ("C404", ("U11", "9")), ("C36", ("U11", "10"))):
-        G(ref, hint={"1": [h]} if h else None, w={"1": 3}, home=(38, 36))
+        G(ref, hint={"1": [h]} if h else None, w={"1": 3}, home=(38, 36 + BAND))
     for ref in ("R407", "R408", "R409", "R410", "R414", "R415", "R411"):
-        G(ref, home=(38, 36))
+        G(ref, home=(38, 36 + BAND))
 
     # ---- 4. the remaining blocks, each confined to its own floorplan region -----------------
     def group(name, refs, bounds, home, rots=None, radius=8.0, hints=None, w=None):
         hints = hints or {}
         w = w or {}
         for ref in refs:
-            if P[ref].placed:
+            if ref not in P or P[ref].placed:
                 continue
             is_p = P[ref].is_passive
             r = rots or ((0, 90) if is_p else (0, 90, 180, 270))
@@ -806,42 +842,36 @@ def place_all(pl, parts):
     C = lambda a, b: ["C%d" % i for i in range(a, b + 1)]
 
     # host: nRF9151 supply / reset / strap / bridge / SPI series parts
+    host_b = (50 + HX, 14, 90 + HX, 58 + HY)
     group("host_crit", ["FB10", "C102", "C103", "C100", "C101", "C109", "C104", "C110", "C107", "C108", "C111", "R101",
                        "R103", "R104", "U21", "R102", "C105", "C106", "R155"],
-          (50, 14, 86, 47), (66, 29), radius=8.0)
+          host_b, (66 + HX, 29 + HY), radius=8.0)
     # GNSS front end and LTE feed near the north edge
     group("gnss", ["U24", "U25", "C127", "L101", "C123", "C128", "C129", "R123", "R124", "R125", "L100", "R122", "C122",
-                   "C124", "C125", "C126", "D100"], (70, 1, 100, 26), (78, 17), radius=8.0)
-    group("lte", ["R130", "R131", "C130", "C131", "D101", "J13"], (70, 14, 100, 32), (80, 23), radius=8.0)
+                   "C124", "C125", "C126", "D100"], (70 + HX, 1, 106 + HX, 30 + HY), (78 + HX, 17 + HY), radius=8.0)
+    group("lte", ["R130", "R131", "C130", "C131", "D101", "J13"], (70 + HX, 14 + HY, 106 + HX, 36 + HY), (80 + HX, 23 + HY), radius=8.0)
     # SIM and its ESD / series parts
     group("sim", ["U22", "R106", "R107", "R108", "R109", "U23", "R110", "R111", "R112", "R113", "C112"],
-          (64, 34, 98, 66), (76, 42), radius=8.0)
+          (64 + HX, 36 + HY, 106 + HX, H - 1), (76 + HX, 42 + HY), radius=8.0)
     # regulation: U40 (LTE rail) next to the nRF, U8 (3V3) toward the power block
     group("u40", ["C300", "L300", "C301", "C302", "R302", "R306", "R307", "R308", "R309", "R310", "R311", "R312",
-                  "J31", "R304"], (76, 18, 106, 48), (86, 33), radius=8.0)
-    # host test pads claim their space after the RF / supply parts (those paths are the critical ones),
-    # and before the series links, pull-ups and DNP options, which can sit a little further out
+                  "J31", "R304"], (76 + HX, 18 + HY, 114 + HX, 58 + HY), (86 + HX, 33 + HY), radius=8.0)
     group("u8", ["C20", "L1", "C21", "C22", "R8", "R9", "R300", "R301", "J30", "R303", "R305", "C303",
-                 "C5", "C6", "C7"], (90, 44, 120, 74), (104, 54), radius=8.0)
+                 "C5", "C6", "C7"], (W - 52, 40, W - 2, H - 1), (W - 26, 62), radius=8.0)
     # charger / battery / inputs
     group("charger", ["D1", "D2", "D3", "U2", "Q1", "TH1", "C1", "C2", "C3", "C4", "R1", "R2", "R3", "R4", "R5",
-                      "R6", "R7", "R29", "R30", "R31"], (100, 16, W, H), (114, 44), radius=8.0)
-    # every test pad claims its slot next to its pin/net now: after all pin-critical parts (decoupling, hot
-    # loops, clock, RF) and before the series links, pull-ups, DNP options and UI parts, which can sit further out
-    place_test_pads(pl, parts)
+                      "R6", "R7", "R29", "R30", "R31"], (W - 42, 14, W, H), (W - 14, 48), radius=8.0)
     group("host", [
                    "R150", "R151", "R152", "R153", "R154", "R140", "R141", "R142", "R143", "R144", "R145",
                    "R37", "R38", "R39", "R224", "R313", "R315", "C304", "R103", "R104", "U21", "R102", "C105",
                    "C106", "R155", "R314"],
-          (50, 14, 86, 47), (66, 29), radius=8.0,
+          host_b, (66 + HX, 29 + HY), radius=8.0,
           hints={"R224": {"1": [("U20", "2")]}})
-    group("ui", ["R32", "R400", "R401"], (92, 1, 114, 15), (101, 8), radius=8.0)
-    group("dbg", ["SW2"], (52, 34, 74, 62), (62, 44), radius=10.0)
+    group("ui", ["R32", "R400", "R401"], (92, 1, 118, 15), (105, 8), radius=8.0)
+    group("dbg", ["SW2"], (52 + HX, 34 + HY, 82 + HX, H - 2), (62 + HX, 44 + HY), radius=10.0)
     # array entry bank on +3V3 at the east edge of the UWB block, centre band
     for ref in ("C72", "C73", "C74"):
-        G(ref, hint={"1": [("pt", 47.0, 38.0)]}, home=(47, 38), bounds=(42, 24, 56, 52), radius=8.0)
-    for ref in ("SW2", "SW11", "SW12"):
-        pass
+        G(ref, hint={"1": [("pt", 47.0, 38.0 + BAND)]}, home=(47, 38 + BAND), bounds=(42, 26, 56, H - 26), radius=8.0)
 
     # ---- 5. anything not covered above (should be empty) --------------------------------------------
     left = sorted(r for r, p in P.items() if not p.placed and not r.startswith("TP"))
@@ -850,111 +880,25 @@ def place_all(pl, parts):
     for ref in left:
         G(ref, rots=(0, 90), radius=10.0)
 
-    # ---- 6. test pads ----------------------------------------------------------------------
-    place_test_pads(pl, parts)
-
     # ---- 7. polish -----------------------------------------------------------------------------
     polish(pl, parts, sorted(pl.rec), passes=POLISH_PASSES)
 
 
-TP_EXPLICIT = {  # (host pads that name a pin follow the pin, so no coordinates here)
-    "TP1": ("R300", "2"), "TP101": ("U4", "29"), "TP102": ("U3", "9"), "TP2": ("U1", "1"), "TP103": ("U8", "4"),
-    "TP100": ("U20", "14"), "TP104": ("J2", "A9"), "TP414": ("U1", "3"),
-    "TP3": ("U31", "4"), "TP110": ("pt", XC, 31.0), "TP4": ("pt", 50.0, 56.0),
-    "TP113": ("U1", "4"), "TP114": ("U8", "2"), "TP115": ("U20", "1"), "TP116": ("pt", XC, 27.0),
-    "TP117": ("J3", "3"), "TP118": ("D5", "1"), "TP119": ("U10", "6"),
-}
-TP_LATE = ("TP3", "TP110", "TP4", "TP113", "TP114", "TP115", "TP116", "TP117", "TP118", "TP119")
-TP_AFTER = {"TP111": ("TP10", "1"), "TP112": ("TP12", "1")}
-TP_STEP = 1.25
-TP_GAP = 0.21          # 2.09 mm courtyard + 2 x 0.21 = 2.51 mm centre pitch: the 2.5 mm spring-probe spacing
-HINTS_USED = {}
+# Test pads: all TP* footprints are kept off the top placement.  The bottom-side test-pad script (functions rows,
+# scripts/layout/testpoint_labels.json) places them later; until then they are parked off-board in a fixed grid so
+# they neither overlap anything nor feed the wirelength metrics.
+PARK_X0, PARK_Y0, PARK_DX, PARK_DY, PARK_COLS = W + 10.0, 5.0, 4.0, 4.0, 8
 
 
-def place_tp_list(pl, parts, refs):
-    """Place the named test pads (skipping ones already placed) near the pin/net each one measures."""
-    P = parts
-    for ref in refs:
-        if ref not in P or P[ref].placed:
-            continue
-        p = P[ref]
-        hint = None
-        if ref in TP_EXPLICIT:
-            e = TP_EXPLICIT[ref]
-            hint = {"1": [e if e[0] == "pt" else (e[0], e[1])]}
-        elif ref in TP_AFTER:
-            hint = {"1": [TP_AFTER[ref]]}
-        num = int(ref[2:])
-        bnd = None
-        if 500 <= num <= 527:
-            bnd = anchor_bounds((num - 500) // 7, grow=6.0)
-        infl = TP_GAP if p.cy[2] - p.cy[0] < 2.2 else GAP
-        try:
-            pl.greedy(ref, hint=hint, home=home_of(p), rots=(0,), radius=8.0, infl=infl, bounds=bnd, step=TP_STEP)
-        except RuntimeError:
-            print("WARNING: %s did not fit its bounds" % ref)
-            pl.greedy(ref, hint=hint, home=home_of(p), rots=(0,), radius=8.0, infl=infl, step=TP_STEP)
-        HINTS_USED[ref] = hint
-
-
-def place_test_pads(pl, parts):
-    P = parts
-    tps = sorted((r for r in P if r.startswith("TP")), key=lambda r: int(r[2:]))
-    order = [r for r in tps if r not in TP_AFTER and r not in TP_LATE]
-    order += [r for r in tps if r in TP_LATE]
-    order += [r for r in tps if r in TP_AFTER]
-    place_tp_list(pl, parts, order)
-    refine_test_pads(pl, parts, HINTS_USED)
-
-
-def refine_test_pads(pl, parts, hints_used):
-    """Pairwise-swap test pads between the slots the greedy pass found, while that shortens the total
-    distance to their nets.  Pads of equal size only, so every swap stays collision free."""
-    P = parts
-    tps = [r for r in P if r.startswith("TP")]
-    tgt = {}
-    for r in tps:
-        tg = pl.targets_for(r, hints_used.get(r))
-        tgt[r] = [pt for _, _, _, _, pts in tg for pt in pts]
-
-    def cost(r, x, y):
-        pts = tgt[r]
-        if not pts:
-            return 0.0
-        return min(math.hypot(x - a, y - b) for a, b in pts)
-
-    def size(r):
-        x0, y0, x1, y1 = P[r].cy
-        return round(x1 - x0, 2)
-
-    improved = True
-    passes = 0
-    while improved and passes < 12:
-        improved = False
-        passes += 1
-        order = sorted(tps, key=lambda r: -cost(r, P[r].x, P[r].y))
-        for a in order:
-            ca = cost(a, P[a].x, P[a].y)
-            if ca < 3.0:
-                continue
-            best = None
-            for b in tps:
-                if b == a or size(b) != size(a):
-                    continue
-                cb = cost(b, P[b].x, P[b].y)
-                new = cost(a, P[b].x, P[b].y) + cost(b, P[a].x, P[a].y)
-                gain = (ca + cb) - new
-                if gain > 0.5 and (best is None or gain > best[0]):
-                    best = (gain, b)
-            if best:
-                b = best[1]
-                P[a].x, P[b].x = P[b].x, P[a].x
-                P[a].y, P[b].y = P[b].y, P[a].y
-                improved = True
-    # the swaps moved pads between slots: re-register every test pad at its final position
-    for r in tps:
-        pl.remove(r)
-        pl.put(r, P[r].x, P[r].y, P[r].rot, infl=pl.rec[r]["infl"])
+def park_test_pads(parts):
+    tps = sorted((r for r in parts if r.startswith("TP")), key=lambda r: (len(r), r))
+    for i, ref in enumerate(tps):
+        p = parts[ref]
+        p.x = PARK_X0 + (i % PARK_COLS) * PARK_DX
+        p.y = PARK_Y0 + (i // PARK_COLS) * PARK_DY
+        p.rot = 0
+        p.placed = False
+    return tps
 
 
 def refresh_note(path):
@@ -972,7 +916,7 @@ def refresh_note(path):
         open(path, "w", encoding="utf-8").write(txt)
 
 
-def apply_to_board(board, parts):
+def apply_to_board(board, parts, strip_copper=True):
     mm = pcbnew.FromMM
 
     def V(x, y):
@@ -988,8 +932,14 @@ def apply_to_board(board, parts):
     old_zones = list(board.Zones())
     old_drawings = list(board.GetDrawings())
     for z in old_zones:
-        if z.GetZoneName().startswith("KO_"):
+        # KO_* are redrawn below.  Everything else at board level (GND pours, DW3210_CUTOUT_* rule areas from
+        # stitch.py) has the old outline / old chip positions and is stale once the parts move.
+        if z.GetZoneName().startswith("KO_") or strip_copper:
             board.Remove(z)
+    if strip_copper:
+        # routing and stitching vias were made for the previous placement and would short the new one
+        for t in list(board.GetTracks()):
+            board.Remove(t)
 
     # Edge.Cuts: rounded rectangle
     for d in old_drawings:

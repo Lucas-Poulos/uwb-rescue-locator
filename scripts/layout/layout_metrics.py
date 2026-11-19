@@ -52,9 +52,14 @@ def seg_cross(a, b, c, d):
     return (o(a, b, c) * o(a, b, d) < 0) and (o(c, d, a) * o(c, d, b) < 0)
 
 
+INCLUDE_TP = False     # test pads are parked off-board (or bottom-side) in the top placement: not part of the metrics
+
+
 def net_pts(d):
     nets = {}
     for ref, p in d["parts"].items():
+        if p.get("parked") or (ref.startswith("TP") and not INCLUDE_TP):
+            continue
         for num, x, y, net in p["pads"]:
             if net and not net.startswith("unconnected-"):
                 nets.setdefault(net, []).append((x, y, ref, num))
@@ -181,11 +186,44 @@ def part_dist(d):
     return out
 
 
+def rect_of(p):
+    x0, y0, x1, y1 = p["cy"]
+    r = p["rot"] % 360
+    pts = []
+    for a, b in ((x0, y0), (x1, y0), (x0, y1), (x1, y1)):
+        pts.append({0: (a, b), 90: (b, -a), 180: (-a, -b), 270: (-b, a)}[r] if r in (0, 90, 180, 270) else (a, b))
+    return (p["x"] + min(q[0] for q in pts), p["y"] + min(q[1] for q in pts),
+            p["x"] + max(q[0] for q in pts), p["y"] + max(q[1] for q in pts))
+
+
+def courtyard_gaps(d):
+    """minimum / count below 0.6 and 0.5 mm of the courtyard-to-courtyard distance (bounding boxes, parts not
+    parked).  Overlaps are counted as negative gaps."""
+    items = [(ref, rect_of(p)) for ref, p in d["parts"].items() if not p.get("parked")]
+    gaps = []
+    for i in range(len(items)):
+        ra = items[i][1]
+        for j in range(i + 1, len(items)):
+            rb = items[j][1]
+            dx = max(rb[0] - ra[2], ra[0] - rb[2])
+            dy = max(rb[1] - ra[3], ra[1] - rb[3])
+            g = max(dx, dy) if (dx < 0 and dy < 0) else math.hypot(max(dx, 0), max(dy, 0))
+            if g < 0.6:
+                gaps.append((round(g, 2), items[i][0], items[j][0]))
+    gaps.sort()
+    return "min %s, %d pairs < 0.6, %d < 0.5, %d overlapping; worst %s" % (
+        gaps[0][0] if gaps else ">=0.6", len(gaps), sum(1 for g in gaps if g[0] < 0.5), sum(1 for g in gaps if g[0] < 0),
+        gaps[:6])
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("json")
     ap.add_argument("--worst", type=int, default=30)
+    ap.add_argument("--with-tp", action="store_true", help="include test pads in the nets (old 128 x 68 numbers)")
     a = ap.parse_args()
+    global INCLUDE_TP
+    INCLUDE_TP = a.with_tp
     d = json.load(open(a.json))
     nets = net_pts(d)
     h, m, cr = whole(nets)
@@ -201,26 +239,9 @@ def main():
     print("clock buffer->XTI (A0..A3):", ["%.1f" % x for x in clock_paths(d)])
     print("RF chains (A0..A3):", ["%.2f" % x for x in rf_chains(d)])
     P = d["parts"]
-    tp = [r for r in P if r.startswith("TP")]
-    ts = []
-    for r in tp:
-        x, y = P[r]["x"], P[r]["y"]
-        for num, px, py, net in P[r]["pads"]:
-            if net and net != "GND":
-                o = [(a_, b_) for a_, b_, r2, n2 in nets[net] if r2 != r]
-                if o:
-                    ts.append(min(dist((px, py), q) for q in o))
-    print("test pads: %d, mean dist to nearest other pin on net %.2f mm, > 5 mm: %d, max %.1f"
-          % (len(tp), sum(ts) / len(ts), sum(1 for t in ts if t > 5), max(ts)))
-    # test pad MST contribution
-    tot = 0.0
-    for k, v in nets.items():
-        if k == "GND":
-            continue
-        pts = [(x, y) for x, y, _, _ in v]
-        pts2 = [(x, y) for x, y, r, _ in v if not r.startswith("TP")]
-        tot += sum(dist(pts[i], pts[j]) for i, j in mst_edges(pts)) - sum(dist(pts2[i], pts2[j]) for i, j in mst_edges(pts2))
-    print("test pads add %.1f mm of MST" % tot)
+    print("test pads: %d parked off-board / bottom side, excluded from every figure above" %
+          sum(1 for r in P if r.startswith("TP")))
+    print("courtyard gaps (top parts, edge-to-edge, mm):", courtyard_gaps(d))
     print("U10 distances: L1 %.1f, L300 %.1f, U40 %.1f" % (
         dist((P["U10"]["x"], P["U10"]["y"]), (P["L1"]["x"], P["L1"]["y"])),
         dist((P["U10"]["x"], P["U10"]["y"]), (P["L300"]["x"], P["L300"]["y"])),
