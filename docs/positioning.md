@@ -296,6 +296,14 @@ wrapping ambiguity, so the baseline can be any length.
 
 ### Link budget
 
+**30 m target (2026-11-23).** The 86 dB above is the slowest mode with 0 dBi
+antennas and no pin loss. At 30 m, free-space loss is 78.2 dB, leaving about
+3-6 dB after 2-5 dB of cable, and RX level of about -95.5 dBm is roughly 10 dB
+below the -85 dBm at which Table 14's 1.5 cm figure was measured. Range is
+therefore marginal and timestamp precision degrades. The chosen levers are
+antenna gain, cable loss and baseline, not an on-board LNA; reasoning in
+`decisions.md` (Resolved, 30 m range).
+
 Table 12 gives 86 dB at CH5 (850 kbps, 1024-symbol preamble). Free-space
 loss at 10 m and 6489.6 MHz is 68.7 dB, leaving **~17 dB of margin**. Cable
 loss of 2-5 dB is easily absorbed. Range is not the binding constraint at

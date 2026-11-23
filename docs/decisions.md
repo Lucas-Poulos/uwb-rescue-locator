@@ -478,6 +478,40 @@ not settle:
 
 ## Resolved
 
+- **30 m range target: no on-board LNAs; PCB goes to 6 layers; Freerouting approved (2026-11-23).**
+  - **Range.** The station must work at about 30 m. DW3000 Datasheet v1.1 Table 12
+    gives an 86 dB link budget at CH5 (850 kbps, 1024-symbol preamble; 0 dBi
+    antennas, no loss at the pins). Free-space loss at 30 m and 6489.6 MHz is
+    78.2 dB, so margin is about 8 dB minus 2-5 dB of cable, roughly 3-6 dB before
+    body shadowing, polarisation and multipath. RX level at the pins is about
+    -92.5 dBm (-95.5 dBm after cable) against -100 dBm/500 MHz sensitivity
+    (Table 8) and the -85 dBm at which Table 14's 1.5 cm figure was measured.
+  - **No LNA on each UWB input.** It would add group delay that drifts with
+    part and temperature on a measurement where 1 cm of path error is about
+    33 ps, A0 also transmits (needs a T/R switch or bypass, so the four anchors
+    stop being identical), the wristband is often close (compression headroom),
+    and CH5 overlaps 6 GHz Wi-Fi (needs a band-pass filter). A board-end LNA
+    only trims the DW3210's own noise contribution, and the datasheet gives no
+    noise-figure number to size it. An antenna-end LNA would recover the cable
+    loss but needs DC power at the antenna: Rev B at the earliest.
+  - **Instead, in order:** higher-gain antennas on all four anchors (no timing
+    penalty, no PCB change; part not yet selected), shorter or lower-loss coax,
+    a baseline wider than 1 m (the accuracy at 30 m depends on it: about 30 cm
+    of position error per centimetre of path error at 30 m, against about 10 cm
+    at 10 m), and averaging. My rough estimate of single-shot error at 30 m with
+    the 1 m baseline is about 1.4 m, about 14 cm after 100 averaged shots; it
+    assumes jitter scales inversely with received amplitude, which is not a
+    datasheet figure. Check at bring-up.
+  - **6 layers (user decision).** More routing layers for the ordinary nets and
+    inner power pours for the di/dt loops. The stackup is NOT yet designed: it
+    must keep the Qorvo rule (DW3000 DS v1.1 Fig 35: copper cleared under the
+    DW3210 on the top layer and the first inner layer, first solid ground at
+    least 0.45 mm below the top surface) and a 50 ohm line that is still
+    buildable at a fab. The 0.45 mm line width, the 1.048 mm thickness and the
+    cut-out geometry were solved for the 4-layer stack and must be re-solved.
+  - **Freerouting approved** by the user for the ordinary nets only; hand-routed
+    RF/clock/power-loop/fan-out copper stays locked. See `docs/routing-plan.md`.
+
 - **Bay-station test pads cut from 127 to 62, and moving to the bottom side (2026-11-18).**
   The 127-pad top-side placement (`docs/layout-notes.md`, "Test pads") cost 548 mm of ratsnest and
   was the first thing to trim if the board needed room; the board is now growing to **150 x 80 mm**
